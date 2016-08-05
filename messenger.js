@@ -97,6 +97,7 @@ const firstEntityValue = (entities, entity) => {
 // Our bot actions
 const actions = {
   send({sessionId}, {text}) {
+    console.log(`replying to message: ${text}`);
     // Our bot has something to say!
     // Let's retrieve the Facebook user whose session belongs to
     const recipientId = sessions[sessionId].fbid;
@@ -105,7 +106,7 @@ const actions = {
       // Let's forward our bot response to her.
       // We return a promise to let our bot know when we're done sending
       return fbMessage(recipientId, text)
-      .then(() => console.log(`replying to message: ${text}`))
+      .then(() => null)
       .catch((err) => {
         console.error(
           'Oops! An error occurred while forwarding the response to',
@@ -121,7 +122,7 @@ const actions = {
     }
   },
 
-  // implementing my custom actions here
+  // my custom actions below
   checkLocation({ sessionID, context, entities }) {
     console.log('executing checklocation!');
     console.log(`sessionID is ${sessionID}`);
@@ -135,6 +136,21 @@ const actions = {
       }
       else { context.missingLocation = true; }
       return res(context);
+     });
+  },
+
+  getWeather({ sessionID, context }) {
+    console.log('executing getWeather!');
+    // Here should go the api call, e.g.:
+    // context.forecast = apiCall(context.loc)
+    return new Promise((res, rej) => {
+      if (context.loc == "New York") {
+        context.forecast = 'real good'
+      }
+      else {
+        context.forecast = 'absolute shite';
+      }
+      res(context);
     });
   },
 };
@@ -168,6 +184,7 @@ app.get('/webhook', (req, res) => {
     req.query['hub.verify_token'] === FB_VERIFY_TOKEN) {
     res.send(req.query['hub.challenge']);
   } else {
+    console.log(`query is ${JSON.stringify(req.query)}`);
     res.sendStatus(400);
   }
 });
