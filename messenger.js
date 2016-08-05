@@ -122,8 +122,9 @@ const actions = {
   },
 
   // implementing my custom actions here
-  checkLocation({ context, entities }) {
+  checkLocation({ sessionID, context, entities }) {
     console.log('executing checklocation!');
+    console.log(`sessionID is ${sessionID}`);
     // Retrieve the loc entity and store it into a context field
     const loc = firstEntityValue(entities, 'location');
     return new Promise((res, rej) => {
