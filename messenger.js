@@ -14,40 +14,23 @@
 // 6. Talk to your bot on Messenger!
 
 const bodyParser = require('body-parser');
-const crypto = require('crypto');
 const express = require('express');
 const fetch = require('node-fetch');
 const request = require('request');
 
-let Wit = null;
-let log = null;
-try {
-  // if running from repo
-  Wit = require('../').Wit;
-  log = require('../').log;
-} catch (e) {
-  Wit = require('node-wit').Wit;
-  log = require('node-wit').log;
-}
+const { Wit, log, WIT_TOKEN, FB_PAGE_TOKEN, FB_APP_SECRET } = require('./index');
+// const log = require('./index').log;
 
 // Webserver parameter
 const PORT = process.env.PORT || 8445;
 
-// Wit.ai parameters
-const WIT_TOKEN = process.env.WIT_TOKEN;
 
-// Messenger API parameters
-const FB_PAGE_TOKEN = process.env.FB_PAGE_TOKEN;
-if (!FB_PAGE_TOKEN) { throw new Error('missing FB_PAGE_TOKEN') }
-const FB_APP_SECRET = process.env.FB_APP_SECRET;
-if (!FB_APP_SECRET) { throw new Error('missing FB_APP_SECRET') }
+const FB_VERIFY_TOKEN = 'verifyMeDandy';
+console.log(`/webhook will accept the Verify Token "${FB_VERIFY_TOKEN}"`);
 
-let FB_VERIFY_TOKEN = null;
-crypto.randomBytes(8, (err, buff) => {
-  if (err) throw err;
-  FB_VERIFY_TOKEN = buff.toString('hex');
-  console.log(`/webhook will accept the Verify Token "${FB_VERIFY_TOKEN}"`);
-});
+console.log(`
+  >> congratulations on making it past the requires & parameters <<
+`);
 
 // ----------------------------------------------------------------------------
 // Messenger API specific code
@@ -100,6 +83,17 @@ const findOrCreateSession = (fbid) => {
   return sessionId;
 };
 
+const firstEntityValue = (entities, entity) => {
+  const val = entities && entities[entity] &&
+    Array.isArray(entities[entity]) &&
+    entities[entity].length > 0 &&
+    entities[entity][0].value;
+  if (!val) {
+    return null;
+  }
+  return typeof val === 'object' ? val.value : val;
+};
+
 // Our bot actions
 const actions = {
   send({sessionId}, {text}) {
@@ -111,7 +105,7 @@ const actions = {
       // Let's forward our bot response to her.
       // We return a promise to let our bot know when we're done sending
       return fbMessage(recipientId, text)
-      .then(() => null)
+      .then(() => console.log(`replying to message: ${text}`))
       .catch((err) => {
         console.error(
           'Oops! An error occurred while forwarding the response to',
@@ -126,8 +120,22 @@ const actions = {
       return Promise.resolve()
     }
   },
-  // You should implement your custom actions here
-  // See https://wit.ai/docs/quickstart
+
+  // implementing my custom actions here
+  checkLocation({ context, entities }) {
+    console.log('executing checklocation!');
+    // Retrieve the loc entity and store it into a context field
+    const loc = firstEntityValue(entities, 'location');
+    return new Promise((res, rej) => {
+      if (loc) {
+        console.log(loc);
+        context.loc = loc;
+        context.missingLocation = false;
+      }
+      else { context.missingLocation = true; }
+      return res(context);
+    });
+  },
 };
 
 // Setting up our bot
@@ -147,6 +155,12 @@ app.use(({method, url}, rsp, next) => {
 });
 app.use(bodyParser.json({ verify: verifyRequestSignature }));
 
+// Home page as insurance
+app.get('/', function(req, res) {
+  res.send("this is the home page. You've had some success at last");
+});
+
+
 // Webhook setup
 app.get('/webhook', (req, res) => {
   if (req.query['hub.mode'] === 'subscribe' &&
@@ -163,6 +177,7 @@ app.post('/webhook', (req, res) => {
   // See the Webhook reference
   // https://developers.facebook.com/docs/messenger-platform/webhook-reference
   const data = req.body;
+  console.log('posting to webhook');
 
   if (data.object === 'page') {
     data.entry.forEach(entry => {
