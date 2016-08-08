@@ -192,7 +192,6 @@ app.post('/webhook', (req, res) => {
   // See the Webhook reference
   // https://developers.facebook.com/docs/messenger-platform/webhook-reference
   const data = req.body;
-  console.log('posting to webhook');
 
   if (data.object === 'page') {
     data.entry.forEach(entry => {
