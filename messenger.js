@@ -17,9 +17,9 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const fetch = require('node-fetch');
 const request = require('request');
+const crypto = require('crypto');
 
 const { Wit, log, WIT_TOKEN, FB_PAGE_TOKEN, FB_APP_SECRET } = require('./index');
-// const log = require('./index').log;
 
 // Webserver parameter
 const PORT = process.env.PORT || 8445;
@@ -27,10 +27,6 @@ const PORT = process.env.PORT || 8445;
 
 const FB_VERIFY_TOKEN = 'verifyMeDandy';
 console.log(`/webhook will accept the Verify Token "${FB_VERIFY_TOKEN}"`);
-
-console.log(`
-  >> congratulations on making it past the requires & parameters <<
-`);
 
 // ----------------------------------------------------------------------------
 // Messenger API specific code
@@ -124,8 +120,6 @@ const actions = {
 
   // my custom actions below
   checkLocation({ sessionID, context, entities }) {
-    console.log('executing checklocation!');
-    console.log(`sessionID is ${sessionID}`);
     // Retrieve the loc entity and store it into a context field
     const loc = firstEntityValue(entities, 'location');
     return new Promise((res, rej) => {
@@ -134,13 +128,16 @@ const actions = {
         context.loc = loc;
         context.missingLocation = false;
       }
-      else { context.missingLocation = true; }
+      else {
+        context.missingLocation = true;
+        context.loc = undefined;
+        context.loc = undefined;
+      }
       return res(context);
      });
   },
 
   getWeather({ sessionID, context }) {
-    console.log('executing getWeather!');
     // Here should go the api call, e.g.:
     // context.forecast = apiCall(context.loc)
     return new Promise((res, rej) => {
