@@ -93,7 +93,7 @@ const firstEntityValue = (entities, entity) => {
 // Our bot actions
 const actions = {
   send({sessionId}, {text}) {
-    console.log(`replying to message: ${text}`);
+    console.log(`replying to message with: ${text}`);
     // Our bot has something to say!
     // Let's retrieve the Facebook user whose session belongs to
     const recipientId = sessions[sessionId].fbid;
@@ -110,6 +110,7 @@ const actions = {
           ':',
           err.stack || err
         );
+        console.log(`was trying to respond to: ${text}`);
       });
     } else {
       console.error('Oops! Couldn\'t find user for session:', sessionId);
@@ -118,7 +119,6 @@ const actions = {
     }
   },
 
-  // my custom actions below
   checkLocation({ sessionID, context, entities }) {
     // Retrieve the loc entity and store it into a context field
     const loc = firstEntityValue(entities, 'location');
