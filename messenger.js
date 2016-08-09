@@ -9,7 +9,8 @@
 // 1. npm install body-parser express request
 // 2. Download and install ngrok from https://ngrok.com/download
 // 3. ./ngrok http 8445
-// 4. WIT_TOKEN=your_access_token FB_APP_SECRET=your_app_secret FB_PAGE_TOKEN=your_page_token node examples/messenger.js
+// 4. WIT_TOKEN=your_access_token FB_APP_SECRET=your_app_secret
+// FB_PAGE_TOKEN=your_page_token node examples/messenger.js
 // 5. Subscribe your page to the Webhooks using verify_token and `https://<your_ngrok_io>/webhook` as callback URL.
 // 6. Talk to your bot on Messenger!
 
@@ -110,7 +111,7 @@ const actions = {
             ':',
             err.stack || err
           );
-          console.log(`was trying to respond to: ${text}`);
+          console.log(`was trying to send: ${text}`);
         });
     } else {
       console.error('Oops! Couldn\'t find user for session:', sessionId);
@@ -125,11 +126,17 @@ const actions = {
     return new Promise((res, rej) => {
       if(prod) {
         console.log(`product is ${prod}`);
-        if (prod == 'coffee') context.productInfo = prod;
-      } else {
-        context.itemNotFound = true;
+        if (prod == 'coffee') {
+          context.productInfo = prod;
+          delete context.itemNotFound;
+        }
+        else {
+          context.itemNotFound = true;
+          delete context.productInfo;
+        }
       }
-      console.log('returning with context');
+      console.log('context:');
+      console.log(context);
       return res(context);
     });
   }
