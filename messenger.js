@@ -25,7 +25,7 @@ const { Wit, log, WIT_TOKEN, FB_PAGE_TOKEN, FB_APP_SECRET } = require('./index')
 const PORT = process.env.PORT || 8445;
 
 
-const FB_VERIFY_TOKEN = 'verifyMeDandy';
+const FB_VERIFY_TOKEN = 'legitVerify';
 console.log(`/webhook will accept the Verify Token "${FB_VERIFY_TOKEN}"`);
 
 // ----------------------------------------------------------------------------
@@ -102,16 +102,16 @@ const actions = {
       // Let's forward our bot response to her.
       // We return a promise to let our bot know when we're done sending
       return fbMessage(recipientId, text)
-      .then(() => null)
-      .catch((err) => {
-        console.error(
-          'Oops! An error occurred while forwarding the response to',
-          recipientId,
-          ':',
-          err.stack || err
-        );
-        console.log(`was trying to respond to: ${text}`);
-      });
+        .then(() => null)
+        .catch((err) => {
+          console.error(
+            'Oops! An error occurred while forwarding the response to',
+            recipientId,
+            ':',
+            err.stack || err
+          );
+          console.log(`was trying to respond to: ${text}`);
+        });
     } else {
       console.error('Oops! Couldn\'t find user for session:', sessionId);
       // Giving the wheel back to our bot
@@ -119,37 +119,20 @@ const actions = {
     }
   },
 
-  checkLocation({ sessionID, context, entities }) {
+  checkProduct({sessionID, context, entities}) {
     // Retrieve the loc entity and store it into a context field
-    const loc = firstEntityValue(entities, 'location');
+    const prod = firstEntityValue(entities, 'product');
     return new Promise((res, rej) => {
-      if (loc) {
-        console.log(loc);
-        context.loc = loc;
-        context.missingLocation = false;
+      if(prod) {
+        console.log(`product is ${prod}`);
+        if (prod == 'coffee') context.productInfo = prod;
+      } else {
+        context.itemNotFound = true;
       }
-      else {
-        context.missingLocation = true;
-        context.loc = undefined;
-        context.loc = undefined;
-      }
+      console.log('returning with context');
       return res(context);
-     });
-  },
-
-  getWeather({ sessionID, context }) {
-    // Here should go the api call, e.g.:
-    // context.forecast = apiCall(context.loc)
-    return new Promise((res, rej) => {
-      if (context.loc == "New York") {
-        context.forecast = 'real good'
-      }
-      else {
-        context.forecast = 'absolute shite';
-      }
-      res(context);
     });
-  },
+  }
 };
 
 // Setting up our bot
@@ -171,7 +154,7 @@ app.use(bodyParser.json({ verify: verifyRequestSignature }));
 
 // Home page as insurance
 app.get('/', function(req, res) {
-  res.send("this is the home page. You've had some success at last");
+  res.send("menubot reporting for duty");
 });
 
 
