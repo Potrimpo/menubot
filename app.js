@@ -10,19 +10,20 @@
 // 2. Download and install ngrok from https://ngrok.com/download
 // 3. ./ngrok http 8445
 // 4. WIT_TOKEN=your_access_token FB_APP_SECRET=your_app_secret
-// FB_PAGE_TOKEN=your_page_token node examples/messenger.js
+// FB_PAGE_TOKEN=your_page_token node examples/app.js
 // 5. Subscribe your page to the Webhooks using verify_token and `https://<your_ngrok_io>/webhook` as callback URL.
 // 6. Talk to your bot on Messenger!
 
 const bodyParser = require('body-parser');
 const express = require('express');
-const fetch = require('node-fetch');
 const request = require('request');
 const crypto = require('crypto');
 
-const { Wit, log, WIT_TOKEN, FB_PAGE_TOKEN, FB_APP_SECRET } = require('./index');
+const { Wit, log, WIT_TOKEN, FB_APP_SECRET } = require('./index');
 const actions = require('./actions');
 const witSessions = require('./witSessions');
+const fbMessage = require('./messenger');
+
 
 // Webserver parameter
 const PORT = process.env.PORT || 8445;
@@ -31,118 +32,6 @@ const PORT = process.env.PORT || 8445;
 const FB_VERIFY_TOKEN = 'legitVerify';
 console.log(`/webhook will accept the Verify Token "${FB_VERIFY_TOKEN}"`);
 
-// ----------------------------------------------------------------------------
-// Messenger API specific code
-
-// See the Send API reference
-// https://developers.facebook.com/docs/messenger-platform/send-api-reference
-
-const fbMessage = (id, text) => {
-  const body = JSON.stringify({
-    recipient: { id },
-    message: { text },
-  });
-  const qs = 'access_token=' + encodeURIComponent(FB_PAGE_TOKEN);
-  return fetch('https://graph.facebook.com/me/messages?' + qs, {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body,
-  })
-  .then(rsp => rsp.json())
-  .then(json => {
-    if (json.error && json.error.message) {
-      throw new Error(json.error.message);
-    }
-    return json;
-  });
-};
-
-// // ----------------------------------------------------------------------------
-// // Wit.ai bot specific code
-//
-// // This will contain all user sessions.
-// // Each session has an entry:
-// // sessionId -> {fbid: facebookUserId, context: sessionState}
-// const sessions = {};
-//
-// const witSessions.findOrCreateSession = (fbid) => {
-//   let sessionId;
-//   // Let's see if we already have a session for the user fbid
-//   Object.keys(sessions).forEach(k => {
-//     if (sessions[k].fbid === fbid) {
-//       // Yep, got it!
-//       sessionId = k;
-//     }
-//   });
-//   if (!sessionId) {
-//     // No session found for user fbid, let's create a new one
-//     sessionId = new Date().toISOString();
-//     sessions[sessionId] = {fbid: fbid, context: {}};
-//   }
-//   return sessionId;
-// };
-
-// const firstEntityValue = (entities, entity) => {
-//   const val = entities && entities[entity] &&
-//     Array.isArray(entities[entity]) &&
-//     entities[entity].length > 0 &&
-//     entities[entity][0].value;
-//   if (!val) {
-//     return null;
-//   }
-//   return typeof val === 'object' ? val.value : val;
-// };
-
-// // Our bot actions
-// const actions = {
-//   send({sessionId}, {text}) {
-//     console.log(`replying to message with: ${text}`);
-//     // Our bot has something to say!
-//     // Let's retrieve the Facebook user whose session belongs to
-//     const recipientId = sessions[sessionId].fbid;
-//     if (recipientId) {
-//       // Yay, we found our recipient!
-//       // Let's forward our bot response to her.
-//       // We return a promise to let our bot know when we're done sending
-//       return fbMessage(recipientId, text)
-//         .then(() => null)
-//         .catch((err) => {
-//           console.error(
-//             'Oops! An error occurred while forwarding the response to',
-//             recipientId,
-//             ':',
-//             err.stack || err
-//           );
-//           console.log(`was trying to send: ${text}`);
-//         });
-//     } else {
-//       console.error('Oops! Couldn\'t find user for session:', sessionId);
-//       // Giving the wheel back to our bot
-//       return Promise.resolve()
-//     }
-//   },
-//
-//   checkProduct({sessionID, context, entities}) {
-//     // Retrieve the loc entity and store it into a context field
-//     const prod = firstEntityValue(entities, 'product');
-//     return new Promise((res, rej) => {
-//       if(prod) {
-//         console.log(`product is ${prod}`);
-//         if (prod == 'coffee') {
-//           context.productInfo = prod;
-//           delete context.itemNotFound;
-//         }
-//         else {
-//           context.itemNotFound = true;
-//           delete context.productInfo;
-//         }
-//       }
-//       console.log('context:');
-//       console.log(context);
-//       return res(context);
-//     });
-//   }
-// };
 
 // Setting up our bot
 const wit = new Wit({

@@ -25,7 +25,7 @@ See `examples` folder for more examples.
 
 ### Messenger integration example
 
-See `examples/messenger.js` for a thoroughly documented tutorial.
+See `examples/app.js` for a thoroughly documented tutorial.
 
 ### Overview
 
@@ -134,7 +134,7 @@ client.runActions(sessionId, 'what is the weather in London?', context0)
 });
 ```
 
-See `./examples/messenger.js` for a full-fledged example
+See `./examples/app.js` for a full-fledged example
 
 ### converse
 
