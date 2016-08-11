@@ -11,6 +11,7 @@ const fbMessage = (id, text) => {
     recipient: { id },
     message: { text },
   });
+  
   const qs = 'access_token=' + encodeURIComponent(FB_PAGE_TOKEN);
   return fetch('https://graph.facebook.com/me/messages?' + qs, {
     method: 'POST',

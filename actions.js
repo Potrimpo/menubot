@@ -46,7 +46,7 @@ const actions = {
     }
   },
 
-  // check if x item is in database
+  // check if item x is in database
   checkProduct({sessionID, context, entities}) {
     const prod = firstEntityValue(entities, 'product');
     return new Promise((res, rej) => {
@@ -61,6 +61,7 @@ const actions = {
             }
             else {
               context.itemNotFound = true;
+              delete context.productInfo;
               return res(context);
             }
           })

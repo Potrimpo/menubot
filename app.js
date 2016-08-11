@@ -11,8 +11,8 @@ const bodyParser = require('body-parser'),
   mongoose = require('mongoose');
 
 const { PORT, Wit, log, WIT_TOKEN, FB_APP_SECRET, FB_VERIFY_TOKEN } = require('./index'),
+  { sessions, findOrCreateSession } = require('./witSessions'),
   actions = require('./actions'),
-  witSessions = require('./witSessions'),
   fbMessage = require('./messenger');
 
 console.log(`/webhook is accepting Verify Token: "${FB_VERIFY_TOKEN}"`);
@@ -72,10 +72,10 @@ app.post('/webhook', (req, res) => {
           // Yay! We got a new message!
           // We retrieve the Facebook user ID of the sender
           const sender = event.sender.id;
-
+          console.log(`sender ID: ${sender}`);
           // We retrieve the user's current session, or create one if it doesn't exist
           // This is needed for our bot to figure out the conversation history
-          const sessionId = witSessions.findOrCreateSession(sender);
+          const sessionId = findOrCreateSession(sender);
 
           // We retrieve the message content
           const {text, attachments} = event.message;
@@ -93,7 +93,7 @@ app.post('/webhook', (req, res) => {
             wit.runActions(
               sessionId, // the user's current session
               text, // the user's message
-              witSessions.sessions[sessionId].context // the user's current session state
+              sessions[sessionId].context // the user's current session state
             ).then((context) => {
               // Our bot did everything it has to do.
               // Now it's waiting for further messages to proceed.
@@ -103,11 +103,11 @@ app.post('/webhook', (req, res) => {
               // This depends heavily on the business logic of your bot.
               // Example:
               // if (context['done']) {
-              //   delete witSessions.sessions[sessionId];
+              //   delete sessions[sessionId];
               // }
 
               // Updating the user's current session state
-              witSessions.sessions[sessionId].context = context;
+              sessions[sessionId].context = context;
             })
             .catch((err) => {
               console.error('Oops! Got an error from Wit: ', err.stack || err);

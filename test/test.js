@@ -2,7 +2,7 @@ const actions = require('../actions'),
   expect = require('chai').expect,
   mongoose = require('mongoose');
 
-// DON'T PUT CATCH STATEMENTS IN PROMISES. WHEN AN ASSERTION FAILS IT ERRORS
+// DON'T PUT CATCH STATEMENTS IN MOCHA-INVOLVED PROMISES. WHEN AN ASSERTION FAILS IT ERRORS
 // CATCH STATEMENTS WILL STOP MOCHA FROM PICKING UP ON THE FAILURE
 
 describe('testing bot actions with database (mocked query values)', function() {
@@ -17,14 +17,14 @@ describe('testing bot actions with database (mocked query values)', function() {
   });
 
   it("checks for products using item it DOESN'T have", function() {
-    const testValue = { product:
+    const mocQuery = { product:
       [ { confidence: 'x value',
         type: 'value',
         value: 'chocolate',
         suggested: true } ]
     };
 
-    return actions.checkProduct({ context: {}, entities: testValue })
+    return actions.checkProduct({ context: {}, entities: mocQuery })
       .then(function (data) {
         console.log(data);
         expect(data).to.not.haveOwnProperty('productInfo');
@@ -33,14 +33,14 @@ describe('testing bot actions with database (mocked query values)', function() {
   });
 
   it('checks for products using item it DOES have', function () {
-    const testValueTrue = { product:
+    const mockQueryTrue = { product:
       [ { confidence: 'x value',
         type: 'value',
         value: 'coffee',
         suggested: true } ]
     };
 
-    return actions.checkProduct({ context: {}, entities: testValueTrue })
+    return actions.checkProduct({ context: {}, entities: mockQueryTrue })
       .then(function (data) {
         console.log(data);
         expect(data).to.not.haveOwnProperty('itemNotFound');
