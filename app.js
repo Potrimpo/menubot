@@ -1,43 +1,34 @@
 'use strict';
 
-// Messenger API integration example
-// We assume you have:
-// * a Wit.ai bot setup (https://wit.ai/docs/quickstart)
-// * a Messenger Platform setup (https://developers.facebook.com/docs/messenger-platform/quickstart)
-// You need to `npm install` the following dependencies: body-parser, express, request.
-//
-// 1. npm install body-parser express request
-// 2. Download and install ngrok from https://ngrok.com/download
-// 3. ./ngrok http 8445
 // 4. WIT_TOKEN=your_access_token FB_APP_SECRET=your_app_secret
 // FB_PAGE_TOKEN=your_page_token node examples/app.js
 // 5. Subscribe your page to the Webhooks using verify_token and `https://<your_ngrok_io>/webhook` as callback URL.
-// 6. Talk to your bot on Messenger!
 
-const bodyParser = require('body-parser');
-const express = require('express');
-const request = require('request');
-const crypto = require('crypto');
+const bodyParser = require('body-parser'),
+  express = require('express'),
+  request = require('request'),
+  crypto = require('crypto'),
+  mongoose = require('mongoose');
 
-const { Wit, log, WIT_TOKEN, FB_APP_SECRET } = require('./index');
-const actions = require('./actions');
-const witSessions = require('./witSessions');
-const fbMessage = require('./messenger');
+const { PORT, Wit, log, WIT_TOKEN, FB_APP_SECRET, FB_VERIFY_TOKEN } = require('./index'),
+  actions = require('./actions'),
+  witSessions = require('./witSessions'),
+  fbMessage = require('./messenger');
 
-
-// Webserver parameter
-const PORT = process.env.PORT || 8445;
-
-
-const FB_VERIFY_TOKEN = 'legitVerify';
-console.log(`/webhook will accept the Verify Token "${FB_VERIFY_TOKEN}"`);
-
+console.log(`/webhook is accepting Verify Token: "${FB_VERIFY_TOKEN}"`);
 
 // Setting up our bot
 const wit = new Wit({
   accessToken: WIT_TOKEN,
   actions,
   logger: new log.Logger(log.INFO)
+});
+
+// Setting up mongodb server
+mongoose.connect(`mongodb://localhost/menubot`);
+mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
+mongoose.connection.once('open', function() {
+  console.log('mongodb connected');
 });
 
 // Starting our webserver and putting it all together
@@ -56,7 +47,7 @@ app.get('/', function(req, res) {
 });
 
 
-// Webhook setup
+// Webhook setup (facebook pings this with heartbeat)
 app.get('/webhook', (req, res) => {
   if (req.query['hub.mode'] === 'subscribe' &&
     req.query['hub.verify_token'] === FB_VERIFY_TOKEN) {

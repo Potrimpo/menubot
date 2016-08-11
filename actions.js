@@ -1,5 +1,9 @@
-const witSessions = require('./witSessions');
-const fbMessage = require('./messenger');
+const witSessions = require('./witSessions'),
+  fbMessage = require('./messenger'),
+  mongoose = require('mongoose'),
+  ProductList = require('./db');
+
+mongoose.Promise = global.Promise;
 
 const firstEntityValue = (entities, entity) => {
   const val = entities && entities[entity] &&
@@ -16,7 +20,7 @@ const firstEntityValue = (entities, entity) => {
 // Our bot actions
 const actions = {
   send({sessionId}, {text}) {
-    console.log(`replying to message with: ${text}`);
+    console.log(`replying >> ${text}`);
     // Our bot has something to say!
     // Let's retrieve the Facebook user whose session belongs to
     const recipientId = witSessions.sessions[sessionId].fbid;
@@ -42,24 +46,29 @@ const actions = {
     }
   },
 
+  // check if x item is in database
   checkProduct({sessionID, context, entities}) {
-    // Retrieve the loc entity and store it into a context field
     const prod = firstEntityValue(entities, 'product');
     return new Promise((res, rej) => {
       if(prod) {
         console.log(`product is ${prod}`);
-        if (prod == 'coffee') {
-          context.productInfo = prod;
-          delete context.itemNotFound;
-        }
-        else {
-          context.itemNotFound = true;
-          delete context.productInfo;
-        }
+        return ProductList.findOne({ name: prod})
+          .then(data => {
+            if (data) {
+              context.productInfo = prod;
+              delete context.itemNotFound;
+              return res(context);
+            }
+            else {
+              context.itemNotFound = true;
+              return res(context);
+            }
+          })
+          .catch(err => {
+            console.error(err);
+            rej(err);
+          });
       }
-      console.log('context:');
-      console.log(context);
-      return res(context);
     });
   }
 };
