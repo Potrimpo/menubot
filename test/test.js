@@ -1,4 +1,4 @@
-const actions = require('../actions'),
+const { actions } = require('../actions'),
   expect = require('chai').expect,
   mongoose = require('mongoose');
 

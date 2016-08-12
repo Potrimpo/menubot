@@ -12,7 +12,7 @@ const bodyParser = require('body-parser'),
 
 const { PORT, Wit, log, WIT_TOKEN, FB_APP_SECRET, FB_VERIFY_TOKEN } = require('./index'),
   { sessions, findOrCreateSession } = require('./witSessions'),
-  actions = require('./actions'),
+  { actions } = require('./actions'),
   fbMessage = require('./messenger');
 
 console.log(`/webhook is accepting Verify Token: "${FB_VERIFY_TOKEN}"`);
