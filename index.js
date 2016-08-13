@@ -2,7 +2,8 @@ module.exports = {
   log: require('./lib/log.js'),
   Wit: require('./lib/wit.js').Wit,
   PORT: 8445,
-  tunnelURL: 'https://df9d753c.ngrok.io',
+  // tunnel url without slash at end ~.com // ~.com/
+  tunnelURL: 'https://863444f2.ngrok.io', // use https
   WIT_TOKEN: 'U2XQR7JKYCAN44AECAEOTA5I2DIASK23',
 
   // APP = SAVEME
