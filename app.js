@@ -12,7 +12,7 @@ const bodyParser = require('body-parser'),
 
 const { PORT, Wit, log, WIT_TOKEN, FB_APP_SECRET, FB_VERIFY_TOKEN } = require('./index'),
   { sessions, findOrCreateSession } = require('./witSessions'),
-  { actions } = require('./actions'),
+  actions = require('./actions'),
   fbMessage = require('./messenger');
 
 console.log(`/webhook is accepting Verify Token: "${FB_VERIFY_TOKEN}"`);
@@ -138,6 +138,8 @@ function verifyRequestSignature(req, res, buf) {
     // error.
     console.error("Couldn't validate the signature.");
   } else {
+    console.log(signature);
+    console.log('^^ signature ^^');
     var elements = signature.split('=');
     var method = elements[0];
     var signatureHash = elements[1];
@@ -147,6 +149,8 @@ function verifyRequestSignature(req, res, buf) {
                         .digest('hex');
 
     if (signatureHash != expectedHash) {
+      console.log(`signatureHash: ${signatureHash}`);
+      console.log(`expectedHash: ${expectedHash}`);
       throw new Error("Couldn't validate the request signature.");
     }
   }
@@ -154,3 +158,5 @@ function verifyRequestSignature(req, res, buf) {
 
 app.listen(PORT);
 console.log('Listening on :' + PORT + '...');
+
+module.exports = app;

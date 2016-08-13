@@ -1,4 +1,4 @@
-const witSessions = require('./witSessions'),
+const { sessions } = require('./witSessions'),
   fbMessage = require('./messenger'),
   mongoose = require('mongoose'),
   ProductList = require('./db');
@@ -19,13 +19,11 @@ const firstEntityValue = (entities, entity) => {
 
 // Our bot actions
 const actions = {
-  send({sessionId}, {text, quickreplies}) {
+  send({sessionId}, {text}) {
     console.log(`replying >> ${text}`);
-    console.log(quickreplies);
-    console.log('quickreplies ^^');
     // Our bot has something to say!
     // Let's retrieve the Facebook user whose session belongs to
-    const recipientId = witSessions.sessions[sessionId].fbid;
+    const recipientId = sessions[sessionId].fbid;
     if (recipientId) {
       // Yay, we found our recipient!
       // Let's forward our bot response to her.
@@ -53,7 +51,6 @@ const actions = {
     const prod = firstEntityValue(entities, 'product');
     return new Promise((res, rej) => {
       if(prod) {
-        console.log(`product is ${prod}`);
         return ProductList.findOne({ name: prod})
           .then(data => {
             if (data) {
@@ -76,10 +73,4 @@ const actions = {
   }
 };
 
-const mapQuickReplies = (quickreplies, contentType = 'text', payload = 'empty') => {
-  return quickreplies.map(x => {
-    return { 'title': x, 'content_type': contentType, 'payload': payload }
-  });
-};
-
-module.exports = { actions, mapQuickReplies };
+module.exports = actions;
