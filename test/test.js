@@ -13,16 +13,6 @@ chai.use(chaiHttp);
 // CATCH STATEMENTS WILL STOP MOCHA FROM PICKING UP ON THE FAILURE
 
 describe('integration & use case tests', function() {
-  // before(function (done) {
-  //   // Setting up server
-  //   mongoose.connect(`mongodb://localhost/menubot`);
-  //   mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
-  //   mongoose.connection.once('open', function() {
-  //     console.log('mongodb connected');
-  //     done();
-  //   });
-  // });
-
   describe('testing whole system', function () {
     it('pinging base path (/)', function () {
       chai.request(tunnelURL)
@@ -71,6 +61,16 @@ describe('integration & use case tests', function() {
   });
 
   describe('testing bot actions with database', function() {
+    before(function (done) {
+      // Setting up server
+      mongoose.connect(`mongodb://localhost/menubot`);
+      mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
+      mongoose.connection.once('open', function() {
+        console.log('mongodb connected');
+        done();
+      });
+    });
+
     it("checks for products using item it DOESN'T have", function() {
       const mockQuery = { product:
         [ { type: 'value',
