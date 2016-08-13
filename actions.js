@@ -1,4 +1,4 @@
-const witSessions = require('./witSessions'),
+const { sessions } = require('./witSessions'),
   fbMessage = require('./messenger'),
   mongoose = require('mongoose'),
   ProductList = require('./db');
@@ -23,7 +23,7 @@ const actions = {
     console.log(`replying >> ${text}`);
     // Our bot has something to say!
     // Let's retrieve the Facebook user whose session belongs to
-    const recipientId = witSessions.sessions[sessionId].fbid;
+    const recipientId = sessions[sessionId].fbid;
     if (recipientId) {
       // Yay, we found our recipient!
       // Let's forward our bot response to her.
