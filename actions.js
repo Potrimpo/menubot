@@ -51,7 +51,6 @@ const actions = {
     const prod = firstEntityValue(entities, 'product');
     return new Promise((res, rej) => {
       if(prod) {
-        console.log(`product is ${prod}`);
         return ProductList.findOne({ name: prod})
           .then(data => {
             if (data) {
