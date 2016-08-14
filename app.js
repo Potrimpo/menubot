@@ -138,8 +138,7 @@ function verifyRequestSignature(req, res, buf) {
     // error.
     console.error("Couldn't validate the signature.");
   } else {
-    console.log(signature);
-    console.log('^^ signature ^^');
+    console.log(`signature: ${signature}`);
     var elements = signature.split('=');
     var method = elements[0];
     var signatureHash = elements[1];
