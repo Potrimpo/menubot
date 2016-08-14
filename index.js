@@ -2,7 +2,8 @@ module.exports = {
   log: require('./lib/log.js'),
   Wit: require('./lib/wit.js').Wit,
   PORT: 8445,
-  tunnelURL: 'https://df9d753c.ngrok.io',
+  // remember to change webhook url @ developers.facebook.com/apps/{app-id}/webhooks/
+  tunnelURL: 'https://b300e356.ngrok.io', // use https && no slash at end (~.com vs ~.com/)
   WIT_TOKEN: 'U2XQR7JKYCAN44AECAEOTA5I2DIASK23',
 
   // APP = SAVEME

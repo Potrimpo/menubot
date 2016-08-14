@@ -47,7 +47,7 @@ const actions = {
   },
 
   // check if item x is in database
-  checkProduct({sessionID, context, entities}) {
+  checkProduct({context, entities}) {
     const prod = firstEntityValue(entities, 'product');
     return new Promise((res, rej) => {
       if(prod) {
