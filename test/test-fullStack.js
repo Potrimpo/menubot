@@ -1,21 +1,37 @@
 const chai = require('chai'),
   chaiHttp = require('chai-http'),
   crypto = require('crypto'),
+  fs = require('fs'),
   { FB_APP_SECRET, tunnelURL } = require('../index');
 
 const expect = chai.expect;
 chai.use(chaiHttp);
 
-describe('integration & use case tests', function() {
+describe('checking url response', function() {
   it('pinging base path (/)', function () {
-    chai.request(tunnelURL)
+    return chai.request(tunnelURL)
       .get('/')
       .then(function (res) {
-        console.log(res);
+        console.log(`res.text = ${res.text}`);
         expect(res).to.have.status(200);
+        expect(res).to.have.property('text', 'menubot reporting for duty');
       });
   });
 
+  it('pinging nonexistent path', function () {
+    return chai.request(tunnelURL)
+      .get('/who-up')
+      .then(function (res) {
+        return expect(res).to.be.null;
+      })
+      .catch(function (err) {
+        return expect(err).to.have.status(404);
+      })
+  });
+});
+
+// NOT WORKING
+describe('mock messaging bot from test user', function() {
   it('messaging bot (POST /webhook)', function () {
     const dummyRequest = {
       object: 'page',
@@ -47,9 +63,15 @@ describe('integration & use case tests', function() {
       .send(dummyRequest)
       .then(function (res) {
         console.log(' --- MUCHO SUCCESSO ---');
-        console.log(res.body);
-        console.log(`res.body ^^`);
+        expect(res).to.be.an('object');
         expect(res).to.have.status(200);
       })
   })
 });
+
+function writeObject(obj) {
+  let wstream = fs.createWriteStream('test/output.json');
+  wstream.write(JSON.stringify(obj));
+  wstream.on('finish', () => console.log('file is readable in output.json'));
+  return wstream.end();
+}
