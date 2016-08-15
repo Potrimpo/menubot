@@ -2,10 +2,10 @@ const chai = require('chai'),
   chaiHttp = require('chai-http'),
     crypto = require('crypto'),
         fs = require('fs'),
-  { FB_APP_SECRET, tunnelURL } = require('../index');
+  { FB_APP_SECRET, tunnelURL } = require('../index'),
+  { requestMessageFactory } = require('./functionsForTests');
 
-const senderID = '1383034061711690',
-        expect = chai.expect;
+const expect = chai.expect;
 
 chai.use(chaiHttp);
 
@@ -34,29 +34,9 @@ describe('checking url response', function() {
 
 describe('sending dummy messages to bot (POST /webhook)', function () {
   let dummyRequest;
-  function requestFactory (text) {
-    return {
-      object: 'page',
-      entry: [
-        { id: '1766837970261548',
-          messaging: [
-            {
-              sender: { id: senderID },
-              recipient: { id: '1766837970261548' },
-              message: {
-                mid: 'mid.1471051769294:ccd122d066ed3d7c18',
-                seq: 50,
-                text
-              }
-            }
-          ]
-        }
-      ]
-    };
-  }
 
   it('should respond positive', function () {
-    dummyRequest = requestFactory('do you have coffee?');
+    dummyRequest = requestMessageFactory('do you have coffee?');
 
     const myGenHash = crypto.createHmac('sha1', FB_APP_SECRET)
       .update(Buffer.from(JSON.stringify(dummyRequest)))
@@ -74,7 +54,7 @@ describe('sending dummy messages to bot (POST /webhook)', function () {
   });
 
   it('should respond negative', function () {
-    dummyRequest = requestFactory('you got tea?');
+    dummyRequest = requestMessageFactory('you got tea?');
 
     const myGenHash = crypto.createHmac('sha1', FB_APP_SECRET)
       .update(Buffer.from(JSON.stringify(dummyRequest)))
@@ -92,10 +72,3 @@ describe('sending dummy messages to bot (POST /webhook)', function () {
   });
 });
 
-
-function writeObject(obj) {
-  let wstream = fs.createWriteStream('test/output.json');
-  wstream.write(JSON.stringify(obj));
-  wstream.on('finish', () => console.log('file is readable in output.json'));
-  return wstream.end();
-}
