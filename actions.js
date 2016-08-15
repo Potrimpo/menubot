@@ -19,8 +19,10 @@ const firstEntityValue = (entities, entity) => {
 
 // Our bot actions
 const actions = {
-  send({sessionId}, {text}) {
+  send({sessionId}, {text, quickreplies}) {
     console.log(`replying >> ${text}`);
+    console.log(`quickreplies >> ${quickreplies}`);
+    // response.quickreplies.map(x => {"title": x, "content_type": "text", "payload": "empty"});
     // Our bot has something to say!
     // Let's retrieve the Facebook user whose session belongs to
     const recipientId = sessions[sessionId].fbid;
