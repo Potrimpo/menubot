@@ -11,19 +11,18 @@ describe('testing bot actions with database', function() {
     // Setting up server
     mongoose.connect(`mongodb://localhost/menubot`);
     mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
-    mongoose.connection.once('open', function() {
-      console.log('mongodb connected');
-      done();
-    });
+    mongoose.connection.once('open', function() { done() });
   });
 
-  it("checks for products using item it DOESN'T have", function() {
-    const mockQuery = { product:
-      [ { type: 'value',
-        value: 'chocolate',
-        suggested: true } ]
+  let mockQuery;
+  function queryFactory (value) {
+    return {
+      product: [ { value, type: 'value', suggested: true } ]
     };
+  }
 
+  it("checks for products using item it DOESN'T have", function() {
+    mockQuery = queryFactory('chocolate');
     return actions.checkProduct({ context: {}, entities: mockQuery })
       .then(function (data) {
         expect(data).to.not.haveOwnProperty('productInfo');
@@ -32,13 +31,8 @@ describe('testing bot actions with database', function() {
   });
 
   it('checks for products using item it DOES have', function () {
-    const mockQueryTrue = { product:
-      [ { type: 'value',
-        value: 'coffee',
-        suggested: true } ]
-    };
-
-    return actions.checkProduct({ context: {}, entities: mockQueryTrue })
+    mockQuery = queryFactory('coffee');
+    return actions.checkProduct({ context: {}, entities: mockQuery })
       .then(function (data) {
         expect(data).to.not.haveOwnProperty('itemNotFound');
         expect(data).to.have.property('productInfo', 'coffee');
