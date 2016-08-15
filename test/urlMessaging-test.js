@@ -9,6 +9,7 @@ const senderID = '1383034061711690',
 
 chai.use(chaiHttp);
 
+// REMEMBER TO CHANGE TUNNELURL ON BOOTUP
 describe('checking url response', function() {
   it('pinging base path (/)', function () {
     return chai.request(tunnelURL)
