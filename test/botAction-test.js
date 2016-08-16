@@ -17,7 +17,7 @@ describe('testing bot actions with database', function() {
 
   let mockQuery;
   it("checks for products using item it DOESN'T have", function() {
-    mockQuery = dbQueryFactory('chocolate');
+    mockQuery = dbQueryFactory('rocks');
     return actions.checkProduct({ context: {}, entities: mockQuery })
       .then(function (data) {
         expect(data).to.not.haveOwnProperty('productInfo');
@@ -26,11 +26,11 @@ describe('testing bot actions with database', function() {
   });
 
   it('checks for products using item it DOES have', function () {
-    mockQuery = dbQueryFactory('coffee');
+    mockQuery = dbQueryFactory('tea');
     return actions.checkProduct({ context: {}, entities: mockQuery })
       .then(function (data) {
         expect(data).to.not.haveOwnProperty('itemNotFound');
-        expect(data).to.have.property('productInfo', 'coffee');
+        expect(data).to.have.property('productInfo', 'tea');
       })
   })
 });

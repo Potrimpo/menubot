@@ -41,7 +41,7 @@ describe('sending dummy messages to bot (POST /webhook)', function () {
    });
 
   it('should respond positive', function () {
-    dummyRequest = requestMessageFactory('do you have coffee?');
+    dummyRequest = requestMessageFactory('do you have tea?');
 
     const myGenHash = crypto.createHmac('sha1', FB_APP_SECRET)
       .update(Buffer.from(JSON.stringify(dummyRequest)))
@@ -59,7 +59,7 @@ describe('sending dummy messages to bot (POST /webhook)', function () {
   });
 
   it('should respond negative', function () {
-    dummyRequest = requestMessageFactory('you got tea?');
+    dummyRequest = requestMessageFactory('you got coffee?');
 
     const myGenHash = crypto.createHmac('sha1', FB_APP_SECRET)
       .update(Buffer.from(JSON.stringify(dummyRequest)))
