@@ -1,5 +1,5 @@
 const fetch = require('node-fetch'),
-  { FB_PAGE_TOKEN } = require('./index');
+  { FB_PAGE_TOKEN } = require('./envVariables');
 
 // ----------------------------------------------------------------------------
 // Messenger API specific code

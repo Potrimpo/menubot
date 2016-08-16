@@ -2,7 +2,7 @@ const chai = require('chai'),
   chaiHttp = require('chai-http'),
     crypto = require('crypto'),
         fs = require('fs'),
-  { FB_APP_SECRET, tunnelURL } = require('../index'),
+  { FB_APP_SECRET, tunnelURL } = require('../envVariables'),
   { requestMessageFactory } = require('./functionsForTests');
 
 const expect = chai.expect;

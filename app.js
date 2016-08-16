@@ -6,7 +6,8 @@ const bodyParser = require('body-parser'),
   crypto = require('crypto'),
   mongoose = require('mongoose');
 
-const { PORT, Wit, log, WIT_TOKEN, FB_APP_SECRET, FB_VERIFY_TOKEN } = require('./index'),
+const { Wit, log } = require('./index'),
+  { PORT, WIT_TOKEN, FB_APP_SECRET, FB_VERIFY_TOKEN } = require('./envVariables'),
   { sessions, findOrCreateSession } = require('./witSessions'),
   actions = require('./actions'),
   fbMessage = require('./messenger');
