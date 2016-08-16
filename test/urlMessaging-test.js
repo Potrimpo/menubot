@@ -2,7 +2,7 @@ const chai = require('chai'),
   chaiHttp = require('chai-http'),
     crypto = require('crypto'),
         fs = require('fs'),
-  { FB_APP_SECRET, tunnelURL } = require('../index'),
+  { FB_APP_SECRET, tunnelURL } = require('../envVariables'),
   { requestMessageFactory } = require('./functionsForTests');
 
 const expect = chai.expect;
@@ -34,6 +34,11 @@ describe('checking url response', function() {
 
 describe('sending dummy messages to bot (POST /webhook)', function () {
   let dummyRequest;
+  this.timeout(4000);
+
+   afterEach(function (done) {
+     setTimeout(done, 2000);
+   });
 
   it('should respond positive', function () {
     dummyRequest = requestMessageFactory('do you have coffee?');
