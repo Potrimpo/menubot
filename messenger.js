@@ -1,15 +1,15 @@
-const fetch = require('node-fetch');
-const FB_PAGE_TOKEN = require('./index').FB_PAGE_TOKEN;
+const fetch = require('node-fetch'),
+  { FB_PAGE_TOKEN } = require('./index');
 
 // ----------------------------------------------------------------------------
 // Messenger API specific code
 // See the Send API reference
 // https://developers.facebook.com/docs/messenger-platform/send-api-reference
 
-const fbMessage = (id, text) => {
+const fbMessage = (id, text, quick_replies) => {
   const body = JSON.stringify({
     recipient: { id },
-    message: { text },
+    message: { text, quick_replies },
   });
   console.log(body);
 

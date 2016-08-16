@@ -1,9 +1,5 @@
 'use strict';
 
-// 4. WIT_TOKEN=your_access_token FB_APP_SECRET=your_app_secret
-// FB_PAGE_TOKEN=your_page_token node examples/app.js
-// 5. Subscribe your page to the Webhooks using verify_token and `https://<your_ngrok_io>/webhook` as callback URL.
-
 const bodyParser = require('body-parser'),
   express = require('express'),
   request = require('request'),
