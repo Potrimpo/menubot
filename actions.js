@@ -21,7 +21,6 @@ const firstEntityValue = (entities, entity) => {
 const actions = {
   send({sessionId}, {text, quickreplies}) {
     console.log(`replying >> ${text}`);
-    console.log(`quickreplies >> ${quickreplies}`);
     let quick_replies;
     if (quickreplies) {
       quick_replies = quickreplies.map(x => {
