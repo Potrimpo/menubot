@@ -65,8 +65,6 @@ app.post('/webhook', (req, res) => {
   if (data.object === 'page') {
     data.entry.forEach(entry => {
       entry.messaging.forEach(event => {
-        console.log('catchall!');
-        console.log(event);
         if (event.message) {
           // Yay! We got a new message!
           // We retrieve the Facebook user ID of the sender

@@ -62,21 +62,17 @@ const actions = {
             if (data) {
               context.productInfo = prod;
               delete context.itemNotFound;
-              console.log('CONTEXT, POSITIVE DATA MATCH:');
-              console.log(context);
               return res(context);
             }
             else {
               context.itemNotFound = true;
               delete context.productInfo;
-              console.log('CONTEXT, NO DATA RETURNED:');
-              console.log(context);
               return res(context);
             }
           })
           .catch(err => {
             console.error(err);
-            rej(err);
+            return rej(err);
           });
       }
     });
