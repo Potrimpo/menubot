@@ -57,16 +57,20 @@ const actions = {
     const prod = firstEntityValue(entities, 'product');
     return new Promise((res, rej) => {
       if(prod) {
-        return Company.findOne({ 'menu.name': prod })
+        return Company.findProduct('Menubot-tester', prod)
           .then(data => {
             if (data) {
               context.productInfo = prod;
               delete context.itemNotFound;
+              console.log('CONTEXT, POSITIVE DATA MATCH:');
+              console.log(context);
               return res(context);
             }
             else {
               context.itemNotFound = true;
               delete context.productInfo;
+              console.log('CONTEXT, NO DATA RETURNED:');
+              console.log(context);
               return res(context);
             }
           })

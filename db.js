@@ -5,23 +5,22 @@ const mongoose = require('mongoose'),
 mongoose.Promise = global.Promise;
 
 
-const productSubDoc = mongoose.Schema({
-  name: String,
+const productSubDocSchem = mongoose.Schema({
+  productName: String,
   price: Number,
   image: Schema.Types.Mixed,
 });
 
-const companyColl = mongoose.Schema({
+const companySchem = mongoose.Schema({
   name: String,
   location: String,
-  menu: [productSubDoc],
+  menu: [productSubDocSchem],
   requests: Schema.Types.ObjectId,
   orders: Schema.Types.ObjectId,
 });
 
-const requestsColl = mongoose.Schema({
+const requestsSchem = mongoose.Schema({
   company: Schema.Types.ObjectId,
-  testWord: String,
   requests: [
     {
       productName: String,
@@ -31,7 +30,7 @@ const requestsColl = mongoose.Schema({
   ]
 });
 
-const ordersColl = mongoose.Schema({
+const ordersSchem = mongoose.Schema({
   company: Schema.Types.ObjectId,
   orders: [
     {
@@ -43,10 +42,13 @@ const ordersColl = mongoose.Schema({
   ]
 });
 
-const Company = mongoose.model('Company', companyColl),
-  Request = mongoose.model('Request', requestsColl),
-  Order = mongoose.model('Order', ordersColl);
+companySchem.statics.findProduct = function (name, prodName) {
+  return this.findOne({ name, 'menu.productName': prodName }, 'menu.productName');
+};
 
+const Company = mongoose.model('Company', companySchem),
+  Request = mongoose.model('Request', requestsSchem),
+  Order = mongoose.model('Order', ordersSchem);
 
 module.exports = {
   Company,
@@ -66,7 +68,7 @@ module.exports = {
 //   name: "Menubot-tester",
 //   location: "middle of nowhere",
 //   menu: [
-//     { name: 'tea', price: 5 }
+//     { productName: 'tea', price: 5 }
 //   ],
 //   requests: mongoose.Types.ObjectId(),
 //   orders: mongoose.Types.ObjectId(),
@@ -88,7 +90,7 @@ module.exports = {
 // testCompany.save()
 //   .then(data => {
 //     console.log(`success saving ${data.name}`);
-//     console.log(`${data.menu[0].name} is on the menu`);
+//     console.log(`${data.menu[0].productName} is on the menu`);
 //     return Company.findOne({ "name": data.name})
 //   })
 //   .then(data => {
@@ -107,3 +109,5 @@ module.exports = {
 //     console.log(`success saving requestlist on company: ${data.company}`);
 //   })
 //   .catch(err => console.error(err));
+
+// Company.findProduct('Menubot-tester', 'tea');
