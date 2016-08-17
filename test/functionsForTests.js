@@ -1,6 +1,4 @@
-const senderID = '1383034061711690';
-
-function writeObject(obj) {
+function writeObjectToFile (obj) {
   let wstream = fs.createWriteStream('test/output.json');
   wstream.write(JSON.stringify(obj));
   wstream.on('finish', () => console.log('file is readable in output.json'));
@@ -31,7 +29,7 @@ function requestMessageFactory (text) {
 }
 
 module.exports = {
-  writeObject,
+  writeObjectToFile,
   requestMessageFactory,
   dbQueryFactory
 };
