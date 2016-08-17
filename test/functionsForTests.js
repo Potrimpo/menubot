@@ -1,3 +1,5 @@
+const { senderID } = require('../envVariables');
+
 function writeObjectToFile (obj) {
   let wstream = fs.createWriteStream('test/output.json');
   wstream.write(JSON.stringify(obj));

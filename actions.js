@@ -83,4 +83,19 @@ const actions = {
   }
 };
 
-module.exports = actions;
+function persistentMenu (payload) {
+  let response = {};
+  return new Promise(function (res, rej) {
+    switch (payload) {
+      case 'MENU':
+        response.text = 'working on getting the menu';
+        break;
+    }
+    return res(response);
+  })
+}
+
+module.exports = {
+  actions,
+  persistentMenu
+};
