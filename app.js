@@ -112,7 +112,7 @@ app.post('/webhook', (req, res) => {
           }
         } else if(event.postback) {
           const sessionId = findOrCreateSession(event.sender.id);
-          persistentMenu(event.postback.payload, sessions[sessionId].context)
+          persistentMenu(event.postback.payload)
             .then(response => {
               actions.send({sessionId}, response)
             })

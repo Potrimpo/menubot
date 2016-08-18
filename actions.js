@@ -78,19 +78,20 @@ const actions = {
     });
   },
 
-  bizLocation (context) {
-    return Company.findLocation('Menubot-tester')
+  bizLocation (bizName) {
+    return Company.findLocation(bizName)
       .then(data => {
         if (data) {
-          context.location = data.location;
-          return context;
+          return data.location;
         }
         else { return new Error("couldn't find company to get location of") }
       });
   }
 };
 
-function persistentMenu (payload, context) {
+function persistentMenu (payload) {
+  // bizName needs to be generated programatically
+  const bizName = 'Menubot-tester';
   let response = {};
   return new Promise(function (res, rej) {
     switch (payload) {
@@ -98,13 +99,13 @@ function persistentMenu (payload, context) {
         response.text = 'working on getting the menu';
         break;
       case 'LOCATION':
-        return actions.bizLocation(context)
+        return actions.bizLocation(bizName)
           .then(data => {
-            response.text = data.location;
+            response.text = data;
             return res(response);
           });
       default:
-        return rej(new Error("coudn't deal with this persistent-menu input"));
+        return rej(new Error("couldn't deal with this persistent-menu input"));
     }
     return res(response);
   })
