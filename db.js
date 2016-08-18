@@ -46,6 +46,10 @@ companySchem.statics.findProduct = function (name, prodName) {
   return this.findOne({ name, 'menu.productName': prodName }, 'menu.productName');
 };
 
+companySchem.statics.findLocation = function (name) {
+  return this.findOne({ name }, 'location');
+};
+
 const Company = mongoose.model('Company', companySchem),
   Request = mongoose.model('Request', requestsSchem),
   Order = mongoose.model('Order', ordersSchem);

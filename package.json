@@ -14,6 +14,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node app.js",
+    "prod": "NODE_ENV=production node app.js",
     "test": "mocha"
   },
   "repository": "https://github.com/Potrimpo/wit-ai-messenger-bot.git",

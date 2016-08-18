@@ -76,16 +76,35 @@ const actions = {
           });
       }
     });
+  },
+
+  bizLocation (context) {
+    return Company.findLocation('Menubot-tester')
+      .then(data => {
+        if (data) {
+          context.location = data.location;
+          return context;
+        }
+        else { return new Error("couldn't find company to get location of") }
+      });
   }
 };
 
-function persistentMenu (payload) {
+function persistentMenu (payload, context) {
   let response = {};
   return new Promise(function (res, rej) {
     switch (payload) {
       case 'MENU':
         response.text = 'working on getting the menu';
         break;
+      case 'LOCATION':
+        return actions.bizLocation(context)
+          .then(data => {
+            response.text = data.location;
+            return res(response);
+          });
+      default:
+        return rej(new Error("coudn't deal with this persistent-menu input"));
     }
     return res(response);
   })
