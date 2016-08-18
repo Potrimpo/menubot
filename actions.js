@@ -89,7 +89,7 @@ const actions = {
   }
 };
 
-function persistentMenu (payload) {
+function persistentMenu (payload, botID) {
   // bizName needs to be generated programatically
   const bizName = 'Menubot-tester';
   let response = {};
@@ -99,7 +99,7 @@ function persistentMenu (payload) {
         response.text = 'working on getting the menu';
         break;
       case 'LOCATION':
-        return actions.bizLocation(bizName)
+        return actions.bizLocation(botID)
           .then(data => {
             response.text = data;
             return res(response);
@@ -107,8 +107,7 @@ function persistentMenu (payload) {
       default:
         return rej(new Error("couldn't deal with this persistent-menu input"));
     }
-    return res(response);
-  })
+  });
 }
 
 module.exports = {

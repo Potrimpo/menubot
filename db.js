@@ -12,6 +12,7 @@ const productSubDocSchem = mongoose.Schema({
 });
 
 const companySchem = mongoose.Schema({
+  fbID: String,
   name: String,
   location: String,
   menu: [productSubDocSchem],
@@ -46,8 +47,12 @@ companySchem.statics.findProduct = function (name, prodName) {
   return this.findOne({ name, 'menu.productName': prodName }, 'menu.productName');
 };
 
-companySchem.statics.findLocation = function (name) {
-  return this.findOne({ name }, 'location');
+companySchem.statics.findLocation = function (fbID) {
+  return this.findOne({ fbID }, 'location');
+};
+
+companySchem.statics.getMenu = function (name) {
+  return this.findOne({ name }, 'menu');
 };
 
 const Company = mongoose.model('Company', companySchem),
