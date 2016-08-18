@@ -86,18 +86,30 @@ const actions = {
         }
         else { return new Error("couldn't find company to get location of") }
       });
+  },
+
+  bizMenu (botID) {
+   return Company.getMenu(botID)
+     .then(data => {
+       if (data) {
+         console.log(data);
+         return data.menu;
+       }
+     })
   }
 };
 
 function persistentMenu (payload, botID) {
   // bizName needs to be generated programatically
-  const bizName = 'Menubot-tester';
   let response = {};
   return new Promise(function (res, rej) {
     switch (payload) {
       case 'MENU':
-        response.text = 'working on getting the menu';
-        break;
+        return actions.bizMenu(botID)
+          .then(() => {
+            response.text = 'working on getting the menu';
+            return res(response);
+          });
       case 'LOCATION':
         return actions.bizLocation(botID)
           .then(data => {

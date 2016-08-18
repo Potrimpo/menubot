@@ -51,8 +51,8 @@ companySchem.statics.findLocation = function (fbID) {
   return this.findOne({ fbID }, 'location');
 };
 
-companySchem.statics.getMenu = function (name) {
-  return this.findOne({ name }, 'menu');
+companySchem.statics.getMenu = function (fbID) {
+  return this.findOne({ fbID }, 'menu');
 };
 
 const Company = mongoose.model('Company', companySchem),
