@@ -9,7 +9,7 @@ const bodyParser = require('body-parser'),
 const { Wit, log } = require('./index'),
   { PORT, WIT_TOKEN, FB_APP_SECRET, FB_VERIFY_TOKEN } = require('./envVariables'),
   { sessions, findOrCreateSession } = require('./witSessions'),
-  actions = require('./actions'),
+  { actions, persistentMenu } = require('./actions'),
   fbMessage = require('./messenger');
 
 console.log(`/webhook is accepting Verify Token: "${FB_VERIFY_TOKEN}"`);
@@ -110,6 +110,15 @@ app.post('/webhook', (req, res) => {
               console.error('Oops! Got an error from Wit: ', err.stack || err);
             })
           }
+        } else if(event.postback) {
+          const sessionId = findOrCreateSession(event.sender.id);
+          console.log(`event.sender.id = ${event.sender.id}`);
+          console.log(`event.recipient.id = ${event.recipient.id}`);
+          persistentMenu(event.postback.payload, event.recipient.id)
+            .then(response => {
+              actions.send({sessionId}, response)
+            })
+            .catch(err => console.log(`Error dealing with persistentMenu: ${err}`));
         } else {
           console.log('received event', JSON.stringify(event));
         }

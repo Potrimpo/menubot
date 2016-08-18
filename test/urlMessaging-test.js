@@ -34,10 +34,9 @@ describe('checking url response', function() {
 
 describe('sending dummy messages to bot (POST /webhook)', function () {
   let dummyRequest;
-  this.timeout(4000);
+  this.timeout(6000);
 
-  beforeEach(function (done) { setTimeout(done, 1500) });
-  afterEach(function (done) { setTimeout(done, 1500) });
+  afterEach(function (done) { setTimeout(done, 4000) });
 
   it('should respond positive', function () {
     dummyRequest = requestMessageFactory('do you have tea?');

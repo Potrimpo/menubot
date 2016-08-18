@@ -62,25 +62,67 @@ const actions = {
             if (data) {
               context.productInfo = prod;
               delete context.itemNotFound;
-              console.log('CONTEXT, POSITIVE DATA MATCH:');
-              console.log(context);
               return res(context);
             }
             else {
               context.itemNotFound = true;
               delete context.productInfo;
-              console.log('CONTEXT, NO DATA RETURNED:');
-              console.log(context);
               return res(context);
             }
           })
           .catch(err => {
             console.error(err);
-            rej(err);
+            return rej(err);
           });
       }
     });
+  },
+
+  bizLocation (bizName) {
+    return Company.findLocation(bizName)
+      .then(data => {
+        if (data) {
+          return data.location;
+        }
+        else { return new Error("couldn't find company to get location of") }
+      });
+  },
+
+  bizMenu (botID) {
+   return Company.getMenu(botID)
+     .then(data => {
+       if (data) {
+         console.log(data);
+         return data.menu;
+       }
+     })
   }
 };
 
-module.exports = actions;
+function persistentMenu (payload, botID) {
+  // bizName needs to be generated programatically
+  let response = {};
+  return new Promise(function (res, rej) {
+    switch (payload) {
+      case 'MENU':
+        return actions.bizMenu(botID)
+          .then(() => {
+            response.text = 'working on getting the menu';
+            return res(response);
+          });
+      case 'LOCATION':
+        return actions.bizLocation(botID)
+          .then(data => {
+            response.text = data;
+            return res(response);
+          });
+      default:
+        return rej(new Error("couldn't deal with this persistent-menu input"));
+    }
+  });
+}
+
+module.exports = {
+  actions,
+  persistentMenu
+};
