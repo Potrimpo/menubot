@@ -135,7 +135,8 @@ function parseMenu(menu) {
   };
   template.attachment.payload.elements = menu.map(val => {
     return {
-      title: `${val.productName} : $${val.price}`,
+      title: val.productName.toUpperCase(),
+      subtitle: `$${val.price}`,
       buttons: [ {
         type: 'postback',
         title: 'Order',
