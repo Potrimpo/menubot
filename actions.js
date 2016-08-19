@@ -19,14 +19,15 @@ const firstEntityValue = (entities, entity) => {
 
 // Our bot actions
 const actions = {
-  send({sessionId}, {text, quickreplies}) {
-    console.log(`replying >> ${text}`);
-    let quick_replies;
-    if (quickreplies) {
-      quick_replies = quickreplies.map(x => {
-        return { "title": x, "content_type": "text", "payload": "empty" };
+  send({sessionId}, message) {
+    if (message.text) { console.log(`replying >> ${message.text}`); }
+    if (message.quickreplies) {
+      message.quick_replies = quickreplies.map(x => {
+        return {"title": x, "content_type": "text", "payload": "empty"};
       });
-    } else { quick_replies = undefined; }
+      delete message.quickreplies;
+    }
+
     // Our bot has something to say!
     // Let's retrieve the Facebook user whose session belongs to
     const recipientId = sessions[sessionId].fbid;
@@ -34,7 +35,7 @@ const actions = {
       // Yay, we found our recipient!
       // Let's forward our bot response to her.
       // We return a promise to let our bot know when we're done sending
-      return fbMessage(recipientId, text, quick_replies)
+      return fbMessage(recipientId, message)
         .then(() => null)
         .catch((err) => {
           console.error(
@@ -57,6 +58,7 @@ const actions = {
     const prod = firstEntityValue(entities, 'product');
     return new Promise((res, rej) => {
       if(prod) {
+        // change this to use fbID and find it programmatically. can't be hardcoding this shit
         return Company.findProduct('Menubot-tester', prod)
           .then(data => {
             if (data) {
@@ -78,8 +80,8 @@ const actions = {
     });
   },
 
-  bizLocation (bizName) {
-    return Company.findLocation(bizName)
+  bizLocation (botID) {
+    return Company.findLocation(botID)
       .then(data => {
         if (data) {
           return data.location;
@@ -92,7 +94,6 @@ const actions = {
    return Company.getMenu(botID)
      .then(data => {
        if (data) {
-         console.log(data);
          return data.menu;
        }
      })
@@ -100,14 +101,14 @@ const actions = {
 };
 
 function persistentMenu (payload, botID) {
-  // bizName needs to be generated programatically
   let response = {};
   return new Promise(function (res, rej) {
     switch (payload) {
       case 'MENU':
         return actions.bizMenu(botID)
-          .then(() => {
-            response.text = 'working on getting the menu';
+          .then((menu) => {
+            response = parseMenu(menu);
+            console.log('response from parseMenu', response);
             return res(response);
           });
       case 'LOCATION':
@@ -120,6 +121,30 @@ function persistentMenu (payload, botID) {
         return rej(new Error("couldn't deal with this persistent-menu input"));
     }
   });
+}
+
+function parseMenu(menu) {
+  console.log('Menu in parseMenu', menu);
+  const template = {
+    attachment: {
+      type:"template",
+      payload:{
+        template_type:"generic",
+      }
+    }
+  };
+  template.attachment.payload.elements = menu.map(val => {
+    return {
+      title: val.productName.toUpperCase(),
+      subtitle: `$${val.price}`,
+      buttons: [ {
+        type: 'postback',
+        title: 'Order',
+        payload: 'ORDER'
+      } ]
+    };
+  });
+  return template;
 }
 
 module.exports = {

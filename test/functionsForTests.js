@@ -30,8 +30,26 @@ function requestMessageFactory (text) {
   };
 }
 
+function postBackFactory (payload) {
+  return {
+    object: 'page',
+    entry: [
+      { id: '1766837970261548',
+        messaging: [
+          {
+            sender: { id: senderID },
+            recipient: { id: '1766837970261548' },
+            postback: { payload }
+          }
+        ]
+      }
+    ]
+  };
+}
+
 module.exports = {
   writeObjectToFile,
   requestMessageFactory,
+  postBackFactory,
   dbQueryFactory
 };
