@@ -57,6 +57,7 @@ const actions = {
     const prod = firstEntityValue(entities, 'product');
     return new Promise((res, rej) => {
       if(prod) {
+        // change this to use fbID and find it programmatically. can't be hardcoding this shit
         return Company.findProduct('Menubot-tester', prod)
           .then(data => {
             if (data) {
@@ -78,8 +79,8 @@ const actions = {
     });
   },
 
-  bizLocation (bizName) {
-    return Company.findLocation(bizName)
+  bizLocation (botID) {
+    return Company.findLocation(botID)
       .then(data => {
         if (data) {
           return data.location;
@@ -100,7 +101,6 @@ const actions = {
 };
 
 function persistentMenu (payload, botID) {
-  // bizName needs to be generated programatically
   let response = {};
   return new Promise(function (res, rej) {
     switch (payload) {
