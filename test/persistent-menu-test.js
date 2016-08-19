@@ -1,45 +1,22 @@
 const chai = require('chai'),
   chaiHttp = require('chai-http'),
-    crypto = require('crypto'),
-        fs = require('fs'),
+  crypto = require('crypto'),
+  // fs for debugging using writeToFile (in functionsForTests.js)
+  fs = require('fs'),
   { FB_APP_SECRET, tunnelURL } = require('../envVariables'),
-  { requestMessageFactory } = require('./functionsForTests');
+  { postBackFactory } = require('./functionsForTests');
 
 const expect = chai.expect;
-
 chai.use(chaiHttp);
 
-// REMEMBER TO CHANGE TUNNELURL ON BOOTUP
-describe('checking url response', function() {
-  it('pinging base path (/)', function () {
-    return chai.request(tunnelURL)
-      .get('/')
-      .then(function (res) {
-        expect(res).to.have.status(200);
-        expect(res).to.have.property('text', 'menubot reporting for duty');
-      });
-  });
-
-  it('pinging nonexistent path', function () {
-    return chai.request(tunnelURL)
-      .get('/who-up')
-      .then(function (res) {
-        return expect(res).to.be.null;
-      })
-      .catch(function (err) {
-        return expect(err).to.have.status(404);
-      });
-  });
-});
-
-describe('sending dummy messages to bot (POST /webhook)', function () {
+describe('simulated persistent menu requests (type postback)', function () {
   let dummyRequest;
   this.timeout(6000);
 
   afterEach(function (done) { setTimeout(done, 4000) });
 
-  it('should respond positive', function () {
-    dummyRequest = requestMessageFactory('do you have tea?');
+  it('should be in the middle of nowhere', function () {
+    dummyRequest = postBackFactory('LOCATION');
 
     const myGenHash = crypto.createHmac('sha1', FB_APP_SECRET)
       .update(Buffer.from(JSON.stringify(dummyRequest)))
@@ -56,8 +33,8 @@ describe('sending dummy messages to bot (POST /webhook)', function () {
       });
   });
 
-  it('should respond negative', function () {
-    dummyRequest = requestMessageFactory('you got coffee?');
+  it('still working on the menu', function () {
+    dummyRequest = postBackFactory('MENU');
 
     const myGenHash = crypto.createHmac('sha1', FB_APP_SECRET)
       .update(Buffer.from(JSON.stringify(dummyRequest)))
