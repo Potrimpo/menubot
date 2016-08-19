@@ -118,7 +118,10 @@ app.post('/webhook', (req, res) => {
             .then(response => {
               actions.send({sessionId}, response)
             })
-            .catch(err => console.log(`Error dealing with persistentMenu: ${err}`));
+            .catch(err => {
+              console.log(`Error dealing with persistentMenu: ${err}`);
+              console.log(err.stack);
+            });
         } else {
           console.log('received event', JSON.stringify(event));
         }

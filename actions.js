@@ -20,13 +20,14 @@ const firstEntityValue = (entities, entity) => {
 // Our bot actions
 const actions = {
   send({sessionId}, message) {
-    console.log(`replying >> ${message.text}`);
+    if (message.text) { console.log(`replying >> ${message.text}`); }
     if (message.quickreplies) {
       message.quick_replies = quickreplies.map(x => {
         return {"title": x, "content_type": "text", "payload": "empty"};
       });
       delete message.quickreplies;
     }
+
     // Our bot has something to say!
     // Let's retrieve the Facebook user whose session belongs to
     const recipientId = sessions[sessionId].fbid;
@@ -93,7 +94,6 @@ const actions = {
    return Company.getMenu(botID)
      .then(data => {
        if (data) {
-         console.log(data);
          return data.menu;
        }
      })
@@ -106,8 +106,9 @@ function persistentMenu (payload, botID) {
     switch (payload) {
       case 'MENU':
         return actions.bizMenu(botID)
-          .then(() => {
-            response.text = 'working on getting the menu';
+          .then((menu) => {
+            response = parseMenu(menu);
+            console.log('response from parseMenu', response);
             return res(response);
           });
       case 'LOCATION':
@@ -120,6 +121,29 @@ function persistentMenu (payload, botID) {
         return rej(new Error("couldn't deal with this persistent-menu input"));
     }
   });
+}
+
+function parseMenu(menu) {
+  console.log('Menu in parseMenu', menu);
+  const template = {
+    attachment: {
+      type:"template",
+      payload:{
+        template_type:"generic",
+      }
+    }
+  };
+  template.attachment.payload.elements = menu.map(val => {
+    return {
+      title: `${val.productName} : $${val.price}`,
+      buttons: [ {
+        type: 'postback',
+        title: 'Order',
+        payload: 'ORDER'
+      } ]
+    };
+  });
+  return template;
 }
 
 module.exports = {
