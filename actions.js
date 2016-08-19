@@ -19,14 +19,14 @@ const firstEntityValue = (entities, entity) => {
 
 // Our bot actions
 const actions = {
-  send({sessionId}, {text, quickreplies}) {
-    console.log(`replying >> ${text}`);
-    let quick_replies;
-    if (quickreplies) {
-      quick_replies = quickreplies.map(x => {
-        return { "title": x, "content_type": "text", "payload": "empty" };
+  send({sessionId}, message) {
+    console.log(`replying >> ${message.text}`);
+    if (message.quickreplies) {
+      message.quick_replies = quickreplies.map(x => {
+        return {"title": x, "content_type": "text", "payload": "empty"};
       });
-    } else { quick_replies = undefined; }
+      delete message.quickreplies;
+    }
     // Our bot has something to say!
     // Let's retrieve the Facebook user whose session belongs to
     const recipientId = sessions[sessionId].fbid;
@@ -34,7 +34,7 @@ const actions = {
       // Yay, we found our recipient!
       // Let's forward our bot response to her.
       // We return a promise to let our bot know when we're done sending
-      return fbMessage(recipientId, text, quick_replies)
+      return fbMessage(recipientId, message)
         .then(() => null)
         .catch((err) => {
           console.error(

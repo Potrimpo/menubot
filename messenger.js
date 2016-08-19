@@ -6,10 +6,10 @@ const fetch = require('node-fetch'),
 // See the Send API reference
 // https://developers.facebook.com/docs/messenger-platform/send-api-reference
 
-const fbMessage = (id, text, quick_replies) => {
+const fbMessage = (id, message) => {
   const body = JSON.stringify({
     recipient: { id },
-    message: { text, quick_replies },
+    message
   });
 
   const qs = 'access_token=' + encodeURIComponent(FB_PAGE_TOKEN);
