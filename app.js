@@ -7,7 +7,7 @@ const bodyParser = require('body-parser'),
   mongoose = require('mongoose');
 
 const { Wit, log } = require('./index'),
-  { PORT, WIT_TOKEN, FB_APP_SECRET, FB_VERIFY_TOKEN } = require('./envVariables'),
+  { PORT, mongooseURL, WIT_TOKEN, FB_APP_SECRET, FB_VERIFY_TOKEN } = require('./envVariables'),
   { sessions, findOrCreateSession } = require('./witSessions'),
   { actions, persistentMenu } = require('./actions'),
   fbMessage = require('./messenger');
@@ -22,7 +22,7 @@ const wit = new Wit({
 });
 
 // Setting up mongodb server
-mongoose.connect(`mongodb://localhost/menubot`);
+mongoose.connect(mongooseURL);
 mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
 mongoose.connection.once('open', function() {
   console.log('mongodb connected');
