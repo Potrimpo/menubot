@@ -133,14 +133,22 @@ function parseMenu(menu) {
       }
     }
   };
+
   template.attachment.payload.elements = menu.map(val => {
     return {
       title: val.name.toUpperCase(),
-      buttons: [ {
-        type: 'postback',
-        title: 'Order',
-        payload: 'ORDER'
-      } ]
+      buttons: [
+        {
+          type: 'postback',
+          title: 'Order',
+          payload: 'ORDER'
+        },
+        {
+          type: 'postback',
+          title: 'Details',
+          payload: 'DETAILS'
+        }
+      ]
     };
   });
   return template;

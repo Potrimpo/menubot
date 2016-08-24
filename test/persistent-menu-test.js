@@ -33,7 +33,7 @@ describe('simulated persistent menu requests (type postback)', function () {
       });
   });
 
-  it('still working on the menu', function () {
+  it('should fetch menu of product categories (coffee, but not every kind of coffee)', function () {
     dummyRequest = postBackFactory('MENU');
 
     const myGenHash = crypto.createHmac('sha1', FB_APP_SECRET)
