@@ -4,10 +4,17 @@ const mongoose = require('mongoose'),
 // using native es6 promises (mongoose promises deprecated)
 mongoose.Promise = global.Promise;
 
+const productSchem = mongoose.Schema({
+  name: String,
+  sizes: [
+    { size: String, price: Number },
+  ],
+  image: Schema.Types.Mixed,
+});
 
-const productSubDocSchem = mongoose.Schema({
-  productName: String,
-  price: Number,
+const productCategorySchem = mongoose.Schema({
+  name: String,
+  types: [productSchem],
   image: Schema.Types.Mixed,
 });
 
@@ -15,7 +22,7 @@ const companySchem = mongoose.Schema({
   fbID: String,
   name: String,
   location: String,
-  menu: [productSubDocSchem],
+  menu: [productCategorySchem],
   requests: Schema.Types.ObjectId,
   orders: Schema.Types.ObjectId,
 });
@@ -44,7 +51,8 @@ const ordersSchem = mongoose.Schema({
 });
 
 companySchem.statics.findProduct = function (name, prodName) {
-  return this.findOne({ name, 'menu.productName': prodName }, 'menu.productName');
+  return this.findOne({ name }, 'menu')
+    .elemMatch('menu', { 'name': prodName });
 };
 
 companySchem.statics.findLocation = function (fbID) {
@@ -64,59 +72,3 @@ module.exports = {
   Request,
   Order
 };
-
-// // -- SPINNING UP SERVER --
-// mongoose.connect(`mongodb://localhost/menubot`);
-// mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
-// mongoose.connection.once('open', function() {
-//   console.log('mongodb up & running');
-// });
-
-// // -- TEST DATABASE VALUES --
-// const testCompany = new Company({
-//   name: "Menubot-tester",
-//   location: "middle of nowhere",
-//   menu: [
-//     { productName: 'tea', price: 5 }
-//   ],
-//   requests: mongoose.Types.ObjectId(),
-//   orders: mongoose.Types.ObjectId(),
-// });
-//
-// const testRequests = new Request({
-//   _id: testCompany.requests,
-//   company: testCompany.id,
-//   requests: []
-// });
-//
-// const testOrders = new Order({
-//   _id: testCompany.orders,
-//   company: testCompany.id,
-//   orders: []
-// });
-//
-// // -- SAVE TEST VALUES --
-// testCompany.save()
-//   .then(data => {
-//     console.log(`success saving ${data.name}`);
-//     console.log(`${data.menu[0].productName} is on the menu`);
-//     return Company.findOne({ "name": data.name})
-//   })
-//   .then(data => {
-//     console.log(`testCompany: ${data.name} located at ${data.location}`);
-//   })
-//   .catch(err => console.error(err));
-//
-// testRequests.save()
-//   .then(data => {
-//     console.log(`success saving requestlist on company: ${data.company}`);
-//   })
-//   .catch(err => console.error(err));
-//
-// testOrders.save()
-//   .then(data => {
-//     console.log(`success saving requestlist on company: ${data.company}`);
-//   })
-//   .catch(err => console.error(err));
-
-// Company.findProduct('Menubot-tester', 'tea');

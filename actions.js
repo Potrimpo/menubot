@@ -124,7 +124,7 @@ function persistentMenu (payload, botID) {
 }
 
 function parseMenu(menu) {
-  console.log('Menu in parseMenu', menu);
+  console.log('MenuItem in parseMenu', menu);
   const template = {
     attachment: {
       type:"template",
@@ -135,7 +135,7 @@ function parseMenu(menu) {
   };
   template.attachment.payload.elements = menu.map(val => {
     return {
-      title: val.productName.toUpperCase(),
+      title: val.name.toUpperCase(),
       subtitle: `$${val.price}`,
       buttons: [ {
         type: 'postback',

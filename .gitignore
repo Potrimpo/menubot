@@ -4,3 +4,4 @@ envVariables.js
 .idea
 *.log
 output.json
+dbStuff.js
