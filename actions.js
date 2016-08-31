@@ -30,7 +30,7 @@ const actions = {
 
     // Our bot has something to say!
     // Let's retrieve the Facebook user whose session belongs to
-    const recipientId = sessions[sessionId].fbid;
+    const recipientId = sessions[sessionId].fbUserId;
     if (recipientId) {
       // Yay, we found our recipient!
       // Let's forward our bot response to her.
@@ -54,12 +54,12 @@ const actions = {
   },
 
   // check if item x is in database
-  checkProduct({context, entities}) {
+  checkProduct({context, entities, sessionId}) {
     const prod = firstEntityValue(entities, 'product');
     return new Promise((res, rej) => {
       if(prod) {
         // change this to use fbID and find it programmatically. can't be hardcoding this shit
-        return Company.findProduct('Menubot-tester', prod)
+        return Company.findProduct(sessionId.fbPageId, prod)
           .then(data => {
             if (data) {
               context.productInfo = prod;

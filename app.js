@@ -73,7 +73,8 @@ app.post('/webhook', (req, res) => {
           // console.log(`sender ID: ${sender}`);
           // We retrieve the user's current session, or create one if it doesn't exist
           // This is needed for our bot to figure out the conversation history
-          const sessionId = findOrCreateSession(sender);
+          const sessionId = findOrCreateSession(event.sender.id, event.recipient.id);
+          console.log('sessions', sessions[sessionId]);
 
           // We retrieve the message content
           const {text, attachments} = event.message;
@@ -112,10 +113,10 @@ app.post('/webhook', (req, res) => {
             })
           }
         } else if(event.postback) {
-          const sessionId = findOrCreateSession(event.sender.id);
+          const sessionId = findOrCreateSession(event.sender.id, event.recipient.id);
           console.log(`event.sender.id = ${event.sender.id}`);
           console.log(`event.recipient.id = ${event.recipient.id}`);
-          persistentMenu(event.postback.payload, event.recipient.id)
+          persistentMenu(event.postback.payload, sessions[sessionId].fbPageId)
             .then(response => {
               actions.send({sessionId}, response)
             })

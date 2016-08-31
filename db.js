@@ -50,8 +50,8 @@ const ordersSchem = mongoose.Schema({
   ]
 });
 
-companySchem.statics.findProduct = function (name, prodName) {
-  return this.findOne({ name }, 'menu')
+companySchem.statics.findProduct = function (fbID, prodName) {
+  return this.findOne({ fbID }, 'menu')
     .elemMatch('menu', { 'name': prodName });
 };
 
