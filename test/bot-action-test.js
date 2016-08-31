@@ -1,5 +1,5 @@
 /* Created by lewis.knoxstreader on 13/08/16. */
-const { actions } = require('../actions'),
+const actions = require('../actions'),
   expect = require('chai').expect,
   mongoose = require('mongoose'),
   { dbQueryFactory } = require('./functionsForTests');
