@@ -27,7 +27,6 @@ const actions = {
       });
       delete message.quickreplies;
     }
-
     // Our bot has something to say!
     // Let's retrieve the Facebook user whose session belongs to
     const recipientId = sessions[sessionId].fbUserId;
@@ -54,21 +53,22 @@ const actions = {
   },
 
   // check if item x is in database
-  checkProduct({context, entities, sessionId}) {
+  checkProduct({context, entities, fbPageId }) {
     const prod = firstEntityValue(entities, 'product');
     return new Promise((res, rej) => {
       if(prod) {
-        // change this to use fbID and find it programmatically. can't be hardcoding this shit
-        return Company.findProduct(sessionId.fbPageId, prod)
+        return Company.findProduct(fbPageId, prod)
           .then(data => {
             if (data) {
               context.productInfo = prod;
               delete context.itemNotFound;
+              console.log('context:', context);
               return res(context);
             }
             else {
               context.itemNotFound = true;
               delete context.productInfo;
+              console.log('context:', context);
               return res(context);
             }
           })
@@ -99,7 +99,5 @@ const actions = {
      })
   }
 };
-
-
 
 module.exports = actions;

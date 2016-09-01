@@ -59,7 +59,8 @@ companySchem.statics.findLocation = function (fbID) {
   return this.findOne({ fbID }, 'location');
 };
 
-companySchem.statics.getMenu = function (fbID) {
+companySchem.statics.getMenu = function (fbID, specificItem) {
+  if (specificItem) return this.findOne({ fbID }, 'menu').elemMatch('menu', { 'name': specificItem });
   return this.findOne({ fbID }, 'menu');
 };
 
