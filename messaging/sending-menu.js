@@ -4,7 +4,7 @@
 
 const actions = require('../actions');
 
-function persistentMenu (payload, botID) {
+function postbackHandler (payload, botID) {
   let response = {};
   return new Promise(function (res, rej) {
     switch (payload) {
@@ -63,4 +63,4 @@ function parseMenu(menu) {
   return template;
 }
 
-module.exports = persistentMenu;
+module.exports = postbackHandler;

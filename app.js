@@ -10,7 +10,7 @@ const { Wit, log } = require('./index'),
   { PORT, mongooseURL, WIT_TOKEN, FB_APP_SECRET, FB_VERIFY_TOKEN } = require('./envVariables'),
   { sessions, findOrCreateSession } = require('./witSessions'),
   actions = require('./actions'),
-  persistentMenu = require('./messaging/sending-menu'),
+  postbackHandler = require('./messaging/sending-menu'),
   fbMessage = require('./messenger');
 
 console.log(`/webhook is accepting Verify Token: "${FB_VERIFY_TOKEN}"`);
@@ -114,12 +114,12 @@ app.post('/webhook', (req, res) => {
           const sessionId = findOrCreateSession(event.sender.id, event.recipient.id);
           console.log(`event.sender.id = ${event.sender.id}`);
           console.log(`event.recipient.id = ${event.recipient.id}`);
-          persistentMenu(event.postback.payload, sessions[sessionId].fbPageId)
+          postbackHandler(event.postback.payload, sessions[sessionId].fbPageId)
             .then(response => {
               actions.send({sessionId}, response)
             })
             .catch(err => {
-              console.log(`Error dealing with persistentMenu: ${err}`);
+              console.log(`Error dealing with postbackHandler: ${err}`);
               console.log(err.stack);
             });
         } else {
