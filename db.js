@@ -50,17 +50,20 @@ const ordersSchem = mongoose.Schema({
   ]
 });
 
-companySchem.statics.findProduct = function (name, prodName) {
-  return this.findOne({ name }, 'menu')
-    .elemMatch('menu', { 'name': prodName });
+companySchem.statics.findProduct = function (fbID, prodName) {
+  return this.findOne({ fbID }, { menu: { $elemMatch: { name: prodName } } } );
 };
 
 companySchem.statics.findLocation = function (fbID) {
   return this.findOne({ fbID }, 'location');
 };
 
-companySchem.statics.getMenu = function (fbID) {
+companySchem.statics.getMenu = function (fbID, specificItem) {
   return this.findOne({ fbID }, 'menu');
+};
+
+companySchem.statics.getSizes = function (fbID, item) {
+  return this.findOne({ name: "Menubot-tester" }, { menu: { $elemMatch: { name: specificItem } } } );
 };
 
 const Company = mongoose.model('Company', companySchem),
