@@ -57,7 +57,7 @@ const actions = {
     const prod = firstEntityValue(entities, 'product');
     return new Promise((res, rej) => {
       if(prod) {
-        return Company.findProduct(fbPageId, prod)
+        return actions.bizProduct(fbPageId, prod)
           .then(data => {
             if (data) {
               context.productInfo = prod;
@@ -101,8 +101,7 @@ const actions = {
   bizProduct (botID, item) {
     return Company.findProduct(botID, item)
       .then(data => {
-        console.log("from bizProduct", data);
-        return data.menu
+        return (data.menu.length > 0) ? data.menu : null;
       });
   }
 };
