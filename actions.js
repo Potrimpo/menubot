@@ -94,8 +94,16 @@ const actions = {
     return Company.getMenu(botID, specificItem)
       .then(data => {
         // getting main menu (categories) = data.menu
-        return data.menu? data.menu : data;
+        return data.menu
       })
+  },
+
+  bizProduct (botID, item) {
+    return Company.findProduct(botID, item)
+      .then(data => {
+        console.log("from bizProduct", data);
+        return data.menu
+      });
   }
 };
 

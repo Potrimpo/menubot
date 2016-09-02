@@ -119,7 +119,7 @@ app.post('/webhook', (req, res) => {
               actions.send({sessionId}, response)
             })
             .catch(err => {
-              console.log(`Error dealing with postbackHandler: ${err}`);
+              console.log(`Error sending postback: ${err}`);
               console.log(err.stack);
             });
         } else {
