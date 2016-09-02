@@ -1,4 +1,5 @@
 /* Created by lewis.knoxstreader on 13/08/16. */
+
 const actions = require('../actions'),
   expect = require('chai').expect,
   mongoose = require('mongoose'),
@@ -19,7 +20,7 @@ describe('testing bot actions with database', function() {
   let mockQuery;
   it("checks for products using item it DOESN'T have", function() {
     mockQuery = dbQueryFactory('rocks');
-    return actions.checkProduct({ context: {}, entities: mockQuery, sessionId: {fbPageId: testPageID} })
+    return actions.checkProduct({ context: {}, entities: mockQuery, fbPageId: testPageID })
       .then(function (data) {
         expect(data).to.not.haveOwnProperty('productInfo');
         expect(data).to.have.property('itemNotFound', true);
@@ -28,7 +29,7 @@ describe('testing bot actions with database', function() {
 
   it('checks for products using item it DOES have', function () {
     mockQuery = dbQueryFactory('coffee');
-    return actions.checkProduct({ context: {}, entities: mockQuery, sessionId: {fbPageId: testPageID} })
+    return actions.checkProduct({ context: {}, entities: mockQuery, fbPageId: testPageID })
       .then(function (data) {
         expect(data).to.not.haveOwnProperty('itemNotFound');
         expect(data).to.have.property('productInfo', 'coffee');
