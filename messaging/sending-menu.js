@@ -23,11 +23,11 @@ function postbackHandler (payload, botID) {
           });
 
       case 'DETAILS':
-        return actions.bizMenu(botID, parsedPayload[2])
+        return actions.bizProduct(botID, parsedPayload[2])
           .then(items => res(parseItems(items)) );
 
       case 'ORDER':
-        return actions.bizMenu(botID, parsedPayload[2])
+        return actions.bizProduct(botID, parsedPayload[2])
           .then(items => res(parseItems(items)) );
 
       default:
