@@ -90,8 +90,8 @@ const actions = {
       });
   },
 
-  bizMenu (botID, specificItem) {
-    return Company.getMenu(botID, specificItem)
+  bizMenu (botID) {
+    return Company.getMenu(botID)
       .then(data => {
         // getting main menu (categories) = data.menu
         return data.menu
