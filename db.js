@@ -60,7 +60,7 @@ companySchem.statics.findLocation = function (fbID) {
 };
 
 companySchem.statics.getMenu = function (fbID, specificItem) {
-  if (specificItem) return this.findOne({ fbID }, 'menu').elemMatch('menu', { 'name': specificItem });
+  if (specificItem) return this.findOne({ name: "Menubot-tester" }, { menu: { $elemMatch: { name: specificItem } } } );
   return this.findOne({ fbID }, 'menu');
 };
 

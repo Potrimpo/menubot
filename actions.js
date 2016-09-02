@@ -90,13 +90,12 @@ const actions = {
       });
   },
 
-  bizMenu (botID) {
-   return Company.getMenu(botID)
-     .then(data => {
-       if (data) {
-         return data.menu;
-       }
-     })
+  bizMenu (botID, specificItem) {
+    return Company.getMenu(botID, specificItem)
+      .then(data => {
+        // getting main menu (categories) = data.menu
+        return data.menu? data.menu : data;
+      })
   }
 };
 

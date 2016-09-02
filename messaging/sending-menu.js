@@ -5,42 +5,42 @@
 const actions = require('../actions');
 
 function postbackHandler (payload, botID) {
+  // a text response must be returned in the 'text' field of an object
   let response = {};
   return new Promise(function (res, rej) {
-    switch (payload) {
+    const parsedPayload = /([A-Z]+)!?(\w*)/g.exec(payload);
+    switch (parsedPayload[1]) {
 
       case 'MENU':
         return actions.bizMenu(botID)
-          .then((menu) => {
-            response = parseMenu(menu);
-            console.log('response from parseMenu', response);
-            return res(response);
-          });
+          .then((menu) => res(parseMenu(menu)) );
 
       case 'LOCATION':
         return actions.bizLocation(botID)
-          .then(data => {
-            response.text = data;
+          .then(location => {
+            response.text = location;
             return res(response);
           });
-      //
-      // case: 'DETAILS':
-      //   return actions
+
+      case 'DETAILS':
+        return actions.bizMenu(botID, parsedPayload[2])
+          .then(items => res(parseItems(items)) );
+
+      case 'ORDER':
+        return actions.bizMenu(botID, parsedPayload[2])
+          .then(items => res(parseItems(items)) );
 
       default:
-        return rej(new Error("couldn't deal with this persistent-menu input"));
+        return rej(new Error("couldn't deal with this postbackHandler input"));
     }
   });
 }
 
 function parseMenu(menu) {
-  console.log('MenuItem in parseMenu', menu);
   const template = {
     attachment: {
       type:"template",
-      payload:{
-        template_type:"generic",
-      }
+      payload: { template_type:"generic" }
     }
   };
   template.attachment.payload.elements = menu.map(val => {
@@ -50,13 +50,40 @@ function parseMenu(menu) {
         {
           type: 'postback',
           title: 'Order',
-          payload: 'ORDER'
+          payload: `ORDER!${val.name}`
         },
         {
           type: 'postback',
           title: 'Details',
-          payload: 'DETAILS'
+          payload: `DETAILS!${val.name}`
         }
+      ]
+    };
+  });
+  return template;
+}
+
+function parseItems(items) {
+  const template = {
+    attachment: {
+      type:"template",
+      payload: { template_type:"generic" }
+    }
+  };
+  template.attachment.payload.elements = items[0].types.map(val => {
+    return {
+      title: val.name.toUpperCase(),
+      buttons: [
+        {
+          type: 'postback',
+          title: 'Order',
+          payload: `ORDER!${val.name}`
+        },
+        {
+          type: 'postback',
+          title: 'Sizes',
+          payload: `SIZES!${val.name}`
+        },
       ]
     };
   });
