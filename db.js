@@ -58,12 +58,12 @@ companySchem.statics.findLocation = function (fbID) {
   return this.findOne({ fbID }, 'location');
 };
 
-companySchem.statics.getMenu = function (fbID, specificItem) {
+companySchem.statics.getMenu = function (fbID) {
   return this.findOne({ fbID }, 'menu');
 };
 
 companySchem.statics.getSizes = function (fbID, item) {
-  return this.findOne({ name: "Menubot-tester" }, { menu: { $elemMatch: { name: specificItem } } } );
+  return this.findOne({ fbID }, { menu: { $elemMatch: { name: item } } } );
 };
 
 const Company = mongoose.model('Company', companySchem),
