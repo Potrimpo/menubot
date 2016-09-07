@@ -1,7 +1,8 @@
 const { sessions } = require('./witSessions'),
   fbMessage = require('./messenger'),
   mongoose = require('mongoose'),
-  { Company } = require('./db');
+  { Company } = require('./db'),
+  { findItem } = require('./sql');
 
 mongoose.Promise = global.Promise;
 
@@ -57,10 +58,10 @@ const actions = {
     const prod = firstEntityValue(entities, 'product');
     return new Promise((res, rej) => {
       if(prod) {
-        return actions.bizProduct(fbPageId, prod)
+        return findItem(fbPageId, prod)
           .then(data => {
             if (data) {
-              context.productInfo = prod;
+              context.productInfo = data.item;
               delete context.itemNotFound;
               console.log('context:', context);
               return res(context);

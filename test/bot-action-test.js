@@ -2,7 +2,7 @@
 
 const actions = require('../actions'),
   expect = require('chai').expect,
-  mongoose = require('mongoose'),
+  // pgp = require('pg-promise')(),
   { dbQueryFactory } = require('./functionsForTests'),
   { testPageID } = require('../envVariables');
 
@@ -10,14 +10,8 @@ const actions = require('../actions'),
 // CATCH STATEMENTS WILL STOP MOCHA FROM PICKING UP ON THE FAILURE
 
 describe('testing bot actions with database', function() {
-  before(function (done) {
-    // Setting up server
-    mongoose.connect(`mongodb://localhost/menubot`);
-    mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
-    mongoose.connection.once('open', function() { done() });
-  });
-
   let mockQuery;
+
   it("checks for products using item it DOESN'T have", function() {
     mockQuery = dbQueryFactory('rocks');
     return actions.checkProduct({ context: {}, entities: mockQuery, fbPageId: testPageID })

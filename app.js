@@ -13,7 +13,7 @@ const { Wit, log } = require('./index'),
   postbackHandler = require('./messaging/sending-menu'),
   fbMessage = require('./messenger');
 
-console.log(`/webhook is accepting Verify Token: "${FB_VERIFY_TOKEN}"`);
+// console.log(`/webhook is accepting Verify Token: "${FB_VERIFY_TOKEN}"`);
 
 // Setting up our bot
 const wit = new Wit({
