@@ -1,8 +1,8 @@
-const { sessions } = require('./witSessions'),
+const { sessions } = require('./../witSessions'),
   fbMessage = require('./messenger'),
   mongoose = require('mongoose'),
-  { Company } = require('./db'),
-  { findItem } = require('./sql');
+  { Company } = require('./../db'),
+  { findItem } = require('./../sql');
 
 mongoose.Promise = global.Promise;
 

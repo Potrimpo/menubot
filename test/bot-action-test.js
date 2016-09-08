@@ -1,6 +1,6 @@
 /* Created by lewis.knoxstreader on 13/08/16. */
 
-const actions = require('../actions'),
+const actions = require('../messaging/actions'),
   expect = require('chai').expect,
   // pgp = require('pg-promise')(),
   { dbQueryFactory } = require('./functionsForTests'),

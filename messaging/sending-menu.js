@@ -2,7 +2,8 @@
  * Created by lewis.knoxstreader on 31/08/16.
  */
 
-const actions = require('../actions');
+const actions = require('./actions'),
+  { getMenu } = require('../sql');
 
 function postbackHandler (payload, botID) {
   // a text response must be returned in the 'text' field of an object
