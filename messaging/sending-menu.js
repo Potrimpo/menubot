@@ -3,7 +3,7 @@
  */
 
 const actions = require('./actions'),
-  { getMenu, getTypes, getLocation } = require('../sql');
+  { findItem, getMenu, getTypes, getLocation } = require('../sql');
 
 function postbackHandler (payload, botID) {
   // a text response must be returned in the 'text' field of an object
@@ -28,8 +28,8 @@ function postbackHandler (payload, botID) {
           .then(types => res(parseProductTypes(types)) );
 
       case 'ORDER':
-        return actions.bizProduct(botID, parsedPayload[2])
-          .then(items => res(parseProductTypes(items)) );
+        return getTypes(botID, parsedPayload[2])
+          .then(types => res(parseProductTypes(types)) );
 
       default:
         return rej(new Error("couldn't deal with this postbackHandler input"));
@@ -48,11 +48,11 @@ function parseItems(menu) {
     return {
       title: val.item.toUpperCase(),
       buttons: [
-        {
-          type: 'postback',
-          title: 'Order',
-          payload: `ORDER!${val.itemid}`
-        },
+        // {
+        //   type: 'postback',
+        //   title: 'Order',
+        //   payload: `ORDER!${val.itemid}`
+        // },
         {
           type: 'postback',
           title: 'Details',
