@@ -3,7 +3,7 @@
  */
 
 const actions = require('./actions'),
-  { getMenu } = require('../sql');
+  { getMenu, getLocation } = require('../sql');
 
 function postbackHandler (payload, botID) {
   // a text response must be returned in the 'text' field of an object
@@ -17,9 +17,9 @@ function postbackHandler (payload, botID) {
           .then((menu) => res(parseMenu(menu)) );
 
       case 'LOCATION':
-        return actions.bizLocation(botID)
-          .then(location => {
-            response.text = location;
+        return getLocation(botID)
+          .then(data => {
+            response.text = data.location;
             return res(response);
           });
 
