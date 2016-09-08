@@ -6,33 +6,34 @@ const actions = require('./actions'),
   { findItem, getMenu, getTypes, getLocation } = require('../sql');
 
 function postbackHandler (payload, botID) {
-  // a text response must be returned in the 'text' field of an object
-  let response = {};
   return new Promise(function (res, rej) {
     const parsedPayload = /([A-Z]+)!?(\w*)/g.exec(payload);
     switch (parsedPayload[1]) {
 
       case 'MENU':
         return getMenu(botID)
-          .then((menu) => res(parseItems(menu)) );
+          .then((menu) => res(parseItems(menu)) )
+          .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
 
       case 'LOCATION':
         return getLocation(botID)
-          .then(data => {
-            response.text = data.location;
-            return res(response);
-          });
+          // a text response must be returned in the 'text' field of an object
+          .then(data => res({ text: data.location }) )
+          .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
 
       case 'DETAILS':
         return getTypes(parsedPayload[2])
-          .then(types => res(parseProductTypes(types)) );
+          .then(types => res(parseProductTypes(types)) )
+          .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
 
       case 'ORDER':
         return getTypes(botID, parsedPayload[2])
-          .then(types => res(parseProductTypes(types)) );
+          .then(types => res(parseProductTypes(types)) )
+          .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
 
       default:
         return rej(new Error("couldn't deal with this postbackHandler input"));
+
     }
   });
 }
