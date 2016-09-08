@@ -1,10 +1,6 @@
 const { sessions } = require('./../witSessions'),
   fbMessage = require('./messenger'),
-  mongoose = require('mongoose'),
-  { Company } = require('./../db'),
   { findItem } = require('./../sql');
-
-mongoose.Promise = global.Promise;
 
 const firstEntityValue = (entities, entity) => {
   const val = entities && entities[entity] &&
@@ -81,30 +77,6 @@ const actions = {
     });
   },
 
-  bizLocation (botID) {
-    return Company.findLocation(botID)
-      .then(data => {
-        if (data) {
-          return data.location;
-        }
-        else { return new Error("couldn't find company to get location of") }
-      });
-  },
-
-  bizMenu (botID) {
-    return Company.getMenu(botID)
-      .then(data => {
-        // getting main menu (categories) = data.menu
-        return data.menu
-      })
-  },
-
-  bizProduct (botID, item) {
-    return Company.findProduct(botID, item)
-      .then(data => {
-        return (data.menu.length > 0) ? data.menu : null;
-      });
-  }
 };
 
 module.exports = actions;

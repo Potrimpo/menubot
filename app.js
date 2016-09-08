@@ -3,11 +3,10 @@
 const bodyParser = require('body-parser'),
   express = require('express'),
   request = require('request'),
-  crypto = require('crypto'),
-  mongoose = require('mongoose');
+  crypto = require('crypto');
 
 const { Wit, log } = require('./index'),
-  { PORT, mongooseURL, WIT_TOKEN, FB_APP_SECRET, FB_VERIFY_TOKEN } = require('./envVariables'),
+  { PORT, WIT_TOKEN, FB_APP_SECRET, FB_VERIFY_TOKEN } = require('./envVariables'),
   { sessions, findOrCreateSession } = require('./witSessions'),
   actions = require('./messaging/actions'),
   postbackHandler = require('./messaging/sending-menu'),
@@ -20,13 +19,6 @@ const wit = new Wit({
   accessToken: WIT_TOKEN,
   actions,
   logger: new log.Logger(log.INFO)
-});
-
-// Setting up mongodb server
-mongoose.connect(mongooseURL);
-mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
-mongoose.connection.once('open', function() {
-  console.log('mongodb connected');
 });
 
 // Starting our webserver and putting it all together
