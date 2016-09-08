@@ -11,12 +11,15 @@ const getMenu = (FBID) => db.many("SELECT item, itemid FROM items WHERE fbid=$1"
 
 const getLocation = (FBID) => db.one("SELECT location FROM companies WHERE fbid=$1", FBID);
 
-getLocation(1766837970261548)
-  .then(data => console.log("data =", data) )
-  .catch(err => console.error("ERRONI", err.message || err));
+const getTypes = (itemid) => db.many("SELECT type, typeid FROM types WHERE itemid=$1", itemid);
+
+// getTypes(1)
+//   .then(data => console.log("data =", data) )
+//   .catch(err => console.error("ERRONI", err.message || err));
 
 module.exports = {
   findItem,
   getMenu,
-  getLocation
+  getLocation,
+  getTypes
 };

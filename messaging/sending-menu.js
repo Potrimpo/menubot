@@ -3,7 +3,7 @@
  */
 
 const actions = require('./actions'),
-  { getMenu, getLocation } = require('../sql');
+  { getMenu, getTypes, getLocation } = require('../sql');
 
 function postbackHandler (payload, botID) {
   // a text response must be returned in the 'text' field of an object
@@ -14,7 +14,7 @@ function postbackHandler (payload, botID) {
 
       case 'MENU':
         return getMenu(botID)
-          .then((menu) => res(parseMenu(menu)) );
+          .then((menu) => res(parseItems(menu)) );
 
       case 'LOCATION':
         return getLocation(botID)
@@ -24,12 +24,12 @@ function postbackHandler (payload, botID) {
           });
 
       case 'DETAILS':
-        return actions.bizProduct(botID, parsedPayload[2])
-          .then(items => res(parseItems(items)) );
+        return getTypes(parsedPayload[2])
+          .then(types => res(parseProductTypes(types)) );
 
       case 'ORDER':
         return actions.bizProduct(botID, parsedPayload[2])
-          .then(items => res(parseItems(items)) );
+          .then(items => res(parseProductTypes(items)) );
 
       default:
         return rej(new Error("couldn't deal with this postbackHandler input"));
@@ -37,7 +37,7 @@ function postbackHandler (payload, botID) {
   });
 }
 
-function parseMenu(menu) {
+function parseItems(menu) {
   const template = {
     attachment: {
       type:"template",
@@ -51,12 +51,12 @@ function parseMenu(menu) {
         {
           type: 'postback',
           title: 'Order',
-          payload: `ORDER!${val.item}`
+          payload: `ORDER!${val.itemid}`
         },
         {
           type: 'postback',
           title: 'Details',
-          payload: `DETAILS!${val.item}`
+          payload: `DETAILS!${val.itemid}`
         }
       ]
     };
@@ -64,26 +64,26 @@ function parseMenu(menu) {
   return template;
 }
 
-function parseItems(items) {
+function parseProductTypes(ITEMIDs) {
   const template = {
     attachment: {
       type:"template",
       payload: { template_type:"generic" }
     }
   };
-  template.attachment.payload.elements = items[0].types.map(val => {
+  template.attachment.payload.elements = ITEMIDs.map(val => {
     return {
-      title: val.name.toUpperCase(),
+      title: val.type.toUpperCase(),
       buttons: [
         {
           type: 'postback',
           title: 'Order',
-          payload: `ORDER!${val.name}`
+          payload: `ORDER!${val.typeid}`
         },
         {
           type: 'postback',
           title: 'Sizes',
-          payload: `SIZES!${val.name}`
+          payload: `SIZES!${val.typeid}`
         },
       ]
     };
