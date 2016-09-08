@@ -2,41 +2,43 @@
  * Created by lewis.knoxstreader on 31/08/16.
  */
 
-const actions = require('../actions');
+const actions = require('./actions'),
+  { findItem, getMenu, getTypes, getLocation } = require('../sql');
 
 function postbackHandler (payload, botID) {
-  // a text response must be returned in the 'text' field of an object
-  let response = {};
   return new Promise(function (res, rej) {
     const parsedPayload = /([A-Z]+)!?(\w*)/g.exec(payload);
     switch (parsedPayload[1]) {
 
       case 'MENU':
-        return actions.bizMenu(botID)
-          .then((menu) => res(parseMenu(menu)) );
+        return getMenu(botID)
+          .then((menu) => res(parseItems(menu)) )
+          .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
 
       case 'LOCATION':
-        return actions.bizLocation(botID)
-          .then(location => {
-            response.text = location;
-            return res(response);
-          });
+        return getLocation(botID)
+          // a text response must be returned in the 'text' field of an object
+          .then(data => res({ text: data.location }) )
+          .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
 
       case 'DETAILS':
-        return actions.bizProduct(botID, parsedPayload[2])
-          .then(items => res(parseItems(items)) );
+        return getTypes(parsedPayload[2])
+          .then(types => res(parseProductTypes(types)) )
+          .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
 
       case 'ORDER':
-        return actions.bizProduct(botID, parsedPayload[2])
-          .then(items => res(parseItems(items)) );
+        return getTypes(botID, parsedPayload[2])
+          .then(types => res(parseProductTypes(types)) )
+          .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
 
       default:
         return rej(new Error("couldn't deal with this postbackHandler input"));
+
     }
   });
 }
 
-function parseMenu(menu) {
+function parseItems(menu) {
   const template = {
     attachment: {
       type:"template",
@@ -45,17 +47,17 @@ function parseMenu(menu) {
   };
   template.attachment.payload.elements = menu.map(val => {
     return {
-      title: val.name.toUpperCase(),
+      title: val.item.toUpperCase(),
       buttons: [
-        {
-          type: 'postback',
-          title: 'Order',
-          payload: `ORDER!${val.name}`
-        },
+        // {
+        //   type: 'postback',
+        //   title: 'Order',
+        //   payload: `ORDER!${val.itemid}`
+        // },
         {
           type: 'postback',
           title: 'Details',
-          payload: `DETAILS!${val.name}`
+          payload: `DETAILS!${val.itemid}`
         }
       ]
     };
@@ -63,26 +65,26 @@ function parseMenu(menu) {
   return template;
 }
 
-function parseItems(items) {
+function parseProductTypes(ITEMIDs) {
   const template = {
     attachment: {
       type:"template",
       payload: { template_type:"generic" }
     }
   };
-  template.attachment.payload.elements = items[0].types.map(val => {
+  template.attachment.payload.elements = ITEMIDs.map(val => {
     return {
-      title: val.name.toUpperCase(),
+      title: val.type.toUpperCase(),
       buttons: [
         {
           type: 'postback',
           title: 'Order',
-          payload: `ORDER!${val.name}`
+          payload: `ORDER!${val.typeid}`
         },
         {
           type: 'postback',
           title: 'Sizes',
-          payload: `SIZES!${val.name}`
+          payload: `SIZES!${val.typeid}`
         },
       ]
     };

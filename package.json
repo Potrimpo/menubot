@@ -22,7 +22,7 @@
     "express": "^4.14.0",
     "node-fetch": "^1.5.1",
     "node-uuid": "^1.4.7",
-    "mongoose": "^4.5.8",
+    "pg-promise": "^5.3.3",
     "request": "^2.74.0"
   },
   "devDependencies": {
