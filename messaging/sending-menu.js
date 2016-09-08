@@ -13,7 +13,7 @@ function postbackHandler (payload, botID) {
     switch (parsedPayload[1]) {
 
       case 'MENU':
-        return actions.bizMenu(botID)
+        return getMenu(botID)
           .then((menu) => res(parseMenu(menu)) );
 
       case 'LOCATION':
@@ -46,17 +46,17 @@ function parseMenu(menu) {
   };
   template.attachment.payload.elements = menu.map(val => {
     return {
-      title: val.name.toUpperCase(),
+      title: val.item.toUpperCase(),
       buttons: [
         {
           type: 'postback',
           title: 'Order',
-          payload: `ORDER!${val.name}`
+          payload: `ORDER!${val.item}`
         },
         {
           type: 'postback',
           title: 'Details',
-          payload: `DETAILS!${val.name}`
+          payload: `DETAILS!${val.item}`
         }
       ]
     };
