@@ -49,11 +49,6 @@ function parseItems(menu) {
     return {
       title: val.item.toUpperCase(),
       buttons: [
-        // {
-        //   type: 'postback',
-        //   title: 'Order',
-        //   payload: `ORDER!${val.itemid}`
-        // },
         {
           type: 'postback',
           title: 'Details',
@@ -65,14 +60,14 @@ function parseItems(menu) {
   return template;
 }
 
-function parseProductTypes(ITEMIDs) {
+function parseProductTypes(types) {
   const template = {
     attachment: {
       type:"template",
       payload: { template_type:"generic" }
     }
   };
-  template.attachment.payload.elements = ITEMIDs.map(val => {
+  template.attachment.payload.elements = types.map(val => {
     return {
       title: val.type.toUpperCase(),
       buttons: [
