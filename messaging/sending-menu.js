@@ -3,7 +3,7 @@
  */
 
 const actions = require('./actions'),
-  { findItem, getMenu, getTypes, getLocation } = require('../sql');
+  { getMenu, getTypes, getSizes, getLocation } = require('../sql');
 
 function postbackHandler (payload, botID) {
   return new Promise(function (res, rej) {
@@ -29,6 +29,11 @@ function postbackHandler (payload, botID) {
       case 'ORDER':
         return getTypes(botID, parsedPayload[2])
           .then(types => res(parseProductTypes(types)) )
+          .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
+
+      case 'SIZES':
+        return getSizes(parsedPayload[2])
+          .then(sizes => res(parseProductSizes(sizes)) )
           .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
 
       default:
@@ -80,6 +85,28 @@ function parseProductTypes(types) {
           type: 'postback',
           title: 'Sizes',
           payload: `SIZES!${val.typeid}`
+        },
+      ]
+    };
+  });
+  return template;
+}
+
+function parseProductSizes(sizes) {
+  const template = {
+    attachment: {
+      type:"template",
+      payload: { template_type:"generic" }
+    }
+  };
+  template.attachment.payload.elements = sizes.map(val => {
+    return {
+      title: `${val.size.toUpperCase()} - ${String(val.price)}`,
+      buttons: [
+        {
+          type: 'postback',
+          title: 'Order',
+          payload: `ORDER!${val.sizeid}`
         },
       ]
     };
