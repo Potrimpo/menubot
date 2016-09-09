@@ -1,23 +1,35 @@
 const { postgresURL } = require('./envVariables'),
- pgp = require('pg-promise')();
+  path = require('path'),
+  pgp = require('pg-promise')();
 
 const db = pgp(postgresURL);
 
-const findItem = (FBID, prodName) => {
-  return db.oneOrNone("SELECT item, itemid FROM items WHERE fbid=$1 AND item=$2", [FBID, prodName]);
-};
+// Create QueryFile globally, once per file:
+const findItemQuery = sql('./sqlFiles/findItem.sql'),
+  getMenuQuery = sql('./sqlFiles/getMenu.sql'),
+  getLocationQuery = sql('./sqlFiles/getLocation.sql'),
+  getTypesQuery = sql('./sqlFiles/getTypes.sql'),
+  getSizesQuery = sql('./sqlFiles/getSizes.sql');
 
-const getMenu = (FBID) => db.many("SELECT item, itemid FROM items WHERE fbid=$1", FBID);
+const findItem = (FBID, prodName) => db.oneOrNone(findItemQuery, [FBID, prodName]),
 
-const getLocation = (FBID) => db.one("SELECT location FROM companies WHERE fbid=$1", FBID);
+  getMenu = (FBID) => db.many(getMenuQuery, FBID),
 
-const getTypes = (itemid) => db.many("SELECT type, typeid FROM types WHERE itemid=$1", itemid);
+  getLocation = (FBID) => db.one(getLocationQuery, FBID),
 
-const getSizes = (typeid) => db.many("SELECT size, price FROM sizes WHERE typeid=$1", typeid);
+  getTypes = (itemid) => db.many(getTypesQuery, itemid),
+
+  getSizes = (typeid) => db.many(getSizesQuery, typeid);
+
+//  makeOrder = (sizeid) => db.one("INSERT INTO orders (fbid, typeid, sizeid, time, userID) VALUES");
 
 // getTypes(1)
 //   .then(data => console.log("data =", data) )
 //   .catch(err => console.error("ERRONI", err.message || err));
+
+function sql(file) {
+  return new pgp.QueryFile(path.join(__dirname, file), {minify: true});
+}
 
 module.exports = {
   findItem,
