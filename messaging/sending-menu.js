@@ -3,7 +3,8 @@
  */
 
 const actions = require('./actions'),
-  { getMenu, getTypes, getSizes, getLocation } = require('../sql');
+  { getMenu, getTypes, getSizes, getLocation } = require('../sql'),
+  { tunnelURL } = require('../envVariables');
 
 function postbackHandler (payload, botID) {
   return new Promise(function (res, rej) {
@@ -12,7 +13,7 @@ function postbackHandler (payload, botID) {
 
       case 'MENU':
         return getMenu(botID)
-          .then((menu) => res(parseItems(menu)) )
+          .then((menu) => res(parseItems(menu, botID)) )
           .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
 
       case 'LOCATION':
@@ -43,7 +44,7 @@ function postbackHandler (payload, botID) {
   });
 }
 
-function parseItems(menu) {
+function parseItems(menu, botID) {
   const template = {
     attachment: {
       type:"template",
@@ -53,6 +54,7 @@ function parseItems(menu) {
   template.attachment.payload.elements = menu.map(val => {
     return {
       title: val.item.toUpperCase(),
+      image_url: `${tunnelURL}/static/images/${botID}/${val.itemid}.jpg`,
       buttons: [
         {
           type: 'postback',
