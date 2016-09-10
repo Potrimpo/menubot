@@ -6,18 +6,18 @@ const actions = require('./actions'),
   { getMenu, getTypes, getSizes, getLocation } = require('../sql'),
   { tunnelURL } = require('../envVariables');
 
-function postbackHandler (payload, botID) {
+function postbackHandler (payload, { fbPageId, fbUserId }) {
   return new Promise(function (res, rej) {
     const parsedPayload = /([A-Z]+)!?(\w*)/g.exec(payload);
     switch (parsedPayload[1]) {
 
       case 'MENU':
-        return getMenu(botID)
-          .then((menu) => res(parseItems(menu, botID)) )
+        return getMenu(fbPageId)
+          .then((menu) => res(parseItems(menu, fbPageId)) )
           .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
 
       case 'LOCATION':
-        return getLocation(botID)
+        return getLocation(fbPageId)
           // a text response must be returned in the 'text' field of an object
           .then(data => res({ text: data.location }) )
           .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
