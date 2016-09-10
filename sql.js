@@ -11,15 +11,15 @@ const findItemQuery = sql('./sqlFiles/findItem.sql'),
   getTypesQuery = sql('./sqlFiles/getTypes.sql'),
   getSizesQuery = sql('./sqlFiles/getSizes.sql');
 
-const findItem = (FBID, prodName) => db.oneOrNone(findItemQuery, [FBID, prodName]),
+const findItem = (fbPageId, prodName) => db.oneOrNone(findItemQuery, [fbPageId, prodName]),
 
-  getMenu = (FBID) => db.many(getMenuQuery, FBID),
+  getMenu = (fbPageId) => db.many(getMenuQuery, fbPageId),
 
-  getLocation = (FBID) => db.one(getLocationQuery, FBID),
+  getLocation = (fbPageId) => db.one(getLocationQuery, fbPageId),
 
   getTypes = (itemid) => db.many(getTypesQuery, itemid),
 
-  getSizes = (typeid) => db.many(getSizesQuery, typeid);
+  getSizes = (typeid) => db.many(getSizesQuery, typeid),
 
 //  makeOrder = (sizeid) => db.one("INSERT INTO orders (fbid, typeid, sizeid, time, userID) VALUES");
 
