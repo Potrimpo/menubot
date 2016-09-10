@@ -20,7 +20,6 @@ describe('testing database queries', function() {
     return findItem(testPageID, 'rocks')
       .then(function (data) {
         expect(data).to.equal(null);
-        expect(data).to.not.have.property('item', 'rocks');
       });
   });
 
