@@ -1,6 +1,6 @@
 const { sessions } = require('./../witSessions'),
   fbMessage = require('./messenger'),
-  { findItem } = require('./../sql');
+  { findItem, makeOrder } = require('./../sql');
 
 const firstEntityValue = (entities, entity) => {
   const val = entities && entities[entity] &&
@@ -71,6 +71,39 @@ const actions = {
           })
           .catch(err => {
             console.error(err);
+            return rej(err);
+          });
+      }
+    });
+  },
+
+  // specify the time of an order
+  orderTime({context, entities, fbPageId, fbUserId }) {
+    const time = firstEntityValue(entities, 'datetime');
+    return new Promise((res, rej) => {
+      if(time) {
+        console.log("INSERTING INTO DATABASE");
+        return makeOrder(fbPageId, fbUserId, context.order.typeid, context.order.sizeid, time)
+          .then(data => {
+            if (data) {
+              console.log("after makeOrder query", data);
+              context.item = "null value - will fix";
+              context.pickupTime = data.pickuptime;
+              delete context.noLuck;
+              delete context.order;
+              console.log('context:', context);
+              return res(context);
+            }
+            else {
+              context.noLuck = true;
+              delete context.pickupTime;
+              delete context.item;
+              console.log('context:', context);
+              return res(context);
+            }
+          })
+          .catch(err => {
+            console.error("Error in orderTime", err.message || err);
             return rej(err);
           });
       }

@@ -3,14 +3,15 @@
  */
 
 const actions = require('./actions'),
-  { getMenu, getTypes, getSizes, getLocation } = require('../sql'),
+  { getMenu, getTypes, getSizes, getLocation, makeOrder } = require('../sql'),
   { tunnelURL } = require('../envVariables');
 
-function postbackHandler (payload, { fbPageId, fbUserId }) {
+function postbackHandler (payload, userSession) {
   return new Promise(function (res, rej) {
-    const parsedPayload = /([A-Z]+)!?(\w*)/g.exec(payload);
-    switch (parsedPayload[1]) {
+    const { fbPageId, fbUserId } = userSession,
+      parsedPayload = /([A-Z]+)!?(\d*)\/?(\d*)/g.exec(payload);
 
+    switch (parsedPayload[1]) {
       case 'MENU':
         return getMenu(fbPageId)
           .then((menu) => res(parseItems(menu, fbPageId)) )
@@ -28,9 +29,10 @@ function postbackHandler (payload, { fbPageId, fbUserId }) {
           .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
 
       case 'ORDER':
-        return getTypes(botID, parsedPayload[2])
-          .then(types => res(parseProductTypes(types)) )
-          .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
+        console.log("EXECUTING ORDER");
+        userSession.context.order = { typeid: parsedPayload[2], sizeid: parsedPayload[3] };
+        console.log("userSession =", userSession);
+        return res({ text: "what time would you like that?" });
 
       case 'SIZES':
         return getSizes(parsedPayload[2])
@@ -39,8 +41,8 @@ function postbackHandler (payload, { fbPageId, fbUserId }) {
 
       default:
         return rej(new Error("couldn't deal with this postbackHandler input"));
-
     }
+
   });
 }
 
@@ -108,7 +110,7 @@ function parseProductSizes(sizes) {
         {
           type: 'postback',
           title: 'Order',
-          payload: `ORDER!${val.sizeid}`
+          payload: `ORDER!${val.typeid}/${val.sizeid}`
         },
       ]
     };

@@ -1,2 +1,2 @@
-SELECT size, price FROM sizes
+SELECT size, sizeid, typeid, price FROM sizes
 WHERE typeid=$1
