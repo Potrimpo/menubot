@@ -9,7 +9,9 @@ const findItemQuery = sql('./sqlFiles/findItem.sql'),
   getMenuQuery = sql('./sqlFiles/getMenu.sql'),
   getLocationQuery = sql('./sqlFiles/getLocation.sql'),
   getTypesQuery = sql('./sqlFiles/getTypes.sql'),
-  getSizesQuery = sql('./sqlFiles/getSizes.sql');
+  getSizesQuery = sql('./sqlFiles/getSizes.sql'),
+  getValsForOrderQuery = sql('./sqlFiles/getValsForOrder.sql'),
+  makeOrderQuery = sql('./sqlFiles/makeOrder.sql');
 
 const findItem = (fbPageId, prodName) => db.oneOrNone(findItemQuery, [fbPageId, prodName]),
 
@@ -21,7 +23,7 @@ const findItem = (fbPageId, prodName) => db.oneOrNone(findItemQuery, [fbPageId, 
 
   getSizes = (typeid) => db.many(getSizesQuery, typeid),
 
-//  makeOrder = (sizeid) => db.one("INSERT INTO orders (fbid, typeid, sizeid, time, userID) VALUES");
+  makeOrder = (fbPageId, fbUserId, typeid, sizeid, time) => db.one(makeOrderQuery, [fbPageId, fbUserId, typeid, sizeid, time]);
 
 // getTypes(1)
 //   .then(data => console.log("data =", data) )
@@ -36,5 +38,6 @@ module.exports = {
   getMenu,
   getLocation,
   getTypes,
-  getSizes
+  getSizes,
+  makeOrder
 };
