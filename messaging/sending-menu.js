@@ -30,6 +30,8 @@ function postbackHandler (payload, userSession) {
 
       case 'ORDER':
         console.log("EXECUTING ORDER");
+        // make sure wit.ai doesn't reuse data from a previous order!
+        delete userSession.context.pickupTime;
         userSession.context.order = { typeid: parsedPayload[2], sizeid: parsedPayload[3] };
         console.log("userSession =", userSession);
         return res({ text: "what time would you like that?" });
