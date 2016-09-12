@@ -1,25 +1,33 @@
 const chai = require('chai'),
   chaiHttp = require('chai-http'),
   crypto = require('crypto'),
+  chrono = require('chrono-node'),
   // fs for debugging using writeToFile (in functionsForTests.js)
   // fs = require('fs'),
   { FB_APP_SECRET, tunnelURL, senderID, testPageID } = require('../envVariables'),
   { sessions, findOrCreateSession } = require('../witSessions'),
-  { postBackFactory, requestMessageFactory } = require('./functionsForTests');
+  { postBackFactory, requestMessageFactory, hashForTestMessage } = require('./functionsForTests'),
+  { findOrder } = require('../sql');
 
 const expect = chai.expect;
 chai.use(chaiHttp);
 
 describe('testing order functionality', function () {
-  let dummyRequest;
+  const typeid = 1,
+        sizeid = 1,
+        testTime = '10am';
+
+  let dummyRequest,
+      myGenHash;
   this.timeout(8000);
 
   afterEach(function (done) { setTimeout(done, 4000) });
 
   it('should store details in conversation context', function () {
-    dummyRequest = postBackFactory('ORDER!1/1');
+    const requestString = `ORDER!${typeid}/${sizeid}`;
+    dummyRequest = postBackFactory(requestString);
 
-    const myGenHash = crypto.createHmac('sha1', FB_APP_SECRET)
+    myGenHash = crypto.createHmac('sha1', FB_APP_SECRET)
       .update(Buffer.from(JSON.stringify(dummyRequest)))
       .digest('hex');
 
@@ -30,21 +38,13 @@ describe('testing order functionality', function () {
       .then(function (res) {
         // this is the request object, not the response we want to be testing
         expect(res).to.have.status(200);
-        setTimeout(function () {
-          const convoSession = findOrCreateSession(senderID, testPageID);
-          expect(sessions[convoSession]).to.contain.key("context");
-          console.log("testSession:", sessions[convoSession]);
-          console.log("testContext:", sessions[convoSession].context);
-          expect(sessions[convoSession].context).to.contain.key("order");
-          expect(sessions[convoSession].context.order).to.contain.key("pickuptime");
-        }, 2000);
       });
   });
 
-  it('should place an order', function () {
-    dummyRequest = requestMessageFactory('10am');
+  it('place an order', function () {
+    dummyRequest = requestMessageFactory(testTime);
 
-    const myGenHash = crypto.createHmac('sha1', FB_APP_SECRET)
+    myGenHash = crypto.createHmac('sha1', FB_APP_SECRET)
       .update(Buffer.from(JSON.stringify(dummyRequest)))
       .digest('hex');
 
@@ -55,11 +55,15 @@ describe('testing order functionality', function () {
       .then(function (res) {
         // this is the request object, not the response we want to be testing
         expect(res).to.have.status(200);
-        setTimeout(function () {
-          const convoSession = findOrCreateSession(senderID, testPageID);
-          expect(sessions[convoSession]).to.contain.key("context");
-          expect(sessions[convoSession].context).to.contain.key("pickuptime");
-        }, 500);
       });
+
   });
+
+  it('check if order was made', function () {
+      findOrder(testPageID, senderID, sizeid)
+        .then(function (data) {
+          expect(data.pickuptime).to.exist;
+          expect(chrono.parseDate(String(data.pickuptime))).to.equal(chrono.parseDate(String(testTime)));
+        })
+    })
 });
