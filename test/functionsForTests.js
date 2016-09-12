@@ -1,10 +1,17 @@
-const { senderID } = require('../envVariables');
+const crypto = require('crypto'),
+  { FB_APP_SECRET, senderID } = require('../envVariables');
 
 function writeObjectToFile (obj) {
   let wstream = fs.createWriteStream('test/output.json');
   wstream.write(JSON.stringify(obj));
   wstream.on('finish', () => console.log('file is readable in output.json'));
   return wstream.end();
+}
+
+function hashMyMessage (dummyReq) {
+  return crypto.createHmac('sha1', FB_APP_SECRET)
+    .update(Buffer.from(JSON.stringify(dummyReq)))
+    .digest('hex');
 }
 
 function dbQueryFactory (value) {
@@ -51,5 +58,6 @@ module.exports = {
   writeObjectToFile,
   requestMessageFactory,
   postBackFactory,
-  dbQueryFactory
+  dbQueryFactory,
+  hashMyMessage
 };

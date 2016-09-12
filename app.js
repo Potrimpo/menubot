@@ -30,6 +30,7 @@ app.use(({method, url}, rsp, next) => {
   next();
 });
 app.use(bodyParser.json({ verify: verifyRequestSignature }));
+app.use('/static', express.static(__dirname + '/public'));
 
 // Home page as insurance
 app.get('/', function(req, res) {
@@ -104,9 +105,7 @@ app.post('/webhook', (req, res) => {
           }
         } else if(event.postback) {
           const sessionId = findOrCreateSession(event.sender.id, event.recipient.id);
-          console.log(`event.sender.id = ${event.sender.id}`);
-          console.log(`event.recipient.id = ${event.recipient.id}`);
-          postbackHandler(event.postback.payload, sessions[sessionId].fbPageId)
+          postbackHandler(event.postback.payload, sessions[sessionId])
             .then(response => {
               actions.send({sessionId}, response)
             })

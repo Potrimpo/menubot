@@ -1,6 +1,7 @@
-const { sessions } = require('./../witSessions'),
+const chrono = require('chrono-node'),
+  { sessions } = require('./../witSessions'),
   fbMessage = require('./messenger'),
-  { findItem } = require('./../sql');
+  { findItem, makeOrder, orderDetails } = require('./../sql');
 
 const firstEntityValue = (entities, entity) => {
   const val = entities && entities[entity] &&
@@ -71,6 +72,39 @@ const actions = {
           })
           .catch(err => {
             console.error(err);
+            return rej(err);
+          });
+      }
+    });
+  },
+
+  // specify the time of an order
+  orderTime({context, entities, fbPageId, fbUserId }) {
+    const time = firstEntityValue(entities, 'datetime');
+    return new Promise((res, rej) => {
+      if(time) {
+        console.log("INSERTING INTO DATABASE");
+        return makeOrder(fbPageId, fbUserId, context.order.typeid, context.order.sizeid, time)
+          .then(data => {
+            if (data) {
+              delete context.noLuck;
+              context.pickupTime = String(chrono.parseDate(String(data.pickuptime)));
+              return orderDetails(context.order.sizeid)
+            }
+            else {
+              context.noLuck = true;
+              delete context.pickupTime;
+              delete context.item;
+              return res(context);
+            }
+          })
+          .then(function (data) {
+            delete context.order;
+            Object.assign(context, data);
+            return res(context);
+          })
+          .catch(err => {
+            console.error("Error in orderTime", err.message || err);
             return rej(err);
           });
       }

@@ -2,14 +2,13 @@
 
 const actions = require('../messaging/actions'),
   expect = require('chai').expect,
-  // pgp = require('pg-promise')(),
   { dbQueryFactory } = require('./functionsForTests'),
   { testPageID } = require('../envVariables');
 
 // DON'T PUT CATCH STATEMENTS IN MOCHA-INVOLVED PROMISES. WHEN AN ASSERTION FAILS IT ERRORS
 // CATCH STATEMENTS WILL STOP MOCHA FROM PICKING UP ON THE FAILURE
 
-describe('testing bot actions with database', function() {
+describe('testing bot actions with mocked queries', function() {
   let mockQuery;
 
   it("checks for products using item it DOESN'T have", function() {
