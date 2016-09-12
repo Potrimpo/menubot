@@ -105,8 +105,6 @@ app.post('/webhook', (req, res) => {
           }
         } else if(event.postback) {
           const sessionId = findOrCreateSession(event.sender.id, event.recipient.id);
-          console.log(`event.sender.id = ${event.sender.id}`);
-          console.log(`event.recipient.id = ${event.recipient.id}`);
           postbackHandler(event.postback.payload, sessions[sessionId])
             .then(response => {
               actions.send({sessionId}, response)

@@ -34,7 +34,7 @@ function postbackHandler (payload, userSession) {
         delete userSession.context.pickupTime;
         userSession.context.order = { typeid: parsedPayload[2], sizeid: parsedPayload[3] };
         console.log("userSession =", userSession);
-        return res({ text: "what time would you like that?" });
+        return res({ text: "what time would you like that? (include am/pm)" });
 
       case 'SIZES':
         return getSizes(parsedPayload[2])
