@@ -2,7 +2,7 @@
  * Created by lewis.knoxstreader on 9/09/16.
  */
 const chrono = require('chrono-node'),
-  { findItem, getMenu, getLocation, getTypes, makeOrder } = require('../sql'),
+  { findItem, getMenu, getLocation, getTypes, makeOrder, orderDetails } = require('../sql'),
   { testPageID, senderID } = require('../envVariables'),
   expect = require('chai').expect;
 
@@ -66,7 +66,7 @@ describe('testing database queries', function() {
 
   it("makeOrder inserts into orders table", function () {
     const witTime = '2016-09-12T08:25:00.000-07:00',
-      queryTime = '8:25am';
+      queryTime = 'september 12th 8:25am';
     return makeOrder(testPageID, senderID, 2, 2, witTime)
       .then(function (data) {
         // Chrono can't deal with datetime values from wit.ai
@@ -77,4 +77,15 @@ describe('testing database queries', function() {
         expect(String(parsedReturnedTime)).to.equal(String(parsedQueryTime));
       });
   });
+
+  it("orderDetails retrieves data from specific order", function () {
+    const sizeid = 1;
+    return orderDetails(sizeid)
+      .then(function (data) {
+        expect(data).to.exist;
+        expect(data).to.contain.all.keys("size", "type", "item", "itemid", "typeid", "sizeid");
+        expect(data).to.have.property("size", "large");
+      })
+  })
+
 });
