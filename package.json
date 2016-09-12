@@ -18,6 +18,7 @@
   "repository": "https://github.com/Potrimpo/wit-ai-messenger-bot.git",
   "dependencies": {
     "body-parser": "^1.15.2",
+    "chrono-node": "^1.2.4",
     "crypto": "0.0.3",
     "express": "^4.14.0",
     "node-fetch": "^1.5.1",
