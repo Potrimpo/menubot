@@ -14,7 +14,7 @@ function postbackHandler (payload, userSession) {
     switch (parsedPayload[1]) {
       case 'MENU':
         return getMenu(fbPageId)
-          .then((menu) => res(parseItems(menu, fbPageId)) )
+          .then((menu) => res(parseItems(fbPageId, menu)) )
           .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
 
       case 'LOCATION':
@@ -25,7 +25,7 @@ function postbackHandler (payload, userSession) {
 
       case 'DETAILS':
         return getTypes(parsedPayload[2])
-          .then(types => res(parseProductTypes(types)) )
+          .then(types => res(parseProductTypes(fbPageId, types)) )
           .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
 
       case 'ORDER':
@@ -33,7 +33,6 @@ function postbackHandler (payload, userSession) {
         // make sure wit.ai doesn't reuse data from a previous order!
         delete userSession.context.pickupTime;
         userSession.context.order = { typeid: parsedPayload[2], sizeid: parsedPayload[3] };
-        console.log("userSession =", userSession);
         return res({ text: "what time would you like that? (include am/pm)" });
 
       case 'SIZES':
@@ -48,7 +47,7 @@ function postbackHandler (payload, userSession) {
   });
 }
 
-function parseItems(menu, botID) {
+function parseItems(botID, menu) {
   const template = {
     attachment: {
       type:"template",
@@ -71,7 +70,7 @@ function parseItems(menu, botID) {
   return template;
 }
 
-function parseProductTypes(types) {
+function parseProductTypes(botID, types) {
   const template = {
     attachment: {
       type:"template",
@@ -81,6 +80,7 @@ function parseProductTypes(types) {
   template.attachment.payload.elements = types.map(val => {
     return {
       title: val.type.toUpperCase(),
+      image_url: `${tunnelURL}/static/images/${botID}/${val.itemid}/${val.typeid}.jpg`,
       buttons: [
         {
           type: 'postback',

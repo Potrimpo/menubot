@@ -1,2 +1,2 @@
-SELECT type, typeid FROM types
+SELECT type, typeid, itemid FROM types
 WHERE itemid=$1
