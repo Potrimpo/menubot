@@ -1,8 +1,9 @@
 /**
  * Created by lewis.knoxstreader on 9/09/16.
  */
-const { findItem, getMenu, getLocation, getTypes } = require('../sql'),
-  { testPageID } = require('../envVariables'),
+const chrono = require('chrono-node'),
+  { findItem, getMenu, getLocation, getTypes, makeOrder } = require('../sql'),
+  { testPageID, senderID } = require('../envVariables'),
   expect = require('chai').expect;
 
 describe('testing database queries', function() {
@@ -63,4 +64,17 @@ describe('testing database queries', function() {
       });
   });
 
+  it("makeOrder inserts into orders table", function () {
+    const witTime = '2016-09-12T08:25:00.000-07:00',
+      queryTime = '8:25am';
+    return makeOrder(testPageID, senderID, 2, 2, witTime)
+      .then(function (data) {
+        // Chrono can't deal with datetime values from wit.ai
+        const parsedQueryTime = chrono.parseDate(queryTime),
+          parsedReturnedTime = chrono.parseDate(String(data.pickuptime));
+        expect(data).to.exist;
+        expect(data).to.contain.key("pickuptime");
+        expect(String(parsedReturnedTime)).to.equal(String(parsedQueryTime));
+      });
+  });
 });

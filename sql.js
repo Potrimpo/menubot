@@ -10,7 +10,8 @@ const findItemQuery = sql('./sqlFiles/findItem.sql'),
   getLocationQuery = sql('./sqlFiles/getLocation.sql'),
   getTypesQuery = sql('./sqlFiles/getTypes.sql'),
   getSizesQuery = sql('./sqlFiles/getSizes.sql'),
-  makeOrderQuery = sql('./sqlFiles/makeOrder.sql');
+  makeOrderQuery = sql('./sqlFiles/makeOrder.sql'),
+  orderDetailsQuery = sql('./sqlFiles/orderDetails.sql');
 
 const findItem = (fbPageId, prodName) => db.oneOrNone(findItemQuery, [fbPageId, prodName]),
 
@@ -22,9 +23,15 @@ const findItem = (fbPageId, prodName) => db.oneOrNone(findItemQuery, [fbPageId, 
 
   getSizes = (typeid) => db.many(getSizesQuery, typeid),
 
-  makeOrder = (fbPageId, fbUserId, typeid, sizeid, time) => db.one(makeOrderQuery, [fbPageId, fbUserId, typeid, sizeid, time]),
+  makeOrder = (fbPageId, fbUserId, typeid, sizeid, time) => {
+    return db.one(makeOrderQuery, [fbPageId, fbUserId, typeid, sizeid, time]);
+  },
 
-  findOrder = (fbPageId, fbUserId, sizeid) => db.one("SELECT * FROM orders WHERE fbid=$1 AND userid=$2 AND sizeid=$3", [fbPageId, fbUserId, sizeid]);
+  orderDetails = (sizeid) => db.one(orderDetailsQuery, sizeid),
+
+  findOrder = (fbPageId, fbUserId, sizeid) => {
+    return db.one("SELECT * FROM orders WHERE fbid=$1 AND userid=$2 AND sizeid=$3", [fbPageId, fbUserId, sizeid]);
+  };
 
 function sql(file) {
   return new pgp.QueryFile(path.join(__dirname, file), {minify: true});
@@ -37,5 +44,6 @@ module.exports = {
   getTypes,
   getSizes,
   makeOrder,
+  orderDetails,
   findOrder
 };
