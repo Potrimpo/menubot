@@ -1,6 +1,6 @@
 const { sessions } = require('./../witSessions'),
   fbMessage = require('./messenger'),
-  { findItem, makeOrder } = require('./../sql');
+  { findItem, makeOrder, orderDetails } = require('./../sql');
 
 const firstEntityValue = (entities, entity) => {
   const val = entities && entities[entity] &&
@@ -83,16 +83,16 @@ const actions = {
     return new Promise((res, rej) => {
       if(time) {
         console.log("INSERTING INTO DATABASE");
+        console.log("context:", context);
         return makeOrder(fbPageId, fbUserId, context.order.typeid, context.order.sizeid, time)
           .then(data => {
             if (data) {
+              delete context.noLuck;
               console.log("after makeOrder query", data);
               context.item = "null value - will fix";
               context.pickupTime = data.pickuptime;
-              delete context.noLuck;
-              delete context.order;
-              console.log('context:', context);
-              return res(context);
+              console.log('before orderDetails:', context);
+              return orderDetails(context.order.sizeid)
             }
             else {
               context.noLuck = true;
@@ -101,6 +101,12 @@ const actions = {
               console.log('context:', context);
               return res(context);
             }
+          })
+          .then(function (data) {
+            delete context.order;
+            console.log("data after orderDetails =", data);
+            Object.assign(context, data);
+            return res(context);
           })
           .catch(err => {
             console.error("Error in orderTime", err.message || err);
