@@ -1,12 +1,10 @@
 const chai = require('chai'),
   chaiHttp = require('chai-http'),
-  crypto = require('crypto'),
   chrono = require('chrono-node'),
   // fs for debugging using writeToFile (in functionsForTests.js)
   // fs = require('fs'),
-  { FB_APP_SECRET, tunnelURL, senderID, testPageID } = require('../envVariables'),
-  { sessions, findOrCreateSession } = require('../witSessions'),
-  { postBackFactory, requestMessageFactory, hashForTestMessage } = require('./functionsForTests'),
+  { tunnelURL, senderID, testPageID } = require('../envVariables'),
+  { postBackFactory, requestMessageFactory, hashMyMessage } = require('./functionsForTests'),
   { findOrder } = require('../sql');
 
 const expect = chai.expect;
@@ -26,10 +24,11 @@ describe('testing order functionality', function () {
   it('should store details in conversation context', function () {
     const requestString = `ORDER!${typeid}/${sizeid}`;
     dummyRequest = postBackFactory(requestString);
+    myGenHash = hashMyMessage(dummyRequest);
 
-    myGenHash = crypto.createHmac('sha1', FB_APP_SECRET)
-      .update(Buffer.from(JSON.stringify(dummyRequest)))
-      .digest('hex');
+    // myGenHash = crypto.createHmac('sha1', FB_APP_SECRET)
+    //   .update(Buffer.from(JSON.stringify(dummyRequest)))
+    //   .digest('hex');
 
     return chai.request(tunnelURL)
       .post('/webhook')
@@ -43,10 +42,11 @@ describe('testing order functionality', function () {
 
   it('place an order', function () {
     dummyRequest = requestMessageFactory(testTime);
+    myGenHash = hashMyMessage(dummyRequest);
 
-    myGenHash = crypto.createHmac('sha1', FB_APP_SECRET)
-      .update(Buffer.from(JSON.stringify(dummyRequest)))
-      .digest('hex');
+    // myGenHash = crypto.createHmac('sha1', FB_APP_SECRET)
+    //   .update(Buffer.from(JSON.stringify(dummyRequest)))
+    //   .digest('hex');
 
     return chai.request(tunnelURL)
       .post('/webhook')

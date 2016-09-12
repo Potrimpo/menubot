@@ -1,10 +1,9 @@
 const chai = require('chai'),
   chaiHttp = require('chai-http'),
-  crypto = require('crypto'),
   // fs for debugging using writeToFile (in functionsForTests.js)
   fs = require('fs'),
-  { FB_APP_SECRET, tunnelURL } = require('../envVariables'),
-  { requestMessageFactory } = require('./functionsForTests');
+  { tunnelURL } = require('../envVariables'),
+  { requestMessageFactory, hashMyMessage } = require('./functionsForTests');
 
 const expect = chai.expect;
 chai.use(chaiHttp);
@@ -17,10 +16,7 @@ describe('sending dummy messages to bot (POST /webhook)', function () {
 
  it('should respond positive', function () {
    dummyRequest = requestMessageFactory('do you have coffee?');
-
-   const myGenHash = crypto.createHmac('sha1', FB_APP_SECRET)
-     .update(Buffer.from(JSON.stringify(dummyRequest)))
-     .digest('hex');
+   myGenHash = hashMyMessage(dummyRequest);
 
    return chai.request(tunnelURL)
      .post('/webhook')
@@ -35,10 +31,7 @@ describe('sending dummy messages to bot (POST /webhook)', function () {
 
  it('should respond negative', function () {
    dummyRequest = requestMessageFactory('you got bikes?');
-
-   const myGenHash = crypto.createHmac('sha1', FB_APP_SECRET)
-     .update(Buffer.from(JSON.stringify(dummyRequest)))
-     .digest('hex');
+   myGenHash = hashMyMessage(dummyRequest);
 
    return chai.request(tunnelURL)
      .post('/webhook')
