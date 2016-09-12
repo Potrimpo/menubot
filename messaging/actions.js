@@ -1,4 +1,5 @@
-const { sessions } = require('./../witSessions'),
+const chrono = require('chrono-node'),
+  { sessions } = require('./../witSessions'),
   fbMessage = require('./messenger'),
   { findItem, makeOrder, orderDetails } = require('./../sql');
 
@@ -83,28 +84,22 @@ const actions = {
     return new Promise((res, rej) => {
       if(time) {
         console.log("INSERTING INTO DATABASE");
-        console.log("context:", context);
         return makeOrder(fbPageId, fbUserId, context.order.typeid, context.order.sizeid, time)
           .then(data => {
             if (data) {
               delete context.noLuck;
-              console.log("after makeOrder query", data);
-              context.item = "null value - will fix";
-              context.pickupTime = data.pickuptime;
-              console.log('before orderDetails:', context);
+              context.pickupTime = String(chrono.parseDate(String(data.pickuptime)));
               return orderDetails(context.order.sizeid)
             }
             else {
               context.noLuck = true;
               delete context.pickupTime;
               delete context.item;
-              console.log('context:', context);
               return res(context);
             }
           })
           .then(function (data) {
             delete context.order;
-            console.log("data after orderDetails =", data);
             Object.assign(context, data);
             return res(context);
           })
