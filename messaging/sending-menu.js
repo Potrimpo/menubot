@@ -3,7 +3,7 @@
  */
 
 const actions = require('./actions'),
-  { getMenu, getTypes, getSizes } = require('../sql'),
+  // { getMenu, getTypes, getSizes } = require('../sql'),
   { Company, Item, Type, Size } = require('./../database'),
   { tunnelURL } = require('../envVariables');
 

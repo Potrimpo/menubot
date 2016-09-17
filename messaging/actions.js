@@ -1,7 +1,7 @@
 const chrono = require('chrono-node'),
   { sessions } = require('./../witSessions'),
   fbMessage = require('./messenger'),
-  { findItem, makeOrder, orderDetails } = require('./../sql'),
+  // { findItem, makeOrder, orderDetails } = require('./../sql'),
   { Item, Size, Order } = require('./../database');
 
 const firstEntityValue = (entities, entity) => {
