@@ -185,6 +185,13 @@ const Order = sequelize.define('Order', {
       })
       .save()
     },
+    findOrder (fbid, userid, sizeid) {
+      return Order.findOne({
+        attributes: ['pickuptime'],
+        where: {fbid, userid, sizeid}
+      })
+      .catch(err => console.error("error in Order.findOrder:", err.message || err));
+    }
   }
 });
 

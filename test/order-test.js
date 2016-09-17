@@ -5,7 +5,8 @@ const chai = require('chai'),
   // fs = require('fs'),
   { tunnelURL, senderID, testPageID } = require('../envVariables'),
   { postBackFactory, requestMessageFactory, hashMyMessage } = require('./functionsForTests'),
-  { findOrder } = require('../sql');
+  { Order } = require('./../database');
+  // { findOrder } = require('../sql');
 
 const expect = chai.expect;
 chai.use(chaiHttp);
@@ -60,7 +61,7 @@ describe('testing order functionality', function () {
   });
 
   it('check if order was made', function () {
-      findOrder(testPageID, senderID, sizeid)
+      return Order.findOrder(testPageID, senderID, sizeid)
         .then(function (data) {
           expect(data.pickuptime).to.exist;
           expect(chrono.parseDate(String(data.pickuptime))).to.equal(chrono.parseDate(String(testTime)));
