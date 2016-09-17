@@ -21,7 +21,15 @@ const Company = sequelize.define('Company', {
   },
   location: Sequelize.STRING
 }, {
-  tableName: 'companies'
+  tableName: 'companies',
+  classMethods: {
+    findLocation(fbid) {
+      return Company.findOne({
+        attributes: ['location'],
+        where: { fbid }
+      })
+    }
+  }
 });
 
 
@@ -49,6 +57,12 @@ const Item = sequelize.define('Item', {
       return Item.findOne({
         attributes: ['item', 'itemid'],
         where: { fbid, item }
+      })
+    },
+    getMenu(fbid) {
+      return Item.findAll({
+        attributes: ['item', 'itemid'],
+        where: { fbid }
       })
     }
   }
