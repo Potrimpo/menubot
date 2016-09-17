@@ -4,7 +4,7 @@
 
 const actions = require('./actions'),
   { getMenu, getTypes, getSizes } = require('../sql'),
-  { Company, Item } = require('./../database'),
+  { Company, Item, Type } = require('./../database'),
   { tunnelURL } = require('../envVariables');
 
 function postbackHandler (payload, userSession) {
@@ -25,7 +25,7 @@ function postbackHandler (payload, userSession) {
           .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
 
       case 'DETAILS':
-        return getTypes(parsedPayload[2])
+        return Type.getTypes(parsedPayload[2])
           .then(types => res(parseProductTypes(fbPageId, types)) )
           .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
 

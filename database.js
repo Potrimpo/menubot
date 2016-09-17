@@ -86,7 +86,15 @@ const Type = sequelize.define('Type', {
     type: Sequelize.STRING
   }
 }, {
-  tableName: 'types'
+  tableName: 'types',
+  classMethods: {
+    getTypes(itemid) {
+      return Type.findAll({
+        attributes: ['itemid', 'typeid', 'type'],
+        where: { itemid }
+      })
+    }
+  }
 });
 
 const Size = sequelize.define('Size', {
