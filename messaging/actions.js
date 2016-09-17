@@ -2,7 +2,7 @@ const chrono = require('chrono-node'),
   { sessions } = require('./../witSessions'),
   fbMessage = require('./messenger'),
   { findItem, makeOrder, orderDetails } = require('./../sql'),
-  { Item } = require('./../database');
+  { Item, Size, Order } = require('./../database');
 
 const firstEntityValue = (entities, entity) => {
   const val = entities && entities[entity] &&
@@ -85,12 +85,12 @@ const actions = {
     return new Promise((res, rej) => {
       if(time) {
         console.log("INSERTING INTO DATABASE");
-        return makeOrder(fbPageId, fbUserId, context.order.typeid, context.order.sizeid, time)
+        return Order.makeOrder(fbPageId, fbUserId, context.order.typeid, context.order.sizeid, time)
           .then(data => {
             if (data) {
               delete context.noLuck;
               context.pickupTime = String(chrono.parseDate(String(data.pickuptime)));
-              return orderDetails(context.order.sizeid)
+              return Size.orderDetails(context.order.sizeid)
             }
             else {
               context.noLuck = true;

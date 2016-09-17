@@ -126,7 +126,65 @@ const Size = sequelize.define('Size', {
         attributes: ['typeid', 'sizeid', 'size', 'price'],
         where: { typeid }
       })
+    },
+    orderDetails(sizeid) {
+      return sequelize.query(
+        "SELECT sizes.sizeid, sizes.typeid, types.itemid, sizes.size, type, item" +
+        " FROM sizes INNER JOIN types ON sizes.typeid=types.typeid" +
+        " INNER JOIN items ON types.itemid=items.itemid" +
+        " WHERE sizes.sizeid=$1",
+        { bind: [sizeid], type: sequelize.QueryTypes.SELECT }
+      );
+      }
     }
+});
+
+
+const Order = sequelize.define('Order', {
+  orderid: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+    allowNull: false
+  },
+  fbid: {
+    type: Sequelize.BIGINT,
+    references: {
+      model: 'companies',
+      key: 'fbid'
+    }
+  },
+  userid: {
+    type: Sequelize.BIGINT,
+    allowNull: false
+  },
+  typeid: {
+    type: Sequelize.INTEGER,
+    references: {
+      model: 'types',
+      key: 'typeid'
+    },
+  },
+  sizeid: {
+    type: Sequelize.INTEGER,
+    references: {
+      model: 'sizes',
+      key: 'sizeid'
+    },
+  },
+  pickuptime: {
+    type: Sequelize.DATE,
+    allowNull: false
+  }
+}, {
+  tableName: 'orders',
+  classMethods: {
+    makeOrder(fbid, userid, typeid, sizeid, pickuptime) {
+      return Order.build({
+        fbid, userid, typeid, sizeid, pickuptime
+      })
+      .save()
+    },
   }
 });
 
