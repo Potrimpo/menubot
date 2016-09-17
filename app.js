@@ -34,7 +34,7 @@ app.use('/static', express.static(__dirname + '/public'));
 
 // Home page as insurance
 app.get('/', function(req, res) {
-  res.send("menubot reporting for duty");
+  res.send('menubot reporting for duty');
 });
 
 
@@ -155,7 +155,15 @@ function verifyRequestSignature(req, res, buf) {
   }
 }
 
-app.listen(PORT);
-console.log('Listening on :' + PORT + '...');
+const { sequelize } = require('./database');
+
+sequelize.sync({ force: false })
+  .then(() => {
+    console.log("sequelize is synced");
+    app.listen(PORT);
+    console.log('Listening on :' + PORT + '...');
+  })
+  .catch(err => console.error("error syncing sequelize db", err.message || err));
+
 
 module.exports = app;
