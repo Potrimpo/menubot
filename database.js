@@ -119,7 +119,15 @@ const Size = sequelize.define('Size', {
     allowNull: false
   }
 }, {
-  tableName: 'types'
+  tableName: 'sizes',
+  classMethods: {
+    getSizes(typeid) {
+      return Size.findAll({
+        attributes: ['typeid', 'sizeid', 'size', 'price'],
+        where: { typeid }
+      })
+    }
+  }
 });
 
 

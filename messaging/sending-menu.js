@@ -4,7 +4,7 @@
 
 const actions = require('./actions'),
   { getMenu, getTypes, getSizes } = require('../sql'),
-  { Company, Item, Type } = require('./../database'),
+  { Company, Item, Type, Size } = require('./../database'),
   { tunnelURL } = require('../envVariables');
 
 function postbackHandler (payload, userSession) {
@@ -37,7 +37,7 @@ function postbackHandler (payload, userSession) {
         return res({ text: "what time would you like that? (include am/pm)" });
 
       case 'SIZES':
-        return getSizes(parsedPayload[2])
+        return Size.getSizes(parsedPayload[2])
           .then(sizes => res(parseProductSizes(sizes)) )
           .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
 
