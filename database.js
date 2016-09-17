@@ -188,11 +188,21 @@ const Order = sequelize.define('Order', {
   }
 });
 
+// Relations
+Item.belongsTo(Company);
+Type.belongsTo(Item);
+Size.belongsTo(Type);
+
+Order.belongsTo(Size);
+Order.belongsTo(Type);
+Order.belongsTo(Company);
+
 
 module.exports = {
   sequelize,
   Company,
   Item,
   Type,
-  Size
+  Size,
+  Order
 };
