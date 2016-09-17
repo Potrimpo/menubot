@@ -1,7 +1,8 @@
 const chrono = require('chrono-node'),
   { sessions } = require('./../witSessions'),
   fbMessage = require('./messenger'),
-  { findItem, makeOrder, orderDetails } = require('./../sql');
+  { findItem, makeOrder, orderDetails } = require('./../sql'),
+  { Item } = require('./../database');
 
 const firstEntityValue = (entities, entity) => {
   const val = entities && entities[entity] &&
@@ -55,7 +56,7 @@ const actions = {
     const prod = firstEntityValue(entities, 'product');
     return new Promise((res, rej) => {
       if(prod) {
-        return findItem(fbPageId, prod)
+        return Item.findItem(fbPageId, prod)
           .then(data => {
             if (data) {
               context.productInfo = data.item;
