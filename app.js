@@ -21,11 +21,14 @@ const express = require('express'),
   expressValidator = require('express-validator'),
   connectAssets = require('connect-assets');
 
-console.log("session = ", session);
 
-const { PORT, FB_APP_SECRET, sessionTable, postgresURL } = require('./envVariables'),
-  { sequelize } = require('./database/models/index'),
+const { sequelize } = require('./database/models/index'),
   messengerMiddleware = require('./controllers/messengerMiddleware');
+
+// API keys and Passport configuration.
+const secrets = require('./config/secrets'),
+  { PORT, FB_APP_SECRET, sessionTable, postgresURL } = require('./envVariables'),
+  passportConf = require('./config/passport');
 
 // console.log(`/webhook is accepting Verify Token: "${FB_VERIFY_TOKEN}"`);
 
@@ -58,6 +61,21 @@ app.use(expressValidator());
 app.use(methodOverride());
 app.use(cookieParser());
 
+//PostgreSQL Store
+app.use(session({
+  store: new pgSession({
+    conString: postgresURL,
+    tableName: sessionTable
+  }),
+  secret: secrets.sessionSecret,
+  saveUninitialized: true,
+  resave: false,
+  cookie: {
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    httpOnly: true
+    //, secure: true // only when on HTTPS
+  }
+}));
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -93,9 +111,6 @@ var userController = require('./controllers/user');
 var apiController = require('./controllers/api');
 var contactController = require('./controllers/contact');
 
-// API keys and Passport configuration.
-var secrets = require('./config/secrets');
-var passportConf = require('./config/passport');
 
 // Primary app routes.
 app.get('/', homeController.index);
@@ -133,22 +148,6 @@ app.use(errorHandler());
 //     next();
 //   }
 // });
-
-//PostgreSQL Store
-app.use(session({
-  store: new pgSession({
-    conString: postgresURL,
-    tableName: sessionTable
-  }),
-  secret: secrets.sessionSecret,
-  saveUninitialized: true,
-  resave: false,
-  cookie: {
-    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-    httpOnly: true
-    //, secure: true // only when on HTTPS
-  }
-}));
 
 /*
  * Verify that the callback came from Facebook. Using the App Secret from
