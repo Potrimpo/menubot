@@ -3,9 +3,28 @@
 const express = require('express'),
   bodyParser = require('body-parser'),
   crypto = require('crypto'),
-  { sequelize } = require('./database');
+  // var toobusy = require('toobusy-js');
+  cookieParser = require('cookie-parser'),
+  compress = require('compression'),
+  favicon = require('serve-favicon'),
+  session = require('express-session'),
+  pgSession = require('connect-pg-simple')(session),
+  logger = require('morgan'),
+  errorHandler = require('errorhandler'),
+  lusca = require('lusca'),
+  methodOverride = require('method-override'),
+  multer = require('multer'),
+  ejsEngine = require('ejs-mate'),
+  flash = require('express-flash'),
+  path = require('path'),
+  passport = require('passport'),
+  expressValidator = require('express-validator'),
+  connectAssets = require('connect-assets');
 
-const { PORT, FB_APP_SECRET } = require('./envVariables'),
+console.log("session = ", session);
+
+const { PORT, FB_APP_SECRET, sessionTable, postgresURL } = require('./envVariables'),
+  { sequelize } = require('./database/models/index'),
   messengerMiddleware = require('./controllers/messengerMiddleware');
 
 // console.log(`/webhook is accepting Verify Token: "${FB_VERIFY_TOKEN}"`);
@@ -21,17 +40,115 @@ app.use(({method, url}, rsp, next) => {
 app.use(bodyParser.json({ verify: verifyRequestSignature }));
 app.use('/static', express.static(__dirname + '/public'));
 
-// Home page as insurance
-app.get('/', function(req, res) {
-  res.send('menubot reporting for duty');
-});
+// Express configuration.
+app.engine('ejs', ejsEngine);
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+app.enable("trust proxy");
+app.use(compress());
+app.use(connectAssets({
+  paths: [path.join(__dirname, 'public/css'), path.join(__dirname, 'public/js')]
+}));
+app.use(logger('dev'));
+app.use(favicon(path.join(__dirname, 'public/favicon.png')));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(multer({ dest: path.join(__dirname, 'uploads') }).single());
+app.use(expressValidator());
+app.use(methodOverride());
+app.use(cookieParser());
 
+
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
+app.use(lusca({
+  csrf: true,
+  xframe: 'SAMEORIGIN',
+  xssProtection: true
+}));
+app.use(function(req, res, next) {
+  res.locals.user = req.user;
+  res.locals.gaCode = secrets.googleAnalyticsCode;
+  next();
+});
+app.use(function(req, res, next) {
+  if (/api/i.test(req.path)) req.session.returnTo = req.path;
+  next();
+});
+app.use(function(req, res, next) {
+  res.cookie('XSRF-TOKEN', res.locals._csrf, {httpOnly: false});
+  next();
+});
 
 // Webhook GET (facebook pings this with heartbeat)
 app.get('/webhook', messengerMiddleware.getWebhook);
 
 // Message handler
 app.post('/webhook', messengerMiddleware.postWebhook);
+
+// Controllers (route handlers).
+var homeController = require('./controllers/home');
+var userController = require('./controllers/user');
+var apiController = require('./controllers/api');
+var contactController = require('./controllers/contact');
+
+// API keys and Passport configuration.
+var secrets = require('./config/secrets');
+var passportConf = require('./config/passport');
+
+// Primary app routes.
+app.get('/', homeController.index);
+app.get('/login', userController.getLogin);
+app.get('/logout', userController.logout);
+app.get('/contact', contactController.getContact);
+app.post('/contact', contactController.postContact);
+app.get('/account', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getFacebook);
+app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);
+
+/**
+ * API examples routes.
+ */
+app.get('/api', apiController.getApi);
+app.get('/api/facebook', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getFacebook);
+
+function safeRedirectToReturnTo(req, res) {
+  var returnTo = req.session.returnTo || '/';
+  delete req.session.returnTo;
+  res.redirect(returnTo);
+}
+
+// OAuth authentication routes. (Sign in)
+app.get('/auth/facebook', passport.authenticate('facebook', secrets.facebook.authOptions));
+app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login', failureFlash: true }), safeRedirectToReturnTo);
+
+// Error Handler.
+app.use(errorHandler());
+
+// Avoid not responsing when server load is huge
+// app.use(function(req, res, next) {
+//   if (toobusy()) {
+//     res.status(503).send("I'm busy right now, sorry. Please try again later.");
+//   } else {
+//     next();
+//   }
+// });
+
+//PostgreSQL Store
+app.use(session({
+  store: new pgSession({
+    conString: postgresURL,
+    tableName: sessionTable
+  }),
+  secret: secrets.sessionSecret,
+  saveUninitialized: true,
+  resave: false,
+  cookie: {
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    httpOnly: true
+    //, secure: true // only when on HTTPS
+  }
+}));
 
 /*
  * Verify that the callback came from Facebook. Using the App Secret from

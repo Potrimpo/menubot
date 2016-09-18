@@ -5,3 +5,4 @@ envVariables.js
 *.log
 output.json
 icon.png
+config/secrets.js
