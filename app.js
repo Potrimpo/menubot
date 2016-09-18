@@ -5,8 +5,8 @@ const bodyParser = require('body-parser'),
   request = require('request'),
   crypto = require('crypto');
 
-const { PORT, FB_APP_SECRET, FB_VERIFY_TOKEN } = require('./envVariables'),
-  { postWebhook } = require('./controllers/postWebhook');
+const { PORT, FB_APP_SECRET } = require('./envVariables'),
+  messengerMiddleware = require('./controllers/messengerMiddleware');
 
 // console.log(`/webhook is accepting Verify Token: "${FB_VERIFY_TOKEN}"`);
 
@@ -27,19 +27,11 @@ app.get('/', function(req, res) {
 });
 
 
-// Webhook setup (facebook pings this with heartbeat)
-app.get('/webhook', (req, res) => {
-  if (req.query['hub.mode'] === 'subscribe' &&
-    req.query['hub.verify_token'] === FB_VERIFY_TOKEN) {
-    res.send(req.query['hub.challenge']);
-  } else {
-    console.log(`query is ${JSON.stringify(req.query)}`);
-    res.sendStatus(400);
-  }
-});
+// Webhook GET (facebook pings this with heartbeat)
+app.get('/webhook', messengerMiddleware.getWebhook);
 
 // Message handler
-app.post('/webhook', postWebhook);
+app.post('/webhook', messengerMiddleware.postWebhook);
 
 /*
  * Verify that the callback came from Facebook. Using the App Secret from

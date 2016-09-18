@@ -3,7 +3,7 @@
  */
 
 const { Wit, log } = require('../index'),
-  { WIT_TOKEN } = require('../envVariables'),
+  { WIT_TOKEN, FB_VERIFY_TOKEN } = require('../envVariables'),
   { sessions, findOrCreateSession } = require('../witSessions'),
   postbackHandler = require('../messaging/sending-menu'),
   actions = require('../messaging/actions'),
@@ -87,3 +87,14 @@ exports.postWebhook = (req, res) => {
   }
   res.sendStatus(200);
 };
+
+exports.getWebhook = (req, res) => {
+  if (req.query['hub.mode'] === 'subscribe' &&
+    req.query['hub.verify_token'] === FB_VERIFY_TOKEN) {
+    res.send(req.query['hub.challenge']);
+  } else {
+    console.log(`query is ${JSON.stringify(req.query)}`);
+    res.sendStatus(400);
+  }
+};
+
