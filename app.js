@@ -1,9 +1,9 @@
 'use strict';
 
-const bodyParser = require('body-parser'),
-  express = require('express'),
-  request = require('request'),
-  crypto = require('crypto');
+const express = require('express'),
+  bodyParser = require('body-parser'),
+  crypto = require('crypto'),
+  { sequelize } = require('./database');
 
 const { PORT, FB_APP_SECRET } = require('./envVariables'),
   messengerMiddleware = require('./controllers/messengerMiddleware');
@@ -66,7 +66,6 @@ function verifyRequestSignature(req, res, buf) {
   }
 }
 
-const { sequelize } = require('./database');
 
 sequelize.sync({ force: false })
   .then(() => {

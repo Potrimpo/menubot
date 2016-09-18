@@ -24,7 +24,6 @@
     "node-fetch": "^1.5.1",
     "node-uuid": "^1.4.7",
     "pg-promise": "^5.3.3",
-    "request": "^2.74.0",
     "sequelize": "^3.24.3"
   },
   "devDependencies": {
