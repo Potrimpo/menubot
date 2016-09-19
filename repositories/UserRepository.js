@@ -80,24 +80,17 @@ repo.createAccFromFacebook = function(accessToken, refreshToken, profile) {
 
   return User.findOne({ where: { facebookId: profileId } })
     .then(function(existingUser) {
-      if (existingUser)
-        return existingUser;
-
-      return User.findOne({ where: { email: profile._json.email } })
-        .then(function(emailUser) {
-          if (emailUser)
-            throw 'There is already an account using this email address. Sign in to that account and link it with Facebook manually from Account Settings.';
-
-          var user = User.build({ facebookId: profileId });
-          user.email = profile._json.email || ( profileId + '@facebook.com' );
-          user.tokens = { facebook: accessToken };
-          user.profile = {
-            name: profile.displayName,
-            gender: profile.gender
-          };
-          addAvatarToProfile('facebook', 'https://graph.facebook.com/' + profileId + '/picture?type=large', user.profile);
-          return user.save();
-        });
+      if (existingUser) { return existingUser; }
+      var user = User.build({ facebookId: profileId });
+      user.email = profile._json.email || ( profileId + '@facebook.com' );
+      user.tokens = { facebook: accessToken };
+      user.name = profile.name.givenName + ' ' + profile.name.familyName;
+      user.profile = {
+        name: profile._json.first_name,
+        gender: profile.gender
+      };
+      addAvatarToProfile('facebook', 'https://graph.facebook.com/' + profileId + '/picture?type=large', user.profile);
+      return user.save();
     });
 };
 

@@ -43,6 +43,7 @@ const User = sequelize.define('User', {
     type: Sequelize.STRING,
     unique: true
   },
+  name: Sequelize.STRING,
   createdAt: Sequelize.DATE,
   updatedAt: Sequelize.DATE,
   email: {

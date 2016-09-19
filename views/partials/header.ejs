@@ -7,7 +7,7 @@
       </button>
 
       <a href="/" class="navbar-brand">
-        <i class="fa fa-cube"></i>Express Starter
+        <i class="fa fa-cloud"></i>Menubot
       </a>
     </div>
     <div class="collapse navbar-collapse">
@@ -23,7 +23,7 @@
           <li class="dropdown">
             <a href="#" data-toggle="dropdown" class="dropdown-toggle">
               <img src="<%= user.getProfilePicture() %>"/>
-              <%= user.profile.name || user.email %>&nbsp;<i class="caret"></i>
+              <%= user.name || user.email %>&nbsp;<i class="caret"></i>
             </a>
             <ul class="dropdown-menu">
               <li><a href="/logout">Logout</a></li>
