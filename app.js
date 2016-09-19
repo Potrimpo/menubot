@@ -41,7 +41,8 @@ app.use(({method, url}, rsp, next) => {
   next();
 });
 app.use(bodyParser.json({ verify: verifyRequestSignature }));
-app.use('/static', express.static(__dirname + '/public'));
+// app.use('/static', express.static(__dirname + 'public'));
+app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
 
 // Express configuration.
 app.engine('ejs', ejsEngine);
