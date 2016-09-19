@@ -15,9 +15,7 @@
         <li><a href="/contact">Contact</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <% if(!user) { %>
-          <li><a href="/login">Login</a></li>
-        <% } else { %>
+        <% if(user) { %>
           <li class="dropdown">
             <a href="#" data-toggle="dropdown" class="dropdown-toggle">
               <img src="<%= user.photo %>"/>

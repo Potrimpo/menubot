@@ -112,7 +112,7 @@ var contactController = require('./controllers/contact');
 // Primary app routes.
 app.get('/', homeController.index);
 app.get('/landing', homeController.landing);
-app.get('/login', userController.getLogin);
+// app.get('/login', userController.getLogin);
 app.get('/logout', userController.logout);
 app.get('/contact', contactController.getContact);
 app.post('/contact', contactController.postContact);
