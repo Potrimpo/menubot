@@ -24,14 +24,6 @@ const Session = sequelize.define('Session', {
   timestamps: false
 });
 
-// User table
-const instanceMethods = {
-  getProfilePicture() {
-    if(this.profile && this.profile.picture != null)
-      return this.profile.picture;
-  }
-};
-
 const User = sequelize.define('User', {
   id: {
     type: Sequelize.INTEGER,
@@ -44,6 +36,7 @@ const User = sequelize.define('User', {
     unique: true
   },
   name: Sequelize.STRING,
+  photo: Sequelize.STRING,
   createdAt: Sequelize.DATE,
   updatedAt: Sequelize.DATE,
   email: {
@@ -56,7 +49,6 @@ const User = sequelize.define('User', {
   tokens: Sequelize.JSON
 }, {
   tableName: 'pl_users',
-  instanceMethods: instanceMethods,
   indexes: [
     {
       name: 'facebookIdIndex',

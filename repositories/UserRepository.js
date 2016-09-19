@@ -4,18 +4,6 @@ var { User } = require('../database/models/index');
 
 var repo = {};
 
-function addAvatarToProfile(provider, url, profile) {
-  if(!profile.avatars)
-    profile.avatars = {};
-
-  if(!url || url.length < 1)
-    return;
-
-  profile.avatars[provider] = url;
-  if(!profile.picture)
-    profile.picture = url;
-}
-
 repo.getUserById = function(id) {
   return User.findById(id);
 };
@@ -62,7 +50,7 @@ repo.linkFacebookProfile = function(userId, accessToken, refreshToken, profile) 
       user.tokens.facebook = accessToken;
       user.profile.name = user.profile.name || profile.displayName;
       user.profile.gender = user.profile.gender || profile._json.gender;
-      addAvatarToProfile('facebook', 'https://graph.facebook.com/' + profileId + '/picture?type=large', user.profile);
+      user.photo = 'https://graph.facebook.com/' + profile.id+ '/picture?type=large';
       user.set('tokens', user.tokens);
       user.set('profile', user.profile);
 
@@ -85,11 +73,10 @@ repo.createAccFromFacebook = function(accessToken, refreshToken, profile) {
       user.email = profile._json.email || ( profileId + '@facebook.com' );
       user.tokens = { facebook: accessToken };
       user.name = profile.name.givenName + ' ' + profile.name.familyName;
+      user.photo = 'https://graph.facebook.com/' + profile.id+ '/picture?type=large';
       user.profile = {
-        name: profile._json.first_name,
-        gender: profile.gender
+        name: profile._json.first_name
       };
-      addAvatarToProfile('facebook', 'https://graph.facebook.com/' + profileId + '/picture?type=large', user.profile);
       return user.save();
     });
 };
