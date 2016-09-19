@@ -5,10 +5,34 @@
   <p class="lead">A platform for automated customer interaction</p>
 </div>
 <hr/>
+<div class="center-block">
+  <form novalidate method="POST" action="/login" name="loginForm">
+      <input type="hidden" name="_csrf" value="<%= _csrf %>"/>
+      <a href="/auth/facebook" class="btn btn-block btn-facebook btn-social center-block">
+          <i class="fa fa-facebook"></i>Sign in with Facebook
+      </a>
+  </form>
+</div>
 <div class="row">
-  <div class="col-xs-12 col-sm-6">
-      <span>
-        this is where the login goes
-      </span>
-  </div>
+    <div class="col-xs-12 col-sm-6 col-sm-offset-3">
+        <h2>24/7 customer service</h2>
+        <p>
+            Provide around-the-clock information availability without having to maintain a website
+        </p>
+        <p><a href="#" role="button" class="btn btn-default">View details »</a></p>
+    </div>
+    <div class="col-xs-12 col-sm-4 col-sm-offset-2">
+        <h2>Consistent user experience</h2>
+        <p>
+            Take advantage of the familiarity your customers already have for the Facebook interface
+        </p>
+        <p><a href="#" role="button" class="btn btn-default">View details »</a></p>
+    </div>
+    <div class="col-xs-12 col-sm-4">
+        <h2>Social media engagement</h2>
+        <p>
+            Boost your social media presence with interactions that have real value
+        </p>
+        <p><a href="#" role="button" class="btn btn-default">View details »</a></p>
+    </div>
 </div>
