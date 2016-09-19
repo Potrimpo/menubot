@@ -7,16 +7,6 @@ var async = require('neo-async');
 var graph;
 
 /**
- * GET /api
- * List of API examples.
- */
-exports.getApi = function(req, res) {
-  res.render('api/index', {
-    title: 'API Examples'
-  });
-};
-
-/**
  * GET /api/facebook
  * Facebook API example.
  */
@@ -41,7 +31,7 @@ exports.getFacebook = function(req, res, next) {
     if (err) return next(err);
     console.log("--- RESULTO ----");
     console.log(results.getMe);
-    res.render('api/facebook', {
+    res.render('account/profile', {
       title: 'Facebook API',
       me: results.getMe,
       friends: results.getMyFriends
