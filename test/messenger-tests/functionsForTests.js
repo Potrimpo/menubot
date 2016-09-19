@@ -1,5 +1,5 @@
 const crypto = require('crypto'),
-  { FB_APP_SECRET, senderID } = require('../envVariables');
+  { FB_APP_SECRET, senderID } = require('../../envVariables');
 
 function writeObjectToFile (obj) {
   let wstream = fs.createWriteStream('test/output.json');

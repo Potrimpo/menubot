@@ -3,9 +3,9 @@ const chai = require('chai'),
   chrono = require('chrono-node'),
   // fs for debugging using writeToFile (in functionsForTests.js)
   // fs = require('fs'),
-  { tunnelURL, senderID, testPageID } = require('../envVariables'),
+  { tunnelURL, senderID, testPageID } = require('../../envVariables'),
   { postBackFactory, requestMessageFactory, hashMyMessage } = require('./functionsForTests'),
-  { Order } = require('./../database');
+  { Order } = require('./../../database');
   // { findOrder } = require('../sql');
 
 const expect = chai.expect;

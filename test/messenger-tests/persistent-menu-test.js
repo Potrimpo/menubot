@@ -2,7 +2,7 @@ const chai = require('chai'),
   chaiHttp = require('chai-http'),
   // fs for debugging using writeToFile (in functionsForTests.js)
   fs = require('fs'),
-  { tunnelURL } = require('../envVariables'),
+  { tunnelURL } = require('../../envVariables'),
   { postBackFactory, hashMyMessage } = require('./functionsForTests');
 
 const expect = chai.expect;

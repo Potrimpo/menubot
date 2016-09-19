@@ -1,25 +1,36 @@
 'use strict';
 
-const bodyParser = require('body-parser'),
-  express = require('express'),
-  request = require('request'),
-  crypto = require('crypto');
+const express = require('express'),
+  bodyParser = require('body-parser'),
+  crypto = require('crypto'),
+  // var toobusy = require('toobusy-js');
+  cookieParser = require('cookie-parser'),
+  compress = require('compression'),
+  favicon = require('serve-favicon'),
+  session = require('express-session'),
+  pgSession = require('connect-pg-simple')(session),
+  logger = require('morgan'),
+  errorHandler = require('errorhandler'),
+  lusca = require('lusca'),
+  methodOverride = require('method-override'),
+  multer = require('multer'),
+  ejsEngine = require('ejs-mate'),
+  flash = require('express-flash'),
+  path = require('path'),
+  passport = require('passport'),
+  expressValidator = require('express-validator'),
+  connectAssets = require('connect-assets');
 
-const { Wit, log } = require('./index'),
-  { PORT, WIT_TOKEN, FB_APP_SECRET, FB_VERIFY_TOKEN } = require('./envVariables'),
-  { sessions, findOrCreateSession } = require('./witSessions'),
-  actions = require('./messaging/actions'),
-  postbackHandler = require('./messaging/sending-menu'),
-  fbMessage = require('./messaging/messenger');
+
+const { sequelize } = require('./database/models/index'),
+  messengerMiddleware = require('./controllers/messengerMiddleware');
+
+// API keys and Passport configuration.
+const secrets = require('./config/secrets'),
+  { PORT, FB_APP_SECRET, sessionTable, postgresURL } = require('./envVariables'),
+  passportConf = require('./config/passport');
 
 // console.log(`/webhook is accepting Verify Token: "${FB_VERIFY_TOKEN}"`);
-
-// Setting up our bot
-const wit = new Wit({
-  accessToken: WIT_TOKEN,
-  actions,
-  logger: new log.Logger(log.INFO)
-});
 
 // Starting our webserver and putting it all together
 const app = express();
@@ -30,97 +41,99 @@ app.use(({method, url}, rsp, next) => {
   next();
 });
 app.use(bodyParser.json({ verify: verifyRequestSignature }));
-app.use('/static', express.static(__dirname + '/public'));
+// app.use('/static', express.static(__dirname + 'public'));
+app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
 
-// Home page as insurance
-app.get('/', function(req, res) {
-  res.send('menubot reporting for duty');
-});
+// Express configuration.
+app.engine('ejs', ejsEngine);
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+app.enable("trust proxy");
+app.use(compress());
+app.use(connectAssets({
+  paths: [path.join(__dirname, 'public/css'), path.join(__dirname, 'public/js')]
+}));
+app.use(logger('dev'));
+app.use(favicon(path.join(__dirname, 'public/favicon.png')));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(multer({ dest: path.join(__dirname, 'uploads') }).single());
+app.use(expressValidator());
+app.use(methodOverride());
+app.use(cookieParser());
 
-
-// Webhook setup (facebook pings this with heartbeat)
-app.get('/webhook', (req, res) => {
-  if (req.query['hub.mode'] === 'subscribe' &&
-    req.query['hub.verify_token'] === FB_VERIFY_TOKEN) {
-    res.send(req.query['hub.challenge']);
-  } else {
-    console.log(`query is ${JSON.stringify(req.query)}`);
-    res.sendStatus(400);
+//PostgreSQL Store
+app.use(session({
+  store: new pgSession({
+    conString: postgresURL,
+    tableName: sessionTable
+  }),
+  secret: secrets.sessionSecret,
+  saveUninitialized: true,
+  resave: false,
+  cookie: {
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    httpOnly: true
+    //, secure: true // only when on HTTPS
   }
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
+app.use(lusca({
+  csrf: true,
+  xframe: 'SAMEORIGIN',
+  xssProtection: true
+}));
+app.use(function(req, res, next) {
+  res.locals.user = req.user;
+  res.locals.gaCode = secrets.googleAnalyticsCode;
+  next();
 });
+app.use(function(req, res, next) {
+  res.cookie('XSRF-TOKEN', res.locals._csrf, {httpOnly: false});
+  next();
+});
+
+// Webhook GET (facebook pings this with heartbeat)
+app.get('/webhook', messengerMiddleware.getWebhook);
 
 // Message handler
-app.post('/webhook', (req, res) => {
-  // Parse the Messenger payload
-  // See the Webhook reference
-  // https://developers.facebook.com/docs/messenger-platform/webhook-reference
-  const data = req.body;
+app.post('/webhook', messengerMiddleware.postWebhook);
 
-  if (data.object === 'page') {
-    data.entry.forEach(entry => {
-      entry.messaging.forEach(event => {
-        if (event.message) {
-          // Yay! We got a new message!
-          // We retrieve the Facebook user ID of the sender
-          const sender = event.sender.id;
-          // console.log(`sender ID: ${sender}`);
-          // We retrieve the user's current session, or create one if it doesn't exist
-          // This is needed for our bot to figure out the conversation history
-          const sessionId = findOrCreateSession(event.sender.id, event.recipient.id);
-          // We retrieve the message content
-          const {text, attachments} = event.message;
+// Controllers (route handlers).
+var homeController = require('./controllers/home');
+var userController = require('./controllers/user');
+var apiController = require('./controllers/api');
+var contactController = require('./controllers/contact');
 
-          if (attachments) {
-            // We received an attachment
-            // Let's reply with an automatic message
-            fbMessage(sender, 'Sorry I can only process text messages for now.')
-            .catch(console.error);
-          } else if (text) {
-            // We received a text message
 
-            // Let's forward the message to the Wit.ai Bot Engine
-            // This will run all actions until our bot has nothing left to do
-            wit.runActions(
-              sessionId, // the user's current session
-              text, // the user's message
-              sessions[sessionId].context // the user's current session state
-            ).then((context) => {
-              // Our bot did everything it has to do.
-              // Now it's waiting for further messages to proceed.
-              console.log('Waiting for next user messages');
+// Primary app routes.
+app.get('/', homeController.index);
+app.get('/landing', homeController.landing);
+// app.get('/login', userController.getLogin);
+app.get('/logout', userController.logout);
+app.get('/contact', contactController.getContact);
+app.post('/contact', contactController.postContact);
+app.get('/account', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getFacebook);
+app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);
 
-              // Based on the session state, you might want to reset the session.
-              // This depends heavily on the business logic of your bot.
-              // Example:
-              // if (context['done']) {
-              //   delete sessions[sessionId];
-              // }
+// OAuth authentication routes. (Sign in)
+app.get('/auth/facebook', passport.authenticate('facebook', secrets.facebook.authOptions));
+app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/', failureRedirect: '/landing', failureFlash: true }) );
 
-              // Updating the user's current session state
-              sessions[sessionId].context = context;
-            })
-            .catch((err) => {
-              console.error('Oops! Got an error from Wit: ', err.stack || err);
-            })
-          }
-        } else if(event.postback) {
-          const sessionId = findOrCreateSession(event.sender.id, event.recipient.id);
-          postbackHandler(event.postback.payload, sessions[sessionId])
-            .then(response => {
-              actions.send({sessionId}, response)
-            })
-            .catch(err => {
-              console.log(`Error sending postback: ${err}`);
-              console.log(err.stack);
-            });
-        } else {
-          console.log('received event', JSON.stringify(event));
-        }
-      });
-    });
-  }
-  res.sendStatus(200);
-});
+// Error Handler.
+app.use(errorHandler());
+
+// Avoid not responsing when server load is huge
+// app.use(function(req, res, next) {
+//   if (toobusy()) {
+//     res.status(503).send("I'm busy right now, sorry. Please try again later.");
+//   } else {
+//     next();
+//   }
+// });
 
 /*
  * Verify that the callback came from Facebook. Using the App Secret from
@@ -155,7 +168,6 @@ function verifyRequestSignature(req, res, buf) {
   }
 }
 
-const { sequelize } = require('./database');
 
 sequelize.sync({ force: false })
   .then(() => {
