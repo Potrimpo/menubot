@@ -115,6 +115,7 @@ var contactController = require('./controllers/contact');
 
 // Primary app routes.
 app.get('/', homeController.index);
+app.get('/landing', homeController.landing);
 app.get('/login', userController.getLogin);
 app.get('/logout', userController.logout);
 app.get('/contact', contactController.getContact);
@@ -128,15 +129,9 @@ app.get('/account/unlink/:provider', passportConf.isAuthenticated, userControlle
 app.get('/api', apiController.getApi);
 app.get('/api/facebook', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getFacebook);
 
-function safeRedirectToReturnTo(req, res) {
-  var returnTo = req.session.returnTo || '/';
-  delete req.session.returnTo;
-  res.redirect(returnTo);
-}
-
 // OAuth authentication routes. (Sign in)
 app.get('/auth/facebook', passport.authenticate('facebook', secrets.facebook.authOptions));
-app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login', failureFlash: true }), safeRedirectToReturnTo);
+app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/', failureRedirect: '/landing', failureFlash: true }) );
 
 // Error Handler.
 app.use(errorHandler());

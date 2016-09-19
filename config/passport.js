@@ -66,12 +66,4 @@ exports.isAuthenticated = function(req, res, next) {
 /**
  * Authorization Required middleware.
  */
-exports.isAuthorized = function(req, res, next) {
-  var provider = req.path.split('/').slice(-1)[0];
-
-  if (req.user.tokens[provider]) {
-    next();
-  } else {
-    res.redirect('/auth/' + provider);
-  }
-};
+exports.isAuthorized = (req, res, next) => req.user ? next() : res.redirect('/landing');
