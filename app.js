@@ -114,8 +114,9 @@ const homeController = require('./controllers/home'),
 app.get('/', passportConf.isAuthenticated, passportConf.isAuthorized, homeController.index);
 app.get('/landing', homeController.landing);
 app.get('/logout', userController.logout);
-app.get('/contact', contactController.getContact);
-app.post('/contact', contactController.postContact);
+app.route('/contact')
+  .get(contactController.getContact)
+  .post(contactController.postContact);
 app.get('/account', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getFacebook);
 app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);
 
