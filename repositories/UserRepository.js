@@ -1,6 +1,6 @@
 'use strict';
 
-var { User, Company } = require('../database/models/index');
+var { User } = require('../database/models/index');
 
 exports.getUserById = function(id) {
   return User.findById(id);
@@ -9,13 +9,6 @@ exports.getUserById = function(id) {
 exports.removeUserById = function(userId) {
   return User.destroy({ where: { id: userId } });
 };
-
-exports.findUserCompanies = (accounts => {
-  return Company.findAll({
-    attributes: ['fbid', 'name'],
-    where: { fbid: { $or: accounts } }
-  })
-});
 
 exports.unlinkProviderFromAccount = function(provider, userId) {
   return User.findById(userId)

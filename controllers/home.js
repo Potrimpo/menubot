@@ -1,13 +1,13 @@
 "use strict";
 
-const userRepo = require('../repositories/UserRepository');
+const companyRepo = require('../repositories/CompanyRepository');
 
 /**
  * GET /
  * Home page.
  */
 exports.index = (req, res) => {
-  return userRepo.findUserCompanies(req.user.accounts)
+  return companyRepo.findUserCompanies(req.user.accounts)
     .then(data => res.render('home', { title: 'home', companies: data }) );
 };
 
