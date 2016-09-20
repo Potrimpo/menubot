@@ -56,10 +56,7 @@ passport.use(new FacebookStrategy(secrets.facebook, function(req, accessToken, r
 /**
  * Login Required middleware.
  */
-exports.isAuthenticated = function(req, res, next) {
-  if (req.isAuthenticated()) return next();
-  res.redirect('/landing');
-};
+exports.isAuthenticated = (req, res, next) => req.isAuthenticated() ? next() : res.redirect('/landing');
 
 /**
  * Authorization Required middleware.

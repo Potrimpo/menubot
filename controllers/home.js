@@ -7,7 +7,6 @@ const userRepo = require('../repositories/UserRepository');
  * Home page.
  */
 exports.index = (req, res) => {
-  if (!req.user) return res.redirect('/landing');
   return userRepo.findUserCompanies(req.user.accounts)
     .then(data => res.render('home', { title: 'home', companies: data }) );
 };
