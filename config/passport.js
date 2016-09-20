@@ -60,7 +60,7 @@ passport.use(new FacebookStrategy(secrets.facebook, function(req, accessToken, r
  */
 exports.isAuthenticated = function(req, res, next) {
   if (req.isAuthenticated()) return next();
-  res.redirect('/login');
+  res.redirect('/landing');
 };
 
 /**
