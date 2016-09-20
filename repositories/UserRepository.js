@@ -2,24 +2,22 @@
 
 var { User, Company } = require('../database/models/index');
 
-var repo = {};
-
-repo.getUserById = function(id) {
+exports.getUserById = function(id) {
   return User.findById(id);
 };
 
-repo.removeUserById = function(userId) {
+exports.removeUserById = function(userId) {
   return User.destroy({ where: { id: userId } });
 };
 
-repo.findUserCompanies = (accounts => {
+exports.findUserCompanies = (accounts => {
   return Company.findAll({
     attributes: ['fbid', 'name'],
     where: { fbid: { $or: accounts } }
   })
 });
 
-repo.unlinkProviderFromAccount = function(provider, userId) {
+exports.unlinkProviderFromAccount = function(provider, userId) {
   return User.findById(userId)
     .then(function(user) {
       if(!user)
@@ -40,7 +38,7 @@ repo.unlinkProviderFromAccount = function(provider, userId) {
 /**
  * Facebook
  */
-repo.linkFacebookProfile = function(userId, accessToken, refreshToken, profile) {
+exports.linkFacebookProfile = function(userId, accessToken, refreshToken, profile) {
   var profileId = profile.id.toString();
 
   return User.findOne({ where: { facebookId: profileId } })
@@ -63,7 +61,7 @@ repo.linkFacebookProfile = function(userId, accessToken, refreshToken, profile) 
     });
 };
 
-repo.createAccFromFacebook = function(accessToken, refreshToken, profile) {
+exports.createAccFromFacebook = function(accessToken, refreshToken, profile) {
   if(!profile._json) {
     throw 'Facebook profile is missing _json property!';
   }
@@ -87,5 +85,3 @@ repo.createAccFromFacebook = function(accessToken, refreshToken, profile) {
     })
     .catch(err => console.error("error creating profile", err.message || err));
 };
-
-module.exports = repo;

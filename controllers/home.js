@@ -12,6 +12,7 @@ exports.index = (req, res) => {
 };
 
 exports.landing = (req, res) => {
+  if (req.user && req.isAuthenticated()) return res.redirect('/');
   res.render('landing', {
     title: 'landing'
   });
