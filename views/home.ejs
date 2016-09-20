@@ -18,13 +18,12 @@
         <h2>
             <%= companies[i].name %>
         </h2>
-        <a href="http://facebook.com/<%= companies[i].fbid %>" class="thumbnail">
+        <a href="/company/<%= companies[i].fbid %>" class="thumbnail">
             <img src="https://graph.facebook.com/<%= companies[i].fbid %>/picture?width=150&height=150" alt="Friend's Avatar">
         </a>
-        <p>
-            Link to the companies / accounts that this user manages
-        </p>
-        <p><a href="/company/<%= companies[i].fbid %>" role="button" class="btn btn-default">View details »</a></p>
+        <a href="http://facebook.com/<%= companies[i].fbid %>" class="btn btn-block btn-facebook btn-social smaller-fb center-block">
+            <i class="fa fa-facebook"></i>
+        </a>
     </div>
     <% } %>
 </div>
