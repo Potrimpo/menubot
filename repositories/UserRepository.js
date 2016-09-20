@@ -1,6 +1,6 @@
 'use strict';
 
-var { User } = require('../database/models/index');
+var { User, Company } = require('../database/models/index');
 
 var repo = {};
 
@@ -11,6 +11,13 @@ repo.getUserById = function(id) {
 repo.removeUserById = function(userId) {
   return User.destroy({ where: { id: userId } });
 };
+
+repo.findUserCompanies = (accounts => {
+  return Company.findAll({
+    attributes: ['fbid', 'name'],
+    where: { fbid: { $or: accounts } }
+  })
+});
 
 repo.unlinkProviderFromAccount = function(provider, userId) {
   return User.findById(userId)

@@ -13,11 +13,18 @@
         </p>
         <p><a href="#" role="button" class="btn btn-default">View details »</a></p>
     </div>
-    <div class="col-xs-12 col-sm-12">
-        <h2>Accounts</h2>
+    <% for(var i = 0; i < companies.length; i++) { %>
+    <div class="col-xs-12 col-sm-6">
+        <h2>
+            <%= companies[i].name %>
+        </h2>
+        <a href="http://facebook.com/<%= companies[i].fbid %>" class="thumbnail">
+            <img src="https://graph.facebook.com/<%= companies[i].fbid %>/picture?width=150&height=150" alt="Friend's Avatar">
+        </a>
         <p>
             Link to the companies / accounts that this user manages
         </p>
         <p><a href="#" role="button" class="btn btn-default">View details »</a></p>
     </div>
+    <% } %>
 </div>
