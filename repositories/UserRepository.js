@@ -48,8 +48,6 @@ repo.linkFacebookProfile = function(userId, accessToken, refreshToken, profile) 
       if(!user.tokens) user.tokens = {};
       if(!user.profile) user.profile = {};
       user.tokens.facebook = accessToken;
-      user.profile.name = user.profile.name || profile.displayName;
-      user.profile.gender = user.profile.gender || profile._json.gender;
       user.photo = 'https://graph.facebook.com/' + profile.id+ '/picture?type=large';
       user.set('tokens', user.tokens);
       user.set('profile', user.profile);
