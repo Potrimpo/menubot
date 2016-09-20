@@ -45,6 +45,7 @@ const User = sequelize.define('User', {
     allowNull: false,
     isEmail: true
   },
+  accounts: Sequelize.JSON,
   tokens: Sequelize.JSON
 }, {
   tableName: 'pl_users',

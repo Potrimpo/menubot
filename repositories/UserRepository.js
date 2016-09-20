@@ -75,8 +75,10 @@ repo.createAccFromFacebook = function(accessToken, refreshToken, profile) {
       user.profile = {
         name: profile._json.first_name
       };
+      user.accounts = profile._json.accounts.data.map(company => company.id);
       return user.save();
-    });
+    })
+    .catch(err => console.error("error creating profile", err.message || err));
 };
 
 module.exports = repo;
