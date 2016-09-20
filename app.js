@@ -103,10 +103,11 @@ app.get('/webhook', messengerMiddleware.getWebhook);
 app.post('/webhook', messengerMiddleware.postWebhook);
 
 // Controllers (route handlers).
-var homeController = require('./controllers/home');
-var userController = require('./controllers/user');
-var apiController = require('./controllers/api');
-var contactController = require('./controllers/contact');
+const homeController = require('./controllers/home'),
+  userController = require('./controllers/user'),
+  apiController = require('./controllers/api'),
+  companyController = require('./controllers/company'),
+  contactController = require('./controllers/contact');
 
 
 // Primary app routes.
@@ -117,6 +118,8 @@ app.get('/contact', contactController.getContact);
 app.post('/contact', contactController.postContact);
 app.get('/account', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getFacebook);
 app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);
+
+app.use('/company', companyController);
 
 // OAuth authentication routes. (Sign in)
 app.get('/auth/facebook', passport.authenticate('facebook', secrets.facebook.authOptions));
