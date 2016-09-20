@@ -11,13 +11,20 @@ exports.findUserCompanies = (accounts => {
   })
 });
 
-exports.getCompanyAndItems = id => {
+exports.getCompanyMenu = id => {
   return sequelize.query(
-    "SELECT name, location, item, items.itemid, type, typeid FROM companies" +
+    "SELECT name, item, itemid FROM companies" +
     " INNER JOIN items ON companies.fbid = items.fbid" +
-    " INNER JOIN types ON items.itemid = types.itemid" +
     " WHERE companies.fbid = $1",
     { bind: [id], type: sequelize.QueryTypes.SELECT }
   );
 };
 
+exports.getMenuTypes = itemids => {
+  return sequelize.query(
+    "SELECT types.itemid, type, typeid FROM items" +
+    " INNER JOIN types ON items.itemid = types.itemid" +
+    " WHERE items.itemid IN (:itemids)",
+    { replacements: { itemids }, type: sequelize.QueryTypes.SELECT }
+  );
+};
