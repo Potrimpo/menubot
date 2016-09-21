@@ -5,6 +5,9 @@
 $(document).ready(function() {
   console.log("WE IN IT");
 
+  $('input').focus(function() {
+    $(`#button-${this.id}`).show();
+  });
   // process the form
   $('form').submit(function(event) {
 
