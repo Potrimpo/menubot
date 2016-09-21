@@ -1,6 +1,7 @@
 <% layout('layout') -%>
 
 <div class="page-header text-center">
-    <h2><%= title %></h2>
+    <h2 class="company-head" id="<%= fbid %>"><%= title %></h2>
+    <input type="hidden" name="_csrf" value="<%= _csrf %>"/>
 </div>
 <%- include ../menu/items %>

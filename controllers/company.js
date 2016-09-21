@@ -7,12 +7,35 @@ const express = require('express'),
 
 const companyRepo = require('../repositories/CompanyRepository');
 
-router.param('companyId', (req, res, next, id) => {
-  return companyRepo.getCompanyMenu(id)
+// router.param('companyId', (req, res, next, id) => {
+//   console.log("ID PROVIDED =", id);
+//   console.log("POST RECEIVED", req.data);
+// });
+
+router.get('/:companyId', (req, res) => {
+  return getMenu(req)
+    .then(data => {
+      return res.render('account/company', {
+        fbid: data.fbid,
+        title: data.company,
+        items: data.items,
+        types: data.types,
+        sizes: data.sizes
+      });
+    })
+});
+
+router.post('/:companyId', (req, res) => {
+  console.log("POST RECEIVED", req.body);
+  return res.sendStatus(200);
+});
+
+function getMenu (req) {
+  return companyRepo.getCompanyMenu(req.params.companyId)
     .then(data => {
       if (!data) throw "no company found";
       req.company = data[0].name;
-      req.fbid = id;
+      req.fbid = req.params.companyId;
       req.items = data;
       const itemids = data.map(val => val.itemid);
       return companyRepo.getMenuTypes(itemids);
@@ -26,18 +49,8 @@ router.param('companyId', (req, res, next, id) => {
     .then(data => {
       console.log("SIZES =", data);
       req.sizes = data;
-      return next();
+      return req;
     })
-});
-
-router.get('/:companyId', (req, res) => {
-  return res.render('account/company', {
-    fbid: req.fbid,
-    title: req.company,
-    items: req.items,
-    types: req.types,
-    sizes: req.sizes
-  });
-});
+}
 
 module.exports = router;
