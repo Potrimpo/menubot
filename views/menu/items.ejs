@@ -1,0 +1,13 @@
+<div class="row">
+    <div class="center-block text-center">
+        <% for(var i = 0; i < items.length; i++) { %>
+        <div class="col-xs-12 col-sm-6">
+            <h2> <%= items[i].item %> </h2>
+            <a href="/company/<%= fbid %>/<%= items[i].itemid %>">
+                <img src="/images/<%= fbid %>/<%= items[i].itemid %>.jpg" class="thumbnail center-block menu-photo" />
+            </a>
+            <%- include types %>
+        </div>
+        <% } %>
+    </div>
+</div>

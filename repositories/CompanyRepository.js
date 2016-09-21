@@ -28,3 +28,12 @@ exports.getMenuTypes = itemids => {
     { replacements: { itemids }, type: sequelize.QueryTypes.SELECT }
   );
 };
+
+exports.getMenuSizes = typeids => {
+  return sequelize.query(
+    "SELECT sizes.typeid, size, sizeid FROM types" +
+    " INNER JOIN sizes ON types.typeid = sizes.typeid" +
+    " WHERE types.typeid IN (:typeids)",
+    { replacements: { typeids }, type: sequelize.QueryTypes.SELECT }
+  );
+};
