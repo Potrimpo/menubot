@@ -2,7 +2,12 @@
     <div class="center-block text-center">
         <% for(var i = 0; i < items.length; i++) { %>
         <div class="col-xs-12 col-sm-6">
-            <h2> <%= items[i].item %> </h2>
+            <h3><%= items[i].item %></h3>
+            <form>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="<%= items[i].itemid %>" placeholder="change name">
+                </div>
+            </form>
             <a href="/company/<%= fbid %>/<%= items[i].itemid %>">
                 <img src="/images/<%= fbid %>/<%= items[i].itemid %>.jpg" class="thumbnail center-block menu-photo" />
             </a>
