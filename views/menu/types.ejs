@@ -6,6 +6,7 @@
             <a href="/company/<%= fbid %>/<%= items[i].itemid %>/<%= types[x].typeid %>">
                 <img src="/images/<%= fbid %>/<%= items[i].itemid %>/<%= types[x].typeid %>.jpg" class="thumbnail center-block menu-photo" />
             </a>
+            <%- include sizes %>
         </div>
         <% } %>
     <% } %>

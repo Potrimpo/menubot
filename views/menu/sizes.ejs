@@ -1,0 +1,9 @@
+<div class="row">
+    <% for (var y = 0; y < sizes.length; y++) { %>
+        <% if (sizes[y].typeid == types[x].typeid) { %>
+        <div class="col-xs-6 col-sm-6">
+            <h6 class="center-block"><%= sizes[y].size %>: $<%= sizes[y].price %></h6>
+        </div>
+        <% } %>
+    <% } %>
+</div>

@@ -31,7 +31,7 @@ exports.getMenuTypes = itemids => {
 
 exports.getMenuSizes = typeids => {
   return sequelize.query(
-    "SELECT sizes.typeid, size, sizeid FROM types" +
+    "SELECT sizes.typeid, size, sizeid, price FROM types" +
     " INNER JOIN sizes ON types.typeid = sizes.typeid" +
     " WHERE types.typeid IN (:typeids)",
     { replacements: { typeids }, type: sequelize.QueryTypes.SELECT }

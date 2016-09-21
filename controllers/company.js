@@ -35,7 +35,8 @@ router.get('/:companyId', (req, res) => {
     fbid: req.fbid,
     title: req.company,
     items: req.items,
-    types: req.types
+    types: req.types,
+    sizes: req.sizes
   });
 });
 
