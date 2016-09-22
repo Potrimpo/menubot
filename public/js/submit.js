@@ -5,42 +5,53 @@
 $(document).ready(function() {
   console.log("WE IN IT");
 
+  const fbid = $('.company-head').attr('id');
+
   $('input').focus(function() {
     $(`#button-${this.id}`).show();
   });
+
+  // $('input').blur(function() {
+  //   console.log("blurring");
+  //   $(`#button-${this.id}`).hide();
+  // });
+
   // process the form
   $('form').submit(function(event) {
 
     // get the form data
     // there are many ways to get this data using jQuery (you can use the class or id also)
     var formData = {
-      fbid: $('.company-head').attr('id'),
-      id: $('input#id').val(),
-      name : $('input[name=name]').val(),
+      fbid,
+      id: $('input').id,
       _csrf: $('input[name=_csrf]').val()
     };
 
     console.log("formData =", formData);
+    console.log("this =", this);
 
-    // process the form
     $.ajax({
       type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
-      url: '/company/' + formData.fbid, // the url where we want to POST
+      url: '/company/' + fbid, // the url where we want to POST
       data: formData, // our data object
-      dataType: 'json', // what type of data do we expect back from the server
-      encode: true
+      encode: true,
+      success(data) {
+        console.log("SUCCESS");
+        console.log(data);
+      },
+      error(smth, status, err) {
+        console.error("ERROR IN AJAX", status);
+        console.error("ERROR =", err);
+      }
     })
     // using the done promise callback
       .done(function(data) {
-        console.log("DONE");
+        console.log("DONE", data);
 
-        // log data to the console so we can see
-        console.log(data);
-
-        // here we will handle errors and validation messages
+        // location.reload();
       });
 
-    // stop the form from submitting the normal way and refreshing the page
+    // stop the form from submitting the normal way
     event.preventDefault();
   });
 

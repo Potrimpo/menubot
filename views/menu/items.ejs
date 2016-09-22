@@ -8,12 +8,15 @@
                     <input type="text" class="form-control" id="<%= items[i].itemid %>" placeholder="change name">
                     <button type="submit" class="btn btn-default btn-space" id="button-<%= items[i].itemid %>">Submit</button>
                 </div>
-            </form>
-            <a href="/company/<%= fbid %>/<%= items[i].itemid %>">
                 <img src="/images/<%= fbid %>/<%= items[i].itemid %>.jpg" class="thumbnail center-block menu-photo" />
-            </a>
+                <label for="exampleInputFile">Change photo</label>
+                <input type="file" id="exampleInputFile">
             <%- include types %>
+            </form>
         </div>
         <% } %>
+        <div class="col-xs-12 col-sm-6">
+            <%- include new-item %>
+        </div>
     </div>
 </div>
