@@ -4,7 +4,7 @@
 
 const actions = require('./actions'),
   // { getMenu, getTypes, getSizes } = require('../sql'),
-  { Company, Item, Type, Size } = require('./../database'),
+  { Company, Item, Type, Size } = require('./../database/models/index'),
   { tunnelURL } = require('../envVariables');
 
 function postbackHandler (payload, userSession) {
@@ -58,7 +58,7 @@ function parseItems(botID, menu) {
   template.attachment.payload.elements = menu.map(val => {
     return {
       title: val.item.toUpperCase(),
-      image_url: `${tunnelURL}/static/images/${botID}/${val.itemid}.jpg`,
+      image_url: `${tunnelURL}/images/${botID}/${val.itemid}.jpg`,
       buttons: [
         {
           type: 'postback',
@@ -81,7 +81,7 @@ function parseProductTypes(botID, types) {
   template.attachment.payload.elements = types.map(val => {
     return {
       title: val.type.toUpperCase(),
-      image_url: `${tunnelURL}/static/images/${botID}/${val.itemid}/${val.typeid}.jpg`,
+      image_url: `${tunnelURL}/images/${botID}/${val.itemid}/${val.typeid}.jpg`,
       buttons: [
         {
           type: 'postback',

@@ -78,6 +78,12 @@ app.use(session({
   }
 }));
 
+// WEBHOOK HANDLERS MUST COME BEFORE SECURITY CHECKS (LUSCA)
+// Webhook GET (facebook pings this with heartbeat)
+app.route('/webhook')
+  .get(messengerMiddleware.getWebhook)
+  .post(messengerMiddleware.postWebhook);
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
@@ -95,12 +101,6 @@ app.use(function(req, res, next) {
   res.cookie('XSRF-TOKEN', res.locals._csrf, {httpOnly: false});
   next();
 });
-
-// Webhook GET (facebook pings this with heartbeat)
-app.get('/webhook', messengerMiddleware.getWebhook);
-
-// Message handler
-app.post('/webhook', messengerMiddleware.postWebhook);
 
 // Controllers (route handlers).
 const homeController = require('./controllers/home'),
