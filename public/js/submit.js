@@ -11,29 +11,48 @@ $(document).ready(function() {
     $(`#button-${this.id}`).show();
   });
 
-  // $('input').blur(function() {
-  //   console.log("blurring");
-  //   $(`#button-${this.id}`).hide();
-  // });
-
   // process the form
   $('form').submit(function(event) {
 
-    // get the form data
-    // there are many ways to get this data using jQuery (you can use the class or id also)
+    const inputElems = $(`#${this.id} :input.menu`);
+    const values = $(inputElems).map(function() {
+      return {
+        id: this.id,
+        val: $(this).val()
+      };
+    }).get();
+    console.log("VALUES", values);
+
+    const sendData = {};
+    for (let x = values.length - 1; x >= 0; x--) {
+      switch (values[x].id) {
+        case "item":
+          sendData.item = values[x].val;
+          break;
+        case "type":
+          sendData.type = values[x].val;
+          break;
+        case "size":
+          sendData.size = values[x].val;
+          break;
+        case "price":
+          sendData.price = values[x].val;
+          break;
+      }
+    }
+
+    console.log("SENDING", sendData);
+
     var formData = {
       fbid,
-      id: $('input').id,
+      sendData,
       _csrf: $('input[name=_csrf]').val()
     };
 
-    console.log("formData =", formData);
-    console.log("this =", this);
-
     $.ajax({
-      type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
-      url: '/company/' + fbid, // the url where we want to POST
-      data: formData, // our data object
+      type: 'POST',
+      url: '/company/' + fbid,
+      data: formData,
       encode: true,
       success(data) {
         console.log("SUCCESS");

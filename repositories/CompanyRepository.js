@@ -37,3 +37,30 @@ exports.getMenuSizes = typeids => {
     { replacements: { typeids }, type: sequelize.QueryTypes.SELECT }
   );
 };
+
+exports.insertMenuVal = (fbid, data) => {
+  return sequelize.query(
+    "INSERT INTO items (fbid, item)" +
+    " VALUES (:fbid, :item)" +
+    " RETURNING itemid",
+    { replacements: { fbid, item: data.item }, type: sequelize.QueryTypes.INSERT }
+  )
+    .then(val => {
+      console.log("value from insertion =", val);
+      return sequelize.query(
+        "INSERT INTO types (itemid, type)" +
+        " VALUES (:itemid, :type)" +
+        " RETURNING typeid",
+        { replacements: { type: data.type, itemid: val[0].itemid }, type: sequelize.QueryTypes.INSERT }
+      )
+    })
+    .then(val => {
+      console.log("value from insertion =", val);
+      return sequelize.query(
+        "INSERT INTO sizes (typeid, size, price)" +
+        " VALUES (:typeid, :size, :price)",
+        { replacements: { typeid: val[0].typeid, size: data.type, price: data.price }, type: sequelize.QueryTypes.INSERT }
+      )
+    })
+    .catch(err => console.error("error inserting menu item:", err));
+};
