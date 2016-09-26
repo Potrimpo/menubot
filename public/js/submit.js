@@ -5,7 +5,8 @@
 $(document).ready(function() {
   console.log("WE IN IT");
 
-  const fbid = $('.company-head').attr('id');
+  const fbid = $('.company-head').attr('id'),
+    _csrf = $('input[name=_csrf]').val();
 
   $('input').focus(function() {
     $(`#button-${this.id}`).show();
@@ -46,7 +47,7 @@ $(document).ready(function() {
     var formData = {
       fbid,
       sendData,
-      _csrf: $('input[name=_csrf]').val()
+      _csrf
     };
 
     $.ajax({
@@ -72,6 +73,34 @@ $(document).ready(function() {
 
     // stop the form from submitting the normal way
     event.preventDefault();
+  });
+
+  // server can't deal with changing photos (client jquery code seems find tho)
+  $(':file').change(function (event) {
+    console.log("THE element =", this);
+    const elem = $(this).get(0);
+    console.log("file", elem.files[0]);
+    const idk = new FormData();
+    idk.append('file', elem.files[0]);
+    idk.append('_csrf', _csrf);
+
+    return $.ajax({
+      type: 'POST',
+      url: '/company' + fbid + '/' + elem.id,
+      data: idk,
+      processData: false,
+      contentType: false,
+      success(data) {
+        console.log("SUCCESS");
+        console.log(data);
+      },
+      error(smth, status, err) {
+        console.error("ERROR IN FILE UPLOAD", status);
+        console.error("ERROR =", err);
+      }
+    })
+      .done(data => console.log("DONE UPLOAD", data));
+
   });
 
 });

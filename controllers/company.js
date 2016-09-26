@@ -26,6 +26,7 @@ router.get('/:companyId', (req, res) => {
     })
 });
 
+// can't handle changing photos
 router.post('/:companyId', addItem, (req, res) => {
   console.log("----- POST RECEIVED ------", req.body);
   return res.sendStatus(200);
