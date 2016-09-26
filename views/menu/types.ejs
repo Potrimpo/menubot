@@ -1,16 +1,19 @@
 <div class="row">
     <% for (var x = 0; x < types.length; x++) { %>
         <% if (types[x].itemid == items[i].itemid) { %>
-        <div class="col-xs-6 col-sm-6">
-            <h4><%= types[x].type %></h4>
-            <div class="form-group">
-                <input type="text" class="form-control" id="<%= items[i].itemid %>/<%= types[x].typeid %>" placeholder="change name">
+            <div class="col-xs-6 col-sm-6">
+                <h4><%= types[x].type %></h4>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="<%= items[i].itemid %>/<%= types[x].typeid %>" placeholder="change name">
+                </div>
+                <img src="/images/<%= fbid %>/<%= items[i].itemid %>/<%= types[x].typeid %>.jpg" class="thumbnail center-block menu-photo" />
+                <label for="exampleInputFile">Change photo</label>
+                <input type="file" id="exampleInputFile">
+                <%- include sizes %>
             </div>
-            <img src="/images/<%= fbid %>/<%= items[i].itemid %>/<%= types[x].typeid %>.jpg" class="thumbnail center-block menu-photo" />
-            <label for="exampleInputFile">Change photo</label>
-            <input type="file" id="exampleInputFile">
-            <%- include sizes %>
-        </div>
         <% } %>
     <% } %>
+    <div class="col-xs-6 col-sm-6 new-thing">
+        <%- include new-type %>
+    </div>
 </div>

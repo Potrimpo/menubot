@@ -35,11 +35,24 @@ router.post('/:companyId', addItem, (req, res) => {
 function addItem(req, res, next) {
   console.log("ADDING ITEM");
   console.log(req.body);
-  return companyRepo.insertMenuVal(req.body.fbid, req.body.sendData)
-    .then(data => {
-      console.log("DATA FROM DB INSERTION", data);
-      return next();
-    });
+  switch (req.body.sendData.intent) {
+    case "item":
+      return companyRepo.insertMenuVal(req.body.fbid, req.body.sendData)
+        .then(data => {
+          console.log("DATA FROM DB INSERTION", data);
+          return next();
+        });
+    case "type":
+      return companyRepo.insertType(req.body.sendData)
+        .then(data => {
+          console.log("DATA FROM DB INSERTION", data);
+          return next();
+        });
+    case "size":
+      break;
+    default:
+      return console.error("no case for this update intent", req.body.sendData.intent);
+    }
 }
 
 function getMenu (req) {

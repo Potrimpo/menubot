@@ -5,6 +5,7 @@
 $(document).ready(function() {
   console.log("WE IN IT");
 
+  // document constants
   const fbid = $('.company-head').attr('id'),
     _csrf = $('input[name=_csrf]').val();
 
@@ -15,16 +16,23 @@ $(document).ready(function() {
   // process the form
   $('form').submit(function(event) {
 
-    const inputElems = $(`#${this.id} :input.menu`);
+    const inputElems = $(`#${this.id} :text`);
     const values = $(inputElems).map(function() {
+      console.log("val name =", this.name);
+      console.log("this =", this);
       return {
-        id: this.id,
+        id: this.name,
         val: $(this).val()
       };
     }).get();
     console.log("VALUES", values);
 
-    const sendData = {};
+    const intent = /-(\w+)-/.exec(this.id)[1];
+    const sendData = {
+      intent,
+      parentId: this.name,
+    };
+
     for (let x = values.length - 1; x >= 0; x--) {
       switch (values[x].id) {
         case "item":
@@ -41,7 +49,6 @@ $(document).ready(function() {
           break;
       }
     }
-
     console.log("SENDING", sendData);
 
     var formData = {
@@ -68,7 +75,7 @@ $(document).ready(function() {
       .done(function(data) {
         console.log("DONE", data);
 
-        // location.reload();
+        location.reload();
       });
 
     // stop the form from submitting the normal way
