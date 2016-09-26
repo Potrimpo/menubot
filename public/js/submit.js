@@ -80,14 +80,14 @@ $(document).ready(function() {
     console.log("THE element =", this);
     const elem = $(this).get(0);
     console.log("file", elem.files[0]);
-    const idk = new FormData();
-    idk.append('file', elem.files[0]);
-    idk.append('_csrf', _csrf);
+    const multiPart = new FormData();
+    multiPart.append('file', elem.files[0]);
+    multiPart.append('_csrf', _csrf);
 
     return $.ajax({
       type: 'POST',
       url: '/company' + fbid + '/' + elem.id,
-      data: idk,
+      data: multiPart,
       processData: false,
       contentType: false,
       success(data) {
