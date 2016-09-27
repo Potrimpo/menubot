@@ -66,14 +66,19 @@ exports.createAccFromFacebook = function(accessToken, refreshToken, profile) {
     .then(function(existingUser) {
       if (existingUser) { return existingUser; }
       var user = User.build({ facebookId: profileId });
+      const accounts = profile._json.accounts.data.map(company => {
+        return {
+          fbid: company.id,
+          name: company.name
+        };
+      });
+      user.set('accounts', accounts);
       user.email = profile._json.email || ( profileId + '@facebook.com' );
       user.tokens = { facebook: accessToken };
       user.name = profile.name.givenName + ' ' + profile.name.familyName;
       user.photo = 'https://graph.facebook.com/' + profile.id+ '/picture?type=large';
-      user.profile = {
-        name: profile._json.first_name
-      };
-      user.accounts = profile._json.accounts.data.map(company => company.id);
+      user.profile = { name: profile._json.first_name };
+
       return user.save();
     })
     .catch(err => console.error("error creating profile", err.message || err));

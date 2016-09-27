@@ -26,4 +26,17 @@
         </a>
     </div>
     <% } %>
+    <% for(var a = 0; a < accounts.length; a++) { %>
+    <div class="col-xs-12 col-sm-6 new-thing">
+        <h2>
+            <%= accounts[a].name %>
+        </h2>
+        <a href="/company/create/<%= accounts[a].fbid %>">
+            <img src="https://graph.facebook.com/<%= accounts[a].fbid %>/picture?width=150&height=150" class="thumbnail company-photo center-block" alt="User avatar">
+        </a>
+        <a href="http://facebook.com/<%= accounts[a].fbid %>" class="btn btn-block btn-facebook btn-social smaller-fb center-block">
+            <i class="fa fa-facebook"></i>
+        </a>
+    </div>
+    <% } %>
 </div>
