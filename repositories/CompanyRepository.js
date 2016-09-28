@@ -2,7 +2,7 @@
  * Created by lewis.knoxstreader on 20/09/16.
  */
 
-const { sequelize, Company, Item } = require('../database/models/index');
+const { sequelize, Company, User, Item } = require('../database/models/index');
 
 exports.findUserCompanies = (accounts => {
   return Company.findAll({
@@ -10,6 +10,8 @@ exports.findUserCompanies = (accounts => {
     where: { fbid: { $or: accounts } }
   })
 });
+
+exports.findCompany = (id) => Company.findById(id, { attributes: ['name'] });
 
 exports.getCompanyMenu = id => {
   return sequelize.query(
@@ -81,4 +83,20 @@ exports.insertType = data => {
       )
     })
     .catch(err => console.error("error inserting new type:", err));
+};
+
+exports.linkCompany = (id, facebookId) => {
+  return User.findOne({
+    attributes: ['accounts'],
+    where: { id }
+  })
+    .then(val => {
+      const page = val.accounts.filter(v => v.fbid == facebookId);
+      return sequelize.query(
+        "INSERT INTO companies (fbid, name)" +
+        " VALUES (:fbid, :name)" +
+        " RETURNING fbid",
+        { replacements: { fbid: page[0].fbid, name: page[0].name }, type: sequelize.QueryTypes.INSERT }
+      );
+    });
 };

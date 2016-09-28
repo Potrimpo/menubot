@@ -7,14 +7,10 @@ const companyRepo = require('../repositories/CompanyRepository');
  * Home page.
  */
 exports.index = (req, res) => {
-  console.log("PROBLEM WITH FINDUSERCOMPANIES");
   const accountIds = req.user.accounts.map(val => val.fbid);
-  console.log("accounts =", accountIds);
   return companyRepo.findUserCompanies(accountIds)
     .then(companies => {
-      console.log("companies", companies.map(val => val.fbid));
       const accounts = unregisteredCompanies(req.user.accounts, companies);
-      console.log("NONREGISTERED ACCOUNTS", accounts);
       return res.render('home', { title: 'home', companies, accounts })
     } );
 };

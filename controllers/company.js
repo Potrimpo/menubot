@@ -9,16 +9,18 @@ const companyRepo = require('../repositories/CompanyRepository');
 
 router.param('companyId', (req, res, next, id) => {
   console.log("ID PROVIDED =", id);
+  req.body.id = id;
   return next();
 });
 
 router.get('/:companyId', (req, res) => {
   console.log("------ getting page -------");
-  return getMenu(req)
+  return getMenu(req.params.companyId)
     .then(data => {
+      console.log("Data =", data);
       return res.render('account/company', {
         fbid: data.fbid,
-        title: data.company,
+        title: data.name,
         items: data.items,
         types: data.types,
         sizes: data.sizes
@@ -32,20 +34,25 @@ router.post('/:companyId', addItem, (req, res) => {
   return res.sendStatus(200);
 });
 
+router.get('/create/:companyId', (req, res) => {
+  console.log("----- ADDING COMPANY ------", req.body.id);
+  return companyRepo.linkCompany(req.user.id, req.body.id)
+    .then(data => {
+      return res.redirect(`/company/${data[0].fbid}`)
+    });
+});
+
 function addItem(req, res, next) {
-  console.log("ADDING ITEM");
   console.log(req.body);
   switch (req.body.sendData.intent) {
     case "item":
       return companyRepo.insertMenuVal(req.body.fbid, req.body.sendData)
         .then(data => {
-          console.log("DATA FROM DB INSERTION", data);
           return next();
         });
     case "type":
       return companyRepo.insertType(req.body.sendData)
         .then(data => {
-          console.log("DATA FROM DB INSERTION", data);
           return next();
         });
     case "size":
@@ -55,27 +62,37 @@ function addItem(req, res, next) {
     }
 }
 
-function getMenu (req) {
-  return companyRepo.getCompanyMenu(req.params.companyId)
+function getMenu (id) {
+  return companyRepo.getCompanyMenu(id)
     .then(data => {
       if (!data) throw "no company found";
-      req.company = data[0].name;
-      req.fbid = req.params.companyId;
-      req.items = data;
-      const itemids = data.map(val => val.itemid);
-      return companyRepo.getMenuTypes(itemids);
+      if (data.length > 0) return fullMenu(id, data);
+      else return companyRepo.findCompany(id)
     })
-    .then(data => {
-      console.log("TYPES =", data);
-      req.types = data;
-      const typeids = data.map(val => val.typeid);
+    .catch(err => console.error("error in getMenu", err.message || err));
+}
+
+function fullMenu (fbid, data) {
+  const itemids = data.map(val => val.itemid);
+  const wholeMenu = {
+    name: data[0].name,
+    fbid,
+    items: data
+  };
+  console.log("fullmenu data", data);
+
+  return companyRepo.getMenuTypes(itemids)
+    .then(types => {
+      console.log("TYPES", types);
+      wholeMenu.types = types;
+      const typeids = types.map(val => val.typeid);
       return companyRepo.getMenuSizes(typeids);
     })
-    .then(data => {
-      console.log("SIZES =", data);
-      req.sizes = data;
-      return req;
-    })
+    .then(sizes => {
+      console.log("SIZES", sizes);
+      wholeMenu.sizes = sizes;
+      return wholeMenu
+    });
 }
 
 module.exports = router;
