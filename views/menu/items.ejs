@@ -2,12 +2,8 @@
     <div class="center-block text-center">
         <% if(items) { %>
             <% for(var i = 0; i < items.length; i++) { %>
-            <div class="col-xs-12 col-sm-6">
+            <div class="col-xs-12 col-sm-6 item-list">
                 <h3><%= items[i].item %></h3>
-                <div class="form-group">
-                    <input type="text" class="form-control" id="<%= items[i].itemid %>" placeholder="change name">
-                    <button type="submit" class="btn btn-default btn-space" id="button-<%= items[i].itemid %>">Submit</button>
-                </div>
                 <img src="/images/<%= fbid %>/<%= items[i].itemid %>.jpg" class="thumbnail center-block menu-photo" />
                 <label for="photo-<%= items[i].itemid %>">Change photo</label>
                 <input type="file" id="photo-<%= items[i].itemid %>">
