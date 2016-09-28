@@ -15,19 +15,18 @@ $(document).ready(function() {
 
   // process the form
   $('form').submit(function(event) {
+    console.log("in form submit jquery");
 
     const inputElems = $(`#${this.id} :text`);
     const values = $(inputElems).map(function() {
       console.log("val name =", this.name);
       console.log("this =", this);
       return {
-        id: this.name,
+        kind: this.name,
         val: $(this).val()
       };
     }).get();
-    console.log("VALUES", values);
 
-    const intent = /-(\w+)-/.exec(this.id)[1];
     const intent = /-(\w+)/.exec(this.id)[1];
     const sendData = {
       intent,
@@ -35,7 +34,7 @@ $(document).ready(function() {
     };
 
     for (let x = values.length - 1; x >= 0; x--) {
-      switch (values[x].id) {
+      switch (values[x].kind) {
         case "item":
           sendData.item = values[x].val;
           break;
@@ -72,7 +71,6 @@ $(document).ready(function() {
         console.error("ERROR =", err);
       }
     })
-    // using the done promise callback
       .done(function(data) {
         console.log("DONE", data);
 

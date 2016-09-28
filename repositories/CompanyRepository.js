@@ -85,6 +85,14 @@ exports.insertType = data => {
     .catch(err => console.error("error inserting new type:", err));
 };
 
+exports.insertSize = data => {
+  return sequelize.query(
+    "INSERT INTO sizes (typeid, size, price)" +
+    " VALUES (:typeid, :size, :price)",
+    { replacements: { typeid: data.parentId, size: data.size, price: data.price }, type: sequelize.QueryTypes.INSERT }
+  );
+};
+
 exports.linkCompany = (id, facebookId) => {
   return User.findOne({
     attributes: ['accounts'],

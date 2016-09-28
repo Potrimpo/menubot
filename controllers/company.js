@@ -55,7 +55,8 @@ function addItem(req, res, next) {
           return next();
         });
     case "size":
-      break;
+      return companyRepo.insertSize(req.body.sendData)
+        .then(() => next());
     default:
       return console.error("no case for this update intent", req.body.sendData.intent);
     }
