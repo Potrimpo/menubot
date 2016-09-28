@@ -72,6 +72,7 @@ const Company = sequelize.define('Company', {
   location: Sequelize.STRING
 }, {
   tableName: 'companies',
+  timestamps: false,
   classMethods: {
     findLocation(fbid) {
       return Company.findOne({
@@ -81,7 +82,6 @@ const Company = sequelize.define('Company', {
     }
   }
 });
-
 
 const Item = sequelize.define('Item', {
   fbid: {
@@ -102,6 +102,7 @@ const Item = sequelize.define('Item', {
   }
 }, {
   tableName: 'items',
+  timestamps: false,
   classMethods: {
     findItem(fbid, item) {
       return Item.findOne({
@@ -137,6 +138,7 @@ const Type = sequelize.define('Type', {
   }
 }, {
   tableName: 'types',
+  timestamps: false,
   classMethods: {
     getTypes(itemid) {
       return Type.findAll({
@@ -170,6 +172,7 @@ const Size = sequelize.define('Size', {
   }
 }, {
   tableName: 'sizes',
+  timestamps: false,
   classMethods: {
     getSizes(typeid) {
       return Size.findAll({
@@ -228,6 +231,8 @@ const Order = sequelize.define('Order', {
   }
 }, {
   tableName: 'orders',
+  // could benefit from adding timestamps in future
+  timestamps: false,
   classMethods: {
     makeOrder(fbid, userid, typeid, sizeid, pickuptime) {
       return Order.build({
@@ -246,13 +251,16 @@ const Order = sequelize.define('Order', {
 });
 
 // Relations
-Item.belongsTo(Company);
-Type.belongsTo(Item);
-Size.belongsTo(Type);
+User.belongsToMany(Company, { through: 'usercompany' });
+Company.belongsToMany(User, { through: 'usercompany' });
 
-Order.belongsTo(Size);
-Order.belongsTo(Type);
-Order.belongsTo(Company);
+// Item.belongsTo(Company);
+// Type.belongsTo(Item);
+// Size.belongsTo(Type);
+//
+// Order.belongsTo(Size);
+// Order.belongsTo(Type);
+// Order.belongsTo(Company);
 
 
 module.exports = {

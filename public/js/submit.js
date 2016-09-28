@@ -28,6 +28,7 @@ $(document).ready(function() {
     console.log("VALUES", values);
 
     const intent = /-(\w+)-/.exec(this.id)[1];
+    const intent = /-(\w+)/.exec(this.id)[1];
     const sendData = {
       intent,
       parentId: this.name,

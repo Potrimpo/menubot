@@ -17,7 +17,6 @@ router.get('/:companyId', (req, res) => {
   console.log("------ getting page -------");
   return getMenu(req.params.companyId)
     .then(data => {
-      console.log("Data =", data);
       return res.render('account/company', {
         fbid: data.fbid,
         title: data.name,
@@ -79,17 +78,14 @@ function fullMenu (fbid, data) {
     fbid,
     items: data
   };
-  console.log("fullmenu data", data);
 
   return companyRepo.getMenuTypes(itemids)
     .then(types => {
-      console.log("TYPES", types);
       wholeMenu.types = types;
       const typeids = types.map(val => val.typeid);
       return companyRepo.getMenuSizes(typeids);
     })
     .then(sizes => {
-      console.log("SIZES", sizes);
       wholeMenu.sizes = sizes;
       return wholeMenu
     });

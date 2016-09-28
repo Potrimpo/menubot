@@ -11,7 +11,7 @@ exports.findUserCompanies = (accounts => {
   })
 });
 
-exports.findCompany = (id) => Company.findById(id, { attributes: ['name'] });
+exports.findCompany = (id) => Company.findById(id, { attributes: ['name', 'fbid'] });
 
 exports.getCompanyMenu = id => {
   return sequelize.query(
