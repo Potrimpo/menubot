@@ -31,6 +31,8 @@ $(document).ready(function() {
     const sendData = {
       intent,
       parentId: this.name,
+      fbid,
+      _csrf
     };
 
     for (let x = values.length - 1; x >= 0; x--) {
@@ -51,16 +53,10 @@ $(document).ready(function() {
     }
     console.log("SENDING", sendData);
 
-    var formData = {
-      fbid,
-      sendData,
-      _csrf
-    };
-
     $.ajax({
       type: 'POST',
       url: '/company/' + fbid,
-      data: formData,
+      data: sendData,
       encode: true,
       success(data) {
         console.log("SUCCESS");

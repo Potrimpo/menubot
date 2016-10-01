@@ -40,12 +40,12 @@ exports.getMenuSizes = typeids => {
   );
 };
 
-exports.insertMenuVal = (fbid, data) => {
+exports.insertMenuVal = (data) => {
   return sequelize.query(
     "INSERT INTO items (fbid, item)" +
     " VALUES (:fbid, :item)" +
     " RETURNING itemid",
-    { replacements: { fbid, item: data.item }, type: sequelize.QueryTypes.INSERT }
+    { replacements: { fbid: data.fbid, item: data.item }, type: sequelize.QueryTypes.INSERT }
   )
     .then(val => {
       console.log("value from insertion =", val);

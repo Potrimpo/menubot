@@ -43,22 +43,22 @@ router.get('/create/:companyId', (req, res) => {
 
 function addItem(req, res, next) {
   console.log(req.body);
-  switch (req.body.sendData.intent) {
+  switch (req.body.intent) {
     case "item":
-      return companyRepo.insertMenuVal(req.body.fbid, req.body.sendData)
+      return companyRepo.insertMenuVal(req.body)
         .then(data => {
           return next();
         });
     case "type":
-      return companyRepo.insertType(req.body.sendData)
+      return companyRepo.insertType(req.body)
         .then(data => {
           return next();
         });
     case "size":
-      return companyRepo.insertSize(req.body.sendData)
+      return companyRepo.insertSize(req.body)
         .then(() => next());
     default:
-      return console.error("no case for this update intent", req.body.sendData.intent);
+      return console.error("no case for this update intent", req.body.intent);
     }
 }
 
