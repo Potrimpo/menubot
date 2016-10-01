@@ -93,6 +93,16 @@ exports.insertSize = data => {
   );
 };
 
+exports.deleteItem = data => {
+  console.log("DELeting!!");
+  console.log("data.id = ", data.id);
+  return sequelize.query(
+    "DELETE FROM items" +
+    " WHERE itemid = $1",
+    { bind: [data.deleteId], type: sequelize.QueryTypes.DELETE }
+  );
+};
+
 exports.linkCompany = (id, facebookId) => {
   return User.findOne({
     attributes: ['accounts'],

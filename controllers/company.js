@@ -57,6 +57,11 @@ function addItem(req, res, next) {
     case "size":
       return companyRepo.insertSize(req.body)
         .then(() => next());
+    case "delete":
+      console.log("DELETAIN *********");
+      console.log("body = ", req.body);
+      return companyRepo.deleteItem(req.body)
+        .then(() => next());
     default:
       return console.error("no case for this update intent", req.body.intent);
     }

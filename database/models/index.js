@@ -254,9 +254,9 @@ const Order = sequelize.define('Order', {
 User.belongsToMany(Company, { through: 'usercompany' });
 Company.belongsToMany(User, { through: 'usercompany' });
 
-// Item.belongsTo(Company);
-// Type.belongsTo(Item);
-// Size.belongsTo(Type);
+Item.belongsTo(Company, { foreignKey: 'fbid' });
+Type.belongsTo(Item, { foreignKey: 'itemid', onDelete: 'cascade' });
+Size.belongsTo(Type, { foreignKey: 'typeid', onDelete: 'cascade' });
 //
 // Order.belongsTo(Size);
 // Order.belongsTo(Type);

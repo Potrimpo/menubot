@@ -9,8 +9,47 @@ $(document).ready(function() {
   const fbid = $('.company-head').attr('id'),
     _csrf = $('input[name=_csrf]').val();
 
-  $('input').focus(function() {
-    $(`#button-${this.id}`).show();
+  // $('input').focus(function() {
+  //   console.log("button");
+  //   console.log(this.name);
+  //   $(`#button-${this.name}`).show();
+  // });
+
+  $('button').click(function (event) {
+    console.log("button click");
+    console.log(this);
+
+    const [_, type, deleteId] = /(\w+)-(\d+)/.exec(this.name);
+    console.log("type =", type);
+    console.log("id =", deleteId);
+    const deleteSpec = {
+      intent: "delete",
+      type,
+      deleteId,
+      fbid,
+      _csrf
+    };
+
+    $.ajax({
+      type: 'POST',
+      url: '/company/' + fbid,
+      data: deleteSpec,
+      encode: true,
+      success(data) {
+        console.log("SUCCESS");
+        console.log(data);
+      },
+      error(smth, status, err) {
+        console.error("ERROR IN AJAX", status);
+        console.error("ERROR =", err);
+      }
+    })
+      .done(function(data) {
+        console.log("DONE", data);
+
+        location.reload();
+      });
+
   });
 
   // process the form
