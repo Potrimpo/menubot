@@ -32,7 +32,7 @@ exports.getOauthUnlink = function(req, res, next) {
   UserRepo.unlinkProviderFromAccount(provider, req.user.id)
     .then(function() {
       req.flash('info', { msg: provider + ' account has been unlinked.' });
-      res.redirect('/account');
+      res.redirect('/landing');
     })
     .catch(function(err) {
       return next(err);

@@ -1,0 +1,12 @@
+<div class="row">
+    <% for (var y = 0; y < sizes.length; y++) { %>
+        <% if (sizes[y].typeid == types[x].typeid) { %>
+        <div class="col-xs-12 col-sm-6 size-list">
+                <h4><%= sizes[y].size %>: $<%= sizes[y].price %></h4>
+        </div>
+        <% } %>
+    <% } %>
+    <div class="col-xs-12 col-sm-6 new-thing">
+        <%- include new-size %>
+    </div>
+</div>

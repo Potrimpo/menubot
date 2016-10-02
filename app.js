@@ -78,6 +78,12 @@ app.use(session({
   }
 }));
 
+// WEBHOOK HANDLERS MUST COME BEFORE SECURITY CHECKS (LUSCA)
+// Webhook GET (facebook pings this with heartbeat)
+app.route('/webhook')
+  .get(messengerMiddleware.getWebhook)
+  .post(messengerMiddleware.postWebhook);
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
@@ -96,28 +102,25 @@ app.use(function(req, res, next) {
   next();
 });
 
-// Webhook GET (facebook pings this with heartbeat)
-app.get('/webhook', messengerMiddleware.getWebhook);
-
-// Message handler
-app.post('/webhook', messengerMiddleware.postWebhook);
-
 // Controllers (route handlers).
-var homeController = require('./controllers/home');
-var userController = require('./controllers/user');
-var apiController = require('./controllers/api');
-var contactController = require('./controllers/contact');
+const homeController = require('./controllers/home'),
+  userController = require('./controllers/user'),
+  apiController = require('./controllers/api'),
+  companyController = require('./controllers/company'),
+  contactController = require('./controllers/contact');
 
 
 // Primary app routes.
-app.get('/', homeController.index);
+app.get('/', passportConf.isAuthenticated, passportConf.isAuthorized, homeController.index);
 app.get('/landing', homeController.landing);
-// app.get('/login', userController.getLogin);
 app.get('/logout', userController.logout);
-app.get('/contact', contactController.getContact);
-app.post('/contact', contactController.postContact);
+app.route('/contact')
+  .get(contactController.getContact)
+  .post(contactController.postContact);
 app.get('/account', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getFacebook);
 app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);
+
+app.use('/company', companyController);
 
 // OAuth authentication routes. (Sign in)
 app.get('/auth/facebook', passport.authenticate('facebook', secrets.facebook.authOptions));

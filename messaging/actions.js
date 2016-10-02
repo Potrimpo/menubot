@@ -2,7 +2,7 @@ const chrono = require('chrono-node'),
   { sessions } = require('./../witSessions'),
   fbMessage = require('./messenger'),
   // { findItem, makeOrder, orderDetails } = require('./../sql'),
-  { Item, Size, Order } = require('./../database');
+  { Item, Size, Order } = require('./../database/models/index');
 
 const firstEntityValue = (entities, entity) => {
   const val = entities && entities[entity] &&
@@ -26,13 +26,11 @@ const actions = {
       });
       delete message.quickreplies;
     }
-    // Our bot has something to say!
     // Let's retrieve the Facebook user whose session belongs to
     const recipientId = sessions[sessionId].fbUserId;
     if (recipientId) {
       // Yay, we found our recipient!
       // Let's forward our bot response to her.
-      // We return a promise to let our bot know when we're done sending
       return fbMessage(recipientId, message)
         .then(() => null)
         .catch((err) => {

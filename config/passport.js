@@ -7,16 +7,12 @@ var secrets = require('./secrets');
 var { User } = require('../database/models/index');
 var UserRepo = require('../repositories/UserRepository');
 
-passport.serializeUser(function(user, done) {
-  done(null, user.id);
-});
+passport.serializeUser((user, done) => done(null, user.id));
 
-passport.deserializeUser(function(id, done) {
-  User.findById(id).then(function(user) {
-    done(null, user);
-  }).catch(function(error) {
-    done(error);
-  });
+passport.deserializeUser((id, done) => {
+  User.findById(id)
+    .then(user => done(null, user))
+    .catch(error => done(error));
 });
 
 /**
@@ -50,7 +46,9 @@ passport.use(new FacebookStrategy(secrets.facebook, function(req, accessToken, r
       });
   } else {
     UserRepo.createAccFromFacebook(accessToken, refreshToken, profile)
-      .then(function(user) { done(null, user); })
+      .then(function (user) {
+        done(null, user);
+      })
       .catch(function(error) { done(error); });
   }
 }));
@@ -58,10 +56,7 @@ passport.use(new FacebookStrategy(secrets.facebook, function(req, accessToken, r
 /**
  * Login Required middleware.
  */
-exports.isAuthenticated = function(req, res, next) {
-  if (req.isAuthenticated()) return next();
-  res.redirect('/login');
-};
+exports.isAuthenticated = (req, res, next) => req.isAuthenticated() ? next() : res.redirect('/landing');
 
 /**
  * Authorization Required middleware.

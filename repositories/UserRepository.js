@@ -2,17 +2,15 @@
 
 var { User } = require('../database/models/index');
 
-var repo = {};
-
-repo.getUserById = function(id) {
+exports.getUserById = function(id) {
   return User.findById(id);
 };
 
-repo.removeUserById = function(userId) {
+exports.removeUserById = function(userId) {
   return User.destroy({ where: { id: userId } });
 };
 
-repo.unlinkProviderFromAccount = function(provider, userId) {
+exports.unlinkProviderFromAccount = function(provider, userId) {
   return User.findById(userId)
     .then(function(user) {
       if(!user)
@@ -33,7 +31,7 @@ repo.unlinkProviderFromAccount = function(provider, userId) {
 /**
  * Facebook
  */
-repo.linkFacebookProfile = function(userId, accessToken, refreshToken, profile) {
+exports.linkFacebookProfile = function(userId, accessToken, refreshToken, profile) {
   var profileId = profile.id.toString();
 
   return User.findOne({ where: { facebookId: profileId } })
@@ -48,8 +46,6 @@ repo.linkFacebookProfile = function(userId, accessToken, refreshToken, profile) 
       if(!user.tokens) user.tokens = {};
       if(!user.profile) user.profile = {};
       user.tokens.facebook = accessToken;
-      user.profile.name = user.profile.name || profile.displayName;
-      user.profile.gender = user.profile.gender || profile._json.gender;
       user.photo = 'https://graph.facebook.com/' + profile.id+ '/picture?type=large';
       user.set('tokens', user.tokens);
       user.set('profile', user.profile);
@@ -58,7 +54,7 @@ repo.linkFacebookProfile = function(userId, accessToken, refreshToken, profile) 
     });
 };
 
-repo.createAccFromFacebook = function(accessToken, refreshToken, profile) {
+exports.createAccFromFacebook = function(accessToken, refreshToken, profile) {
   if(!profile._json) {
     throw 'Facebook profile is missing _json property!';
   }
@@ -70,15 +66,20 @@ repo.createAccFromFacebook = function(accessToken, refreshToken, profile) {
     .then(function(existingUser) {
       if (existingUser) { return existingUser; }
       var user = User.build({ facebookId: profileId });
+      const accounts = profile._json.accounts.data.map(company => {
+        return {
+          fbid: company.id,
+          name: company.name
+        };
+      });
+      user.set('accounts', accounts);
       user.email = profile._json.email || ( profileId + '@facebook.com' );
       user.tokens = { facebook: accessToken };
       user.name = profile.name.givenName + ' ' + profile.name.familyName;
       user.photo = 'https://graph.facebook.com/' + profile.id+ '/picture?type=large';
-      user.profile = {
-        name: profile._json.first_name
-      };
-      return user.save();
-    });
-};
+      user.profile = { name: profile._json.first_name };
 
-module.exports = repo;
+      return user.save();
+    })
+    .catch(err => console.error("error creating profile", err.message || err));
+};
