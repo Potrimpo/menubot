@@ -99,7 +99,7 @@ const actions = {
           })
           .then(function (data) {
             delete context.order;
-            Object.assign(context, data);
+            Object.assign(context, data[0]);
             return res(context);
           })
           .catch(err => {

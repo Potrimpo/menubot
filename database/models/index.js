@@ -237,8 +237,7 @@ const Order = sequelize.define('Order', {
     makeOrder(fbid, userid, typeid, sizeid, pickuptime) {
       return Order.build({
         fbid, userid, typeid, sizeid, pickuptime
-      })
-        .save()
+      }).save();
     },
     findOrder (fbid, userid, sizeid) {
       return Order.findOne({
