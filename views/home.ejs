@@ -7,12 +7,9 @@
 <hr/>
 <div class="row">
     <div class="col-xs-12 col-sm-12">
-        <h2>Orders</h2>
-        <p>
-            A todo list of people's orders goes here
-        </p>
-        <p><a href="#" role="button" class="btn btn-default">View details »</a></p>
+        <h2>Accounts</h2>
     </div>
+
     <% for(var i = 0; i < companies.length; i++) { %>
     <div class="col-xs-12 col-sm-6">
         <h2>
@@ -24,8 +21,13 @@
         <a href="http://facebook.com/<%= companies[i].fbid %>" class="btn btn-block btn-facebook btn-social smaller-fb center-block">
             <i class="fa fa-facebook"></i>
         </a>
+        <!--<h2>Orders</h2>-->
+        <div>
+            <a href="#" role="button" class="btn btn-default btn-space">Orders »</a>
+        </div>
     </div>
     <% } %>
+
     <% for(var a = 0; a < accounts.length; a++) { %>
     <div class="col-xs-12 col-sm-6 new-thing">
         <h2>
