@@ -3,7 +3,8 @@
  */
 
 const express = require('express'),
-  router = express.Router();
+  router = express.Router(),
+  passportConf = require('../config/passport');
 
 const companyRepo = require('../repositories/CompanyRepository');
 
@@ -13,7 +14,7 @@ router.param('companyId', (req, res, next, id) => {
   return next();
 });
 
-router.get('/:companyId', (req, res) => {
+router.get('/:companyId', passportConf.isAuthenticated, passportConf.isAuthorized, (req, res) => {
   console.log("------ getting page -------");
   return getMenu(req.params.companyId)
     .then(data => {
@@ -28,12 +29,12 @@ router.get('/:companyId', (req, res) => {
 });
 
 // can't handle changing photos
-router.post('/:companyId', addItem, (req, res) => {
+router.post('/:companyId', passportConf.isAuthenticated, passportConf.isAuthorized, addItem, (req, res) => {
   console.log("----- POST RECEIVED ------", req.body);
   return res.sendStatus(200);
 });
 
-router.get('/create/:companyId', (req, res) => {
+router.get('/create/:companyId', passportConf.isAuthenticated, passportConf.isAuthorized, (req, res) => {
   console.log("----- ADDING COMPANY ------", req.body.id);
   return companyRepo.linkCompany(req.user.id, req.body.id)
     .then(data => {
