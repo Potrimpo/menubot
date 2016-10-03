@@ -107,7 +107,8 @@ const homeController = require('./controllers/home'),
   userController = require('./controllers/user'),
   apiController = require('./controllers/api'),
   companyController = require('./controllers/company'),
-  contactController = require('./controllers/contact');
+  contactController = require('./controllers/contact'),
+  ordersController = require('./controllers/orders');
 
 
 // Primary app routes.
@@ -121,6 +122,7 @@ app.get('/account', passportConf.isAuthenticated, passportConf.isAuthorized, api
 app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);
 
 app.use('/company', companyController);
+app.use('/orders', ordersController);
 
 // OAuth authentication routes. (Sign in)
 app.get('/auth/facebook', passport.authenticate('facebook', secrets.facebook.authOptions));
