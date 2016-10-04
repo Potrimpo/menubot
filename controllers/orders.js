@@ -8,7 +8,7 @@ const express = require('express'),
 
 router.get('/:fbid', (req, res) => {
   console.log("fbid for order page =", req.params.fbid);
-  return res.render('orders', { title: 'Orders' });
+  return res.render('orders/orders', { title: 'Orders' });
 });
 
 module.exports = router;
