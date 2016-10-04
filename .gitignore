@@ -6,3 +6,6 @@ envVariables.js
 output.json
 icon.png
 config/secrets.js
+public/dist
+public/js/lib
+uploads
