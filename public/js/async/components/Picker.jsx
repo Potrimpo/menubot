@@ -12,7 +12,7 @@ const Picker = ({ value, onChange, options }) => (
       }
     </select>
   </span>
-)
+);
 
 Picker.propTypes = {
   options: PropTypes.arrayOf(
@@ -20,6 +20,6 @@ Picker.propTypes = {
   ).isRequired,
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired
-}
+};
 
 export default Picker

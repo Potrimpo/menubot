@@ -7,11 +7,11 @@ import {
 const selectedReddit = (state = 'reactjs', action) => {
   switch (action.type) {
     case SELECT_REDDIT:
-      return action.reddit
+      return action.reddit;
     default:
       return state
   }
-}
+};
 
 const posts = (state = {
   isFetching: false,
@@ -23,13 +23,13 @@ const posts = (state = {
       return {
         ...state,
         didInvalidate: true
-      }
+      };
     case REQUEST_POSTS:
       return {
         ...state,
         isFetching: true,
         didInvalidate: false
-      }
+      };
     case RECEIVE_POSTS:
       return {
         ...state,
@@ -37,11 +37,11 @@ const posts = (state = {
         didInvalidate: false,
         items: action.posts,
         lastUpdated: action.receivedAt
-      }
+      };
     default:
       return state
   }
-}
+};
 
 const postsByReddit = (state = { }, action) => {
   switch (action.type) {
@@ -51,15 +51,15 @@ const postsByReddit = (state = { }, action) => {
       return {
         ...state,
         [action.reddit]: posts(state[action.reddit], action)
-      }
+      };
     default:
       return state
   }
-}
+};
 
 const rootReducer = combineReducers({
   postsByReddit,
   selectedReddit
-})
+});
 
 export default rootReducer

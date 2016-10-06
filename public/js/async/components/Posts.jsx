@@ -6,10 +6,10 @@ const Posts = ({posts}) => (
       <li key={i}>{post.title}</li>
     )}
   </ul>
-)
+);
 
 Posts.propTypes = {
   posts: PropTypes.array.isRequired
-}
+};
 
 export default Posts
