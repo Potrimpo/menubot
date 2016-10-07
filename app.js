@@ -106,6 +106,7 @@ app.use(function(req, res, next) {
 const homeController = require('./controllers/home'),
   userController = require('./controllers/user'),
   apiController = require('./controllers/api'),
+  facebookController = require('./controllers/facebook'),
   companyController = require('./controllers/company'),
   contactController = require('./controllers/contact'),
   ordersController = require('./controllers/orders');
@@ -118,8 +119,10 @@ app.get('/logout', userController.logout);
 app.route('/contact')
   .get(contactController.getContact)
   .post(contactController.postContact);
-app.get('/account', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getFacebook);
+app.get('/account', passportConf.isAuthenticated, passportConf.isAuthorized, facebookController.getFacebook);
 app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);
+
+app.use('/api', apiController);
 
 app.use('/company', companyController);
 app.use('/orders', ordersController);

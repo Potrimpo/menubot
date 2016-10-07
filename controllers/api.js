@@ -1,40 +1,19 @@
 "use strict";
 
 //global requires
-var async = require('neo-async');
+const express = require('express'),
+  router = express.Router(),
+  passportConf = require('../config/passport');
 
-//specific requires
-var graph;
-
-/**
- * GET /api/facebook
- * Facebook API example.
- */
-exports.getFacebook = function(req, res, next) {
-  graph = require('fbgraph');
-
-  var token = req.user.tokens.facebook;
-  graph.setAccessToken(token);
-  async.parallel({
-    getMe: function(done) {
-      graph.get(req.user.facebookId, function(err, me) {
-        done(err, me);
-      });
-    },
-    getMyFriends: function(done) {
-      graph.get(req.user.facebookId + '/friends', function(err, friends) {
-        done(err, friends.data);
-      });
-    }
-  },
-  function(err, results) {
-    if (err) return next(err);
-    console.log("--- RESULTO ----");
-    console.log(results.getMe);
-    res.render('account/profile', {
-      title: 'Facebook API',
-      me: results.getMe,
-      friends: results.getMyFriends
-    });
+router.route('/orders')
+  .get(passportConf.isAuthenticated, passportConf.isAuthorized, (req, res, next) => {
+    console.log('req.params.fbid =', req.params.fbid);
+    console.log(req.body);
+    res.send('got it');
+  })
+  .post(passportConf.isAuthenticated, passportConf.isAuthorized, (req, res, next) => {
+    console.log('HE TRYNA POST');
+    res.send('ur postin 2 me');
   });
-};
+
+module.exports = router;
