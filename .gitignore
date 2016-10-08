@@ -7,5 +7,6 @@ output.json
 icon.png
 config/secrets.js
 public/dist
+public/asyncDist
 public/js/lib
 uploads
