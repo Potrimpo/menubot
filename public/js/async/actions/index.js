@@ -12,7 +12,7 @@ export const requestPosts = () => ({
 
 export const receivePosts = json => ({
   type: RECEIVE_POSTS,
-  posts: json.data.children.map(child => child.data),
+  posts: json,
   receivedAt: Date.now()
 });
 

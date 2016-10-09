@@ -14,11 +14,12 @@ class App extends Component {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(requestPosts());
-    return fetch(`https://www.reddit.com/r/overwatch.json`)
-      .then(response => {
-        return response.json()
+    return fetch("/api/orders/1766837970261548", { credentials : 'same-origin' })
+      .then(response => response.json())
+      .then(json => {
+        console.log("parsed json", json);
+        return dispatch(receivePosts(json))
       })
-      .then(json => dispatch(receivePosts(json)))
       .catch(e => console.error("something went wrong fetching the data"));
   }
 
@@ -33,7 +34,7 @@ class App extends Component {
     const { dispatch } = this.props;
     dispatch(reload());
     dispatch(requestPosts());
-    return fetch(`https://www.reddit.com/r/overwatch.json`)
+    return fetch("/api/orders/1766837970261548", { credentials : 'same-origin' })
       .then(response => {
         return response.json()
       })

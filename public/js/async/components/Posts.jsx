@@ -3,7 +3,7 @@ import React, { PropTypes } from 'react'
 const Posts = ({ orders }) => (
   <ul>
     {orders.map((item, i) =>
-      <li key={i}>{item.title}</li>
+      <li key={i}>{item.orderid}</li>
     )}
   </ul>
 );
