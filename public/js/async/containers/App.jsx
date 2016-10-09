@@ -13,14 +13,7 @@ class App extends Component {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatch(requestPosts());
-    return fetch("/api/orders/1766837970261548", { credentials : 'same-origin' })
-      .then(response => response.json())
-      .then(json => {
-        console.log("parsed json", json);
-        return dispatch(receivePosts(json))
-      })
-      .catch(e => console.error("something went wrong fetching the data"));
+    return dispatch(fetchPosts());
   }
 
   static componentWillReceiveProps(nextProps) {
@@ -33,13 +26,7 @@ class App extends Component {
 
     const { dispatch } = this.props;
     dispatch(reload());
-    dispatch(requestPosts());
-    return fetch("/api/orders/1766837970261548", { credentials : 'same-origin' })
-      .then(response => {
-        return response.json()
-      })
-      .then(json => dispatch(receivePosts(json)))
-      .catch(e => console.error("something went wrong fetching the data"));
+    return dispatch(fetchPosts());
   };
 
   render() {

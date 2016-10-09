@@ -16,15 +16,14 @@ export const receivePosts = json => ({
   receivedAt: Date.now()
 });
 
-const thunkFetch = dispatch => {
-  dispatch(requestPosts());
-  return fetch(`https://www.reddit.com/r/overwatch.json`)
-    .then(response => {
-      console.log("response =", response);
-      return response.json()
-    })
-    .then(json => dispatch(receivePosts(json)))
-    .catch(e => console.error("something went wrong fetching the data"));
+export const fetchPosts = () => {
+  return dispatch => {
+    return fetch("/api/orders/1766837970261548", { credentials : 'same-origin' })
+      .then(response => response.json())
+      .then(json => {
+        console.log("parsed json", json);
+        return dispatch(receivePosts(json))
+      })
+      .catch(e => console.error("something went wrong fetching the data"));
+  }
 };
-
-export const fetchPosts = () => thunkFetch(dispatch);
