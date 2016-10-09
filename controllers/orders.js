@@ -7,7 +7,8 @@ const { getOrders } = require('../repositories/CompanyRepository');
 exports.retrieveOrders = (req, res, next) => {
   return getOrders(req.params.fbid)
     .then(data => {
-      req.orders = data.map(val => val.dataValues);
+      console.log("getOrders data =", data);
+      req.orders = data;
       return next();
     })
     .catch(err => res.status(500).send('error getting orders'));

@@ -12,8 +12,11 @@ export const requestPosts = () => ({
 
 export const receivePosts = json => ({
   type: RECEIVE_POSTS,
-  posts: json,
-  receivedAt: Date.now()
+  posts: json.filter(order => {
+    const currentDate = new Date(Date.now());
+    const pickupTime = new Date(order.pickuptime);
+    return pickupTime.getDate() === currentDate.getDate();
+  }),
 });
 
 export const fetchPosts = () => {

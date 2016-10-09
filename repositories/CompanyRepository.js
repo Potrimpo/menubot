@@ -2,7 +2,7 @@
  * Created by lewis.knoxstreader on 20/09/16.
  */
 
-const { sequelize, Company, User, Item, Order } = require('../database/models/index');
+const { sequelize, Company, User, Item, Type, Size, Order } = require('../database/models/index');
 
 exports.findUserCompanies = (accounts => {
   return Company.findAll({
@@ -104,10 +104,14 @@ exports.deleteItem = data => {
 };
 
 exports.getOrders = fbid => {
-  return Order.findAll({
-    attributes: [ 'orderid', 'userid', 'sizeid', 'pickuptime' ],
-    where: { fbid }
-  })
+  return sequelize.query(
+    "SELECT * FROM orders" +
+    " INNER JOIN sizes ON orders.sizeid = sizes.sizeid" +
+    " INNER JOIN types ON orders.typeid = types.typeid" +
+    " INNER JOIN items ON types.itemid = items.itemid" +
+    " WHERE orders.fbid = $1",
+    { bind: [fbid], type: sequelize.QueryTypes.SELECT }
+  );
 };
 
 exports.linkCompany = (id, facebookId) => {

@@ -2,8 +2,8 @@ import React, { PropTypes } from 'react'
 
 const Posts = ({ orders }) => (
   <ul>
-    {orders.map((item, i) =>
-      <li key={i}>{item.orderid}</li>
+    {orders.map((order, i) =>
+      <li key={i}>{order.size} | {order.type} | {order.item}</li>
     )}
   </ul>
 );
