@@ -122,7 +122,7 @@ app.route('/contact')
 app.get('/account', passportConf.isAuthenticated, passportConf.isAuthorized, facebookController.getFacebook);
 app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);
 
-app.use('/api', apiController);
+app.use('/api', passportConf.isAuthenticated, passportConf.isAuthorized, apiController);
 
 app.use('/company', companyController);
 app.use('/orders', ordersController);

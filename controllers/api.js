@@ -1,17 +1,18 @@
 "use strict";
 
-//global requires
 const express = require('express'),
   router = express.Router(),
-  passportConf = require('../config/passport');
+  { retrieveOrders } = require('./orders');
 
-router.route('/orders')
-  .get(passportConf.isAuthenticated, passportConf.isAuthorized, (req, res, next) => {
-    console.log('req.params.fbid =', req.params.fbid);
-    console.log(req.body);
-    res.send('got it');
+
+// absolute path is /api/orders/:fbid
+router.route('/orders/:fbid')
+  .get(retrieveOrders, (req, res) => {
+    console.log('Getting orders through API', req.params.fbid);
+    console.log('orders retreived:', req.orders);
+    return res.status(200).send("got it broski");
   })
-  .post(passportConf.isAuthenticated, passportConf.isAuthorized, (req, res, next) => {
+  .post((req, res) => {
     console.log('HE TRYNA POST');
     res.send('ur postin 2 me');
   });

@@ -12,3 +12,11 @@ router.get('/:fbid', passportConf.isAuthenticated, passportConf.isAuthorized, (r
 });
 
 module.exports = router;
+exports.retrieveOrders = (req, res, next) => {
+  return getOrders(req.params.fbid)
+    .then(data => {
+      req.orders = data;
+      return next();
+    })
+    .catch(err => res.status(500).send('error getting orders'));
+};
