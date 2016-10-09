@@ -121,11 +121,11 @@ app.route('/contact')
   .post(contactController.postContact);
 app.get('/account', passportConf.isAuthenticated, passportConf.isAuthorized, facebookController.getFacebook);
 app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);
+app.get('/orders/:fbid', passportConf.isAuthenticated, passportConf.isAuthorized, homeController.orders);
 
 app.use('/api', passportConf.isAuthenticated, passportConf.isAuthorized, apiController);
 
-app.use('/company', companyController);
-app.use('/orders', ordersController);
+app.use('/company', passportConf.isAuthenticated, passportConf.isAuthorized, companyController);
 
 // OAuth authentication routes. (Sign in)
 app.get('/auth/facebook', passport.authenticate('facebook', secrets.facebook.authOptions));
