@@ -256,10 +256,10 @@ Company.belongsToMany(User, { through: 'usercompany' });
 Item.belongsTo(Company, { foreignKey: 'fbid' });
 Type.belongsTo(Item, { foreignKey: 'itemid', onDelete: 'cascade' });
 Size.belongsTo(Type, { foreignKey: 'typeid', onDelete: 'cascade' });
-//
-// Order.belongsTo(Size);
-// Order.belongsTo(Type);
-// Order.belongsTo(Company);
+
+Order.belongsTo(Size, { foreignKey: 'sizeid', onDelete: 'cascade' });
+Order.belongsTo(Type, { foreignKey: 'typeid', onDelete: 'cascade' });
+Order.belongsTo(Company, { foreignKey: 'fbid', onDelete: 'cascade' });
 
 
 module.exports = {
