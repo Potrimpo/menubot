@@ -33,5 +33,5 @@ function unregisteredCompanies (accounts, dbCompanies) {
 
 exports.orders = (req, res) => {
   console.log("fbid for order page =", req.params.fbid);
-  return res.render('orders/orders', { title: 'Orders' });
+  return res.render('orders/orders', { title: 'Orders', fbid: req.params.fbid });
 };

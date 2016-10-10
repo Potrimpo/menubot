@@ -1,10 +1,18 @@
 export const REQUEST_POSTS = 'REQUEST_POSTS';
 export const RECEIVE_POSTS = 'RECEIVE_POSTS';
 export const RELOAD = 'RELOAD';
+export const REQUEST_FBID = 'REQUEST_FBID';
 
 export const reload = () => ({
   type: RELOAD,
 });
+
+export const requestFbid = () => {
+  return {
+    type: REQUEST_FBID,
+    fbid: document.getElementById("root").getAttribute("name")
+  };
+};
 
 export const requestPosts = () => ({
   type: REQUEST_POSTS,
@@ -19,9 +27,9 @@ export const receivePosts = json => ({
   }),
 });
 
-export const fetchPosts = () => {
+export const fetchPosts = fbid => {
   return dispatch => {
-    return fetch("/api/orders/1766837970261548", { credentials : 'same-origin' })
+    return fetch(`/api/orders/${fbid}`, { credentials : 'same-origin' })
       .then(response => response.json())
       .then(json => {
         console.log("parsed json", json);

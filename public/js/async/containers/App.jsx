@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { fetchPosts, reload, requestPosts, receivePosts } from '../actions'
+import { requestFbid, fetchPosts, reload } from '../actions'
 import Picker from '../components/Picker'
 import Posts from '../components/Posts'
 
@@ -8,12 +8,13 @@ class App extends Component {
   static propTypes = {
     orders: PropTypes.array.isRequired,
     isFetching: PropTypes.bool.isRequired,
-    dispatch: PropTypes.func.isRequired
+    dispatch: PropTypes.func.isRequired,
+    fbid: PropTypes.string
   };
 
   componentDidMount() {
-    const { dispatch } = this.props;
-    return dispatch(fetchPosts());
+    const { dispatch, fbid } = this.props;
+    return dispatch(fetchPosts(fbid));
   }
 
   static componentWillReceiveProps(nextProps) {
@@ -59,11 +60,12 @@ class App extends Component {
 }
 
 const mapStateToProps = state => {
-  const { status, orders } = state || { isFetching: true, orders: [] };
+  const { status, orders, fbid } = state || { isFetching: true, orders: [], fbid: "" };
 
   return {
     orders,
-    isFetching: status.isFetching
+    isFetching: status.isFetching,
+    fbid
   }
 };
 
