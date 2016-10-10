@@ -25,9 +25,9 @@ class App extends Component {
   handleRefreshClick = e => {
     e.preventDefault();
 
-    const { dispatch } = this.props;
+    const { dispatch, fbid } = this.props;
     dispatch(reload());
-    return dispatch(fetchPosts());
+    return dispatch(fetchPosts(fbid));
   };
 
   render() {
