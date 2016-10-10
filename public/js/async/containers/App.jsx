@@ -1,13 +1,13 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { requestFbid, fetchPosts, reload } from '../actions'
+import { fetchPosts, reload } from '../actions'
 import Picker from '../components/Picker'
 import Posts from '../components/Posts'
 
 class App extends Component {
   static propTypes = {
     orders: PropTypes.array.isRequired,
-    isFetching: PropTypes.bool.isRequired,
+    forceReload: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired,
     fbid: PropTypes.string
   };
@@ -31,12 +31,12 @@ class App extends Component {
   };
 
   render() {
-    const { orders, isFetching } = this.props;
+    const { orders, forceReload } = this.props;
     const isEmpty = orders.length === 0;
     return (
       <div>
         <p>
-          {!isFetching &&
+          {!forceReload &&
             <a href="#"
                onClick={this.handleRefreshClick}>
               Refresh
@@ -44,8 +44,8 @@ class App extends Component {
           }
         </p>
         {isEmpty
-          ? (isFetching ? <h2>Loading...</h2> : <h2>Empty.</h2>)
-          : <div style={{ opacity: isFetching ? 0.5 : 1 }}>
+          ? (forceReload ? <h2>Loading...</h2> : <h2>Empty.</h2>)
+          : <div style={{ opacity: forceReload ? 0.5 : 1 }}>
               <Posts orders={orders} />
             </div>
         }
@@ -60,11 +60,11 @@ class App extends Component {
 }
 
 const mapStateToProps = state => {
-  const { status, orders, fbid } = state || { isFetching: true, orders: [], fbid: "" };
+  const { status, orders, fbid } = state || { forceReload: true, orders: [], fbid: "" };
 
   return {
     orders,
-    isFetching: status.isFetching,
+    forceReload: status.forceReload,
     fbid
   }
 };

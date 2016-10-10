@@ -18,8 +18,8 @@ const status = (state = {
     case RELOAD:
       return {
         ...state,
-        forceReload: true,
-        isFetching: true
+        isFetching: true,
+        forceReload: true
       };
     case REQUEST_POSTS:
       return {
