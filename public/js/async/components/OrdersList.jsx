@@ -3,17 +3,13 @@ import Order from './Order'
 
 const OrdersList = ({ orders, onOrderClick }) => (
   <ul>
-    {orders.map((order, i) => {
-      console.log("RENDERING ORDER =", order);
-      return (
-        <Order
+    {orders.map((order, i) =>
+      <Order
         key={order.orderid}
         {...order}
         onClick={() => onOrderClick(order.orderid)}
-        />
-        );
-    })
-    }
+      />
+    )}
   </ul>
 );
 

@@ -19,7 +19,6 @@ const order = (state, action) => {
 };
 
 const orders = (state = [], action) => {
-  console.log("in orders:", action);
   switch (action.type) {
     case RECEIVE_POSTS:
       return [ ...action.orders ];
