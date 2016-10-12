@@ -2,11 +2,11 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { fetchPosts, reload } from '../actions'
 import Picker from '../components/Picker'
-import Posts from '../components/Posts'
+import VisibleOrders from './VisibleOrders'
 
 class App extends Component {
   static propTypes = {
-    orders: PropTypes.array.isRequired,
+    orders: PropTypes.array,
     forceReload: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired,
     fbid: PropTypes.string
@@ -18,8 +18,8 @@ class App extends Component {
   }
 
   static componentWillReceiveProps(nextProps) {
-    const { dispatch } = nextProps;
-    dispatch(fetchPosts())
+    const { dispatch, fbid } = nextProps;
+    dispatch(fetchPosts(fbid));
   }
 
   handleRefreshClick = e => {
@@ -31,8 +31,7 @@ class App extends Component {
   };
 
   render() {
-    const { orders, forceReload } = this.props;
-    const isEmpty = orders.length === 0;
+    const { forceReload } = this.props;
     return (
       <div>
         <p>
@@ -43,15 +42,9 @@ class App extends Component {
             </a>
           }
         </p>
-        {isEmpty
-          ? (forceReload ? <h2>Loading...</h2> : <h2>Empty.</h2>)
-          : <div style={{ opacity: forceReload ? 0.5 : 1 }}>
-              <Posts orders={orders} />
-            </div>
-        }
+        <VisibleOrders/>
         <Picker
           value={'placeholder value'}
-          onChange={this.handleChange}
           options={[ 'reactjs', 'frontend' ]}
         />
       </div>
@@ -60,7 +53,7 @@ class App extends Component {
 }
 
 const mapStateToProps = state => {
-  const { status, orders, fbid } = state || { forceReload: true, orders: [], fbid: "" };
+  const { orders, status, fbid } = state || { orders: [], forceReload: true, fbid: "" };
 
   return {
     orders,

@@ -1,10 +1,30 @@
 import { combineReducers } from 'redux'
-import { RELOAD, REQUEST_POSTS, RECEIVE_POSTS, REQUEST_FBID } from '../actions'
+import { RELOAD, REQUEST_POSTS, RECEIVE_POSTS, REQUEST_FBID, TOGGLE_ORDER } from '../actions'
+import filter from './filter'
+
+const order = (state, action) => {
+  switch (action.type) {
+    case TOGGLE_ORDER:
+      if (state.orderid !== action.orderid) {
+        return state
+      }
+
+      return {
+        ...state,
+        pending: !state.pending
+      };
+    default:
+      return state
+  }
+};
 
 const orders = (state = [], action) => {
+  console.log("in orders:", action);
   switch (action.type) {
     case RECEIVE_POSTS:
-      return [ ...action.posts ];
+      return [ ...action.orders ];
+    case TOGGLE_ORDER:
+      return state.map(o => order(o, action));
     default:
       return state
   }
@@ -48,9 +68,10 @@ const fbid = (state = "", action) => {
 };
 
 const rootReducer = combineReducers({
+  fbid,
   orders,
   status,
-  fbid
+  filter
 });
 
 export default rootReducer

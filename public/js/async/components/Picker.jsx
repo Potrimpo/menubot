@@ -19,7 +19,6 @@ Picker.propTypes = {
     PropTypes.string.isRequired
   ).isRequired,
   value: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired
 };
 
 export default Picker
