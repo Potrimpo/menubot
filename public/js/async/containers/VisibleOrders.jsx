@@ -5,8 +5,6 @@ import OrdersList from '../components/OrdersList'
 
 const getVisibleOrders = (orders, filter) => {
   switch (filter) {
-    case 'SHOW_ALL':
-      return orders;
     case 'SHOW_COMPLETED':
       return orders.filter(o => !o.pending);
     case 'SHOW_ACTIVE':
