@@ -228,6 +228,11 @@ const Order = sequelize.define('Order', {
   pickuptime: {
     type: Sequelize.DATE,
     allowNull: false
+  },
+  pending: {
+    type: Sequelize.BOOLEAN,
+    allowNull: false,
+    defaultValue: true
   }
 }, {
   tableName: 'orders',
