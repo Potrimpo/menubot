@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { fetchPosts, reload } from '../actions'
+import { fetchOrders, reload } from '../actions'
 import VisibleOrders from './VisibleOrders'
 
 class OrdersBox extends Component {
@@ -13,19 +13,19 @@ class OrdersBox extends Component {
 
   componentDidMount() {
     const { dispatch, fbid } = this.props;
-    return dispatch(fetchPosts(fbid));
+    return dispatch(fetchOrders(fbid));
   }
 
   static componentWillReceiveProps(nextProps) {
     const { dispatch, fbid } = nextProps;
-    dispatch(fetchPosts(fbid));
+    dispatch(fetchOrders(fbid));
   }
 
   handleRefreshClick = e => {
     e.preventDefault();
     const { dispatch, fbid } = this.props;
     dispatch(reload());
-    return dispatch(fetchPosts(fbid));
+    return dispatch(fetchOrders(fbid));
   };
 
   render() {
