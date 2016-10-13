@@ -5,7 +5,6 @@ import VisibleOrders from './VisibleOrders'
 
 class OrdersBox extends Component {
   static propTypes = {
-    orders: PropTypes.array,
     forceReload: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired,
     fbid: PropTypes.string
@@ -47,10 +46,9 @@ class OrdersBox extends Component {
 }
 
 const mapStateToProps = state => {
-  const { orders, status, fbid } = state || { orders: [], forceReload: true, fbid: "" };
+  const { status, fbid } = state || { forceReload: true, fbid: "" };
 
   return {
-    orders,
     forceReload: status.forceReload,
     fbid
   }
