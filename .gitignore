@@ -3,4 +3,6 @@ performanceLogs
 .idea
 *.log
 output.json
+envVariables.js
+config/secrets.js
 icon.png
