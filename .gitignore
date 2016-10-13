@@ -4,9 +4,7 @@ envVariables.js
 .idea
 *.log
 output.json
-icon.png
+envVariables.js
 config/secrets.js
-public/dist
 public/asyncDist
-public/js/lib
-uploads
+icon.png
