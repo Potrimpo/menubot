@@ -31,11 +31,19 @@ export const toggleOrder = (orderid) => ({
 
 export const todaysOrders = json => ({
   type: RECEIVE_ORDERS,
-  orders: json.filter(order => {
-    const currentDate = new Date(Date.now());
-    const pickupTime = new Date(order.pickuptime);
-    return pickupTime.getDate() === currentDate.getDate();
-  }),
+  orders: json
+    .filter(order => {
+      const currentDate = new Date(Date.now());
+      const pickupTime = new Date(order.pickuptime);
+      return pickupTime.getDate() === currentDate.getDate();
+    })
+    .map(order => {
+      let ordertime = new Date(order.pickuptime);
+      return {
+        ...order,
+        pickuptime: ordertime.getHours() + ": " + ordertime.getMinutes()
+      };
+    })
 });
 
 export const fetchOrders = fbid => {
