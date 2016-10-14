@@ -109,7 +109,8 @@ exports.getOrders = fbid => {
     " INNER JOIN sizes ON orders.sizeid = sizes.sizeid" +
     " INNER JOIN types ON orders.typeid = types.typeid" +
     " INNER JOIN items ON types.itemid = items.itemid" +
-    " WHERE orders.fbid = $1",
+    " WHERE orders.fbid = $1" +
+    " ORDER BY orders.pickuptime ASC",
     { bind: [fbid], type: sequelize.QueryTypes.SELECT }
   );
 };
