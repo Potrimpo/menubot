@@ -1,6 +1,5 @@
 node_modules
 performanceLogs
-envVariables.js
 .idea
 *.log
 output.json
