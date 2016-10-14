@@ -10,9 +10,15 @@ class OrdersBox extends Component {
     fbid: PropTypes.string
   };
 
-  componentDidMount() {
+  getOrdersQuietly () {
     const { dispatch, fbid } = this.props;
+    console.log("getting thos orders");
     return dispatch(fetchOrders(fbid));
+  };
+
+  componentDidMount() {
+    this.getOrdersQuietly();
+    return setInterval(this.getOrdersQuietly.bind(this), 3000);
   }
 
   static componentWillReceiveProps(nextProps) {
