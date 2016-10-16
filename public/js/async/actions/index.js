@@ -24,7 +24,7 @@ export const setVisibilityFilter = (filter) => ({
   filter
 });
 
-export const toggleOrder = (orderid) => ({
+const toggleLocal = (orderid) => ({
   type: TOGGLE_ORDER,
   orderid
 });
@@ -51,9 +51,37 @@ export const fetchOrders = fbid => {
     dispatch(requestOrders());
     return fetch(`/api/orders/${fbid}`, { credentials : 'same-origin' })
       .then(response => response.json())
-      .then(json => {
-        return dispatch(todaysOrders(json));
-      })
+      .then(json => dispatch(todaysOrders(json)))
       .catch(e => console.error("something went wrong fetching the data:", e));
   }
 };
+
+export const toggleOrder = (fbid, orderid) => {
+  return dispatch => {
+    console.log("orderid =", orderid);
+    console.log("fbid =", fbid);
+    dispatch(toggleLocal(orderid));
+    let data = {
+      orderid
+    };
+    return $.ajax({
+      type: 'POST',
+      url: `/api/orders/${fbid}`,
+      data,
+      encode: true,
+      success(data) {
+        console.log("SUCCESS");
+        console.log(data);
+      },
+      error(smth, status, err) {
+        console.error("ERROR IN AJAX", status);
+        console.error("ERROR =", err);
+      }
+    })
+      .done(function(data) {
+        console.log("DONE", data);
+      });
+
+  };
+};
+

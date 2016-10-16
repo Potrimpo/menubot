@@ -115,6 +115,15 @@ exports.getOrders = fbid => {
   );
 };
 
+exports.orderComplete = orderid => {
+  return sequelize.query(
+    "UPDATE orders" +
+    " SET pending = NOT pending" +
+    " WHERE orderid = $1",
+    { bind: [orderid], type: sequelize.QueryTypes.UPDATE }
+  );
+};
+
 exports.linkCompany = (id, facebookId) => {
   return User.findOne({
     attributes: ['accounts'],

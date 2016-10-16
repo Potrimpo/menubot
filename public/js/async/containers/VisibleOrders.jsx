@@ -15,7 +15,8 @@ const getVisibleOrders = (orders, filter) => {
 };
 
 const mapStateToProps = (state) => ({
-  orders: getVisibleOrders(state.orders, state.filter)
+  orders: getVisibleOrders(state.orders, state.filter),
+  fbid: state.fbid
 });
 
 const mapDispatchToProps =  ({
