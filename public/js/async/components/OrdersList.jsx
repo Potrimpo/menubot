@@ -1,13 +1,13 @@
 import React, { PropTypes } from 'react'
 import Order from './Order'
 
-const OrdersList = ({ orders, onOrderClick }) => (
+const OrdersList = ({ fbid, orders, onOrderClick }) => (
   <ul>
     {orders.map((order, i) =>
       <Order
         key={order.orderid}
         {...order}
-        onClick={() => onOrderClick(order.orderid)}
+        onClick={() => onOrderClick(fbid, order.orderid)}
       />
     )}
   </ul>

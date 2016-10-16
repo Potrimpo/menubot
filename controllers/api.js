@@ -2,19 +2,16 @@
 
 const express = require('express'),
   router = express.Router(),
-  { retrieveOrders } = require('./orders');
+  { retrieveOrders, setOrderComplete } = require('./orders');
 
 
 // absolute path is /api/orders/:fbid
 router.route('/orders/:fbid')
   .get(retrieveOrders, (req, res) => {
-    console.log('Getting orders through API', req.params.fbid);
-    console.log('orders retreived:', req.orders);
     return res.json(req.orders);
   })
-  .post((req, res) => {
-    console.log('HE TRYNA POST');
-    res.send('ur postin 2 me');
+  .post(setOrderComplete, (req, res) => {
+    return res.send('ur postin 2 me & i think it done worked');
   });
 
 module.exports = router;

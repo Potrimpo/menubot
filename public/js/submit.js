@@ -7,7 +7,7 @@ $(document).ready(function() {
 
   // document constants
   const fbid = $('.company-head').attr('id'),
-    _csrf = $('input[name=_csrf]').val();
+    // _csrf = $('input[name=_csrf]').val();
 
   // $('input').focus(function() {
   //   console.log("button");
@@ -27,7 +27,7 @@ $(document).ready(function() {
       type,
       deleteId,
       fbid,
-      _csrf
+      // _csrf
     };
 
     $.ajax({
