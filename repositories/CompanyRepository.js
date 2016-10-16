@@ -103,15 +103,15 @@ exports.deleteItem = data => {
   );
 };
 
-exports.getOrders = fbid => {
+exports.getOrders = (fbid, today) => {
   return sequelize.query(
     "SELECT * FROM orders" +
     " INNER JOIN sizes ON orders.sizeid = sizes.sizeid" +
     " INNER JOIN types ON orders.typeid = types.typeid" +
     " INNER JOIN items ON types.itemid = items.itemid" +
-    " WHERE orders.fbid = $1" +
+    " WHERE orders.fbid = :fbid AND pickuptime >= :today" +
     " ORDER BY orders.pickuptime ASC",
-    { bind: [fbid], type: sequelize.QueryTypes.SELECT }
+    { replacements: {fbid, today}, type: sequelize.QueryTypes.SELECT }
   );
 };
 

@@ -29,19 +29,13 @@ const toggleLocal = (orderid) => ({
   orderid
 });
 
-export const todaysOrders = json => ({
+export const receiveAndParse = json => ({
   type: RECEIVE_ORDERS,
   orders: json
-    .filter(order => {
-      const currentDate = new Date(Date.now());
-      const pickupTime = new Date(order.pickuptime);
-      return pickupTime.getDate() === currentDate.getDate();
-    })
     .map(order => {
-      let ordertime = new Date(order.pickuptime);
       return {
         ...order,
-        pickuptime: ordertime.getHours() + ": " + ordertime.getMinutes()
+        pickuptime: timeParsing(order.pickuptime)
       };
     })
 });
@@ -51,7 +45,7 @@ export const fetchOrders = fbid => {
     dispatch(requestOrders());
     return fetch(`/api/orders/${fbid}`, { credentials : 'same-origin' })
       .then(response => response.json())
-      .then(json => dispatch(todaysOrders(json)))
+      .then(json => dispatch(receiveAndParse(json)))
       .catch(e => console.error("something went wrong fetching the data:", e));
   }
 };
@@ -85,3 +79,13 @@ export const toggleOrder = (fbid, orderid) => {
   };
 };
 
+function timeParsing (pickuptime) {
+  const ordertime = new Date(pickuptime);
+  let hours = ordertime.getHours(),
+    minutes = ordertime.getMinutes();
+
+  hours = hours > 10 ? hours : `0${hours}`;
+  minutes = minutes > 10 ? minutes : `0${minutes}`;
+
+  return `${hours}: ${minutes}`;
+}
