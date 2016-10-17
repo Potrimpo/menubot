@@ -76,7 +76,7 @@ exports.createAccFromFacebook = function(accessToken, refreshToken, profile) {
             return {
               fbid: company.id,
               name: company.name,
-              token: json.access_token
+              access_token: json.access_token
             };
           })
       });
@@ -86,7 +86,7 @@ exports.createAccFromFacebook = function(accessToken, refreshToken, profile) {
       var user = User.build({facebookId: profileId});
       user.set('accounts', accounts);
       user.email = profile._json.email || ( profileId + '@facebook.com' );
-      user.tokens = { facebook: accessToken };
+      user.token = accessToken;
       user.name = profile.name.givenName + ' ' + profile.name.familyName;
       user.photo = 'https://graph.facebook.com/' + profile.id+ '/picture?type=large';
       user.profile = { name: profile._json.first_name };
