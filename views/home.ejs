@@ -15,14 +15,20 @@
         <h2>
             <%= companies[i].name %>
         </h2>
-        <a href="/company/<%= companies[i].fbid %>">
-            <img src="https://graph.facebook.com/<%= companies[i].fbid %>/picture?width=150&height=150" class="thumbnail company-photo center-block" alt="User avatar">
+        <a href="http://facebook.com/<%= companies[i].fbid %>">
+          <div class="thumbnail company-photo center-block" title="User avatar"
+               style="background-image: url(https://graph.facebook.com/<%= companies[i].fbid %>/picture?width=200&height=200);">
+            <div class="btn btn-social-icon btn-facebook smaller-fb">
+                <i class="fa fa-facebook" aria-hidden="true"></i>
+            </div>
+          </div>
         </a>
-        <a href="http://facebook.com/<%= companies[i].fbid %>" class="btn btn-block btn-facebook btn-social smaller-fb center-block">
-            <i class="fa fa-facebook"></i>
-        </a>
+
         <div>
-            <a href="/orders/<%= companies[i].fbid %>" role="button" class="btn btn-default btn-space">Orders</a>
+            <a href="/orders/<%= companies[i].fbid %>" role="button" class="btn btn-default btn-space home-button">Received Orders</a>
+        </div>
+        <div>
+            <a href="/company/<%= companies[i].fbid %>" role="button" class="btn btn-default btn-space home-button">Change Menu Items</a>
         </div>
     </div>
     <% } %>
@@ -32,12 +38,19 @@
         <h2>
             <%= accounts[a].name %>
         </h2>
-        <a href="/company/create/<%= accounts[a].fbid %>">
-            <img src="https://graph.facebook.com/<%= accounts[a].fbid %>/picture?width=150&height=150" class="thumbnail company-photo center-block" alt="User avatar">
+
+        <a href="http://facebook.com/<%= accounts[a].fbid %>">
+          <div class="thumbnail company-photo center-block" title="User avatar"
+               style="background-image: url(https://graph.facebook.com/<%= accounts[a].fbid %>/picture?width=200&height=200);">
+            <div class="btn btn-social-icon btn-facebook smaller-fb">
+                <i class="fa fa-facebook" aria-hidden="true"></i>
+            </div>
+          </div>
         </a>
-        <a href="http://facebook.com/<%= accounts[a].fbid %>" class="btn btn-block btn-facebook btn-social smaller-fb center-block">
-            <i class="fa fa-facebook"></i>
-        </a>
+
+        <div>
+            <a href="/company/create/<%= accounts[a].fbid %>" role="button" class="btn btn-default btn-space home-button">Create Menu for Page</a>
+        </div>
     </div>
     <% } %>
 </div>
