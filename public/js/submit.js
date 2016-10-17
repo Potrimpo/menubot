@@ -6,8 +6,7 @@ $(document).ready(function() {
   console.log("WE IN IT");
 
   // document constants
-  const fbid = $('.company-head').attr('id'),
-    // _csrf = $('input[name=_csrf]').val();
+  const fbid = $('.company-head').attr('id');
 
   // $('input').focus(function() {
   //   console.log("button");
@@ -27,7 +26,6 @@ $(document).ready(function() {
       type,
       deleteId,
       fbid,
-      // _csrf
     };
 
     $.ajax({
@@ -70,8 +68,7 @@ $(document).ready(function() {
     const sendData = {
       intent,
       parentId: this.name,
-      fbid,
-      _csrf
+      fbid
     };
 
     for (let x = values.length - 1; x >= 0; x--) {
@@ -117,31 +114,30 @@ $(document).ready(function() {
   });
 
   // server can't deal with changing photos (client jquery code seems find tho)
-  $(':file').change(function (event) {
-    console.log("THE element =", this);
-    const elem = $(this).get(0);
-    console.log("file", elem.files[0]);
-    const multiPart = new FormData();
-    multiPart.append('file', elem.files[0]);
-    multiPart.append('_csrf', _csrf);
-
-    return $.ajax({
-      type: 'POST',
-      url: '/company' + fbid + '/' + elem.id,
-      data: multiPart,
-      processData: false,
-      contentType: false,
-      success(data) {
-        console.log("SUCCESS");
-        console.log(data);
-      },
-      error(smth, status, err) {
-        console.error("ERROR IN FILE UPLOAD", status);
-        console.error("ERROR =", err);
-      }
-    })
-      .done(data => console.log("DONE UPLOAD", data));
-
-  });
+  // $(':file').change(function (event) {
+  //   console.log("THE element =", this);
+  //   const elem = $(this).get(0);
+  //   console.log("file", elem.files[0]);
+  //   const multiPart = new FormData();
+  //   multiPart.append('file', elem.files[0]);
+  //
+  //   return $.ajax({
+  //     type: 'POST',
+  //     url: '/company' + fbid + '/' + elem.id,
+  //     data: multiPart,
+  //     processData: false,
+  //     contentType: false,
+  //     success(data) {
+  //       console.log("SUCCESS");
+  //       console.log(data);
+  //     },
+  //     error(smth, status, err) {
+  //       console.error("ERROR IN FILE UPLOAD", status);
+  //       console.error("ERROR =", err);
+  //     }
+  //   })
+  //     .done(data => console.log("DONE UPLOAD", data));
+  //
+  // });
 
 });
