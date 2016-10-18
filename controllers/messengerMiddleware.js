@@ -35,10 +35,10 @@ exports.postWebhook = (req, res) => {
           return findOrCreateSession(event.sender.id, event.recipient.id)
             .then(sessionId => {
               outerSession = sessionId;
-              const { text, atttatchments } = event.message;
+              const { text, attatchments } = event.message;
               // Let's forward the message to the Wit.ai Bot Engine
               // This will run all actions until our bot has nothing left to do
-              if (atttatchments) {
+              if (attatchments) {
                 return actions.send(sessionId, 'Sorry, I can only handle text messages!');
               }
               else if (text) {

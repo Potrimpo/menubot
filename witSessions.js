@@ -20,9 +20,9 @@ const findOrCreateSession = (fbUserId, fbPageId) => {
   });
   if (!sessionId) {
     sessionId = new Date().toISOString();
+    // getting page access token so the server knows which page is supposed to be responding
     return getCompanyAccessToken(fbPageId)
       .then(data => {
-        console.log("----- GOT THE ACCESS TOKEN -----", data.access_token);
         sessions[sessionId] = {
           fbUserId,
           fbPageId,
