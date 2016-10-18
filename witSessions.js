@@ -4,7 +4,7 @@ const { getCompanyAccessToken } = require('./repositories/CompanyRepository');
 
 // This will contain all user sessions.
 // Each session has an entry:
-// sessionId -> {fbid: facebookUserId, context: sessionState}
+// sessionId -> {fbid, context, access_token}
 const sessions = {};
 
 const findOrCreateSession = (fbUserId, fbPageId) => {
@@ -12,12 +12,13 @@ const findOrCreateSession = (fbUserId, fbPageId) => {
   // Let's see if we already have a session for the user fbUserId
   Object.keys(sessions).forEach(k => {
     if (sessions[k].fbUserId === fbUserId) {
-      // Yep, got it!
-      sessionId = k;
+      // return a promise even though this isnt really async
+      // because getCompanyAccessToken returns a promise
+      // so we need to be able to call .then() on the return value of findOrCreateSession
+      return new Promise((res, rej) => res(k));
     }
   });
   if (!sessionId) {
-    // No session found for user fbUserId, let's create a new one
     sessionId = new Date().toISOString();
     return getCompanyAccessToken(fbPageId)
       .then(data => {
