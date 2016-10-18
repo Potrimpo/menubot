@@ -1,5 +1,6 @@
 // ----------------------------------------------------------------------------
 // Wit.ai bot specific code
+const { getCompanyAccessToken } = require('./repositories/CompanyRepository');
 
 // This will contain all user sessions.
 // Each session has an entry:
@@ -18,9 +19,19 @@ const findOrCreateSession = (fbUserId, fbPageId) => {
   if (!sessionId) {
     // No session found for user fbUserId, let's create a new one
     sessionId = new Date().toISOString();
-    sessions[sessionId] = { fbUserId, fbPageId, context: {}};
+    return getCompanyAccessToken(fbPageId)
+      .then(data => {
+        console.log("----- GOT THE ACCESS TOKEN -----", data.access_token);
+        sessions[sessionId] = {
+          fbUserId,
+          fbPageId,
+          access_token: data.access_token,
+          context: {}
+        };
+        return sessionId;
+      })
+      .catch(e => console.error("error generating session for bot interaction!!", e));
   }
-  return sessionId;
 };
 
 module.exports = {

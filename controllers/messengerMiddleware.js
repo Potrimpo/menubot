@@ -28,57 +28,58 @@ exports.postWebhook = (req, res) => {
         if (event.message) {
           // Yay! We got a new message!
           // We retrieve the Facebook user ID of the sender
-          const sender = event.sender.id;
+          let outerSession = {};
           // console.log(`sender ID: ${sender}`);
           // We retrieve the user's current session, or create one if it doesn't exist
           // This is needed for our bot to figure out the conversation history
-          const sessionId = findOrCreateSession(event.sender.id, event.recipient.id);
-          // We retrieve the message content
-          const {text, attachments} = event.message;
-
-          if (attachments) {
-            // We received an attachment
-            // Let's reply with an automatic message
-            fbMessage(sender, 'Sorry I can only process text messages for now.')
-            .catch(console.error);
-          } else if (text) {
-            // We received a text message
-
-            // Let's forward the message to the Wit.ai Bot Engine
-            // This will run all actions until our bot has nothing left to do
-            wit.runActions(
-              sessionId, // the user's current session
-              text, // the user's message
-              sessions[sessionId].context // the user's current session state
-            ).then((context) => {
-              // Our bot did everything it has to do.
-              // Now it's waiting for further messages to proceed.
-              console.log('Waiting for next user messages');
-
-              // Based on the session state, you might want to reset the session.
-              // This depends heavily on the business logic of your bot.
-              // Example:
-              // if (context['done']) {
-              //   delete sessions[sessionId];
-              // }
-
-              // Updating the user's current session state
-              sessions[sessionId].context = context;
+          return findOrCreateSession(event.sender.id, event.recipient.id)
+            .then(sessionId => {
+              outerSession = sessionId;
+              const { text, atttatchments } = event.message;
+              // Let's forward the message to the Wit.ai Bot Engine
+              // This will run all actions until our bot has nothing left to do
+              if (atttatchments) {
+                return actions.send(sessionId, 'Sorry, I can only handle text messages!');
+              }
+              else if (text) {
+                console.log("EVENT.MESSAGE =====", event.message);
+                return wit.runActions(
+                  sessionId, // the user's current session
+                  text, // the user's message
+                  sessions[sessionId].context // the user's current session state
+                )
+              }
             })
-            .catch((err) => {
-              console.error('Oops! Got an error from Wit: ', err.stack || err);
-            })
-          }
+            .then((context) => {
+                // Our bot did everything it has to do.
+                // Now it's waiting for further messages to proceed.
+                console.log('Waiting for next user messages');
+
+                // Based on the session state, you might want to reset the session.
+                // This depends heavily on the business logic of your bot.
+                // Example:
+                // if (context['done']) {
+                //   delete sessions[sessionId];
+                // }
+
+                // Updating the user's current session state
+                sessions[outerSession].context = context;
+              })
+              .catch((err) => {
+                console.error('Oops! Got an error from Wit: ', err.stack || err);
+              });
         } else if(event.postback) {
-          const sessionId = findOrCreateSession(event.sender.id, event.recipient.id);
-          postbackHandler(event.postback.payload, sessions[sessionId])
-            .then(response => {
-              actions.send({sessionId}, response)
+          return findOrCreateSession(event.sender.id, event.recipient.id)
+            .then(sessionId => {
+              return postbackHandler(event.postback.payload, sessions[sessionId])
+                .then(response => {
+                  actions.send({sessionId}, response)
+                })
+                .catch(err => {
+                  console.log(`Error sending postback: ${err}`);
+                  console.log(err.stack);
+                });
             })
-            .catch(err => {
-              console.log(`Error sending postback: ${err}`);
-              console.log(err.stack);
-            });
         } else {
           console.log('received event', JSON.stringify(event));
         }

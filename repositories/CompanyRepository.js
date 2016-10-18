@@ -139,3 +139,5 @@ exports.linkCompany = (id, facebookId) => {
       );
     });
 };
+
+exports.getCompanyAccessToken = id => Company.findById(id, { attributes: ['access_token']});
