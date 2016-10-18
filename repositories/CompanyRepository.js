@@ -15,12 +15,16 @@ exports.findCompany = (id) => Company.findById(id, { attributes: ['name', 'fbid'
 
 exports.getCompanyMenu = id => {
   return sequelize.query(
-    "SELECT name, item, itemid FROM companies" +
+    "SELECT companies.name, items.item, items.itemid FROM companies" +
     " INNER JOIN items ON companies.fbid = items.fbid" +
     " WHERE companies.fbid = $1",
     { bind: [id], type: sequelize.QueryTypes.SELECT }
   );
 };
+
+// exports.getCompanyMenuDavidLeetRemixVer = id => {
+//   return Company.find({ where: {fbid: id}})
+// };
 
 exports.getMenuTypes = itemids => {
   return sequelize.query(

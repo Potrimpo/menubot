@@ -2,7 +2,7 @@
     <div class="center-block text-center">
         <% if(items) { %>
             <% for(var i = 0; i < items.length; i++) { %>
-            <div class="col-xs-12 col-sm-6 item-list">
+            <div class="col-xs-12 col-sm-6 item-list menu-border">
                 <h3><%= items[i].item %></h3>
                 <button type="button" name="item-<%= items[i].itemid %>" class="btn btn-default btn-downspace">Delete</button>
                 <img src="/images/<%= fbid %>/<%= items[i].itemid %>.jpg" class="thumbnail center-block menu-photo" />
@@ -12,7 +12,7 @@
             </div>
             <% } %>
         <% } %>
-        <div class="col-xs-12 col-sm-6 new-thing">
+        <div class="col-xs-12 col-sm-6 new-thing menu-border">
             <%- include new-item %>
         </div>
     </div>

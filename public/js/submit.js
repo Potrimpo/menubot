@@ -52,6 +52,9 @@ $(document).ready(function() {
 
   // process the form
   $('form').submit(function(event) {
+    // stop the form from submitting the normal way
+    event.preventDefault();
+
     console.log("in form submit jquery");
 
     const inputElems = $(`#${this.id} :text`);
@@ -108,12 +111,9 @@ $(document).ready(function() {
 
         location.reload();
       });
-
-    // stop the form from submitting the normal way
-    event.preventDefault();
   });
 
-  // server can't deal with changing photos (client jquery code seems find tho)
+  // server can't deal with changing photos (client jquery code seems fine tho)
   // $(':file').change(function (event) {
   //   console.log("THE element =", this);
   //   const elem = $(this).get(0);
