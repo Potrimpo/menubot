@@ -4,6 +4,7 @@
           <% if (types[x].itemid == items[i].itemid) { %>
               <div class="col-xs-6 col-sm-6 type-list">
                   <h4><%= types[x].type %></h4>
+                  <button type="button" name="type-<%= types[x].typeid %>" class="btn btn-default btn-downspace">Delete</button>
                   <img src="/images/<%= fbid %>/<%= items[i].itemid %>/<%= types[x].typeid %>.jpg" class="thumbnail center-block menu-photo" />
                   <label for="exampleInputFile">Change photo</label>
                   <input type="file" id="exampleInputFile">

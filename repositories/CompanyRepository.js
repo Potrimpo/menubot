@@ -98,13 +98,43 @@ exports.insertSize = data => {
 };
 
 exports.deleteItem = data => {
-  console.log("DELeting!!");
-  console.log("data.id = ", data.id);
-  return sequelize.query(
-    "DELETE FROM items" +
-    " WHERE itemid = $1",
-    { bind: [data.deleteId], type: sequelize.QueryTypes.DELETE }
-  );
+  console.log("David, this is the info being passed to the the delete query === "+JSON.stringify(data));
+  switch (data.type) {
+
+    case "item":
+    console.log("Deleting item: " + data.id );
+    return sequelize.query(
+      "DELETE FROM items" +
+      " WHERE itemid = $1",
+      { bind: [data.deleteId], type: sequelize.QueryTypes.DELETE }
+    );
+      break;
+
+
+    case "type":
+    console.log("Deleting type: " + data.id );
+    return sequelize.query(
+      "DELETE FROM types" +
+      " WHERE typeid = $1",
+      { bind: [data.deleteId], type: sequelize.QueryTypes.DELETE }
+    );
+      break;
+
+
+    case "size":
+    console.log("Deleting size: " + data.id );
+    return sequelize.query(
+      "DELETE FROM sizes" +
+      " WHERE sizeid = $1",
+      { bind: [data.deleteId], type: sequelize.QueryTypes.DELETE }
+    );
+      break;
+
+
+    default:
+      console.log("Attempt to delete failed, type not recognised");
+  }
+
 };
 
 exports.getOrders = (fbid, today) => {

@@ -3,7 +3,8 @@
     <% for (var y = 0; y < sizes.length; y++) { %>
         <% if (sizes[y].typeid == types[x].typeid) { %>
         <div class="col-xs-12 col-sm-6 size-list">
-                <h4><%= sizes[y].size %>: $<%= sizes[y].price %></h4>
+          <h4><%= sizes[y].size %>: $<%= sizes[y].price %></h4>
+          <button type="button" name="size-<%= sizes[y].sizeid %>" class="btn btn-default btn-downspace">Delete</button>
         </div>
         <% } %>
     <% } %>
