@@ -17,7 +17,6 @@ router.get('/:companyId', (req, res) => {
   console.log("------ getting company menu -------", req.params.companyId);
   return getMenu(req.params.companyId)
     .then(data => {
-      console.log("PHOTOS TO BE RENDERED ==== ", data.items);
       return res.render('account/company', {
         fbid: data.fbid,
         title: data.name,

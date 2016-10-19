@@ -24,7 +24,7 @@ exports.getCompanyMenu = id => {
 
 exports.getMenuTypes = itemids => {
   return sequelize.query(
-    "SELECT types.itemid, type, typeid FROM items" +
+    "SELECT types.itemid, type, typeid, types.photo FROM items" +
     " INNER JOIN types ON items.itemid = types.itemid" +
     " WHERE items.itemid IN (:itemids)",
     { replacements: { itemids }, type: sequelize.QueryTypes.SELECT }
