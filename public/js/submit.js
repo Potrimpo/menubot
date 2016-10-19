@@ -114,6 +114,7 @@ $(document).ready(function() {
   });
 
   // server can't deal with changing photos (client jquery code seems fine tho)
+  //
   // $(':file').change(function (event) {
   //   console.log("THE element =", this);
   //   const elem = $(this).get(0);

@@ -22,10 +22,6 @@ exports.getCompanyMenu = id => {
   );
 };
 
-// exports.getCompanyMenuDavidLeetRemixVer = id => {
-//   return Company.find({ where: {fbid: id}})
-// };
-
 exports.getMenuTypes = itemids => {
   return sequelize.query(
     "SELECT types.itemid, type, typeid FROM items" +
@@ -51,23 +47,25 @@ exports.insertMenuVal = (data) => {
     " RETURNING itemid",
     { replacements: { fbid: data.fbid, item: data.item }, type: sequelize.QueryTypes.INSERT }
   )
-    .then(val => {
-      console.log("value from insertion =", val);
-      return sequelize.query(
-        "INSERT INTO types (itemid, type)" +
-        " VALUES (:itemid, :type)" +
-        " RETURNING typeid",
-        { replacements: { type: data.type, itemid: val[0].itemid }, type: sequelize.QueryTypes.INSERT }
-      )
-    })
-    .then(val => {
-      console.log("value from insertion =", val);
-      return sequelize.query(
-        "INSERT INTO sizes (typeid, size, price)" +
-        " VALUES (:typeid, :size, :price)",
-        { replacements: { typeid: val[0].typeid, size: data.size, price: data.price }, type: sequelize.QueryTypes.INSERT }
-      )
-    })
+    // By commenting this out, I have removed insertMenuVal's ability to add a type and size.
+    //
+    // .then(val => {
+    //   console.log("value from insertion =", val);
+    //   return sequelize.query(
+    //     "INSERT INTO types (itemid, type)" +
+    //     " VALUES (:itemid, :type)" +
+    //     " RETURNING typeid",
+    //     { replacements: { type: data.type, itemid: val[0].itemid }, type: sequelize.QueryTypes.INSERT }
+    //   )
+    // })
+    // .then(val => {
+    //   console.log("value from insertion =", val);
+    //   return sequelize.query(
+    //     "INSERT INTO sizes (typeid, size, price)" +
+    //     " VALUES (:typeid, :size, :price)",
+    //     { replacements: { typeid: val[0].typeid, size: data.size, price: data.price }, type: sequelize.QueryTypes.INSERT }
+    //   )
+    // })
     .catch(err => console.error("error inserting menu item:", err));
 };
 
@@ -78,14 +76,16 @@ exports.insertType = data => {
       " RETURNING typeid",
       { replacements: { type: data.type, itemid: data.parentId }, type: sequelize.QueryTypes.INSERT }
     )
-    .then(val => {
-      console.log("value from insertion =", val);
-      return sequelize.query(
-        "INSERT INTO sizes (typeid, size, price)" +
-        " VALUES (:typeid, :size, :price)",
-        { replacements: { typeid: val[0].typeid, size: data.size, price: data.price }, type: sequelize.QueryTypes.INSERT }
-      )
-    })
+    // By commenting this out, I have removed insertType's ability to add a size.
+    //
+    // .then(val => {
+    //   console.log("value from insertion =", val);
+    //   return sequelize.query(
+    //     "INSERT INTO sizes (typeid, size, price)" +
+    //     " VALUES (:typeid, :size, :price)",
+    //     { replacements: { typeid: val[0].typeid, size: data.size, price: data.price }, type: sequelize.QueryTypes.INSERT }
+    //   )
+    // })
     .catch(err => console.error("error inserting new type:", err));
 };
 

@@ -28,6 +28,7 @@ router.get('/:companyId', (req, res) => {
       });
     })
 });
+
 function getMenu (id) {
   return companyRepo.getCompanyMenu(id)
     .then(data => {
@@ -44,11 +45,20 @@ function fullMenu (fbid, data) {
     fbid,
     items: data
   };
+
   return companyRepo.getMenuTypes(itemids)
     .then(types => {
       wholeMenu.types = types;
       const typeids = types.map(val => val.typeid);
-      return companyRepo.getMenuSizes(typeids);
+
+      //If there aren't any types, doesn't ask the database to produce the sizes related to the (non-existant) types
+      if (typeids.length !== 0) {
+        console.log("running getMenuSizes");
+        return companyRepo.getMenuSizes(typeids)
+      } else {
+        console.log("running resolved promise");
+        return Promise.resolve([])
+      };
     })
     .then(sizes => {
       wholeMenu.sizes = sizes;
