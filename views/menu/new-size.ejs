@@ -1,10 +1,10 @@
 <h5>new size</h5>
 <form id="new-size-<%= types[x].typeid %>" name="<%= types[x].typeid %>">
     <div class="form-group">
-        <input type="text" class="form-control" name="size" placeholder="size name">
+        <input type="text" class="form-control" name="size" placeholder="size name" required>
         <div class="input-group">
             <span class="input-group-addon">$</span>
-            <input type="text" class="form-control" name="price" aria-label="price" placeholder="price">
+            <input type="text" class="form-control" name="price" aria-label="price" placeholder="price" required>
         </div>
     </div>
     <button type="submit" id="button-size" class="btn btn-default btn-space hidden">Submit</button>
