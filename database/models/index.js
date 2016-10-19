@@ -156,7 +156,7 @@ const Type = sequelize.define('Type', {
   classMethods: {
     getTypes(itemid) {
       return Type.findAll({
-        attributes: ['itemid', 'typeid', 'type'],
+        attributes: ['itemid', 'typeid', 'type', 'photo'],
         where: { itemid }
       })
     }

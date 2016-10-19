@@ -81,7 +81,7 @@ function parseProductTypes(botID, types) {
   template.attachment.payload.elements = types.map(val => {
     return {
       title: val.type.toUpperCase(),
-      image_url: `${tunnelURL}/images/${botID}/${val.itemid}/${val.typeid}.jpg`,
+      image_url: val.photo,
       buttons: [
         {
           type: 'postback',
@@ -108,7 +108,7 @@ function parseProductSizes(sizes) {
   };
   template.attachment.payload.elements = sizes.map(val => {
     return {
-      title: `${val.size.toUpperCase()} - ${String(val.price)}`,
+      title: `${val.size.toUpperCase()} - $${String(val.price)}`,
       buttons: [
         {
           type: 'postback',
