@@ -107,7 +107,10 @@ const Item = sequelize.define('Item', {
   },
   item: {
     type: Sequelize.STRING
-  }
+  },
+  photo: {
+    type: Sequelize.STRING
+  },
 }, {
   tableName: 'items',
   timestamps: false,

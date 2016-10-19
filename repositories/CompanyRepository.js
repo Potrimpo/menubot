@@ -15,7 +15,7 @@ exports.findCompany = (id) => Company.findById(id);
 
 exports.getCompanyMenu = id => {
   return sequelize.query(
-    "SELECT name, item, itemid FROM companies" +
+    "SELECT name, item, itemid, photo FROM companies" +
     " INNER JOIN items ON companies.fbid = items.fbid" +
     " WHERE companies.fbid = $1",
     { bind: [id], type: sequelize.QueryTypes.SELECT }
@@ -146,3 +146,15 @@ exports.setBotStatus = (id, status) => sequelize.query(
   "UPDATE companies SET bot_status = :status WHERE fbid = :id",
   { replacements: { id, status}, type: sequelize.QueryTypes.UPDATE}
 );
+
+exports.addPhotos = (val, fbid) => {
+  if (val.picture && val.name) {
+    return sequelize.query(
+      "UPDATE items" +
+      " SET photo = :picture" +
+      " WHERE fbid = :fbid AND item = :name",
+      { replacements: { fbid, picture: val.picture, name: val.name }, type: sequelize.QueryTypes.UPDATE }
+    );
+  }
+  else throw 'fields missing in database update query';
+};
