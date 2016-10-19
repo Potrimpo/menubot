@@ -69,6 +69,10 @@ const Company = sequelize.define('Company', {
     type: Sequelize.STRING,
     allowNull: false
   },
+  bot_status: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
+  },
   name: {
     type: Sequelize.STRING,
     allowNull: false

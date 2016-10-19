@@ -6,12 +6,12 @@ const { sequelize, Company, User, Item, Type, Size, Order } = require('../databa
 
 exports.findUserCompanies = (accounts => {
   return Company.findAll({
-    attributes: ['fbid', 'name'],
+    attributes: ['fbid', 'name', 'bot_status'],
     where: { fbid: { $or: accounts } }
   })
 });
 
-exports.findCompany = (id) => Company.findById(id, { attributes: ['name', 'fbid'] });
+exports.findCompany = (id) => Company.findById(id);
 
 exports.getCompanyMenu = id => {
   return sequelize.query(
@@ -141,3 +141,8 @@ exports.linkCompany = (id, facebookId) => {
 };
 
 exports.getCompanyAccessToken = id => Company.findById(id, { attributes: ['access_token']});
+
+exports.setBotStatus = (id, status) => sequelize.query(
+  "UPDATE companies SET bot_status = :status WHERE fbid = :id",
+  { replacements: { id, status}, type: sequelize.QueryTypes.UPDATE}
+);
