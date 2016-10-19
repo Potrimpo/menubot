@@ -123,7 +123,7 @@ const Item = sequelize.define('Item', {
     },
     getMenu(fbid) {
       return Item.findAll({
-        attributes: ['item', 'itemid'],
+        attributes: ['item', 'itemid', 'photo'],
         where: { fbid }
       })
     }

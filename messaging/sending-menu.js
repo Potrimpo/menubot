@@ -58,7 +58,7 @@ function parseItems(botID, menu) {
   template.attachment.payload.elements = menu.map(val => {
     return {
       title: val.item.toUpperCase(),
-      image_url: `${tunnelURL}/images/${botID}/${val.itemid}.jpg`,
+      image_url: val.photo,
       buttons: [
         {
           type: 'postback',
