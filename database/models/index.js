@@ -46,7 +46,7 @@ const User = sequelize.define('User', {
     isEmail: true
   },
   accounts: Sequelize.JSON,
-  tokens: Sequelize.JSON
+  token: Sequelize.STRING,
 }, {
   tableName: 'pl_users',
   indexes: [
@@ -64,6 +64,14 @@ const Company = sequelize.define('Company', {
     unique: true,
     allowNull: false,
     primaryKey: true
+  },
+  access_token: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  bot_status: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
   },
   name: {
     type: Sequelize.STRING,

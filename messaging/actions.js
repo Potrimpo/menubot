@@ -26,12 +26,11 @@ const actions = {
       });
       delete message.quickreplies;
     }
-    // Let's retrieve the Facebook user whose session belongs to
+    // retrieve the Facebook user whose session belongs to
     const recipientId = sessions[sessionId].fbUserId;
+    const token = sessions[sessionId].access_token;
     if (recipientId) {
-      // Yay, we found our recipient!
-      // Let's forward our bot response to her.
-      return fbMessage(recipientId, message)
+      return fbMessage(recipientId, token, message)
         .then(() => null)
         .catch((err) => {
           console.error(
