@@ -5,7 +5,7 @@
             <div class="col-xs-12 col-sm-6 item-list">
                 <h3><%= items[i].item %></h3>
                 <button type="button" name="item-<%= items[i].itemid %>" class="btn btn-default btn-downspace">Delete</button>
-                <img src="<%= items[i].photo %>" class="thumbnail center-block menu-photo" />
+                <img src="<%= items[i].photo ? items[i].photo : "" %>" class="thumbnail center-block menu-photo" />
                 <label for="photo-<%= items[i].itemid %>">Change photo</label>
                 <input type="file" id="photo-<%= items[i].itemid %>">
             <%- include types %>

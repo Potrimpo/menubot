@@ -146,7 +146,10 @@ const Type = sequelize.define('Type', {
   },
   type: {
     type: Sequelize.STRING
-  }
+  },
+  photo: {
+    type: Sequelize.STRING
+  },
 }, {
   tableName: 'types',
   timestamps: false,

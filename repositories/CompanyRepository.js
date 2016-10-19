@@ -40,6 +40,15 @@ exports.getMenuSizes = typeids => {
   );
 };
 
+exports.getTypesThroughFbid = fbid => {
+  return sequelize.query(
+    "SELECT typeid, type FROM items" +
+    " INNER JOIN types ON items.itemid = types.itemid" +
+    " WHERE items.fbid = :fbid",
+    { replacements: { fbid }, type: sequelize.QueryTypes.SELECT }
+  );
+};
+
 exports.insertMenuVal = (data) => {
   return sequelize.query(
     "INSERT INTO items (fbid, item)" +
@@ -147,13 +156,26 @@ exports.setBotStatus = (id, status) => sequelize.query(
   { replacements: { id, status}, type: sequelize.QueryTypes.UPDATE}
 );
 
-exports.addPhotos = (val, fbid) => {
+exports.addItemPhotos = (val, fbid) => {
   if (val.picture && val.name) {
     return sequelize.query(
       "UPDATE items" +
       " SET photo = :picture" +
-      " WHERE fbid = :fbid AND item = :name",
+      " WHERE fbid = :fbid AND item = :name" +
+      " RETURNING item, itemid",
       { replacements: { fbid, picture: val.picture, name: val.name }, type: sequelize.QueryTypes.UPDATE }
+    );
+  }
+  else throw 'fields missing in database update query';
+};
+
+exports.addTypePhotos = val => {
+  if (val.picture && val.name && val.typeid) {
+    return sequelize.query(
+      "UPDATE types" +
+      " SET photo = :picture" +
+      " WHERE typeid = :typeid AND type = :name",
+      { replacements: { typeid: val.typeid, picture: val.picture, name: val.name }, type: sequelize.QueryTypes.UPDATE }
     );
   }
   else throw 'fields missing in database update query';
