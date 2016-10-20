@@ -5,10 +5,10 @@
   <div class="col-xs-11 col-md-6">
     <form id="new-size-<%= types[x].typeid %>" name="<%= types[x].typeid %>" class="form-inline">
         <div class="form-group">
-          <input type="text" class="form-control" name="size" placeholder="Size name (eg: Large)" required>
+          <input type="text" class="form-control" name="size" placeholder="Size name (eg: Large)" required autocomplete="off">
           <div class="input-group">
               <span class="input-group-addon">$</span>
-              <input type="text" class="form-control" name="price" aria-label="price" placeholder="Price" required>
+              <input type="text" class="form-control" name="price" aria-label="price" placeholder="Price" required autocomplete="off">
           </div>
         </div>
         <button type="submit" id="button-size" class="btn btn-default btn-space hidden">Submit</button>
