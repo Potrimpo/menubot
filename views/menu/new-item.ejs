@@ -1,27 +1,12 @@
-<h3>new menu item</h3>
-<form id="new-item">
-    <div class="form-group">
-        <input type="text" class="form-control menu" name="item" placeholder="item name">
-    </div>
-    <div class="row">
-        <div class="col-xs-6 col-sm-6">
-            <h4>new type</h4>
-            <div class="form-group">
-                <input type="text" class="form-control menu" name="type" placeholder="type name">
-            </div>
-            <div class="row">
-                <div class="col-xs-12 col-sm-6">
-                    <h5>new size / price</h5>
-                    <div class="form-group">
-                        <input type="text" class="form-control menu" name="size" placeholder="size">
-                        <div class="input-group">
-                            <span class="input-group-addon">$</span>
-                            <input type="text" class="form-control menu" aria-label="price" name="price" placeholder="price">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <button type="submit" class="btn btn-default btn-space hidden">Submit</button>
+<div class="row item-heading-inner-container">
+  <p class="item-title">Create New Item</p>
+</div>
+<div class="row item-input-inner-container">
+  <div class="col-xs-11 col-md-6">
+    <form id="new-item">
+        <div class="form-group">
+            <input type="text" class="form-control menu" name="item" placeholder="Item name (eg: Coffee, sandwich)" autocomplete="off">
         </div>
-    </div>
-</form>
+    </form>
+  </div>
+</div>

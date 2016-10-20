@@ -15,7 +15,7 @@ exports.findCompany = (id) => Company.findById(id);
 
 exports.getCompanyMenu = id => {
   return sequelize.query(
-    "SELECT name, item, itemid, photo FROM companies" +
+    "SELECT companies.name, items.item, items.itemid, items.photo FROM companies" +
     " INNER JOIN items ON companies.fbid = items.fbid" +
     " WHERE companies.fbid = $1",
     { bind: [id], type: sequelize.QueryTypes.SELECT }
@@ -56,23 +56,25 @@ exports.insertMenuVal = (data) => {
     " RETURNING itemid",
     { replacements: { fbid: data.fbid, item: data.item }, type: sequelize.QueryTypes.INSERT }
   )
-    .then(val => {
-      console.log("value from insertion =", val);
-      return sequelize.query(
-        "INSERT INTO types (itemid, type)" +
-        " VALUES (:itemid, :type)" +
-        " RETURNING typeid",
-        { replacements: { type: data.type, itemid: val[0].itemid }, type: sequelize.QueryTypes.INSERT }
-      )
-    })
-    .then(val => {
-      console.log("value from insertion =", val);
-      return sequelize.query(
-        "INSERT INTO sizes (typeid, size, price)" +
-        " VALUES (:typeid, :size, :price)",
-        { replacements: { typeid: val[0].typeid, size: data.size, price: data.price }, type: sequelize.QueryTypes.INSERT }
-      )
-    })
+    // By commenting this out, I have removed insertMenuVal's ability to add a type and size.
+    //
+    // .then(val => {
+    //   console.log("value from insertion =", val);
+    //   return sequelize.query(
+    //     "INSERT INTO types (itemid, type)" +
+    //     " VALUES (:itemid, :type)" +
+    //     " RETURNING typeid",
+    //     { replacements: { type: data.type, itemid: val[0].itemid }, type: sequelize.QueryTypes.INSERT }
+    //   )
+    // })
+    // .then(val => {
+    //   console.log("value from insertion =", val);
+    //   return sequelize.query(
+    //     "INSERT INTO sizes (typeid, size, price)" +
+    //     " VALUES (:typeid, :size, :price)",
+    //     { replacements: { typeid: val[0].typeid, size: data.size, price: data.price }, type: sequelize.QueryTypes.INSERT }
+    //   )
+    // })
     .catch(err => console.error("error inserting menu item:", err));
 };
 
@@ -83,14 +85,16 @@ exports.insertType = data => {
       " RETURNING typeid",
       { replacements: { type: data.type, itemid: data.parentId }, type: sequelize.QueryTypes.INSERT }
     )
-    .then(val => {
-      console.log("value from insertion =", val);
-      return sequelize.query(
-        "INSERT INTO sizes (typeid, size, price)" +
-        " VALUES (:typeid, :size, :price)",
-        { replacements: { typeid: val[0].typeid, size: data.size, price: data.price }, type: sequelize.QueryTypes.INSERT }
-      )
-    })
+    // By commenting this out, I have removed insertType's ability to add a size.
+    //
+    // .then(val => {
+    //   console.log("value from insertion =", val);
+    //   return sequelize.query(
+    //     "INSERT INTO sizes (typeid, size, price)" +
+    //     " VALUES (:typeid, :size, :price)",
+    //     { replacements: { typeid: val[0].typeid, size: data.size, price: data.price }, type: sequelize.QueryTypes.INSERT }
+    //   )
+    // })
     .catch(err => console.error("error inserting new type:", err));
 };
 
@@ -103,13 +107,43 @@ exports.insertSize = data => {
 };
 
 exports.deleteItem = data => {
-  console.log("DELeting!!");
-  console.log("data.id = ", data.id);
-  return sequelize.query(
-    "DELETE FROM items" +
-    " WHERE itemid = $1",
-    { bind: [data.deleteId], type: sequelize.QueryTypes.DELETE }
-  );
+  console.log("David, this is the info being passed to the the delete query === "+JSON.stringify(data));
+  switch (data.type) {
+
+    case "item":
+    console.log("Deleting item: " + data.id );
+    return sequelize.query(
+      "DELETE FROM items" +
+      " WHERE itemid = $1",
+      { bind: [data.deleteId], type: sequelize.QueryTypes.DELETE }
+    );
+      break;
+
+
+    case "type":
+    console.log("Deleting type: " + data.id );
+    return sequelize.query(
+      "DELETE FROM types" +
+      " WHERE typeid = $1",
+      { bind: [data.deleteId], type: sequelize.QueryTypes.DELETE }
+    );
+      break;
+
+
+    case "size":
+    console.log("Deleting size: " + data.id );
+    return sequelize.query(
+      "DELETE FROM sizes" +
+      " WHERE sizeid = $1",
+      { bind: [data.deleteId], type: sequelize.QueryTypes.DELETE }
+    );
+      break;
+
+
+    default:
+      console.log("Attempt to delete failed, type not recognised");
+  }
+
 };
 
 exports.getOrders = (fbid, today) => {

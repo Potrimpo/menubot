@@ -13,6 +13,8 @@ router.param('companyId', (req, res, next, id) => {
   return next();
 });
 
+
+
 router.get('/:companyId', (req, res) => {
   console.log("------ getting company menu -------", req.params.companyId);
   return getMenu(req.params.companyId)
@@ -26,6 +28,46 @@ router.get('/:companyId', (req, res) => {
       });
     })
 });
+
+function getMenu (id) {
+  return companyRepo.getCompanyMenu(id)
+    .then(data => {
+      if (!data) throw "no company found";
+      if (data.length > 0) return fullMenu(id, data);
+      else return companyRepo.findCompany(id)
+    })
+    .catch(err => console.error("error in getMenu", err.message || err));
+}
+
+function fullMenu (fbid, data) {
+  const itemids = data.map(val => val.itemid);
+  const wholeMenu = {
+    name: data[0].name,
+    fbid,
+    items: data
+  };
+
+  return companyRepo.getMenuTypes(itemids)
+    .then(types => {
+      wholeMenu.types = types;
+      const typeids = types.map(val => val.typeid);
+
+      //If there aren't any types, doesn't ask the database to produce the sizes related to the (non-existant) types
+      if (typeids.length !== 0) {
+        console.log("running getMenuSizes");
+        return companyRepo.getMenuSizes(typeids)
+      } else {
+        console.log("running resolved promise");
+        return Promise.resolve([])
+      }
+    })
+    .then(sizes => {
+      wholeMenu.sizes = sizes;
+      return wholeMenu
+    });
+}
+
+
 
 // can't handle changing photos
 router.post('/:companyId', addItem, (req, res) => {
@@ -65,36 +107,6 @@ function addItem(req, res, next) {
     default:
       return console.error("no case for this update intent", req.body.intent);
     }
-}
-
-function getMenu (id) {
-  return companyRepo.getCompanyMenu(id)
-    .then(data => {
-      if (!data) throw "no company found";
-      if (data.length > 0) return fullMenu(id, data);
-      else return companyRepo.findCompany(id)
-    })
-    .catch(err => console.error("error in getMenu", err.message || err));
-}
-
-function fullMenu (fbid, data) {
-  const itemids = data.map(val => val.itemid);
-  const wholeMenu = {
-    name: data[0].name,
-    fbid,
-    items: data,
-  };
-
-  return companyRepo.getMenuTypes(itemids)
-    .then(types => {
-      wholeMenu.types = types;
-      const typeids = types.map(val => val.typeid);
-      return companyRepo.getMenuSizes(typeids);
-    })
-    .then(sizes => {
-      wholeMenu.sizes = sizes;
-      return wholeMenu
-    });
 }
 
 module.exports = router;
