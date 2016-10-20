@@ -5,7 +5,7 @@ var FacebookStrategy = require('passport-facebook').Strategy;
 
 var secrets = require('./secrets');
 var { User } = require('../database/models/index');
-var UserRepo = require('../repositories/UserRepository');
+var UserRepo = require('../repositories/site/UserRepository');
 
 passport.serializeUser((user, done) => done(null, user.id));
 

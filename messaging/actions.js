@@ -2,7 +2,7 @@ const chrono = require('chrono-node'),
   { sessions } = require('./../witSessions'),
   fbMessage = require('./messenger'),
   // { findItem, makeOrder, orderDetails } = require('./../sql'),
-  db = require('../repositories/botQueries');
+  db = require('../repositories/bot/botQueries');
 
 const firstEntityValue = (entities, entity) => {
   const val = entities && entities[entity] &&

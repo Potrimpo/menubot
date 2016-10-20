@@ -1,6 +1,6 @@
 'use strict';
 
-var { User } = require('../database/models/index');
+var { User } = require('../../database/models/index');
 const fetch = require('node-fetch');
 
 exports.getUserById = function(id) {

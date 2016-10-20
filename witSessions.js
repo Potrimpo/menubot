@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------------
 // Wit.ai bot specific code
-const { getCompanyAccessToken } = require('./repositories/CompanyRepository');
+const { getCompanyAccessToken } = require('./repositories/site/CompanyRepository');
 
 // This will contain all user sessions.
 // Each session has an entry:

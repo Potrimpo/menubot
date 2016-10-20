@@ -5,7 +5,7 @@
 const actions = require('./actions'),
   // { getMenu, getTypes, getSizes } = require('../sql'),
   { Company, Item, Type, Size } = require('./../database/models/index'),
-  db = require('./../repositories/botQueries'),
+  db = require('./../repositories/bot/botQueries'),
   { tunnelURL } = require('../envVariables');
 
 function postbackHandler (payload, userSession) {

@@ -1,6 +1,6 @@
 "use strict";
 
-const companyRepo = require('../repositories/CompanyRepository');
+const companyRepo = require('../repositories/site/CompanyRepository');
 
 /**
  * GET /

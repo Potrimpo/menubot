@@ -2,7 +2,7 @@
  * Created by lewis.knoxstreader on 3/10/16.
  */
 
-const { getOrders, orderComplete } = require('../repositories/CompanyRepository');
+const { getOrders, orderComplete } = require('../repositories/site/CompanyRepository');
 
 exports.retrieveOrders = (req, res, next) => {
   const today = dateParsing();

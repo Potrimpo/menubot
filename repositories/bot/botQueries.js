@@ -1,7 +1,7 @@
 /**
  * Created by lewis.knoxstreader on 21/10/16.
  */
-const { Company, Item, Type, Size, Order } = require('./../database/models/index');
+const { Company, Item, Type, Size, Order } = require('./../../database/models/index');
 
 exports.findLocation = fbid => {
     return Company.findOne({

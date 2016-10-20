@@ -1,6 +1,6 @@
 'use strict';
 
-var UserRepo = require('../repositories/UserRepository.js');
+var UserRepo = require('../repositories/site/UserRepository.js');
 
 exports.getLogin = function(req, res) {
   if (req.user)

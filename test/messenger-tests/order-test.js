@@ -5,7 +5,7 @@ const chai = require('chai'),
   // fs = require('fs'),
   { tunnelURL, senderID, testPageID } = require('../../envVariables'),
   { postBackFactory, requestMessageFactory, hashMyMessage } = require('./functionsForTests'),
-  db = require('../../repositories/botQueries'),
+  db = require('../../repositories/bot/botQueries'),
   { Order } = require('./../../database/models/index');
   // { findOrder } = require('../sql');
 

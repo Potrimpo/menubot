@@ -4,7 +4,9 @@ const express = require('express'),
   router = express.Router(),
   fetch = require('node-fetch'),
   { retrieveOrders, setOrderComplete } = require('./orders'),
-  { findCompany, setBotStatus, addItemPhotos, getTypesThroughFbid, addTypePhotos } = require('../repositories/CompanyRepository'),
+  { findCompany, setBotStatus,
+    addItemPhotos, getTypesThroughFbid,
+    addTypePhotos } = require('../repositories/site/CompanyRepository'),
   { activateBot } = require('./activateAccount');
 
 

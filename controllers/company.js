@@ -5,7 +5,7 @@
 const express = require('express'),
   router = express.Router();
 
-const companyRepo = require('../repositories/CompanyRepository');
+const companyRepo = require('../repositories/site/CompanyRepository');
 
 router.param('companyId', (req, res, next, id) => {
   console.log("ID PROVIDED =", id);
