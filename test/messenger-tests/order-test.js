@@ -5,6 +5,7 @@ const chai = require('chai'),
   // fs = require('fs'),
   { tunnelURL, senderID, testPageID } = require('../../envVariables'),
   { postBackFactory, requestMessageFactory, hashMyMessage } = require('./functionsForTests'),
+  db = require('../../repositories/botQueries'),
   { Order } = require('./../../database/models/index');
   // { findOrder } = require('../sql');
 
@@ -61,7 +62,7 @@ describe('testing order functionality', function () {
   });
 
   it('check if order was made', function () {
-      return Order.findOrder(testPageID, senderID, sizeid)
+      return db.findOrder(testPageID, senderID, sizeid)
         .then(function (data) {
           expect(data.pickuptime).to.exist;
           expect(chrono.parseDate(String(data.pickuptime))).to.equal(chrono.parseDate(String(testTime)));

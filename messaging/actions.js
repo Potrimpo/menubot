@@ -2,7 +2,7 @@ const chrono = require('chrono-node'),
   { sessions } = require('./../witSessions'),
   fbMessage = require('./messenger'),
   // { findItem, makeOrder, orderDetails } = require('./../sql'),
-  { Item, Size, Order } = require('./../database/models/index');
+  db = require('../repositories/botQueries');
 
 const firstEntityValue = (entities, entity) => {
   const val = entities && entities[entity] &&
@@ -53,7 +53,7 @@ const actions = {
     const prod = firstEntityValue(entities, 'product');
     return new Promise((res, rej) => {
       if(prod) {
-        return Item.findItem(fbPageId, prod)
+        return db.findItem(fbPageId, prod)
           .then(data => {
             if (data) {
               context.productInfo = data.item;
@@ -82,12 +82,12 @@ const actions = {
     return new Promise((res, rej) => {
       if(time) {
         console.log("INSERTING INTO DATABASE");
-        return Order.makeOrder(fbPageId, fbUserId, context.order.typeid, context.order.sizeid, time)
+        return db.makeOrder(fbPageId, fbUserId, context.order.typeid, context.order.sizeid, time)
           .then(data => {
             if (data) {
               delete context.noLuck;
               context.pickupTime = String(chrono.parseDate(String(data.pickuptime)));
-              return Size.orderDetails(context.order.sizeid)
+              return db.orderDetails(context.order.sizeid)
             }
             else {
               context.noLuck = true;

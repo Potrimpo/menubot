@@ -5,6 +5,7 @@
 const actions = require('./actions'),
   // { getMenu, getTypes, getSizes } = require('../sql'),
   { Company, Item, Type, Size } = require('./../database/models/index'),
+  db = require('./../repositories/botQueries'),
   { tunnelURL } = require('../envVariables');
 
 function postbackHandler (payload, userSession) {
@@ -14,18 +15,18 @@ function postbackHandler (payload, userSession) {
 
     switch (parsedPayload[1]) {
       case 'MENU':
-        return Item.getMenu(fbPageId)
+        return db.getMenu(fbPageId)
           .then((menu) => res(parseItems(fbPageId, menu)) )
           .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
 
       case 'LOCATION':
-        return Company.findLocation(fbPageId)
+        return db.findLocation(fbPageId)
           // a text response must be returned in the 'text' field of an object
           .then(data => res({ text: data.location }) )
           .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
 
       case 'DETAILS':
-        return Type.getTypes(parsedPayload[2])
+        return db.getTypes(parsedPayload[2])
           .then(types => res(parseProductTypes(fbPageId, types)) )
           .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
 
@@ -37,7 +38,7 @@ function postbackHandler (payload, userSession) {
         return res({ text: "what time would you like that? (include am/pm)" });
 
       case 'SIZES':
-        return Size.getSizes(parsedPayload[2])
+        return db.getSizes(parsedPayload[2])
           .then(sizes => res(parseProductSizes(sizes)) )
           .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
 

@@ -78,7 +78,7 @@ exports.insertSize = data => {
 };
 
 exports.deleteItem = data => {
-  console.log("David, this is the info being passed to the the delete query === "+JSON.stringify(data));
+  console.log("David, this is the info being passed to the the delete db === "+JSON.stringify(data));
   switch (data.type) {
 
     case "item":
@@ -171,7 +171,7 @@ exports.addItemPhotos = (val, fbid) => {
       { replacements: { fbid, picture: val.picture, name: val.name }, type: sequelize.QueryTypes.UPDATE }
     );
   }
-  else throw 'fields missing in database update query';
+  else throw 'fields missing in database update db';
 };
 
 exports.addTypePhotos = val => {
@@ -183,5 +183,5 @@ exports.addTypePhotos = val => {
       { replacements: { typeid: val.typeid, picture: val.picture, name: val.name }, type: sequelize.QueryTypes.UPDATE }
     );
   }
-  else throw 'fields missing in database update query';
+  else throw 'fields missing in database update db';
 };

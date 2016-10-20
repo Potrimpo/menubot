@@ -84,14 +84,6 @@ const Company = sequelize.define('Company', {
 }, {
   tableName: 'companies',
   timestamps: false,
-  classMethods: {
-    findLocation(fbid) {
-      return Company.findOne({
-        attributes: ['location'],
-        where: { fbid }
-      })
-    }
-  }
 });
 
 const Item = sequelize.define('Item', {
@@ -117,20 +109,6 @@ const Item = sequelize.define('Item', {
 }, {
   tableName: 'items',
   timestamps: false,
-  classMethods: {
-    findItem(fbid, item) {
-      return Item.findOne({
-        attributes: ['item', 'itemid'],
-        where: { fbid, item }
-      })
-    },
-    getMenu(fbid) {
-      return Item.findAll({
-        attributes: ['item', 'itemid', 'photo'],
-        where: { fbid }
-      })
-    }
-  }
 });
 
 const Type = sequelize.define('Type', {
@@ -156,14 +134,6 @@ const Type = sequelize.define('Type', {
 }, {
   tableName: 'types',
   timestamps: false,
-  classMethods: {
-    getTypes(itemid) {
-      return Type.findAll({
-        attributes: ['itemid', 'typeid', 'type', 'photo'],
-        where: { itemid }
-      })
-    }
-  }
 });
 
 const Size = sequelize.define('Size', {
@@ -190,23 +160,6 @@ const Size = sequelize.define('Size', {
 }, {
   tableName: 'sizes',
   timestamps: false,
-  classMethods: {
-    getSizes(typeid) {
-      return Size.findAll({
-        attributes: ['typeid', 'sizeid', 'size', 'price'],
-        where: { typeid }
-      })
-    },
-    orderDetails(sizeid) {
-      return sequelize.query(
-        "SELECT sizes.sizeid, sizes.typeid, types.itemid, sizes.size, type, item" +
-        " FROM sizes INNER JOIN types ON sizes.typeid=types.typeid" +
-        " INNER JOIN items ON types.itemid=items.itemid" +
-        " WHERE sizes.sizeid=$1",
-        { bind: [sizeid], type: sequelize.QueryTypes.SELECT }
-      );
-    }
-  }
 });
 
 
@@ -255,20 +208,6 @@ const Order = sequelize.define('Order', {
   tableName: 'orders',
   // could benefit from adding timestamps in future
   timestamps: false,
-  classMethods: {
-    makeOrder(fbid, userid, typeid, sizeid, pickuptime) {
-      return Order.build({
-        fbid, userid, typeid, sizeid, pickuptime
-      }).save();
-    },
-    findOrder (fbid, userid, sizeid) {
-      return Order.findOne({
-        attributes: ['pickuptime'],
-        where: {fbid, userid, sizeid}
-      })
-        .catch(err => console.error("error in Order.findOrder:", err.message || err));
-    }
-  }
 });
 
 // Relations
