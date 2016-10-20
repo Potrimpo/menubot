@@ -1,15 +1,25 @@
-<div class="row">
+<div class="size-offseter">
   <% if (sizes) { %>
     <% for (var y = 0; y < sizes.length; y++) { %>
-        <% if (sizes[y].typeid == types[x].typeid) { %>
-        <div class="col-xs-12 col-sm-6 size-list">
-          <h4><%= sizes[y].size %>: $<%= sizes[y].price %></h4>
-          <button type="button" name="size-<%= sizes[y].sizeid %>" class="btn btn-default btn-downspace">Delete</button>
+      <% if (sizes[y].typeid == types[x].typeid) { %>
+        <div class="container">
+          <div class="col-xs-10">
+            <div class="row size-outer-container">
+              <div class="row size-heading-inner-container">
+                <button type="button" name="size-<%= sizes[y].sizeid %>" class="size-remove-button"><i class="fa fa-trash-o size-remove-button-glyph" aria-hidden="true"></i></button>
+                <p class="size-title"><%= sizes[y].size %>: $<%= sizes[y].price %></p>
+              </div>
+            </div>
+          </div>
         </div>
-        <% } %>
+      <% } %>
     <% } %>
   <% } %>
-  <div class="col-xs-12 col-sm-6 new-thing">
-      <%- include new-size %>
+  <div class="container">
+    <div class="col-xs-10">
+      <div class="row size-outer-container">
+        <%- include new-size %>
+      </div>
+    </div>
   </div>
 </div>

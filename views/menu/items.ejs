@@ -1,19 +1,24 @@
-<div class="row">
-    <div class="center-block text-center">
-        <% if(items) { %>
-            <% for(var i = 0; i < items.length; i++) { %>
-              <div class="col-xs-12 col-sm-6 item-list menu-border">
-                  <h3><%= items[i].item %></h3>
-                  <button type="button" name="item-<%= items[i].itemid %>" class="btn btn-default btn-downspace">Delete</button>
-                  <img src="/images/<%= fbid %>/<%= items[i].itemid %>.jpg" class="thumbnail center-block menu-photo" />
-                  <label for="photo-<%= items[i].itemid %>">Change photo</label>
-                  <input type="file" id="photo-<%= items[i].itemid %>">
-              <%- include types %>
-              </div>
-            <% } %>
-        <% } %>
-        <div class="col-xs-12 col-sm-6 new-thing menu-border">
-            <%- include new-item %>
+<!-- David's Experemental changes -->
+<% if(items) { %>
+    <% for(var i = 0; i < items.length; i++) { %>
+      <div class="row item-outer-container">
+        <div class="col-xs-12 ">
+          <div class="row item-heading-inner-container">
+            <button type="button" name="item-<%= items[i].itemid %>" class="item-remove-button"><i class="fa fa-trash-o item-remove-button-glyph" aria-hidden="true"></i></button>
+            <p class="item-title"><%= items[i].item %></p>
+          </div>
+          <div class="row item-content-inner-container">
+            <img src="/images/<%= fbid %>/<%= items[i].itemid %>.jpg" class="thumbnail menu-photo" />
+          </div>
+          <div class="row">
+            <%- include types %>
+          </div>
         </div>
-    </div>
+      </div>
+    <% } %>
+<% } %>
+<div class="row item-outer-container">
+  <div class="col-xs-12">
+    <%- include new-item %>
+  </div>
 </div>

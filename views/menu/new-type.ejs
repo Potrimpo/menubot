@@ -1,19 +1,13 @@
-<h4>new type</h4>
-<form id="new-type-<%= items[i].itemid %>" name="<%= items[i].itemid %>">
-    <div class="form-group">
-        <input type="text" class="form-control menu" name="type" placeholder="type name">
-    </div>
-    <!-- <div class="row">
-        <div class="col-xs-12 col-sm-6">
-            <h5>new size / price</h5>
-            <div class="form-group">
-                <input type="text" class="form-control menu" name="size" placeholder="size">
-                <div class="input-group">
-                    <span class="input-group-addon">$</span>
-                    <input type="text" class="form-control menu" aria-label="price" name="price" placeholder="price">
-                </div>
-            </div>
+<div class="row type-heading-inner-container">
+  <p class="type-title">Create New Type</p>
+</div>
+<div class="row type-input-inner-container">
+  <div class="col-xs-11 col-md-6">
+    <form id="new-type-<%= items[i].itemid %>" name="<%= items[i].itemid %>">
+        <div class="form-group">
+            <input type="text" class="form-control menu" name="type" placeholder="Type name (eg: Latte, cappuccino, ham)">
         </div>
-    </div> -->
-    <button type="submit" class="btn btn-default btn-space hidden">Submit</button>
-</form>
+        <button type="submit" class="btn btn-default btn-space hidden">Submit</button>
+    </form>
+  </div>
+</div>
