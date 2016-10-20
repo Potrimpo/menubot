@@ -14,7 +14,7 @@ router.param('companyId', (req, res, next, id) => {
 });
 
 router.get('/:companyId', (req, res) => {
-  console.log("------ getting page -------");
+  console.log("------ getting company menu -------", req.params.companyId);
   return getMenu(req.params.companyId)
     .then(data => {
       return res.render('account/company', {
@@ -82,7 +82,7 @@ function fullMenu (fbid, data) {
   const wholeMenu = {
     name: data[0].name,
     fbid,
-    items: data
+    items: data,
   };
 
   return companyRepo.getMenuTypes(itemids)

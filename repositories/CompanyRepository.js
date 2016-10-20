@@ -15,7 +15,7 @@ exports.findCompany = (id) => Company.findById(id);
 
 exports.getCompanyMenu = id => {
   return sequelize.query(
-    "SELECT name, item, itemid FROM companies" +
+    "SELECT name, item, itemid, photo FROM companies" +
     " INNER JOIN items ON companies.fbid = items.fbid" +
     " WHERE companies.fbid = $1",
     { bind: [id], type: sequelize.QueryTypes.SELECT }
@@ -24,7 +24,7 @@ exports.getCompanyMenu = id => {
 
 exports.getMenuTypes = itemids => {
   return sequelize.query(
-    "SELECT types.itemid, type, typeid FROM items" +
+    "SELECT types.itemid, type, typeid, types.photo FROM items" +
     " INNER JOIN types ON items.itemid = types.itemid" +
     " WHERE items.itemid IN (:itemids)",
     { replacements: { itemids }, type: sequelize.QueryTypes.SELECT }
@@ -37,6 +37,15 @@ exports.getMenuSizes = typeids => {
     " INNER JOIN sizes ON types.typeid = sizes.typeid" +
     " WHERE types.typeid IN (:typeids)",
     { replacements: { typeids }, type: sequelize.QueryTypes.SELECT }
+  );
+};
+
+exports.getTypesThroughFbid = fbid => {
+  return sequelize.query(
+    "SELECT typeid, type FROM items" +
+    " INNER JOIN types ON items.itemid = types.itemid" +
+    " WHERE items.fbid = :fbid",
+    { replacements: { fbid }, type: sequelize.QueryTypes.SELECT }
   );
 };
 
@@ -146,3 +155,28 @@ exports.setBotStatus = (id, status) => sequelize.query(
   "UPDATE companies SET bot_status = :status WHERE fbid = :id",
   { replacements: { id, status}, type: sequelize.QueryTypes.UPDATE}
 );
+
+exports.addItemPhotos = (val, fbid) => {
+  if (val.picture && val.name) {
+    return sequelize.query(
+      "UPDATE items" +
+      " SET photo = :picture" +
+      " WHERE fbid = :fbid AND item = :name" +
+      " RETURNING item, itemid",
+      { replacements: { fbid, picture: val.picture, name: val.name }, type: sequelize.QueryTypes.UPDATE }
+    );
+  }
+  else throw 'fields missing in database update query';
+};
+
+exports.addTypePhotos = val => {
+  if (val.picture && val.name && val.typeid) {
+    return sequelize.query(
+      "UPDATE types" +
+      " SET photo = :picture" +
+      " WHERE typeid = :typeid AND type = :name",
+      { replacements: { typeid: val.typeid, picture: val.picture, name: val.name }, type: sequelize.QueryTypes.UPDATE }
+    );
+  }
+  else throw 'fields missing in database update query';
+};

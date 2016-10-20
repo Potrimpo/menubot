@@ -4,7 +4,8 @@ const express = require('express'),
   router = express.Router(),
   fetch = require('node-fetch'),
   { retrieveOrders, setOrderComplete } = require('./orders'),
-  { findCompany, setBotStatus } = require('../repositories/CompanyRepository');
+  { findCompany, setBotStatus, addItemPhotos, getTypesThroughFbid, addTypePhotos } = require('../repositories/CompanyRepository'),
+  { activateBot } = require('./activateAccount');
 
 
 // absolute path is /api/orders/:fbid
@@ -24,66 +25,71 @@ router.route('/activate/:fbid')
       .then(() => res.redirect('/'));
   });
 
-function activateBot(pageToken) {
-  return subscribeToWebhook(pageToken)
-    .then(() => initializePersistentMenu(pageToken))
+router.route('/photos/:fbid')
+  .get((req, res) => {
+    return findCompany(req.params.fbid)
+      .then(data => syncPhotos(data.access_token))
+      .then(() => res.redirect(`/company/${req.params.fbid}`))
+      .catch(e => {
+        console.error("error getting photos from facebook:", e);
+        return res.status(500).redirect(`/company/${req.params.fbid}`);
+      })
+  });
+
+function syncPhotos (pageToken) {
+  let fbid = "";
+  let photos = [];
+  return fetchPhotos(pageToken)
+    .then(response => {
+      fbid = response.id;
+      const rightAlbum = response.albums.data.filter(album => album.name == "menu");
+      photos = rightAlbum[0].photos.data;
+      console.log("PHOTOS NAMES ===", photos.map(val => val.name));
+      // add photos to items table, matching the name in the description of the facebook photo to item names
+      return Promise.all(
+        photos.map(val => addItemPhotos(val, fbid))
+      );
+    })
+    .then(() => getTypesThroughFbid(fbid))
+    .then(data => {
+      console.log("DATA FROM GETTING TYPES ==", data);
+      console.log("HPTOOSO ====", photos);
+      const photosWithTypeids = photos
+        .map(val => {
+          for (let x = data.length - 1; x >= 0; x--) {
+            if (data[x].type == val.name) {
+              val.typeid = data[x].typeid;
+              return val
+            }
+          }
+          return null;
+        })
+        .filter(val => val);
+      console.log("HPTOSO WITH TYPEIDS =======^^^^^==== ", photosWithTypeids);
+      return Promise.all(
+        photosWithTypeids.map(val => addTypePhotos(val))
+      );
+    });
 }
 
-function subscribeToWebhook (pageToken) {
+// fetches albums from facebook page
+function fetchPhotos (pageToken) {
+  const body = {};
   pageToken = encodeURIComponent((pageToken));
-  const body = `access_token=${pageToken}`;
-  const query = `https://graph.facebook.com/me/subscribed_apps`;
-  return fetch(query, {
-    method: 'POST',
+  const url = `https://graph.facebook.com/me?fields=albums{photos{name,picture},name}&access_token=${pageToken}`;
+  return fetch(url, {
+    method: 'GET',
     headers: {'Content-Type': 'application/json'},
-    body
   })
     .then(rsp => rsp.json())
     .then(json => {
       if (json.error && json.error.message) {
         throw new Error(json.error.message);
       }
+      console.log("JSON ====", json);
       return json;
     })
-    .catch(err => console.error("error activating bot for this page!!", err));
-}
-
-function initializePersistentMenu (pageToken) {
-  const body = {
-    setting_type: "call_to_actions",
-    thread_state: "existing_thread",
-    call_to_actions:[
-      {
-        type: "postback",
-        title: "Menu",
-        payload: "MENU"
-      },
-      {
-        type: "postback",
-        title: "My Orders",
-        payload: "MY_ORDERS"
-      },
-      {
-        type: "postback",
-        title: "Location",
-        url: "LOCATION",
-      }
-    ]
-  };
-  pageToken = encodeURIComponent((pageToken));
-  const url = `https://graph.facebook.com/me/thread_settings?access_token=${pageToken}`;
-  return fetch(url, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body
-    })
-    .then(rsp => rsp.json())
-    .then(json => {
-      if (json.error && json.error.message) {
-        throw new Error(json.error.message);
-      }
-      return json;
-    })
+    .catch(err => console.error("error fetching photos for this menu!", err));
 }
 
 module.exports = router;

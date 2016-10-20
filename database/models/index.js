@@ -107,7 +107,10 @@ const Item = sequelize.define('Item', {
   },
   item: {
     type: Sequelize.STRING
-  }
+  },
+  photo: {
+    type: Sequelize.STRING
+  },
 }, {
   tableName: 'items',
   timestamps: false,
@@ -120,7 +123,7 @@ const Item = sequelize.define('Item', {
     },
     getMenu(fbid) {
       return Item.findAll({
-        attributes: ['item', 'itemid'],
+        attributes: ['item', 'itemid', 'photo'],
         where: { fbid }
       })
     }
@@ -143,14 +146,17 @@ const Type = sequelize.define('Type', {
   },
   type: {
     type: Sequelize.STRING
-  }
+  },
+  photo: {
+    type: Sequelize.STRING
+  },
 }, {
   tableName: 'types',
   timestamps: false,
   classMethods: {
     getTypes(itemid) {
       return Type.findAll({
-        attributes: ['itemid', 'typeid', 'type'],
+        attributes: ['itemid', 'typeid', 'type', 'photo'],
         where: { itemid }
       })
     }

@@ -3,5 +3,10 @@
 
 <div class="page-header text-center">
     <h2 class="company-head" id="<%= fbid %>"><%= title %></h2>
+    <div>
+        <a href="/api/photos/<%= fbid %>" role="button" class="btn btn-default btn-space home-button">
+            Fetch photos from Facebook
+        </a>
+    </div>
 </div>
 <%- include ../menu/items %>

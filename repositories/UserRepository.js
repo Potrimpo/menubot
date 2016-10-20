@@ -92,7 +92,7 @@ exports.createAccFromFacebook = function(accessToken, refreshToken, profile) {
       user.profile = { name: profile._json.first_name };
       return user.save();
     })
-    .catch(err => console.error("error creating profile", err.message || err));
+    .catch(err => console.error("error creating profile", err));
 };
 
 function getPageAccessToken (userToken, pageId) {
