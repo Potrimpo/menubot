@@ -6,6 +6,7 @@ const fetch = require('node-fetch');
 exports.activateBot = pageToken => {
   return subscribeToWebhook(pageToken)
     .then(() => initializePersistentMenu(pageToken))
+    .then(() => setupGreetingText(pageToken))
 };
 
 function subscribeToWebhook (pageToken) {
@@ -49,6 +50,30 @@ function initializePersistentMenu (pageToken) {
       }
     ]
   };
+  pageToken = encodeURIComponent((pageToken));
+  const url = `https://graph.facebook.com/me/thread_settings?access_token=${pageToken}`;
+  return fetch(url, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(body)
+  })
+    .then(rsp => rsp.json())
+    .then(json => {
+      if (json.error && json.error.message) {
+        throw new Error(json.error.message);
+      }
+      return json;
+    })
+}
+
+function setupGreetingText (pageToken) {
+  const body = {
+    setting_type: "greeting",
+    greeting: {
+      text: "This is a menu.bot activated page"
+    }
+  };
+  console.log("SETUP GREETING TEXT", body);
   pageToken = encodeURIComponent((pageToken));
   const url = `https://graph.facebook.com/me/thread_settings?access_token=${pageToken}`;
   return fetch(url, {
