@@ -10,12 +10,11 @@ chai.use(chaiHttp);
 
 // REMEMBER TO CHANGE TUNNELURL ON BOOTUP
 describe('checking url response', function() {
-  it('pinging base path (/)', function () {
+  it('pinging base path (/landing)', function () {
     return chai.request(tunnelURL)
-      .get('/')
+      .get('/landing')
       .then(function (res) {
         expect(res).to.have.status(200);
-        expect(res).to.have.property('text', 'menubot reporting for duty');
       });
   });
 

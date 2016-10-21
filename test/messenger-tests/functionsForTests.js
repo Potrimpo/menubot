@@ -1,5 +1,5 @@
 const crypto = require('crypto'),
-  { FB_APP_SECRET, senderID } = require('../../envVariables');
+  { FB_APP_SECRET, senderID, testPageID } = require('../../envVariables');
 
 function writeObjectToFile (obj) {
   let wstream = fs.createWriteStream('test/output.json');
@@ -24,11 +24,11 @@ function requestMessageFactory (text) {
   return {
     object: 'page',
     entry: [
-      { id: '1766837970261548',
+      { id: testPageID,
         messaging: [
           {
             sender: { id: senderID },
-            recipient: { id: '1766837970261548' },
+            recipient: { id: testPageID },
             message: { text }
           }
         ]
@@ -41,11 +41,11 @@ function postBackFactory (payload) {
   return {
     object: 'page',
     entry: [
-      { id: '1766837970261548',
+      { id: testPageID,
         messaging: [
           {
             sender: { id: senderID },
-            recipient: { id: '1766837970261548' },
+            recipient: { id: testPageID },
             postback: { payload }
           }
         ]
