@@ -5,8 +5,9 @@ const fetch = require('node-fetch');
 
 exports.activateBot = pageToken => {
   return subscribeToWebhook(pageToken)
-    .then(() => initializePersistentMenu(pageToken))
+    .then(() => getStartedButton(pageToken))
     .then(() => setupGreetingText(pageToken))
+    .then(() => initializePersistentMenu(pageToken))
 };
 
 function subscribeToWebhook (pageToken) {
@@ -23,6 +24,7 @@ function subscribeToWebhook (pageToken) {
       if (json.error && json.error.message) {
         throw new Error(json.error.message);
       }
+      console.log(json);
       return json;
     })
     .catch(err => console.error("error activating bot for this page!!", err));
@@ -62,8 +64,10 @@ function initializePersistentMenu (pageToken) {
       if (json.error && json.error.message) {
         throw new Error(json.error.message);
       }
+      console.log(json);
       return json;
     })
+    .catch(err => console.error("error initializing persistent menu!!", err));
 }
 
 function setupGreetingText (pageToken) {
@@ -86,6 +90,36 @@ function setupGreetingText (pageToken) {
       if (json.error && json.error.message) {
         throw new Error(json.error.message);
       }
+      console.log(json);
       return json;
     })
+    .catch(err => console.error("error setting greeting text!!", err));
+}
+
+function getStartedButton (pageToken) {
+  const body = {
+    setting_type: "call_to_actions",
+    thread_state: "new_thread",
+    call_to_actions: [
+      {
+        payload: "GET_STARTED"
+      }
+    ]
+  };
+  pageToken = encodeURIComponent((pageToken));
+  const url = `https://graph.facebook.com/me/thread_settings?access_token=${pageToken}`;
+  return fetch(url, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(body)
+  })
+    .then(rsp => rsp.json())
+    .then(json => {
+      if (json.error && json.error.message) {
+        throw new Error(json.error.message);
+      }
+      console.log(json);
+      return json;
+    })
+    .catch(err => console.error("error adding get-started button!!", err));
 }
