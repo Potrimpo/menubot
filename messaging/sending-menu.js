@@ -11,12 +11,12 @@ const actions = require('./actions'),
 function postbackHandler (payload, userSession) {
   return new Promise(function (res, rej) {
     const { fbPageId, fbUserId } = userSession,
-      parsedPayload = /([A-Z]+)!?(\d*)\/?(\d*)/g.exec(payload);
+      parsedPayload = /(\D+)!?(\d*)\/?(\d*)/g.exec(payload);
 
-    switch (parsedPayload[1]) {
+    switch (parsedPayload[1].toUpperCase()) {
       case 'MENU':
         return db.getMenu(fbPageId)
-          .then((menu) => res(parseItems(fbPageId, menu)) )
+          .then((menu) => res(parseItems(menu)) )
           .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
 
       case 'LOCATION':
@@ -27,7 +27,7 @@ function postbackHandler (payload, userSession) {
 
       case 'DETAILS':
         return db.getTypes(parsedPayload[2])
-          .then(types => res(parseProductTypes(fbPageId, types)) )
+          .then(types => res(parseProductTypes(types)) )
           .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
 
       case 'ORDER':
@@ -42,6 +42,10 @@ function postbackHandler (payload, userSession) {
           .then(sizes => res(parseProductSizes(sizes)) )
           .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
 
+      case 'GET_STARTED':
+        console.log("GETTING SHIT GOING MY DUDE");
+       return res(getStarted());
+
       default:
         return rej(new Error("couldn't deal with this postbackHandler input"));
     }
@@ -49,7 +53,7 @@ function postbackHandler (payload, userSession) {
   });
 }
 
-function parseItems(botID, menu) {
+function parseItems(menu) {
   const template = {
     attachment: {
       type:"template",
@@ -72,7 +76,7 @@ function parseItems(botID, menu) {
   return template;
 }
 
-function parseProductTypes(botID, types) {
+function parseProductTypes(types) {
   const template = {
     attachment: {
       type:"template",
@@ -120,6 +124,13 @@ function parseProductSizes(sizes) {
     };
   });
   return template;
+}
+
+function getStarted () {
+  return {
+    text: "Welcome to the menu.bot experience",
+    quickreplies:[ "Menu" ]
+  };
 }
 
 module.exports = postbackHandler;

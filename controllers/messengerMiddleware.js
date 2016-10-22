@@ -25,6 +25,7 @@ exports.postWebhook = (req, res) => {
   if (data.object === 'page') {
     data.entry.forEach(entry => {
       entry.messaging.forEach(event => {
+        console.log("sender id ==", event.sender.id);
         if (event.message) {
           // Yay! We got a new message!
           // We retrieve the Facebook user ID of the sender
@@ -35,11 +36,21 @@ exports.postWebhook = (req, res) => {
           return findOrCreateSession(event.sender.id, event.recipient.id)
             .then(sessionId => {
               outerSession = sessionId;
-              const { text, attatchments } = event.message;
+              const { text, attatchments, quick_reply } = event.message;
               // Let's forward the message to the Wit.ai Bot Engine
               // This will run all actions until our bot has nothing left to do
               if (attatchments) {
-                return actions.send(sessionId, 'Sorry, I can only handle text messages!');
+                return actions.send({sessionId}, {text: 'Sorry, I can only handle text messages!'});
+              }
+              else if (quick_reply) {
+                return postbackHandler(quick_reply.payload, sessions[sessionId])
+                  .then(response => {
+                    actions.send({sessionId}, response)
+                  })
+                  .catch(err => {
+                    console.log(`Error sending postback: ${err}`);
+                    console.log(err.stack);
+                  });
               }
               else if (text) {
                 console.log("EVENT.MESSAGE =====", event.message);
@@ -69,6 +80,8 @@ exports.postWebhook = (req, res) => {
                 console.error('Oops! Got an error from Wit: ', err.stack || err);
               });
         } else if(event.postback) {
+          console.log("sender =", event.sender.id);
+          console.log("recipient =", event.recipient.id);
           return findOrCreateSession(event.sender.id, event.recipient.id)
             .then(sessionId => {
               return postbackHandler(event.postback.payload, sessions[sessionId])

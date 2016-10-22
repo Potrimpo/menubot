@@ -21,8 +21,8 @@ const actions = {
   send({sessionId}, message) {
     if (message.text) { console.log(`replying >> ${message.text}`); }
     if (message.quickreplies) {
-      message.quick_replies = quickreplies.map(x => {
-        return {"title": x, "content_type": "text", "payload": "empty"};
+      message.quick_replies = message.quickreplies.map(x => {
+        return {"title": x, "content_type": "text", "payload": x};
       });
       delete message.quickreplies;
     }

@@ -44,5 +44,20 @@ describe('simulated persistent menu requests (type postback)', function () {
         expect(res).to.have.status(200);
       });
   });
+
+  it("simulated pressing 'get started' button", function () {
+    dummyRequest = postBackFactory('GET_STARTED');
+    myGenHash = hashMyMessage(dummyRequest);
+
+    return chai.request(tunnelURL)
+      .post('/webhook')
+      .set("x-hub-signature", `sha1=${myGenHash}`)
+      .send(dummyRequest)
+      .then(function (res) {
+        // this is the request object, not the response we want to be testing
+        expect(res).to.be.an('object');
+        expect(res).to.have.status(200);
+      });
+  });
 });
 
