@@ -77,9 +77,10 @@ const actions = {
   },
 
   // specify the time of an order
-  orderTime({context, entities, fbPageId, fbUserId }) {
-    const time = firstEntityValue(entities, 'datetime');
+  orderTime({context, fbPageId, fbUserId }, request) {
     return new Promise((res, rej) => {
+      console.log("request ==", request);
+      const time = chrono.parseDate(request);
       if(time) {
         console.log("INSERTING INTO DATABASE");
         return db.makeOrder(fbPageId, fbUserId, context.order.typeid, context.order.sizeid, time)

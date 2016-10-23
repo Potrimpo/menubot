@@ -2,19 +2,12 @@
  * Created by lewis.knoxstreader on 18/09/16.
  */
 
-const { Wit, log } = require('../index'),
-  { WIT_TOKEN, FB_VERIFY_TOKEN } = require('../envVariables'),
+const { FB_VERIFY_TOKEN } = require('../envVariables'),
   { sessions, findOrCreateSession } = require('../witSessions'),
+  runActions = require('../messaging/runActions'),
   postbackHandler = require('../messaging/sending-menu'),
   actions = require('../messaging/actions'),
   fbMessage = require('../messaging/messenger');
-
-// Setting up our bot
-const wit = new Wit({
-  accessToken: WIT_TOKEN,
-  actions,
-  logger: new log.Logger(log.INFO)
-});
 
 exports.postWebhook = (req, res) => {
   // Parse the Messenger payload
@@ -54,11 +47,13 @@ exports.postWebhook = (req, res) => {
               }
               else if (text) {
                 console.log("EVENT.MESSAGE =====", event.message);
-                return wit.runActions(
-                  sessionId, // the user's current session
-                  text, // the user's message
-                  sessions[sessionId].context // the user's current session state
-                )
+                console.log("SessionId: messengerMiddleware", sessionId);
+                console.log("Session: messengerMiddleware", sessions[sessionId]);
+                return runActions(
+                  sessionId,
+                  text,
+                  sessions[sessionId].context
+                );
               }
             })
             .then((context) => {
@@ -77,7 +72,7 @@ exports.postWebhook = (req, res) => {
                 sessions[outerSession].context = context;
               })
               .catch((err) => {
-                console.error('Oops! Got an error from Wit: ', err.stack || err);
+                console.error('Oops! Got an error dealing with this message: ', err.stack || err);
               });
         } else if(event.postback) {
           console.log("sender =", event.sender.id);
