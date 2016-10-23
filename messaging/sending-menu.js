@@ -11,7 +11,9 @@ const actions = require('./actions'),
 function postbackHandler (payload, userSession) {
   return new Promise(function (res, rej) {
     const { fbPageId, fbUserId } = userSession,
-      parsedPayload = /(\D+)!?(\d*)\/?(\d*)/g.exec(payload);
+      parsedPayload = /([A-Z]+_?[A-Z]*)!?(\d*)/g.exec(payload);
+
+    console.log("PARSED PAYLOAD =", parsedPayload);
 
     switch (parsedPayload[1].toUpperCase()) {
       case 'MENU':
