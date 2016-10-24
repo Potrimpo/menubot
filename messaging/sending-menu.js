@@ -30,6 +30,11 @@ function postbackHandler (payload, userSession) {
           .then(types => res(parseProductTypes(types)) )
           .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
 
+      case 'SIZES':
+        return db.getSizes(parsedPayload[2])
+          .then(sizes => res(parseProductSizes(sizes)) )
+          .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
+
       case 'ORDER':
         console.log("EXECUTING ORDER");
         // make sure wit.ai doesn't reuse data from a previous order!
@@ -40,10 +45,11 @@ function postbackHandler (payload, userSession) {
         console.log("IN POSTBACK HANDLER", userSession);
         return res({ text: "what time would you like that? (include am/pm)" });
 
-      case 'SIZES':
-        return db.getSizes(parsedPayload[2])
-          .then(sizes => res(parseProductSizes(sizes)) )
-          .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
+      case 'MY_ORDERS':
+        console.log("--> looking at my orders <--");
+        return db.getOrders(fbUserId)
+          .then(orders => res(parseOrders(orders)))
+          .catch(err => console.error(`Error in ${parsedPayload[1]} postback`, err));
 
       case 'GET_STARTED':
         console.log("GETTING SHIT GOING MY DUDE");
@@ -125,6 +131,22 @@ function parseProductSizes(sizes) {
           payload: `ORDER!${val.sizeid}`
         },
       ]
+    };
+  });
+  return template;
+}
+
+function parseOrders(orders) {
+  const template = {
+    attachment: {
+      type:"template",
+      payload: { template_type:"generic" }
+    }
+  };
+  template.attachment.payload.elements = orders.map(val => {
+    return {
+      title: `${val.size.toUpperCase()} ${val.type.toUpperCase()} ${val.item.toUpperCase()}`,
+      subtitle: `$${val.price}`
     };
   });
   return template;

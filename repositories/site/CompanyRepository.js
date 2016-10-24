@@ -149,7 +149,8 @@ exports.linkCompany = (id, facebookId) => {
         "INSERT INTO companies (fbid, name, access_token)" +
         " VALUES (:fbid, :name, :access_token)" +
         " RETURNING fbid",
-        { replacements: { fbid: page[0].fbid, name: page[0].name, access_token: page[0].access_token }, type: sequelize.QueryTypes.INSERT }
+        { replacements: { fbid: page[0].fbid, name: page[0].name, access_token: page[0].access_token },
+          type: sequelize.QueryTypes.INSERT }
       );
     });
 };

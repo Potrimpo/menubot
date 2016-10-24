@@ -55,9 +55,22 @@ exports.makeOrder = (fbid, userid, sizeid, pickuptime)  => {
     fbid, userid, sizeid, pickuptime
   })
   .save();
-  };
+};
 
- exports.findOrder = (fbid, userid, sizeid) => {
+exports.getOrders = userid => {
+  return sequelize.query(
+    "SELECT * FROM orders" +
+    " INNER JOIN sizes ON orders.sizeid = sizes.sizeid" +
+    " INNER JOIN types ON sizes.typeid = types.typeid" +
+    " INNER JOIN items ON types.itemid = items.itemid" +
+    " WHERE orders.userid = :userid AND pending = true" +
+    " ORDER BY orders.pickuptime ASC",
+    { replacements: { userid }, type: sequelize.QueryTypes.SELECT }
+  );
+};
+
+// only used in tests
+exports.findOrder = (fbid, userid, sizeid) => {
   return Order.findOne({
     attributes: ['pickuptime'],
     where: {fbid, userid, sizeid}
