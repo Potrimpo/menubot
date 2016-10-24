@@ -181,13 +181,6 @@ const Order = sequelize.define('Order', {
     type: Sequelize.BIGINT,
     allowNull: false
   },
-  typeid: {
-    type: Sequelize.INTEGER,
-    references: {
-      model: 'types',
-      key: 'typeid'
-    },
-  },
   sizeid: {
     type: Sequelize.INTEGER,
     references: {
