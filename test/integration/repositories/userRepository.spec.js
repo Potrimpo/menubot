@@ -25,7 +25,7 @@ describe('Facebook OAuth', function () {
       accounts: { data: [], paging: {} }
     };
 
-    return userRepo.createAccFromFacebook($u.accessToken, $u.refreshToken, $u.profile)
+    return userRepo.loginOrCreateAcc($u.accessToken, $u.refreshToken, $u.profile)
       .then(function (user) {
         expect(user).to.be.a('object');
         expect(user.facebookId).to.be($u.uniqueness.toString());
@@ -63,7 +63,7 @@ describe('Facebook OAuth', function () {
       }
     };
 
-    return userRepo.createAccFromFacebook($u.accessToken, $u.refreshToken, sampleProfile)
+    return userRepo.loginOrCreateAcc($u.accessToken, $u.refreshToken, sampleProfile)
       .then(function (user) {
         expect(user).to.be.a('object');
         expect(user.facebookId).to.be(sampleProfile.id);

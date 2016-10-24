@@ -34,23 +34,11 @@ passport.deserializeUser((id, done) => {
  * Sign in with Facebook.
  */
 passport.use(new FacebookStrategy(secrets.facebook, function(req, accessToken, refreshToken, profile, done) {
-  if (req.user) {
-    UserRepo.linkFacebookProfile(req.user.id, accessToken, refreshToken, profile)
-      .then(function(user) {
-        req.flash('info', { msg: 'Facebook account has been linked.' });
-        done(null, user);
-      })
-      .catch(function(err) {
-        req.flash('errors', { msg: err });
-        done(null, false, { message: err });
-      });
-  } else {
-    UserRepo.createAccFromFacebook(accessToken, refreshToken, profile)
-      .then(function (user) {
-        done(null, user);
-      })
-      .catch(function(error) { done(error); });
-  }
+  UserRepo.loginOrCreateAcc(accessToken, refreshToken, profile)
+    .then(function (user) {
+      done(null, user);
+    })
+    .catch(function(error) { done(error); });
 }));
 
 /**
