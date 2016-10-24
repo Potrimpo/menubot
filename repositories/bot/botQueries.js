@@ -1,7 +1,7 @@
 /**
  * Created by lewis.knoxstreader on 21/10/16.
  */
-const { Company, Item, Type, Size, Order } = require('./../../database/models/index');
+const { Company, Item, Type, Size, Order, sequelize } = require('./../../database/models/index');
 
 exports.findLocation = fbid => {
     return Company.findOne({
@@ -49,9 +49,10 @@ exports.orderDetails = sizeid => {
   );
 };
 
-exports.makeOrder = (fbid, userid, typeid, sizeid, pickuptime)  => {
+exports.makeOrder = (fbid, userid, sizeid, pickuptime)  => {
+  console.log("makeOrder pickuptime =", pickuptime);
   return Order.build({
-    fbid, userid, typeid, sizeid, pickuptime
+    fbid, userid, sizeid, pickuptime
   })
   .save();
   };

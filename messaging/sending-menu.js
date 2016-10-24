@@ -3,8 +3,6 @@
  */
 
 const actions = require('./actions'),
-  // { getMenu, getTypes, getSizes } = require('../sql'),
-  { Company, Item, Type, Size } = require('./../database/models/index'),
   db = require('./../repositories/bot/botQueries'),
   { tunnelURL } = require('../envVariables');
 
@@ -36,7 +34,10 @@ function postbackHandler (payload, userSession) {
         console.log("EXECUTING ORDER");
         // make sure wit.ai doesn't reuse data from a previous order!
         delete userSession.context.pickupTime;
-        userSession.context.order = { typeid: parsedPayload[2], sizeid: parsedPayload[3] };
+        // wit.ai resets the context after sending, so we cant store this data there
+        console.log("session order =", userSession.order);
+        userSession.order = { sizeid: parsedPayload[2] };
+        console.log("IN POSTBACK HANDLER", userSession);
         return res({ text: "what time would you like that? (include am/pm)" });
 
       case 'SIZES':
@@ -114,13 +115,14 @@ function parseProductSizes(sizes) {
     }
   };
   template.attachment.payload.elements = sizes.map(val => {
+    console.log("   val.sizeid =", val.sizeid);
     return {
       title: `${val.size.toUpperCase()} - $${String(val.price)}`,
       buttons: [
         {
           type: 'postback',
           title: 'Order',
-          payload: `ORDER!${val.typeid}/${val.sizeid}`
+          payload: `ORDER!${val.sizeid}`
         },
       ]
     };

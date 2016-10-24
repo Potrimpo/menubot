@@ -47,8 +47,8 @@ exports.postWebhook = (req, res) => {
               }
               else if (text) {
                 console.log("EVENT.MESSAGE =====", event.message);
-                console.log("SessionId: messengerMiddleware", sessionId);
                 console.log("Session: messengerMiddleware", sessions[sessionId]);
+                console.log("all sessions: messengerMiddleware", sessions);
                 return runActions(
                   sessionId,
                   text,

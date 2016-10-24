@@ -30,6 +30,8 @@ const actions = {
     const recipientId = sessions[sessionId].fbUserId;
     const token = sessions[sessionId].access_token;
     if (recipientId) {
+      console.log("order be4 sending =", sessions[sessionId].order);
+      console.log("ALL SESSIONS: actions.send ===", sessions);
       return fbMessage(recipientId, token, message)
         .then(() => null)
         .catch((err) => {
@@ -58,7 +60,6 @@ const actions = {
             if (data) {
               context.productInfo = data.item;
               delete context.itemNotFound;
-              console.log('context:', context);
               return res(context);
             }
             else {
@@ -82,13 +83,15 @@ const actions = {
       console.log("request ==", request);
       const time = chrono.parseDate(request);
       if(time) {
-        console.log("INSERTING INTO DATABASE");
-        return db.makeOrder(fbPageId, fbUserId, context.order.typeid, context.order.sizeid, time)
+        console.log("order time =", time);
+        const order = sessions[fbUserId].order;
+        console.log("order in orderTime =", order);
+        return db.makeOrder(fbPageId, fbUserId, order.sizeid, time)
           .then(data => {
             if (data) {
               delete context.noLuck;
               context.pickupTime = String(chrono.parseDate(String(data.pickuptime)));
-              return db.orderDetails(context.order.sizeid)
+              return db.orderDetails(order.sizeid);
             }
             else {
               context.noLuck = true;
