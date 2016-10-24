@@ -3,8 +3,7 @@
  */
 
 const actions = require('./actions'),
-  db = require('./../repositories/bot/botQueries'),
-  { tunnelURL } = require('../envVariables');
+  db = require('./../repositories/bot/botQueries');
 
 function postbackHandler (payload, userSession) {
   return new Promise(function (res, rej) {
@@ -63,12 +62,7 @@ function postbackHandler (payload, userSession) {
 }
 
 function parseItems(menu) {
-  const template = {
-    attachment: {
-      type:"template",
-      payload: { template_type:"generic" }
-    }
-  };
+  const template = genericTemplate();
   template.attachment.payload.elements = menu.map(val => {
     return {
       title: val.item.toUpperCase(),
@@ -86,12 +80,7 @@ function parseItems(menu) {
 }
 
 function parseProductTypes(types) {
-  const template = {
-    attachment: {
-      type:"template",
-      payload: { template_type:"generic" }
-    }
-  };
+  const template = genericTemplate();
   template.attachment.payload.elements = types.map(val => {
     return {
       title: val.type.toUpperCase(),
@@ -114,14 +103,8 @@ function parseProductTypes(types) {
 }
 
 function parseProductSizes(sizes) {
-  const template = {
-    attachment: {
-      type:"template",
-      payload: { template_type:"generic" }
-    }
-  };
+  const template = genericTemplate();
   template.attachment.payload.elements = sizes.map(val => {
-    console.log("   val.sizeid =", val.sizeid);
     return {
       title: `${val.size.toUpperCase()} - $${String(val.price)}`,
       buttons: [
@@ -137,12 +120,7 @@ function parseProductSizes(sizes) {
 }
 
 function parseOrders(orders) {
-  const template = {
-    attachment: {
-      type:"template",
-      payload: { template_type:"generic" }
-    }
-  };
+  const template = genericTemplate();
   template.attachment.payload.elements = orders.map(val => {
     return {
       title: `${val.size.toUpperCase()} ${val.type.toUpperCase()} ${val.item.toUpperCase()}`,
@@ -156,6 +134,15 @@ function getStarted () {
   return {
     text: "Welcome to the menu.bot experience",
     quickreplies:[ "Menu" ]
+  };
+}
+
+function genericTemplate () {
+  return {
+    attachment: {
+      type:"template",
+      payload: { template_type:"generic" }
+    }
   };
 }
 
