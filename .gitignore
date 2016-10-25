@@ -3,7 +3,5 @@ performanceLogs
 .idea
 *.log
 output.json
-envVariables.js
-config/secrets.js
 public/asyncDist
 icon.png
