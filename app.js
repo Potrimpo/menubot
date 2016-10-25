@@ -192,7 +192,10 @@ sequelize.sync({ force: false })
     app.listen(PORT, serverIP);
     console.log('Listening on :' + PORT + '...');
   })
-  .catch(err => console.error("error syncing sequelize db", err.message || err));
+  .catch(err => {
+    console.log("postgresURL =", postgresURL);
+    console.error("error syncing sequelize db", err)
+  });
 
 
 module.exports = app;
