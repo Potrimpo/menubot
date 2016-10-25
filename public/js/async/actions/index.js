@@ -29,8 +29,10 @@ const toggleLocal = (orderid) => ({
   orderid
 });
 
-export const receiveAndParse = json => ({
-  type: RECEIVE_ORDERS,
+export const receiveAndParse = json => {
+  console.log("returned orders =", json);
+  return {
+    type: RECEIVE_ORDERS,
   orders: json
     .map(order => {
       return {
@@ -38,7 +40,8 @@ export const receiveAndParse = json => ({
         pickuptime: timeParsing(order.pickuptime)
       };
     })
-});
+  };
+};
 
 export const fetchOrders = fbid => {
   return dispatch => {

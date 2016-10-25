@@ -13,12 +13,11 @@ router.param('companyId', (req, res, next, id) => {
   return next();
 });
 
-
-
 router.get('/:companyId', (req, res) => {
   console.log("------ getting company menu -------", req.params.companyId);
   return getMenu(req.params.companyId)
     .then(data => {
+      console.log("This is the object being passed to the .ejs files: " + JSON.stringify(data));
       return res.render('account/company', {
         fbid: data.fbid,
         title: data.name,
@@ -96,14 +95,29 @@ function addItem(req, res, next) {
         .then(data => {
           return next();
         });
+
     case "size":
       return companyRepo.insertSize(req.body)
         .then(() => next());
+
+    case "iprice":
+      return companyRepo.updateIPrice(req.body)
+        .then(() => next());
+
+    case "tprice":
+      return companyRepo.updateTPrice(req.body)
+        .then(() => next());
+
+    case "sprice":
+      return companyRepo.updateSPrice(req.body)
+        .then(() => next());
+
     case "delete":
       console.log("DELETAIN *********");
       console.log("body = ", req.body);
       return companyRepo.deleteItem(req.body)
         .then(() => next());
+
     default:
       return console.error("no case for this update intent", req.body.intent);
     }

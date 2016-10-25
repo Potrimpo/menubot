@@ -13,6 +13,7 @@ const express = require('express'),
 // absolute path is /api/orders/:fbid
 router.route('/orders/:fbid')
   .get(retrieveOrders, (req, res) => {
+    console.log("orders ==", req.orders);
     return res.json(req.orders);
   })
   .post(setOrderComplete, (req, res) => {

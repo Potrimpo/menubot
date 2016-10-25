@@ -85,7 +85,8 @@
   min-height: 125px;
 }
 
-//Experemental changes
+
+//menu classes
 
 .seprator {
   height: 100px;
@@ -104,6 +105,7 @@
 .item-heading-inner-container {
   padding-left: 15px;
   padding-top: 10px;
+  padding-right: 15px;
 }
 
 .item-remove-button {
@@ -123,9 +125,21 @@
   font-size: 30px;
 }
 
+.item-price {
+  float: right;
+  font-size: 30px;
+  color: grey;
+  text-decoration: line-through;
+}
+
+.item-price-input {
+  margin-top:-10px;
+}
+
 .item-content-inner-container {
   margin-left: 16px;
   margin-right: 16px;
+
 }
 
 .item-input-inner-container {
@@ -143,8 +157,9 @@
 }
 
 .type-heading-inner-container {
-  padding-left: 25px;
+  padding-left: 15px;
   padding-top: 10px;
+  padding-right: 15px;
 }
 
 .type-remove-button {
@@ -185,8 +200,15 @@
 }
 
 .size-heading-inner-container {
-  padding-left: 25px;
+  padding-left: 12px;
   padding-top: 10px;
+  padding-right: 15px;
+}
+
+.new-size-heading-inner-container {
+  padding-left: 30px;
+  padding-top: 10px;
+  padding-right: 15px;
 }
 
 .size-remove-button {
@@ -215,3 +237,51 @@
   padding-left: 11px;
   margin-bottom: 11px;
 }
+
+
+//Tooltip css
+
+#tooltip
+{
+    text-align: center;
+    color: #fff;
+    background: #111;
+    position: absolute;
+    z-index: 100;
+    padding: 15px;
+}
+
+    #tooltip:after /* triangle decoration */
+    {
+        width: 0;
+        height: 0;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-top: 10px solid #111;
+        content: '';
+        position: absolute;
+        left: 50%;
+        bottom: -10px;
+        margin-left: -10px;
+    }
+
+        #tooltip.top:after
+        {
+            border-top-color: transparent;
+            border-bottom: 10px solid #111;
+            top: -20px;
+            bottom: auto;
+        }
+
+        #tooltip.left:after
+        {
+            left: 10px;
+            margin: 0;
+        }
+
+        #tooltip.right:after
+        {
+            right: 10px;
+            left: auto;
+            margin: 0;
+        }

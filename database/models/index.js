@@ -106,6 +106,9 @@ const Item = sequelize.define('Item', {
   photo: {
     type: Sequelize.STRING
   },
+  price: {
+    type: Sequelize.DECIMAL
+  }
 }, {
   tableName: 'items',
   timestamps: false,
@@ -131,6 +134,9 @@ const Type = sequelize.define('Type', {
   photo: {
     type: Sequelize.STRING
   },
+  price: {
+    type: Sequelize.DECIMAL
+  }
 }, {
   tableName: 'types',
   timestamps: false,
@@ -154,8 +160,7 @@ const Size = sequelize.define('Size', {
     type: Sequelize.STRING
   },
   price: {
-    type: Sequelize.DECIMAL,
-    allowNull: false
+    type: Sequelize.DECIMAL
   }
 }, {
   tableName: 'sizes',

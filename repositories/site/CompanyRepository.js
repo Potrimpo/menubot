@@ -15,27 +15,30 @@ exports.findCompany = (id) => Company.findById(id);
 
 exports.getCompanyMenu = id => {
   return sequelize.query(
-    "SELECT companies.name, items.item, items.itemid, items.photo FROM companies" +
+    "SELECT companies.name, items.item, items.itemid, items.photo, items.price FROM companies" +
     " INNER JOIN items ON companies.fbid = items.fbid" +
-    " WHERE companies.fbid = $1",
+    " WHERE companies.fbid = $1" +
+    " ORDER BY itemid ASC",
     { bind: [id], type: sequelize.QueryTypes.SELECT }
   );
 };
 
 exports.getMenuTypes = itemids => {
   return sequelize.query(
-    "SELECT types.itemid, type, typeid, types.photo FROM items" +
+    "SELECT types.itemid, type, typeid, types.photo, types.price FROM items" +
     " INNER JOIN types ON items.itemid = types.itemid" +
-    " WHERE items.itemid IN (:itemids)",
+    " WHERE items.itemid IN (:itemids)" +
+    " ORDER BY typeid ASC",
     { replacements: { itemids }, type: sequelize.QueryTypes.SELECT }
   );
 };
 
 exports.getMenuSizes = typeids => {
   return sequelize.query(
-    "SELECT sizes.typeid, size, sizeid, price FROM types" +
+    "SELECT sizes.typeid, size, sizeid, sizes.price FROM types" +
     " INNER JOIN sizes ON types.typeid = sizes.typeid" +
-    " WHERE types.typeid IN (:typeids)",
+    " WHERE types.typeid IN (:typeids)" +
+    " ORDER BY sizeid ASC",
     { replacements: { typeids }, type: sequelize.QueryTypes.SELECT }
   );
 };
@@ -71,9 +74,36 @@ exports.insertType = data => {
 
 exports.insertSize = data => {
   return sequelize.query(
-    "INSERT INTO sizes (typeid, size, price)" +
-    " VALUES (:typeid, :size, :price)",
-    { replacements: { typeid: data.parentId, size: data.size, price: data.price }, type: sequelize.QueryTypes.INSERT }
+    "INSERT INTO sizes (typeid, size)" +
+    " VALUES (:typeid, :size)",
+    { replacements: { typeid: data.parentId, size: data.size}, type: sequelize.QueryTypes.INSERT }
+  );
+};
+
+exports.updateIPrice = data => {
+  return sequelize.query(
+    "UPDATE ONLY items" +
+    " SET price = :price" +
+    " WHERE itemid = :itemid",
+    { replacements: { itemid: data.parentId, price: data.price}, type: sequelize.QueryTypes.UPDATE }
+  );
+};
+
+exports.updateTPrice = data => {
+  return sequelize.query(
+    "UPDATE ONLY types" +
+    " SET price = :price" +
+    " WHERE typeid = :typeid",
+    { replacements: { typeid: data.parentId, price: data.price}, type: sequelize.QueryTypes.UPDATE }
+  );
+};
+
+exports.updateSPrice = data => {
+  return sequelize.query(
+    "UPDATE ONLY sizes" +
+    " SET price = :price" +
+    " WHERE sizeid = :sizeid",
+    { replacements: { sizeid: data.parentId, price: data.price}, type: sequelize.QueryTypes.UPDATE }
   );
 };
 
