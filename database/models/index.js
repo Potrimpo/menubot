@@ -1,8 +1,8 @@
 const Sequelize = require('sequelize'),
-  { postgresURL, sessionTable } = require('../../envVariables'),
+  { postgresURL, postgresPassword, sessionTable } = require('../../envVariables'),
   bcrypt = require('bcrypt-nodejs');
 
-const sequelize = new Sequelize(postgresURL, {
+const sequelize = new Sequelize(postgresURL, 'postgres', postgresPassword, {
   maxConcurrentQueries: 100,
   dialect: 'postgres',
 });
