@@ -27,7 +27,7 @@ const { sequelize } = require('./database/models/index'),
 
 // API keys and Passport configuration.
 const secrets = require('./config/secrets'),
-  { PORT, FB_APP_SECRET, sessionTable, postgresURL } = require('./envVariables'),
+  { PORT, FB_APP_SECRET, sessionTable, postgresURL, serverIP } = require('./envVariables'),
   passportConf = require('./config/passport');
 
 // console.log(`/webhook is accepting Verify Token: "${FB_VERIFY_TOKEN}"`);
@@ -189,7 +189,7 @@ function verifyRequestSignature(req, res, buf) {
 sequelize.sync({ force: false })
   .then(() => {
     console.log("sequelize is synced");
-    app.listen(PORT);
+    app.listen(PORT, serverIP);
     console.log('Listening on :' + PORT + '...');
   })
   .catch(err => console.error("error syncing sequelize db", err.message || err));

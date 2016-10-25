@@ -6,6 +6,7 @@ module.exports = {
 
   // link to postgres database
   postgresURL: process.env.postgresURL || 'postgres://localhost:5432/menubot',
+  serverIP: process.env.serverIP || '',
   sessionTable: 'session',
 
   WIT_TOKEN: 'U2XQR7JKYCAN44AECAEOTA5I2DIASK23',
