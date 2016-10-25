@@ -46,7 +46,7 @@ function postbackHandler (payload, userSession) {
 
       case 'MY_ORDERS':
         console.log("--> looking at my orders <--");
-        return db.getOrders(fbUserId)
+        return db.ordersbyUserid(fbUserId)
           .then(orders => res(parseOrders(orders)))
           .catch(err => console.error(`Error in ${parsedPayload[1]} postback`, err));
 

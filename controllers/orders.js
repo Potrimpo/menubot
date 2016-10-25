@@ -2,11 +2,11 @@
  * Created by lewis.knoxstreader on 3/10/16.
  */
 
-const { getOrders, orderComplete } = require('../repositories/site/CompanyRepository');
+const { ordersByFbid, orderComplete } = require('../repositories/site/CompanyRepository');
 
 exports.retrieveOrders = (req, res, next) => {
   const today = dateParsing();
-  return getOrders(req.params.fbid, today)
+  return ordersByFbid(req.params.fbid, today)
     .then(data => {
       req.orders = data;
       console.log("data ====", data);

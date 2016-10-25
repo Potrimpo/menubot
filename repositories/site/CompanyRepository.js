@@ -147,7 +147,7 @@ exports.deleteItem = data => {
 
 };
 
-exports.getOrders = (fbid, today) => {
+exports.ordersByFbid = (fbid, today) => {
   return sequelize.query(
     "SELECT * FROM orders" +
     " INNER JOIN sizes ON orders.sizeid = sizes.sizeid" +

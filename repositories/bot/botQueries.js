@@ -57,7 +57,7 @@ exports.makeOrder = (fbid, userid, sizeid, pickuptime)  => {
   .save();
 };
 
-exports.getOrders = userid => {
+exports.ordersbyUserid = userid => {
   return sequelize.query(
     "SELECT * FROM orders" +
     " INNER JOIN sizes ON orders.sizeid = sizes.sizeid" +
