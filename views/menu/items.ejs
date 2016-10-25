@@ -3,8 +3,50 @@
       <div class="row item-outer-container">
         <div class="col-xs-12 ">
           <div class="row item-heading-inner-container">
-            <button type="button" name="item-<%= items[i].itemid %>" class="item-remove-button"><i class="fa fa-trash-o item-remove-button-glyph" aria-hidden="true"></i></button>
-            <p class="item-title"><%= items[i].item %></p>
+            <div class="col-xs-6">
+              <button type="button" name="item-<%= items[i].itemid %>" class="item-remove-button"><i class="fa fa-trash-o item-remove-button-glyph" aria-hidden="true"></i></button>
+              <p class="item-title"><%= items[i].item %></p>
+            </div>
+
+            <%
+            var hasTypeChild = false;
+             for (var x = 0; x < types.length; x++) {
+               if (types[x].itemid == items[i].itemid) {
+                 hasTypeChild = true;
+                 break;
+               }
+             }
+
+             if (hasTypeChild) { %>
+              <div class="col-xs-6">
+                <form style="float:right;" class="form-inline">
+                  <div class="form-group-lg" >
+
+                    <abbr rel="tooltip" title="The price of this item is no longer changed here. It is now set in it's types.">
+                      <div class="input-group">
+                        <div class="input-group-addon">$</div>
+                        <!-- This tag needs to remain one line, no indentation allowed -->
+                        <input name="price" type="text" <% if (items[i].price == null) { %> value="" <% } else { %> value="<%= items[i].price %>" <% } %> size="10" class="form-control" placeholder="Price" disabled>
+                      </div>
+                    </abbr>
+
+                  </div>
+                </form>
+              </div>
+            <% } else { %>
+              <div class="col-xs-6">
+                <form id="new-iprice-<%= items[i].itemid %>" name="<%= items[i].itemid %>" style="float:right;" class="form-inline">
+                  <div class="form-group-lg" >
+                    <div class="input-group">
+                      <div class="input-group-addon">$</div>
+                      <input name="price" type="text" <% if (items[i].price == null) { %> value="" <% } else { %> value="<%= items[i].price %>" <% } %> size="10" class="form-control" placeholder="Price">
+                    </div>
+                  </div>
+                </form>
+              </div>
+            <% } %>
+
+            <div style="clear:both;"></div>
           </div>
           <div class="row item-content-inner-container">
             <img src="<%= items[i].photo ? items[i].photo : "" %>" class="thumbnail menu-photo" />

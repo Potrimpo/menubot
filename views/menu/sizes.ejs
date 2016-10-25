@@ -6,8 +6,24 @@
           <div class="col-xs-10">
             <div class="row size-outer-container">
               <div class="row size-heading-inner-container">
-                <button type="button" name="size-<%= sizes[y].sizeid %>" class="size-remove-button"><i class="fa fa-trash-o size-remove-button-glyph" aria-hidden="true"></i></button>
-                <p class="size-title"><%= sizes[y].size %>: $<%= sizes[y].price %></p>
+
+                <div class="col-xs-6">
+                  <button type="button" name="size-<%= sizes[y].sizeid %>" class="size-remove-button"><i class="fa fa-trash-o size-remove-button-glyph" aria-hidden="true"></i></button>
+                  <p class="size-title"><%= sizes[y].size %></p>
+                </div>
+
+                <div class="col-xs-6">
+                  <form id="new-sprice-<%= sizes[y].sizeid %>" name="<%= sizes[y].sizeid %>" style="float:right;" class="form-inline">
+                    <div class="form-group" >
+                      <div class="input-group">
+                        <div class="input-group-addon">$</div>
+                        <!-- This tag needs to remain one line, no indentation allowed -->
+                        <input name="price" type="text" <% if (sizes[y].price === null) { %> value="" <% } else { %> value="<%= sizes[y].price %>" <% } %> size="10" class="form-control" placeholder="Price">
+                      </div>
+                    </div>
+                  </form>
+                </div>
+
               </div>
             </div>
           </div>
