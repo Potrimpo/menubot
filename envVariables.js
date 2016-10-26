@@ -5,7 +5,7 @@ module.exports = {
   tunnelURL: 'https://menubot.ngrok.io', // use https && no slash at end (~.com vs ~.com/)
 
   // link to postgres database
-  postgresURL: process.env.postgresURL || 'menubot',
+  postgresURL: process.env.postgresURL || 'localhost',
   postgresPassword: '45FeistyEggsFearY2k',
 
   serverIP: process.env.serverIP || 'localhost',
