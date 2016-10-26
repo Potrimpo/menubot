@@ -2,7 +2,7 @@ const Sequelize = require('sequelize'),
   { postgresURL, serverIP, postgresPassword, sessionTable } = require('../../envVariables'),
   bcrypt = require('bcrypt-nodejs');
 
-const sequelize = new Sequelize(`postgres://${postgresPassword}@${postgresURL}:5432/menubot`, {
+const sequelize = new Sequelize(`postgres://postgres:${postgresPassword}@${postgresURL}:5432/menubot`, {
   dialect: 'postgres',
   maxConcurrentQueries: 100,
 });
