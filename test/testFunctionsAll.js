@@ -16,5 +16,6 @@ exports.dateParsing = () => {
     mm='0'+mm
   }
 
-  return `${yyyy}-${mm}-${dd}`;
+  // start of the day (00's) & nz timezone (+13)
+  return `${yyyy}-${mm}-${dd} 00:00:00+13`;
 };

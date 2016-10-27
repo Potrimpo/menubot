@@ -72,8 +72,18 @@ exports.ordersbyUserid = userid => {
 // only used in tests
 exports.findOrder = (fbid, userid, sizeid) => {
   return Order.findOne({
-    attributes: ['pickuptime'],
+    attributes: ['orderid', 'pickuptime', 'pending'],
     where: {fbid, userid, sizeid}
   })
   .catch(err => console.error("error in Order.findOrder:", err.message || err));
+};
+
+exports.findOrderById = orderid => Order.findById(orderid);
+
+exports.deleteOrder = orderid => {
+  return sequelize.query(
+    "DELETE FROM orders" +
+    " WHERE orderid = :orderid",
+    { replacements: {orderid}, type: sequelize.QueryTypes.DELETE }
+  );
 };

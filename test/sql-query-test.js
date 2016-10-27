@@ -4,92 +4,60 @@
 const chrono = require('chrono-node'),
   { testPageID, senderID } = require('../envVariables'),
   companyRepo = require('../repositories/site/CompanyRepository'),
+  botQueries = require('../repositories/bot/botQueries'),
   { dateParsing } = require('./testFunctionsAll'),
   expect = require('chai').expect;
 
 describe('testing database queries', function() {
-  this.timeout(1000);
+  this.timeout(3000);
+  afterEach(function (done) { setTimeout(done, 1000) });
 
-  it("getOrders testing", function() {
-    const today = dateParsing();
-    return companyRepo.getOrders(testPageID, today)
+  let globalOrders = [];
+
+  before(function () {
+    console.log("SETTING UP SOME ORDERS");
+    const time = chrono.parseDate('10am');
+    const makeOrder1 = botQueries.makeOrder(testPageID, senderID, 2, time),
+      makeOrder2 = botQueries.makeOrder(testPageID, senderID, 2, time);
+
+    globalOrders.push(makeOrder1, makeOrder2);
+    return Promise.all(globalOrders).then(data => globalOrders = data);
+  });
+
+  after(function () {
+    console.log("CLEANIGN UP");
+    return Promise.all(
+      globalOrders.map(val => botQueries.deleteOrder(val.orderid))
+    );
+  });
+
+  it("makeOrder testing", function() {
+    const time = chrono.parseDate('4pm');
+    return botQueries.makeOrder(testPageID, senderID, 1, time)
+      .then(function () {
+        return botQueries.findOrder(testPageID, senderID, 1);
+      })
       .then(function (data) {
-        console.log("TEST DATA == ", data);
         expect(data).to.not.equal(null);
-        expect(data[0]).to.contain.key("orderid");
-        // expect(data).to.have.property('itemid', 2);
+        expect(data.pending).to.equal(true);
+        const orderid = data.orderid;
+        return botQueries.deleteOrder(orderid);
+      })
+      .then(function (data) {
+        console.log("data from deleteOrder", data);
       });
   });
 
-  // it("findItem returns null", function() {
-  //   return findItem(testPageID, 'rocks')
-  //     .then(function (data) {
-  //       expect(data).to.equal(null);
-  //     });
-  // });
-
-  // it("getMenu returns multiple items", function () {
-  //   return getMenu(testPageID)
-  //     .then(function(data) {
-  //       expect(data).to.exist;
-  //       if(data[0]) {
-  //         expect(data[0]).to.contain.key("item");
-  //         expect(data[0]).to.contain.key("itemid");
-  //       } else {
-  //         expect(data).to.contain.key("item");
-  //         expect(data).to.contain.key("itemid");
-  //       }
-  //     });
-  // });
-  //
-  // it("getLocation returns valid string", function () {
-  //   return getLocation(testPageID)
-  //     .then(function(data) {
-  //       expect(data).to.contain.key("location");
-  //       expect(data.location).to.be.a("string");
-  //       expect(data.location.length).to.be.greaterThan(0);
-  //     });
-  // });
-  //
-  // it("getTypes returns multiple values", function () {
-  //   return findItem(testPageID, 'sandwiches')
-  //     .then(function (data) {
-  //       return getTypes(data.itemid);
-  //     })
-  //     .then(function (data) {
-  //       expect(data).to.exist;
-  //       if(data[0]) {
-  //         expect(data[0]).to.contain.key("type");
-  //         expect(data[0]).to.contain.key("typeid");
-  //       } else {
-  //         expect(data).to.contain.key("type");
-  //         expect(data).to.contain.key("typeid");
-  //       }
-  //     });
-  // });
-  //
-  // it("makeOrder inserts into orders table", function () {
-  //   const witTime = '2016-09-12T08:25:00.000-07:00',
-  //     queryTime = 'september 12th 8:25am';
-  //   return makeOrder(testPageID, senderID, 2, 2, witTime)
-  //     .then(function (data) {
-  //       // Chrono can't deal with datetime values from wit.ai
-  //       const parsedQueryTime = chrono.parseDate(queryTime),
-  //         parsedReturnedTime = chrono.parseDate(String(data.pickuptime));
-  //       expect(data).to.exist;
-  //       expect(data).to.contain.key("pickuptime");
-  //       expect(String(parsedReturnedTime)).to.equal(String(parsedQueryTime));
-  //     });
-  // });
-  //
-  // it("orderDetails retrieves data from specific order", function () {
-  //   const sizeid = 1;
-  //   return orderDetails(sizeid)
-  //     .then(function (data) {
-  //       expect(data).to.exist;
-  //       expect(data).to.contain.all.keys("size", "type", "item", "itemid", "typeid", "sizeid");
-  //       expect(data).to.have.property("size", "large");
-  //     })
-  // })
+  //requires multiple orders already in database
+  it("ordersByFbid testing", function() {
+    const today = dateParsing();
+    return companyRepo.ordersByFbid(testPageID, today)
+      .then(function (data) {
+        expect(data).to.not.equal(null);
+        // [ 'to.contain.all' means can have more ] [ 'to.have.all' means has these and only these ]
+        expect(data[0]).to.contain.all.keys("orderid", "price", "fbid", "userid");
+        expect(data[0]).to.have.property('fbid', testPageID);
+      });
+  });
 
 });
