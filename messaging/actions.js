@@ -83,7 +83,6 @@ const actions = {
       console.log("request ==", request);
       const time = chrono.parseDate(request);
       if(time) {
-        console.log("order time =", time);
         const order = sessions[fbUserId].order;
         console.log("order in orderTime =", order);
         return db.makeOrder(fbPageId, fbUserId, time, order)
@@ -91,9 +90,7 @@ const actions = {
             if (data) {
               delete context.noLuck;
               context.pickupTime = String(chrono.parseDate(String(data.pickuptime)));
-              console.log("order success i thinkg");
-              return;
-              return db.orderDetails(order.sizeid);
+              return db.orderDetails(data.orderid);
             }
             else {
               context.noLuck = true;

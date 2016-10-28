@@ -25,12 +25,12 @@ function postbackHandler (payload, userSession) {
 
       case 'DETAILS':
         return db.getTypes(payload.itemid)
-          .then(types => res(parseProductTypes(types)) )
+          .then(types => res(parseProductTypes(types, payload.itemid)) )
           .catch(err => console.error(`Error in postback:`, err));
 
       case 'SIZES':
         return db.getSizes(payload.typeid)
-          .then(sizes => res(parseProductSizes(sizes)) )
+          .then(sizes => res(parseProductSizes(sizes, payload.typeid)) )
           .catch(err => console.error(`Error in postback:`, err));
 
       case 'ORDER':
@@ -86,7 +86,7 @@ function parseItems(menu) {
   return template;
 }
 
-function parseProductTypes(types) {
+function parseProductTypes(types, itemid) {
   const template = genericTemplate();
   template.attachment.payload.elements = types.map(val => {
     const types = {
@@ -97,6 +97,7 @@ function parseProductTypes(types) {
     if (val.type_price) {
       const order = {
         intent: 'ORDER',
+        itemid,
         typeid: val.typeid
       };
       types.title = types.title.concat(` - $${val.type_price}`);
@@ -113,11 +114,12 @@ function parseProductTypes(types) {
   return template;
 }
 
-function parseProductSizes(sizes) {
+function parseProductSizes(sizes, typeid) {
   const template = genericTemplate();
   template.attachment.payload.elements = sizes.map(val => {
     const order = {
       intent: 'ORDER',
+      typeid,
       sizeid: val.sizeid
     };
     return {

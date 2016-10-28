@@ -39,13 +39,14 @@ exports.getSizes = typeid => {
   })
 };
 
-exports.orderDetails = sizeid => {
+exports.orderDetails = orderid => {
   return sequelize.query(
-    "SELECT sizes.sizeid, sizes.typeid, types.itemid, sizes.size, type, item" +
-    " FROM sizes INNER JOIN types ON sizes.typeid=types.typeid" +
-    " INNER JOIN items ON types.itemid=items.itemid" +
-    " WHERE sizes.sizeid=$1",
-    { bind: [sizeid], type: sequelize.QueryTypes.SELECT }
+    "SELECT * FROM orders AS o" +
+    " LEFT OUTER JOIN sizes ON o.sizeid=sizes.sizeid" +
+    " LEFT OUTER JOIN types ON o.typeid=types.typeid" +
+    " LEFT OUTER JOIN items ON o.itemid=items.itemid" +
+    " WHERE o.orderid = :orderid",
+    { replacements: { orderid }, type: sequelize.QueryTypes.SELECT }
   );
 };
 

@@ -10,11 +10,14 @@ function runActions (sessionId, request, context) {
   return actions.orderTime(sessions[sessionId], request)
     .then(ctx => {
 
-      if (ctx.pickupTime && ctx.item && ctx.type && ctx.size && !ctx.noLuck) {
+      if (ctx.pickupTime && (ctx.item || ctx.type || ctx.size) && !ctx.noLuck) {
         const success = "Success!";
         return actions.send({sessionId}, {text: success})
           .then(() => {
-            const orderResponse = `Order for one ${ctx.size} ${ctx.type} ${ctx.item} @ ${ctx.pickupTime}`;
+            let orderResponse;
+            if (ctx.size) orderResponse = `Order for one ${ctx.size} ${ctx.type} ${ctx.item} @ ${ctx.pickupTime}`;
+            else if (ctx.type) orderResponse = `Order for one ${ctx.type} ${ctx.item} @ ${ctx.pickupTime}`;
+            else orderResponse = `Order for one ${ctx.item} @ ${ctx.pickupTime}`;
             return actions.send({sessionId}, {text: orderResponse});
           })
       }
