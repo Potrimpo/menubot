@@ -232,6 +232,7 @@ Size.belongsTo(Type, { foreignKey: 'typeid', onDelete: 'cascade' });
 
 Order.belongsTo(Size, { foreignKey: 'sizeid', onDelete: 'cascade' });
 Order.belongsTo(Type, { foreignKey: 'typeid', onDelete: 'cascade' });
+Order.belongsTo(Item, { foreignKey: 'itemid', onDelete: 'cascade' });
 Order.belongsTo(Company, { foreignKey: 'fbid', onDelete: 'cascade' });
 
 

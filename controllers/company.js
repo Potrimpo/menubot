@@ -69,7 +69,7 @@ function fullMenu (fbid, data) {
 
 
 // can't handle changing photos
-router.post('/:companyId', addItem, (req, res) => {
+router.post('/:companyId', add_to_menu, (req, res) => {
   console.log("----- POST RECEIVED ------", req.body);
   return res.sendStatus(200);
 });
@@ -82,23 +82,21 @@ router.get('/create/:companyId', (req, res) => {
     });
 });
 
-function addItem(req, res, next) {
+function add_to_menu(req, res, next) {
   console.log(req.body);
   switch (req.body.intent) {
     case "item":
       return companyRepo.insertMenuVal(req.body)
-        .then(data => {
-          return next();
-        });
+        .then(next());
     case "type":
-      return companyRepo.insertType(req.body)
-        .then(data => {
-          return next();
-        });
+      return companyRepo.deleteItemPrice(req.body)
+        .then(companyRepo.insertType(req.body))
+        .then(next());
 
     case "size":
-      return companyRepo.insertSize(req.body)
-        .then(() => next());
+      return companyRepo.deleteTypePrice(req.body)
+        .then(companyRepo.insertSize(req.body))
+        .then(next());
 
     case "iprice":
       return companyRepo.updateIPrice(req.body)

@@ -122,10 +122,23 @@ function parseProductSizes(sizes) {
 function parseOrders(orders) {
   const template = genericTemplate();
   template.attachment.payload.elements = orders.map(val => {
-    return {
-      title: `${val.size.toUpperCase()} ${val.type.toUpperCase()} ${val.item.toUpperCase()}`,
-      subtitle: `$${val.price}`
-    };
+    console.log("val -=", val);
+    if (val.size) {
+      return {
+        title: `${val.size.toUpperCase()} ${val.type.toUpperCase()} ${val.item.toUpperCase()}`,
+        subtitle: `$${val.size_price}`
+      };
+    } else if (val.type) {
+      return {
+        title: `${val.type.toUpperCase()} ${val.item.toUpperCase()}`,
+        subtitle: `$${val.type_price}`
+      }
+    } else {
+      return {
+        title: `${val.item.toUpperCase()}`,
+        subtitle: `$${val.item_price}`
+      }
+    }
   });
   return template;
 }

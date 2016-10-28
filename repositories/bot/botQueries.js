@@ -34,7 +34,7 @@ exports.getTypes = itemid => {
 
 exports.getSizes = typeid => {
   return Size.findAll({
-    attributes: ['typeid', 'sizeid', 'size', 'price'],
+    attributes: ['typeid', 'sizeid', 'size', 'size_price'],
     where: { typeid }
   })
   };
@@ -59,12 +59,12 @@ exports.makeOrder = (fbid, userid, sizeid, pickuptime)  => {
 
 exports.ordersbyUserid = userid => {
   return sequelize.query(
-    "SELECT * FROM orders" +
-    " INNER JOIN sizes ON orders.sizeid = sizes.sizeid" +
-    " INNER JOIN types ON sizes.typeid = types.typeid" +
-    " INNER JOIN items ON types.itemid = items.itemid" +
-    " WHERE orders.userid = :userid AND pending = true" +
-    " ORDER BY orders.pickuptime ASC",
+    "SELECT * FROM orders AS o" +
+    " LEFT OUTER JOIN sizes ON o.sizeid = sizes.sizeid" +
+    " LEFT OUTER JOIN types ON o.typeid = types.typeid" +
+    " LEFT OUTER JOIN items ON o.itemid = items.itemid" +
+    " WHERE o.userid = :userid AND pending = true" +
+    " ORDER BY o.pickuptime ASC",
     { replacements: { userid }, type: sequelize.QueryTypes.SELECT }
   );
 };
