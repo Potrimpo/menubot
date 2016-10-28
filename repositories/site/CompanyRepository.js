@@ -167,14 +167,14 @@ exports.deleteItem = data => {
 
 exports.ordersByFbid = (fbid, today) => {
   return sequelize.query(
-    "SELECT * FROM orders" +
-    " INNER JOIN sizes ON orders.sizeid = sizes.sizeid" +
-    " INNER JOIN types ON sizes.typeid = types.typeid" +
-    " INNER JOIN items ON types.itemid = items.itemid" +
-    " WHERE orders.fbid = :fbid AND pickuptime >= :today" +
-    " ORDER BY orders.pickuptime ASC",
+    "SELECT * FROM orders AS o" +
+    " LEFT OUTER JOIN sizes ON o.sizeid = sizes.sizeid" +
+    " LEFT OUTER JOIN types ON o.typeid = types.typeid" +
+    " LEFT OUTER JOIN items ON o.itemid = items.itemid" +
+    " WHERE o.fbid = :fbid AND o.pickuptime >= :today" +
+    " ORDER BY o.pickuptime ASC",
     { replacements: {fbid, today}, type: sequelize.QueryTypes.SELECT }
-  );
+  ).catch(err => console.error("error getting orders in sql", err));
 };
 
 // exports.otherOrdersByFbid = (fbid, today) => {
