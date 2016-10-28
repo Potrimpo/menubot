@@ -62,20 +62,10 @@ function postbackHandler (payload, userSession) {
 function parseItems(menu) {
   const template = genericTemplate();
   template.attachment.payload.elements = menu.map(val => {
-    const details = {
-      intent: 'DETAILS',
-      itemid: val.itemid
-    };
     const items = {
       title: `${val.item.toUpperCase()}`,
       image_url: val.photo,
-      buttons: [
-        {
-          type: 'postback',
-          title: 'Details',
-          payload: JSON.stringify(details)
-        }
-      ]
+      buttons: []
     };
     if (val.item_price) {
       const order = {
@@ -84,7 +74,13 @@ function parseItems(menu) {
       };
       items.title = items.title.concat(` - $${val.item_price}`);
       items.buttons.push({ type: 'postback', title: 'Order', payload: JSON.stringify(order) });
+      return items;
     }
+    const details = {
+      intent: 'DETAILS',
+      itemid: val.itemid
+    };
+    items.buttons.push({ type: 'postback', title: 'Details', payload: JSON.stringify(details) });
     return items;
   });
   return template;
@@ -93,20 +89,10 @@ function parseItems(menu) {
 function parseProductTypes(types) {
   const template = genericTemplate();
   template.attachment.payload.elements = types.map(val => {
-    const sizes = {
-      intent: 'SIZES',
-      typeid: val.typeid
-    };
     const types = {
       title: val.type.toUpperCase(),
       image_url: val.photo,
-      buttons: [
-        {
-          type: 'postback',
-          title: 'Sizes',
-          payload: JSON.stringify(sizes)
-        },
-      ]
+      buttons: []
     };
     if (val.type_price) {
       const order = {
@@ -115,8 +101,13 @@ function parseProductTypes(types) {
       };
       types.title = types.title.concat(` - $${val.type_price}`);
       types.buttons.push({ type: 'postback', title: 'Order', payload: JSON.stringify(order) });
+      return types;
     }
-    console.log("     -----> types.title =", types.title);
+    const sizes = {
+      intent: 'SIZES',
+      typeid: val.typeid
+    };
+    types.buttons.push({ type: 'postback', title: 'Sizes', payload: JSON.stringify(sizes) });
     return types;
   });
   return template;
