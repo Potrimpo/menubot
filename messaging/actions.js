@@ -80,11 +80,11 @@ const actions = {
   // specify the time of an order
   orderTime({context, fbPageId, fbUserId }, request) {
     return new Promise((res, rej) => {
+      context = context ? context : {};
       console.log("request ==", request);
       const time = chrono.parseDate(request);
       if(time) {
         const order = sessions[fbUserId].order;
-        console.log("order in orderTime =", order);
         return db.makeOrder(fbPageId, fbUserId, time, order)
           .then(data => {
             if (data) {
