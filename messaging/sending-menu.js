@@ -126,7 +126,7 @@ function parseProductSizes(sizes, typeid, itemid) {
       sizeid: val.sizeid
     };
     return {
-      title: `${val.size.toUpperCase()}`,
+      title: `${val.size.toUpperCase()} - $${val.size_price}`,
       buttons: [
         {
           type: 'postback',
@@ -146,17 +146,17 @@ function parseOrders(orders) {
     if (val.size) {
       return {
         title: `${val.size.toUpperCase()} ${val.type.toUpperCase()} ${val.item.toUpperCase()}`,
-        subtitle: `$${val.size_price}`
+        subtitle: `$${val.size_price} @ ${val.pickuptime}`
       };
     } else if (val.type) {
       return {
         title: `${val.type.toUpperCase()} ${val.item.toUpperCase()}`,
-        subtitle: `$${val.type_price}`
+        subtitle: `$${val.type_price} @ ${val.pickuptime}`
       }
     } else {
       return {
         title: `${val.item.toUpperCase()}`,
-        subtitle: `$${val.item_price}`
+        subtitle: `$${val.item_price} @ ${val.pickuptime}`
       }
     }
   });

@@ -177,34 +177,6 @@ exports.ordersByFbid = (fbid, today) => {
   ).catch(err => console.error("error getting orders in sql", err));
 };
 
-// exports.otherOrdersByFbid = (fbid, today) => {
-//   return Order.findAll({
-//     attributes: ['size', 'sizeid', 'type', 'typeid'],
-//     include: [
-//       {
-//         model: Size,
-//         where: { sizeid: sequelize.col('Order.sizeid') },
-//         include: [
-//           {
-//             model: Type,
-//             where: { typeid: sequelize.col('Size.typeid') },
-//             include: [
-//               {
-//                 model: Item,
-//                 where: { itemid: sequelize.col('Type.itemid') }
-//               },
-//             ]
-//           },
-//         ]
-//       },
-//     ],
-//     where: {
-//       fbid,
-//       pickuptime: { $gte: today }
-//     }
-//   });
-// };
-
 exports.orderComplete = orderid => {
   return sequelize.query(
     "UPDATE orders" +
