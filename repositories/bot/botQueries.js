@@ -37,7 +37,7 @@ exports.getSizes = typeid => {
     attributes: ['typeid', 'sizeid', 'size', 'size_price'],
     where: { typeid }
   })
-  };
+};
 
 exports.orderDetails = sizeid => {
   return sequelize.query(
@@ -49,10 +49,10 @@ exports.orderDetails = sizeid => {
   );
 };
 
-exports.makeOrder = (fbid, userid, sizeid, pickuptime)  => {
+exports.makeOrder = (fbid, userid, pickuptime, { itemid, typeid, sizeid })  => {
   console.log("makeOrder pickuptime =", pickuptime);
   return Order.build({
-    fbid, userid, sizeid, pickuptime
+    fbid, userid, pickuptime, itemid, typeid, sizeid
   })
   .save();
 };

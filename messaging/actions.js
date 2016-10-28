@@ -86,11 +86,13 @@ const actions = {
         console.log("order time =", time);
         const order = sessions[fbUserId].order;
         console.log("order in orderTime =", order);
-        return db.makeOrder(fbPageId, fbUserId, order.sizeid, time)
+        return db.makeOrder(fbPageId, fbUserId, time, order)
           .then(data => {
             if (data) {
               delete context.noLuck;
               context.pickupTime = String(chrono.parseDate(String(data.pickuptime)));
+              console.log("order success i thinkg");
+              return;
               return db.orderDetails(order.sizeid);
             }
             else {

@@ -38,7 +38,7 @@ function postbackHandler (payload, userSession) {
         // make sure wit.ai doesn't reuse data from a previous order!
         delete userSession.context.pickupTime;
         // wit.ai resets the context after sending, so we cant store this data there
-        userSession.order = { sizeid: parsedPayload[2] };
+        userSession.order = payload;
         console.log("IN POSTBACK HANDLER", userSession);
         return res({ text: "what time would you like that? (include am/pm)" });
 
@@ -95,7 +95,7 @@ function parseProductTypes(types) {
   template.attachment.payload.elements = types.map(val => {
     const sizes = {
       intent: 'SIZES',
-      sizeid: val.sizeid
+      typeid: val.typeid
     };
     const types = {
       title: val.type.toUpperCase(),
@@ -110,9 +110,8 @@ function parseProductTypes(types) {
     };
     if (val.type_price) {
       const order = {
-        type: 'postback',
-        title: 'Order',
-        payload: `ORDER!${val.typeid}`
+        intent: 'ORDER',
+        typeid: val.typeid
       };
       types.title = types.title.concat(` - $${val.type_price}`);
       types.buttons.push({ type: 'postback', title: 'Order', payload: JSON.stringify(order) });
