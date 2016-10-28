@@ -10,7 +10,8 @@
 
               <div class="row type-heading-inner-container">
                 <div class="col-xs-6">
-                  <button type="button" name="type-<%= types[x].typeid %>" class="type-remove-button"><i class="fa fa-trash-o type-remove-button-glyph" aria-hidden="true"></i></button>
+                  <button type="button" name="type-<%= types[x].typeid %>" class="type-remove-button">
+                    <i class="fa fa-trash-o type-remove-button-glyph" aria-hidden="true"></i></button>
                   <p class="type-title"><%= types[x].type %></p>
                 </div>
 
@@ -25,14 +26,21 @@
 
                  if (hasSizeChild) { %>
                    <div class="col-xs-6">
-                     <form id="new-tprice-<%= types[x].typeid %>" name="<%= types[x].typeid %>" style="float:right;" class="form-inline">
+                     <form id="new-tprice-<%= types[x].typeid %>" name="<%= types[x].typeid %>" style="float:right;"
+                           class="form-inline">
                        <div class="form-group-lg" >
 
-                         <abbr rel="tooltip" title="The price of this type is no longer changed here. It is now set in it's sizes.">
+                         <abbr rel="tooltip"
+                           title="The price of this type is no longer changed here. It is now set in it's sizes."
+                         >
                            <div class="input-group">
                              <div class="input-group-addon">$</div>
                              <!-- This tag needs to remain one line, no indentation allowed -->
-                             <input name="price" type="text" <% if (types[x].price === null) { %> value="" <% } else { %> value="<%= types[x].price %>" <% } %> size="10" class="form-control" placeholder="Price" disabled >
+                             <input name="price" type="text"
+                                 <% if (types[x].price === null) { %> value="" <% }
+                                 else { %> value="<%= types[x].type_price %>" <% } %>
+                                 size="10" class="form-control" placeholder="Price" disabled
+                             >
                            </div>
                         </abbr>
 
@@ -41,12 +49,17 @@
                    </div>
                 <% } else { %>
                   <div class="col-xs-6">
-                    <form id="new-tprice-<%= types[x].typeid %>" name="<%= types[x].typeid %>" style="float:right;" class="form-inline">
+                    <form id="new-tprice-<%= types[x].typeid %>" name="<%= types[x].typeid %>"
+                          style="float:right;" class="form-inline">
                       <div class="form-group-lg" >
                         <div class="input-group">
                           <div class="input-group-addon">$</div>
                           <!-- This tag needs to remain one line, no indentation allowed -->
-                          <input name="price" type="text" <% if (types[x].price === null) { %> value="" <% } else { %> value="<%= types[x].price %>" <% } %> size="10" class="form-control" placeholder="Price">
+                          <input name="price" type="text"
+                              <% if (types[x].type_price === null) { %> value="" <% }
+                              else { %> value="<%= types[x].type_price %>" <% } %>
+                              size="10" class="form-control" placeholder="Price"
+                          >
                         </div>
                       </div>
                     </form>

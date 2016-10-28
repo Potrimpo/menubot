@@ -106,7 +106,7 @@ const Item = sequelize.define('Item', {
   photo: {
     type: Sequelize.STRING
   },
-  price: {
+  item_price: {
     type: Sequelize.DECIMAL
   }
 }, {
@@ -134,7 +134,7 @@ const Type = sequelize.define('Type', {
   photo: {
     type: Sequelize.STRING
   },
-  price: {
+  type_price: {
     type: Sequelize.DECIMAL
   }
 }, {
@@ -159,7 +159,7 @@ const Size = sequelize.define('Size', {
   size: {
     type: Sequelize.STRING
   },
-  price: {
+  size_price: {
     type: Sequelize.DECIMAL
   }
 }, {
@@ -191,6 +191,20 @@ const Order = sequelize.define('Order', {
     references: {
       model: 'sizes',
       key: 'sizeid'
+    },
+  },
+  typeid: {
+    type: Sequelize.INTEGER,
+    references: {
+      model: 'types',
+      key: 'typeid'
+    },
+  },
+  itemid: {
+    type: Sequelize.INTEGER,
+    references: {
+      model: 'items',
+      key: 'itemid'
     },
   },
   pickuptime: {

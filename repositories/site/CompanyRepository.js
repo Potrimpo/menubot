@@ -15,7 +15,7 @@ exports.findCompany = (id) => Company.findById(id);
 
 exports.getCompanyMenu = id => {
   return sequelize.query(
-    "SELECT companies.name, items.item, items.itemid, items.photo, items.price FROM companies" +
+    "SELECT companies.name, items.item, items.itemid, items.photo, items.item_price FROM companies" +
     " INNER JOIN items ON companies.fbid = items.fbid" +
     " WHERE companies.fbid = $1" +
     " ORDER BY itemid ASC",
@@ -25,7 +25,7 @@ exports.getCompanyMenu = id => {
 
 exports.getMenuTypes = itemids => {
   return sequelize.query(
-    "SELECT types.itemid, type, typeid, types.photo, types.price FROM items" +
+    "SELECT types.itemid, type, typeid, types.photo, types.type_price FROM items" +
     " INNER JOIN types ON items.itemid = types.itemid" +
     " WHERE items.itemid IN (:itemids)" +
     " ORDER BY typeid ASC",
@@ -35,7 +35,7 @@ exports.getMenuTypes = itemids => {
 
 exports.getMenuSizes = typeids => {
   return sequelize.query(
-    "SELECT sizes.typeid, size, sizeid, sizes.price FROM types" +
+    "SELECT sizes.typeid, size, sizeid, sizes.size_price FROM types" +
     " INNER JOIN sizes ON types.typeid = sizes.typeid" +
     " WHERE types.typeid IN (:typeids)" +
     " ORDER BY sizeid ASC",
@@ -83,7 +83,7 @@ exports.insertSize = data => {
 exports.updateIPrice = data => {
   return sequelize.query(
     "UPDATE ONLY items" +
-    " SET price = :price" +
+    " SET item_price = :price" +
     " WHERE itemid = :itemid",
     { replacements: { itemid: data.parentId, price: data.price}, type: sequelize.QueryTypes.UPDATE }
   );
@@ -92,7 +92,7 @@ exports.updateIPrice = data => {
 exports.updateTPrice = data => {
   return sequelize.query(
     "UPDATE ONLY types" +
-    " SET price = :price" +
+    " SET type_price = :price" +
     " WHERE typeid = :typeid",
     { replacements: { typeid: data.parentId, price: data.price}, type: sequelize.QueryTypes.UPDATE }
   );
@@ -101,7 +101,7 @@ exports.updateTPrice = data => {
 exports.updateSPrice = data => {
   return sequelize.query(
     "UPDATE ONLY sizes" +
-    " SET price = :price" +
+    " SET size_price = :price" +
     " WHERE sizeid = :sizeid",
     { replacements: { sizeid: data.parentId, price: data.price}, type: sequelize.QueryTypes.UPDATE }
   );
