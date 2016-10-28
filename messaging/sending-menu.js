@@ -29,8 +29,9 @@ function postbackHandler (payload, userSession) {
           .catch(err => console.error(`Error in postback:`, err));
 
       case 'SIZES':
+        console.log("payload in sizes =", payload);
         return db.getSizes(payload.typeid)
-          .then(sizes => res(parseProductSizes(sizes, payload.typeid)) )
+          .then(sizes => res(parseProductSizes(sizes, payload.typeid, payload.itemid)) )
           .catch(err => console.error(`Error in postback:`, err));
 
       case 'ORDER':
@@ -106,6 +107,7 @@ function parseProductTypes(types, itemid) {
     }
     const sizes = {
       intent: 'SIZES',
+      itemid,
       typeid: val.typeid
     };
     types.buttons.push({ type: 'postback', title: 'Sizes', payload: JSON.stringify(sizes) });
@@ -114,11 +116,12 @@ function parseProductTypes(types, itemid) {
   return template;
 }
 
-function parseProductSizes(sizes, typeid) {
+function parseProductSizes(sizes, typeid, itemid) {
   const template = genericTemplate();
   template.attachment.payload.elements = sizes.map(val => {
     const order = {
       intent: 'ORDER',
+      itemid,
       typeid,
       sizeid: val.sizeid
     };
