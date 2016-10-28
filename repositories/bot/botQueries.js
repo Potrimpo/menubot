@@ -19,7 +19,7 @@ exports.findItem = (fbid, item) => {
 
 exports.getMenu = fbid => {
   return Item.findAll({
-    attributes: ['item', 'itemid', 'photo'],
+    attributes: ['item', 'itemid', 'photo', 'item_price'],
     where: { fbid }
   })
 };
@@ -27,7 +27,7 @@ exports.getMenu = fbid => {
 
 exports.getTypes = itemid => {
   return Type.findAll({
-    attributes: ['itemid', 'typeid', 'type', 'photo'],
+    attributes: ['itemid', 'typeid', 'type', 'photo', 'type_price'],
     where: { itemid }
   })
 };

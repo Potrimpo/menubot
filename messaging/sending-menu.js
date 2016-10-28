@@ -7,39 +7,37 @@ const actions = require('./actions'),
 
 function postbackHandler (payload, userSession) {
   return new Promise(function (res, rej) {
-    const { fbPageId, fbUserId } = userSession,
-      parsedPayload = /([A-Z]+_?[A-Z]*)!?(\d*)/g.exec(payload);
+    console.log("PAYLOAD", payload);
+    payload = JSON.parse(payload);
+    const { fbPageId, fbUserId } = userSession;
 
-    console.log("PARSED PAYLOAD =", parsedPayload);
-
-    switch (parsedPayload[1].toUpperCase()) {
+    switch (payload.intent) {
       case 'MENU':
         return db.getMenu(fbPageId)
           .then((menu) => res(parseItems(menu)) )
-          .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
+          .catch(err => console.error(`Error in postback:`, err));
 
       case 'LOCATION':
         return db.findLocation(fbPageId)
           // a text response must be returned in the 'text' field of an object
           .then(data => res({ text: data.location }) )
-          .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
+          .catch(err => console.error(`Error in postback:`, err));
 
       case 'DETAILS':
-        return db.getTypes(parsedPayload[2])
+        return db.getTypes(payload.itemid)
           .then(types => res(parseProductTypes(types)) )
-          .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
+          .catch(err => console.error(`Error in postback:`, err));
 
       case 'SIZES':
-        return db.getSizes(parsedPayload[2])
+        return db.getSizes(payload.typeid)
           .then(sizes => res(parseProductSizes(sizes)) )
-          .catch(err => console.error(`Error in ${parsedPayload[1]} postback:`, err.message || err));
+          .catch(err => console.error(`Error in postback:`, err));
 
       case 'ORDER':
         console.log("EXECUTING ORDER");
         // make sure wit.ai doesn't reuse data from a previous order!
         delete userSession.context.pickupTime;
         // wit.ai resets the context after sending, so we cant store this data there
-        console.log("session order =", userSession.order);
         userSession.order = { sizeid: parsedPayload[2] };
         console.log("IN POSTBACK HANDLER", userSession);
         return res({ text: "what time would you like that? (include am/pm)" });
@@ -48,7 +46,7 @@ function postbackHandler (payload, userSession) {
         console.log("--> looking at my orders <--");
         return db.ordersbyUserid(fbUserId)
           .then(orders => res(parseOrders(orders)))
-          .catch(err => console.error(`Error in ${parsedPayload[1]} postback`, err));
+          .catch(err => console.error(`Error in postback`, err));
 
       case 'GET_STARTED':
         console.log("GETTING SHIT GOING MY DUDE");
@@ -64,17 +62,30 @@ function postbackHandler (payload, userSession) {
 function parseItems(menu) {
   const template = genericTemplate();
   template.attachment.payload.elements = menu.map(val => {
-    return {
-      title: val.item.toUpperCase(),
+    const details = {
+      intent: 'DETAILS',
+      itemid: val.itemid
+    };
+    const items = {
+      title: `${val.item.toUpperCase()}`,
       image_url: val.photo,
       buttons: [
         {
           type: 'postback',
           title: 'Details',
-          payload: `DETAILS!${val.itemid}`
+          payload: JSON.stringify(details)
         }
       ]
     };
+    if (val.item_price) {
+      const order = {
+        intent: 'ORDER',
+        itemid: val.itemid
+      };
+      items.title = items.title.concat(` - $${val.item_price}`);
+      items.buttons.push({ type: 'postback', title: 'Order', payload: JSON.stringify(order) });
+    }
+    return items;
   });
   return template;
 }
@@ -82,22 +93,32 @@ function parseItems(menu) {
 function parseProductTypes(types) {
   const template = genericTemplate();
   template.attachment.payload.elements = types.map(val => {
-    return {
+    const sizes = {
+      intent: 'SIZES',
+      sizeid: val.sizeid
+    };
+    const types = {
       title: val.type.toUpperCase(),
       image_url: val.photo,
       buttons: [
         {
           type: 'postback',
-          title: 'Order',
-          payload: `ORDER!${val.typeid}`
-        },
-        {
-          type: 'postback',
           title: 'Sizes',
-          payload: `SIZES!${val.typeid}`
+          payload: JSON.stringify(sizes)
         },
       ]
     };
+    if (val.type_price) {
+      const order = {
+        type: 'postback',
+        title: 'Order',
+        payload: `ORDER!${val.typeid}`
+      };
+      types.title = types.title.concat(` - $${val.type_price}`);
+      types.buttons.push({ type: 'postback', title: 'Order', payload: JSON.stringify(order) });
+    }
+    console.log("     -----> types.title =", types.title);
+    return types;
   });
   return template;
 }
@@ -105,13 +126,17 @@ function parseProductTypes(types) {
 function parseProductSizes(sizes) {
   const template = genericTemplate();
   template.attachment.payload.elements = sizes.map(val => {
+    const order = {
+      intent: 'ORDER',
+      sizeid: val.sizeid
+    };
     return {
-      title: `${val.size.toUpperCase()} - $${String(val.price)}`,
+      title: `${val.size.toUpperCase()}`,
       buttons: [
         {
           type: 'postback',
           title: 'Order',
-          payload: `ORDER!${val.sizeid}`
+          payload: JSON.stringify(order)
         },
       ]
     };

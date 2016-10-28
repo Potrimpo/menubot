@@ -38,17 +38,17 @@ function initializePersistentMenu (pageToken) {
       {
         type: "postback",
         title: "Menu",
-        payload: "MENU"
+        payload: JSON.stringify({ intent: "MENU" })
       },
       {
         type: "postback",
         title: "My Orders",
-        payload: "MY_ORDERS"
+        payload: JSON.stringify({ intent: "MY_ORDERS" })
       },
       {
         type: "postback",
         title: "Location",
-        payload: "LOCATION",
+        payload: JSON.stringify({ intent: "LOCATION" })
       }
     ]
   };
@@ -102,7 +102,7 @@ function getStartedButton (pageToken) {
     thread_state: "new_thread",
     call_to_actions: [
       {
-        payload: "GET_STARTED"
+        payload: JSON.stringify({ intent: "GET_STARTED" })
       }
     ]
   };
