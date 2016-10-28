@@ -36,7 +36,7 @@ function postbackHandler (payload, userSession) {
       case 'ORDER':
         console.log("EXECUTING ORDER");
         // make sure wit.ai doesn't reuse data from a previous order!
-        delete userSession.context.pickupTime;
+        if (userSession.context && userSession.context.pickupTime) delete userSession.context.pickupTime;
         // wit.ai resets the context after sending, so we cant store this data there
         userSession.order = payload;
         console.log("IN POSTBACK HANDLER", userSession);

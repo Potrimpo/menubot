@@ -88,14 +88,14 @@ const actions = {
         return db.makeOrder(fbPageId, fbUserId, time, order)
           .then(data => {
             if (data) {
-              delete context.noLuck;
+              if (context.noLuck) delete context.noLuck;
               context.pickupTime = String(chrono.parseDate(String(data.pickuptime)));
               return db.orderDetails(data.orderid);
             }
             else {
               context.noLuck = true;
-              delete context.pickupTime;
-              delete context.item;
+              if (context.pickupTime) delete context.pickupTime;
+              if (context.item) delete context.item;
               return res(context);
             }
           })
