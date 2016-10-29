@@ -25,12 +25,11 @@
                   <div class="form-group-lg" >
 
                     <abbr rel="tooltip"
-                          title="The price of this item is no longer changed here. It is now set in it's types."
+                          title="The price of this item is no longer changed here. It is now set in its types."
                     >
                       <div class="input-group">
                         <div class="input-group-addon">$</div>
-                        <!-- This tag needs to remain one line, no indentation allowed -->
-                        <input name="price" type="text" <% if (items[i].item_price == null) { %> value="" <% }
+                        <input name="price" type="text" <% if (items[i].item_price === null) { %> value="" <% }
                            else { %> value="<%= items[i].item_price %>" <% } %>
                            size="10" class="form-control" placeholder="Price" disabled>
                       </div>
