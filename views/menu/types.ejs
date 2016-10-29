@@ -25,27 +25,7 @@
                  }
 
                  if (hasSizeChild) { %>
-                   <div class="col-xs-6">
-                     <form id="new-tprice-<%= types[x].typeid %>" name="<%= types[x].typeid %>" style="float:right;"
-                           class="form-inline">
-                       <div class="form-group-lg" >
 
-                         <abbr rel="tooltip"
-                           title="The price of this type is no longer changed here. It is now set in its sizes."
-                         >
-                           <div class="input-group">
-                             <div class="input-group-addon">$</div>
-                             <input name="price" type="text"
-                                 <% if (types[x].price === null) { %> value="" <% }
-                                 else { %> value="<%= types[x].type_price %>" <% } %>
-                                 size="10" class="form-control" placeholder="Price" disabled
-                             >
-                           </div>
-                        </abbr>
-
-                       </div>
-                     </form>
-                   </div>
                 <% } else { %>
                   <div class="col-xs-6">
                     <form id="new-tprice-<%= types[x].typeid %>" name="<%= types[x].typeid %>"
