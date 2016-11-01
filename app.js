@@ -27,7 +27,7 @@ const { sequelize } = require('./database/models/index'),
 
 // API keys and Passport configuration.
 const secrets = require('./config/secrets'),
-  { PORT, FB_APP_SECRET, sessionTable, postgresURL } = require('./envVariables'),
+  { PORT, FB_APP_SECRET, sessionTable, postgresURL, postgresPassword, serverIP } = require('./envVariables'),
   passportConf = require('./config/passport');
 
 // console.log(`/webhook is accepting Verify Token: "${FB_VERIFY_TOKEN}"`);
@@ -65,7 +65,7 @@ app.use(cookieParser());
 //PostgreSQL Store
 app.use(session({
   store: new pgSession({
-    conString: postgresURL,
+    conString: `postgres://postgres:${postgresPassword}@${postgresURL}:5432/menubot?ssl=true`,
     tableName: sessionTable
   }),
   secret: secrets.sessionSecret,
@@ -189,10 +189,13 @@ function verifyRequestSignature(req, res, buf) {
 sequelize.sync({ force: false })
   .then(() => {
     console.log("sequelize is synced");
-    app.listen(PORT);
+    app.listen(PORT, serverIP);
     console.log('Listening on :' + PORT + '...');
   })
-  .catch(err => console.error("error syncing sequelize db", err.message || err));
+  .catch(err => {
+    console.log("postgresURL =", postgresURL);
+    console.error("error syncing sequelize db", err)
+  });
 
 
 module.exports = app;
