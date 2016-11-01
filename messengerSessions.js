@@ -1,6 +1,5 @@
-// ----------------------------------------------------------------------------
-// Wit.ai bot specific code
-const { getCompanyAccessToken } = require('./repositories/site/CompanyRepository');
+const { getCompanyAccessToken } = require('./repositories/site/CompanyRepository'),
+  { findOrCreateCustomer } = require('./repositories/bot/botQueries');
 
 // This will contain all user sessions.
 // Each session has an entry:
@@ -15,6 +14,9 @@ const findOrCreateSession = (fbUserId, fbPageId) => {
   console.log("---->     creating new session      <----");
   return getCompanyAccessToken(fbPageId)
     .then(data => {
+      // finding or creating an entry in the Customer database table to store customer info
+      findOrCreateCustomer(fbUserId, fbPageId, data.access_token)
+        .catch(err => console.error("error finding or creating customer!", err));
       sessions[fbUserId] = {
         fbUserId,
         fbPageId,

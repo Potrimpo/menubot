@@ -55,7 +55,7 @@ describe('testing database queries', function() {
       .then(function (data) {
         expect(data).to.not.equal(null);
         // [ 'to.contain.all' means can have more ] [ 'to.have.all' means has these and only these ]
-        expect(data[0]).to.contain.all.keys("orderid", "price", "fbid", "userid");
+        expect(data[0]).to.contain.all.keys("orderid", "price", "fbid", "customer_id");
         expect(data[0]).to.have.property('fbid', testPageID);
       });
   });

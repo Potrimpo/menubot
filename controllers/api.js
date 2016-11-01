@@ -77,7 +77,7 @@ function syncPhotos (pageToken) {
 
 // fetches albums from facebook page
 function fetchPhotos (pageToken) {
-  pageToken = encodeURIComponent((pageToken));
+  pageToken = encodeURIComponent(pageToken);
   const url = `https://graph.facebook.com/me?fields=albums{photos{name,picture},name}&access_token=${pageToken}`;
   return fetch(url, {
     method: 'GET',
