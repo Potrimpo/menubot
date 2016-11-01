@@ -231,8 +231,8 @@ const Customer = sequelize.define('Customer', {
     primaryKey: true,
     allowNull: false
   },
-  photo: Sequelize.STRING,
-  name: Sequelize.STRING
+  profile_pic: Sequelize.STRING,
+  customer_name: Sequelize.STRING
 }, {
   tableName: 'customers',
   timestamps: false

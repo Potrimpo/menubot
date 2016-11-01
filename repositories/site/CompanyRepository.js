@@ -168,6 +168,7 @@ exports.deleteItem = data => {
 exports.ordersByFbid = (fbid, today) => {
   return sequelize.query(
     "SELECT * FROM orders AS o" +
+    " INNER JOIN customers ON o.customer_id = customers.customer_id" +
     " LEFT OUTER JOIN sizes ON o.sizeid = sizes.sizeid" +
     " LEFT OUTER JOIN types ON o.typeid = types.typeid" +
     " LEFT OUTER JOIN items ON o.itemid = items.itemid" +

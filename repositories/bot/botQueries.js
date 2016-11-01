@@ -15,8 +15,8 @@ exports.findOrCreateCustomer = (fbUserId, fbPageId, pageToken) => {
           console.log("data from customer fb request", data);
           return Customer.build({
             customer_id: fbUserId,
-            photo: data.profile_pic,
-            name: data.first_name + " " + data.last_name
+            profile_pic: data.profile_pic,
+            customer_name: data.first_name + " " + data.last_name
           }).save();
         })
     })
