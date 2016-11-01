@@ -30,8 +30,6 @@ const actions = {
     const recipientId = sessions[sessionId].fbUserId;
     const token = sessions[sessionId].access_token;
     if (recipientId) {
-      console.log("order be4 sending =", sessions[sessionId].order);
-      console.log("ALL SESSIONS: actions.send ===", sessions);
       return fbMessage(recipientId, token, message)
         .then(() => null)
         .catch((err) => {
@@ -65,7 +63,6 @@ const actions = {
             else {
               context.itemNotFound = true;
               delete context.productInfo;
-              console.log('context:', context);
               return res(context);
             }
           })
@@ -81,7 +78,6 @@ const actions = {
   orderTime({context, fbPageId, fbUserId }, request) {
     return new Promise((res, rej) => {
       context = context ? context : {};
-      console.log("request ==", request);
       const time = chrono.parseDate(request);
       if(time) {
         const order = sessions[fbUserId].order;

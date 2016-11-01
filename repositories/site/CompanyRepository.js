@@ -126,7 +126,6 @@ exports.updateSPrice = data => {
 };
 
 exports.deleteItem = data => {
-  console.log("David, this is the info being passed to the the delete db === "+JSON.stringify(data));
   switch (data.type) {
 
     case "item":

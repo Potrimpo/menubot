@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import Order from './Order'
 
 const OrdersList = ({ fbid, orders, onOrderClick }) => (
-  <ul>
+  <div>
     {orders.map((order, i) =>
       <Order
         key={order.orderid}
@@ -10,7 +10,7 @@ const OrdersList = ({ fbid, orders, onOrderClick }) => (
         onClick={() => onOrderClick(fbid, order.orderid)}
       />
     )}
-  </ul>
+  </div>
 );
 
 OrdersList.propTypes = {

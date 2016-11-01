@@ -7,7 +7,6 @@ const actions = require('./actions'),
 
 function postbackHandler (payload, userSession) {
   return new Promise(function (res, rej) {
-    console.log("PAYLOAD", payload);
     payload = JSON.parse(payload);
     const { fbPageId, fbUserId } = userSession;
 
@@ -29,28 +28,23 @@ function postbackHandler (payload, userSession) {
           .catch(err => console.error(`Error in postback:`, err));
 
       case 'SIZES':
-        console.log("payload in sizes =", payload);
         return db.getSizes(payload.typeid)
           .then(sizes => res(parseProductSizes(sizes, payload.typeid, payload.itemid)) )
           .catch(err => console.error(`Error in postback:`, err));
 
       case 'ORDER':
-        console.log("EXECUTING ORDER");
         // make sure wit.ai doesn't reuse data from a previous order!
         if (userSession.context && userSession.context.pickupTime) delete userSession.context.pickupTime;
         // wit.ai resets the context after sending, so we cant store this data there
         userSession.order = payload;
-        console.log("IN POSTBACK HANDLER", userSession);
         return res({ text: "what time would you like that? (include am/pm)" });
 
       case 'MY_ORDERS':
-        console.log("--> looking at my orders <--");
         return db.ordersbyUserid(fbUserId)
           .then(orders => res(parseOrders(orders)))
           .catch(err => console.error(`Error in postback`, err));
 
       case 'GET_STARTED':
-        console.log("GETTING SHIT GOING MY DUDE");
        return res(getStarted());
 
       default:
@@ -142,7 +136,6 @@ function parseProductSizes(sizes, typeid, itemid) {
 function parseOrders(orders) {
   const template = genericTemplate();
   template.attachment.payload.elements = orders.map(val => {
-    console.log("val -=", val);
     if (val.size) {
       return {
         title: `${val.size.toUpperCase()} ${val.type.toUpperCase()} ${val.item.toUpperCase()}`,

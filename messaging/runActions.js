@@ -5,8 +5,6 @@ const { sessions } = require('../witSessions'),
   actions = require('./actions');
 
 function runActions (sessionId, request, context) {
-  console.log("session: runActions =", sessions[sessionId]);
-  console.log("all sessions: runActions", sessions);
   return actions.orderTime(sessions[sessionId], request)
     .then(ctx => {
 

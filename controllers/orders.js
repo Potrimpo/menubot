@@ -9,7 +9,6 @@ exports.retrieveOrders = (req, res, next) => {
   return ordersByFbid(req.params.fbid, today)
     .then(data => {
       req.orders = data;
-      console.log("data ====", data);
       return next();
     })
     .catch(err => res.status(500).send('error getting orders'));

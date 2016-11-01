@@ -18,7 +18,6 @@ exports.postWebhook = (req, res) => {
   if (data.object === 'page') {
     data.entry.forEach(entry => {
       entry.messaging.forEach(event => {
-        console.log("sender id ==", event.sender.id);
         if (event.message) {
           // Yay! We got a new message!
           // We retrieve the Facebook user ID of the sender
@@ -46,9 +45,6 @@ exports.postWebhook = (req, res) => {
                   });
               }
               else if (text) {
-                console.log("EVENT.MESSAGE =====", event.message);
-                console.log("Session: messengerMiddleware", sessions[sessionId]);
-                console.log("all sessions: messengerMiddleware", sessions);
                 return runActions(
                   sessionId,
                   text,
@@ -75,8 +71,6 @@ exports.postWebhook = (req, res) => {
                 console.error('Oops! Got an error dealing with this message: ', err.stack || err);
               });
         } else if(event.postback) {
-          console.log("sender =", event.sender.id);
-          console.log("recipient =", event.recipient.id);
           return findOrCreateSession(event.sender.id, event.recipient.id)
             .then(sessionId => {
               return postbackHandler(event.postback.payload, sessions[sessionId])
@@ -89,7 +83,6 @@ exports.postWebhook = (req, res) => {
                 });
             })
         } else {
-          console.log('received event', JSON.stringify(event));
         }
       });
     });
@@ -106,4 +99,3 @@ exports.getWebhook = (req, res) => {
     res.sendStatus(400);
   }
 };
-

@@ -4,8 +4,8 @@ import Footer from '../components/Footer'
 
 const App = () => (
   <div>
-    <OrdersBox/>
     <Footer/>
+    <OrdersBox/>
   </div>
 );
 

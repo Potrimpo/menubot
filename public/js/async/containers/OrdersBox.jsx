@@ -37,14 +37,6 @@ class OrdersBox extends Component {
     const { forceReload } = this.props;
     return (
       <div>
-        <p>
-          {!forceReload &&
-          <a href="#"
-             onClick={this.handleRefreshClick}>
-            Refresh
-          </a>
-          }
-        </p>
         <VisibleOrders/>
       </div>
     )
