@@ -182,9 +182,12 @@ const Order = sequelize.define('Order', {
       key: 'fbid'
     }
   },
-  userid: {
+  customer_id: {
     type: Sequelize.BIGINT,
-    allowNull: false
+    references: {
+      model: 'customers',
+      key: 'customer_id'
+    }
   },
   sizeid: {
     type: Sequelize.INTEGER,
@@ -222,11 +225,24 @@ const Order = sequelize.define('Order', {
   timestamps: false,
 });
 
-// Relations
-User.belongsToMany(Company, { through: 'usercompany' });
-Company.belongsToMany(User, { through: 'usercompany' });
+const Customer = sequelize.define('Customer', {
+  customer_id: {
+    type: Sequelize.BIGINT,
+    primaryKey: true,
+    allowNull: false
+  },
+  photo: Sequelize.STRING,
+  name: Sequelize.STRING
+}, {
+  tableName: 'customers',
+  timestamps: false
+});
 
-Item.belongsTo(Company, { foreignKey: 'fbid' });
+// Relations
+// User.belongsToMany(Company, { through: 'usercompany' });
+// Company.belongsToMany(User, { through: 'usercompany' });
+
+Item.belongsTo(Company, { foreignKey: 'fbid', onDelete: 'cascade' });
 Type.belongsTo(Item, { foreignKey: 'itemid', onDelete: 'cascade' });
 Size.belongsTo(Type, { foreignKey: 'typeid', onDelete: 'cascade' });
 
@@ -234,6 +250,7 @@ Order.belongsTo(Size, { foreignKey: 'sizeid', onDelete: 'cascade' });
 Order.belongsTo(Type, { foreignKey: 'typeid', onDelete: 'cascade' });
 Order.belongsTo(Item, { foreignKey: 'itemid', onDelete: 'cascade' });
 Order.belongsTo(Company, { foreignKey: 'fbid', onDelete: 'cascade' });
+Order.belongsTo(Customer, { foreignKey: 'customer_id', onDelete: 'cascade' });
 
 
 module.exports = {
@@ -244,5 +261,6 @@ module.exports = {
   Size,
   Order,
   Session,
-  User
+  User,
+  Customer
 };

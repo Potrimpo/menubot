@@ -3,7 +3,7 @@
  */
 
 const { FB_VERIFY_TOKEN } = require('../envVariables'),
-  { sessions, findOrCreateSession } = require('../witSessions'),
+  { sessions, findOrCreateSession } = require('../messengerSessions'),
   runActions = require('../messaging/runActions'),
   postbackHandler = require('../messaging/sending-menu'),
   actions = require('../messaging/actions'),

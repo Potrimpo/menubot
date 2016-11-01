@@ -1,7 +1,7 @@
 /**
  * Created by lewis.knoxstreader on 24/10/16.
  */
-const { sessions } = require('../witSessions'),
+const { sessions } = require('../messengerSessions'),
   actions = require('./actions');
 
 function runActions (sessionId, request, context) {

@@ -1,5 +1,5 @@
 const chrono = require('chrono-node'),
-  { sessions } = require('./../witSessions'),
+  { sessions } = require('./../messengerSessions'),
   fbMessage = require('./messenger'),
   // { findItem, makeOrder, orderDetails } = require('./../sql'),
   db = require('../repositories/bot/botQueries');
@@ -85,6 +85,7 @@ const actions = {
       const time = chrono.parseDate(request);
       if(time) {
         const order = sessions[fbUserId].order;
+        // fbUserId becomes customer_id
         return db.makeOrder(fbPageId, fbUserId, time, order)
           .then(data => {
             if (data) {
