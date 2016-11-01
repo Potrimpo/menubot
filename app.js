@@ -65,7 +65,7 @@ app.use(cookieParser());
 //PostgreSQL Store
 app.use(session({
   store: new pgSession({
-    conString: `postgres://postgres:${postgresPassword}@${postgresURL}:5432/menubot?ssl=true`,
+    conString: `postgres://postgres:${postgresPassword}@${postgresURL}:5432/menubot`,
     tableName: sessionTable
   }),
   secret: secrets.sessionSecret,
