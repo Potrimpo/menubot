@@ -17,13 +17,12 @@
 `$ sudo iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 3000`
 
 ##### Running
-> postgresURL = postgres instance internal IP
-> serverIP = node-server instance internal IP
-> postgresPassword = menubot database user password
+`$ pm2 start process.json`
+> starts app through pm2 management, which includes environment variables (port, serverIP, etc)
 
-```
-postgresURL=xxxx serverIP=xxxx postgresPassword=xxxx node app.js
-```
+##### View logs
+`$ pm2 logs`
+> shows errors and printlines from running server
 
 ##### Running for Development
 1. Download ngrok. On mac `$ brew install ngrok`
