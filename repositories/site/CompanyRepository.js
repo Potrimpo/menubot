@@ -4,12 +4,11 @@
 
 const { sequelize, Company, User, Item, Type, Size, Order } = require('../../database/models/index');
 
-exports.findUserCompanies = (accounts => {
+exports.findUserCompanies = accounts => {
   return Company.findAll({
     attributes: ['fbid', 'name', 'bot_status'],
     where: { fbid: { $or: accounts } }
   })
-});
 
 exports.findCompany = (id) => Company.findById(id);
 

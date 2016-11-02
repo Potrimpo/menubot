@@ -6,7 +6,6 @@ const express = require('express'),
   // var toobusy = require('toobusy-js');
   cookieParser = require('cookie-parser'),
   compress = require('compression'),
-  favicon = require('serve-favicon'),
   session = require('express-session'),
   pgSession = require('connect-pg-simple')(session),
   logger = require('morgan'),
@@ -54,7 +53,6 @@ app.use(connectAssets({
   paths: [path.join(__dirname, 'public/css'), path.join(__dirname, 'public/js')]
 }));
 app.use(logger('dev'));
-app.use(favicon(path.join(__dirname, 'public/favicon.png')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(multer({ dest: path.join(__dirname, 'uploads') }).single());
