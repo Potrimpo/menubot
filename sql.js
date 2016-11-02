@@ -30,7 +30,7 @@ const findItem = (fbPageId, prodName) => db.oneOrNone(findItemQuery, [fbPageId, 
   orderDetails = (sizeid) => db.one(orderDetailsQuery, sizeid),
 
   findOrder = (fbPageId, fbUserId, sizeid) => {
-    return db.one("SELECT * FROM orders WHERE fbid=$1 AND userid=$2 AND sizeid=$3", [fbPageId, fbUserId, sizeid]);
+    return db.one("SELECT * FROM orders WHERE fbid=$1 AND customer_id=$2 AND sizeid=$3", [fbPageId, fbUserId, sizeid]);
   };
 
 function sql(file) {

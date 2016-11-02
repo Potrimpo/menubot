@@ -1,7 +1,45 @@
 /**
  * Created by lewis.knoxstreader on 21/10/16.
  */
-const { Company, Item, Type, Size, Order, sequelize } = require('./../../database/models/index');
+const { Company, Item, Type, Size, Order, Customer, sequelize } = require('./../../database/models/index'),
+  fetch = require('node-fetch');
+
+exports.findOrCreateCustomer = (fbUserId, fbPageId, pageToken) => {
+  return Customer.findById(fbUserId)
+    .then(user => {
+      if (user) {
+        return user;
+      }
+      return customerDetails(fbUserId, pageToken)
+        .then(data => {
+          console.log("data from customer fb request", data);
+          return Customer.build({
+            customer_id: fbUserId,
+            profile_pic: data.profile_pic,
+            customer_name: data.first_name + " " + data.last_name
+          }).save();
+        })
+    })
+};
+
+// fetches customer data from facebook
+function customerDetails (fbUserId, pageToken) {
+  pageToken = encodeURIComponent(pageToken);
+  const url = `https://graph.facebook.com/${fbUserId}?access_token=${pageToken}`;
+  return fetch(url, {
+    method: 'GET',
+    headers: {'Content-Type': 'application/json'},
+  })
+    .then(rsp => rsp.json())
+    .then(json => {
+      if (json.error && json.error.message) {
+        throw new Error(json.error.message);
+      }
+      console.log("JSON ====", json);
+      return json;
+    })
+    .catch(err => console.error("error fetching customer data", err));
+}
 
 exports.findLocation = fbid => {
     return Company.findOne({
@@ -50,23 +88,23 @@ exports.orderDetails = orderid => {
   );
 };
 
-exports.makeOrder = (fbid, userid, pickuptime, { itemid, typeid, sizeid })  => {
+exports.makeOrder = (fbid, customer_id, pickuptime, { itemid, typeid, sizeid })  => {
   console.log("makeOrder pickuptime =", pickuptime);
   return Order.build({
-    fbid, userid, pickuptime, itemid, typeid, sizeid
+    fbid, customer_id, pickuptime, itemid, typeid, sizeid
   })
   .save();
 };
 
-exports.ordersbyUserid = userid => {
+exports.ordersbyUserid = customer_id => {
   return sequelize.query(
     "SELECT * FROM orders AS o" +
     " LEFT OUTER JOIN sizes ON o.sizeid = sizes.sizeid" +
     " LEFT OUTER JOIN types ON o.typeid = types.typeid" +
     " LEFT OUTER JOIN items ON o.itemid = items.itemid" +
-    " WHERE o.userid = :userid AND pending = true" +
+    " WHERE o.customer_id = :customer_id AND pending = true" +
     " ORDER BY o.pickuptime ASC",
-    { replacements: { userid }, type: sequelize.QueryTypes.SELECT }
+    { replacements: { customer_id }, type: sequelize.QueryTypes.SELECT }
   );
 };
 
@@ -74,7 +112,7 @@ exports.ordersbyUserid = userid => {
 exports.findOrder = (fbid, userid, sizeid) => {
   return Order.findOne({
     attributes: ['orderid', 'pickuptime', 'pending'],
-    where: {fbid, userid, sizeid}
+    where: {fbid, customer_id, sizeid}
   })
   .catch(err => console.error("error in Order.findOrder:", err.message || err));
 };
