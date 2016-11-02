@@ -7,9 +7,13 @@
 2. `$ curl -sL https://deb.nodesource.com/setup_6.x -o nodesource_setup.sh`
 3. `$ sudo bash ./nodesource_setup.sh`
 4. `$ sudo apt-get install nodejs`
-5. `$ sudo apt-get install build-essential`
+5. `$ npm update node` (update to latest version of node.js)
+5. `$ sudo apt-get install build-essential` (debian tools?)
 
-###### Route traffic from port 80 to 3000 (run server on 3000)
+##### Process & environment management for node.js server (restart server on crash, etc)
+`$ npm install pm2 -g` 
+
+##### Route traffic from port 80 to 3000 (run server on 3000)
 `$ sudo iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 3000`
 
 ##### Running
