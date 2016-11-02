@@ -1,0 +1,14 @@
+{
+  apps : [{
+    name        : "menubot",
+    script      : "./app.js",
+    env: {
+      "NODE_ENV": "development",
+      "PORT": 3000,
+      "postgresURL": "10.146.0.3",
+      "serverIP": "10.146.0.2",
+      "password": "45FeistyEggsFearY2k"
+    }
+  }
+]
+}
