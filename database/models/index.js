@@ -1,18 +1,14 @@
 const Sequelize = require('sequelize'),
-  { postgresURL, serverIP, postgresPassword, sessionTable } = require('../../envVariables'),
+  { sessionTable } = require('../../envVariables'),
   bcrypt = require('bcrypt-nodejs');
 
-const sequelize = new Sequelize(`postgres://postgres:${postgresPassword}@${postgresURL}:5432/menubot`, {
-  dialect: 'postgres',
-  maxConcurrentQueries: 100,
-});
-
-// const sequelize = new Sequelize('menubot', 'postgres', postgresPassword, {
-//   host: postgresURL,
-//   port: 5432,
-//   maxConcurrentQueries: 100,
-//   dialect: 'postgres',
-// });
+const sequelize = new Sequelize(
+  `postgres://postgres:${process.env.postgresPassword}@${process.env.postgresURL}:5432/menubot`,
+  {
+    dialect: 'postgres',
+    maxConcurrentQueries: 100
+  }
+);
 
 // Sessions table
 const Session = sequelize.define('Session', {

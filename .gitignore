@@ -4,4 +4,5 @@ performanceLogs
 *.log
 output.json
 public/asyncDist
+envVariables.js
 icon.png

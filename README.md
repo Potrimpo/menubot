@@ -10,7 +10,7 @@
 5. `$ npm update node` (update to latest version of node.js)
 5. `$ sudo apt-get install build-essential` (debian tools?)
 
-##### Process & environment management for node.js server (restart server on crash, etc)
+##### Process management for node.js server (restart server on crash, etc)
 `$ npm install pm2 -g` 
 
 ##### Route traffic from port 80 to 3000 (run server on 3000)
@@ -23,6 +23,16 @@
 ##### View logs
 `$ pm2 logs`
 > shows errors and printlines from running server
+
+##### Changing pm2 setup
+Any change to pm2 process.json requires the daemon to be reset
+
+* `$ pm2 kill`
+* `$ pm2 start process.json`
+
+##### Nginx reverse proxy
+`$ sudo vim /etc/nginx/sites-available/menubot`
+> config file
 
 ##### Running for Development
 1. Download ngrok. On mac `$ brew install ngrok`

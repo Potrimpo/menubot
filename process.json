@@ -1,13 +1,26 @@
 {
-  apps : [{
-    name        : "menubot",
-    script      : "./app.js",
-    env: {
-      "NODE_ENV": "development",
+  "apps" : [{
+    "name": "menubot",
+    "script": "./app.js",
+    "env": {
+      "NODE_ENV": "production",
       "PORT": 3000,
       "postgresURL": "10.146.0.3",
       "serverIP": "10.146.0.2",
-      "postgresPassword": "45FeistyEggsFearY2k"
+      "postgresPassword": "45FeistyEggsFearY2k",
+      "sessionTable": "session",
+      "FB_APP_SECRET": "096eac9cb0c0ad06dd3204440515febc",
+      "FB_VERIFY_TOKEN": "saveme"
+    },
+    "env_development": {
+      "NODE_ENV": "development",
+      "PORT": 8445,
+      "postgresURL": "localhost",
+      "serverIP": "localhost",
+      "postgresPassword": "45FeistyEggsFearY2k",
+      "sessionTable": "session",
+      "FB_APP_SECRET": "096eac9cb0c0ad06dd3204440515febc",
+      "FB_VERIFY_TOKEN": "saveme"
     }
   }
 ]
