@@ -1,8 +1,6 @@
 {
   "name": "menubot",
   "keywords": [
-    "wit",
-    "wit.ai",
     "bot",
     "botengine",
     "bots",
@@ -11,8 +9,8 @@
   ],
   "main": "index.js",
   "scripts": {
-    "start": "node app.js",
-    "prod": "NODE_ENV=production node app.js",
+    "start": "pm2 start process.json --env development",
+    "prod": "pm2 start process.json",
     "test": "mocha",
     "dev": "webpack -d --progress --colors --watch",
     "build": "webpack -p"
@@ -55,7 +53,6 @@
     "redux": "^3.6.0",
     "redux-logger": "^2.7.0",
     "redux-thunk": "^2.1.0",
-    "sendgrid": "^2.0.0",
     "sequelize": "^3.24.3"
   },
   "devDependencies": {
