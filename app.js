@@ -12,7 +12,6 @@ const express = require('express'),
   errorHandler = require('errorhandler'),
   lusca = require('lusca'),
   methodOverride = require('method-override'),
-  multer = require('multer'),
   ejsEngine = require('ejs-mate'),
   flash = require('express-flash'),
   path = require('path'),
@@ -55,7 +54,6 @@ app.use(connectAssets({
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(multer({ dest: path.join(__dirname, 'uploads') }).single());
 app.use(expressValidator());
 app.use(methodOverride());
 app.use(cookieParser());

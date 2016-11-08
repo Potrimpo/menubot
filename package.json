@@ -41,7 +41,6 @@
     "material-ui": "^0.15.4",
     "method-override": "^2.3.5",
     "morgan": "^1.7.0",
-    "multer": "^1.1.0",
     "neo-async": "^1.8.2",
     "node-fetch": "^1.5.1",
     "node-uuid": "^1.4.7",
