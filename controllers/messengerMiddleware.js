@@ -92,7 +92,7 @@ exports.postWebhook = (req, res) => {
 
 exports.getWebhook = (req, res) => {
   if (req.query['hub.mode'] === 'subscribe' &&
-    req.query['hub.verify_token'] === FB_VERIFY_TOKEN) {
+    req.query['hub.verify_token'] === process.env.FB_VERIFY_TOKEN) {
     res.send(req.query['hub.challenge']);
   } else {
     console.log(`query is ${JSON.stringify(req.query)}`);
