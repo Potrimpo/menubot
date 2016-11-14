@@ -273,9 +273,7 @@ sudo -u postgres createdb menubot
 
 ## Development setup
 
-### Ubuntu development
-
-#### First time setup
+### Ubuntu development: First time setup
 
 ##### Documentation begins
 ```
@@ -331,7 +329,7 @@ Access the webpage with the Ngrok url you've generated.
 
 
 
-#### Day to day setup
+### Ubuntu development: Day to day setup
 > This setup assumes you have already followed the first time setup, and now need to restart the server.
 
 ##### Documentation begins
@@ -359,3 +357,23 @@ Add the ngrok url you have just generated to the Facebook development console. T
 
 Access the webpage with the Ngrok url you've generated.
 ##### Congratulations, the development application is running.
+
+### Ubuntu development: useful commands
+
+##### Inspecting the database
+```
+sudo -u postgres psql menubot
+\d
+SELECT * FROM [TABLE NAME]
+```
+
+>Use this to inspect the contents of tables.
+
+
+##### Renewing the database
+```
+sudo -u postgres dropdb menubot
+sudo -u postgres createdb menubot
+```
+
+> Use this when you've made a change to the application that will effect the database's structure in anyway, otherwise the application will error out.
