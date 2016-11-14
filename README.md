@@ -13,12 +13,12 @@ Made using:
 1. First, using Google Cloud services, create your project, server instance, and activate billing.
 2. Buy a domain name, for example menubot.xyz
 3. Acquire a static IP for the domain
-    a. Assign an already existing static IP to the instance: https://console.cloud.google.com/networking/addresses/
-    b. Reserve a new static IP for the domain: https://console.cloud.google.com/networking/addresses/add
+    1. Assign an already existing static IP to the instance: https://console.cloud.google.com/networking/addresses/
+    2. Reserve a new static IP for the domain: https://console.cloud.google.com/networking/addresses/add
 4. Create a zone. A zone controls the DNS of a single domain name, like for example, menubot.xyz. We should already have a zone for Menubot.xyz. https://console.cloud.google.com/networking/dns/zones
 5. Create an appropriate record in this zone, for the static IP you just created.
-    a. If your IP address is in the form #.#.#.#, you have an IPv4 address and need to create an A record.
-    b. If your IP address is in the format #:#:#:#:#:#:#:#, you have an IPv6 address and should create an AAAA record to point the domain to the IP address.
+    1. If your IP address is in the form #.#.#.#, you have an IPv4 address and need to create an A record.
+    2. If your IP address is in the format #:#:#:#:#:#:#:#, you have an IPv6 address and should create an AAAA record to point the domain to the IP address.
 6. Create an appropriate CNAME. Click Add record set while in the Cloud Platform Console.
 7. Under DNS Name, enter www.
 8. Under Resource Record Type, choose CNAME.
