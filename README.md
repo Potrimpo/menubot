@@ -270,6 +270,12 @@ sudo -u postgres createdb menubot
 
 > Use this when you've made a change to the application that will effect the database's structure in anyway, otherwise the application will error out.
 
+##### Restarting postgres
+```
+sudo /etc/init.d/postgresql restart
+```
+
+> I can't remember why this is important.
 
 ## Development setup
 
@@ -377,3 +383,10 @@ sudo -u postgres createdb menubot
 ```
 
 > Use this when you've made a change to the application that will effect the database's structure in anyway, otherwise the application will error out.
+
+##### Restarting postgres
+```
+sudo /etc/init.d/postgresql restart
+```
+
+> I can't remember why this is important.
