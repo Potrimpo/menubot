@@ -40,7 +40,8 @@ app.use(({method, url}, rsp, next) => {
 });
 app.use(bodyParser.json({ verify: verifyRequestSignature }));
 // app.use('/static', express.static(__dirname + 'public'));
-app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
+
+app.use(express.static(path.join(__dirname, 'dist'), { maxAge: 31557600000 }));
 
 // Express configuration.
 app.engine('ejs', ejsEngine);
@@ -48,9 +49,9 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.enable("trust proxy");
 app.use(compress());
-app.use(connectAssets({
-  paths: [path.join(__dirname, 'public/css'), path.join(__dirname, 'public/js')]
-}));
+// app.use(connectAssets({
+//   paths: [path.join(__dirname, 'public/css'), path.join(__dirname, 'public/js')]
+// }));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

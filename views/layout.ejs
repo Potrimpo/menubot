@@ -27,8 +27,7 @@
     <title><%= title %></title>
 
     <!-- Bootstrap -->
-    <%- css('main') %>
-    <%- css('menubot') %>
+      <link rel="stylesheet" type="text/css" href="/css/index.css" />
   </head>
   <body>
     <% include partials/header %>
@@ -38,7 +37,7 @@
       <%- body %>
     </div>
 
-    <%- js('common') %>
+    <script type="text/javascript" href="/js/jquery.bundle.js" />
 
   <% if(gaCode) { %>
     <script>
