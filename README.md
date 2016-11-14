@@ -27,6 +27,7 @@ Made using:
 11. Now we must set our domain name on our domain name registration service (EG: Onlydomians, gandi.net) to point to google’s name servers. Log onto the service with which the domain was registered. You can find the logon for the Onlydomains account on the google doc: Business passwords.
 12. Find the name servers for the zone we just created. These can be found as the data value for the automatically created “NS” entry.
 13. Set the domain name on our domain name registration service to delegate to the name servers we found in the previous step.
+
 ##### Congratulations, you’re done. The changes should propagate in no more than 48 hours.
 
 
@@ -43,29 +44,34 @@ Made using:
 ##### Documentation begins
 First create an Ubuntu 16 instance on Google Cloud.
 
-`cd ~`
-`sudo apt-get update`
-`curl -sL https://deb.nodesource.com/setup_6.x -o nodesource_setup.sh`
-`nano nodesource_setup.sh`
-`sudo bash nodesource_setup.sh`
-`sudo apt-get install nodejs build-essential letsencrypt`
-`sudo git clone https://github.com/Potrimpo/menubot.git --branch ssl/tsl`
-`cd menubot/`
-`sudo npm i`
-`sudo npm install -g pm2`
-`pm2 start process.json`
-`pm2 startup systemd`
+```
+cd ~
+sudo apt-get update
+curl -sL https://deb.nodesource.com/setup_6.x -o nodesource_setup.sh
+nano nodesource_setup.sh
+sudo bash nodesource_setup.sh
+sudo apt-get install nodejs build-essential letsencrypt
+sudo git clone https://github.com/Potrimpo/menubot.git --branch ssl/tsl
+cd menubot/
+sudo npm i
+sudo npm install -g pm2
+pm2 start process.json
+pm2 startup systemd
+```
 
 Enter the commands returned.
 
-`cd ~`
-`sudo apt-get install nginx`
-`sudo rm /etc/nginx/sites-available/default`
-`sudo nano /etc/nginx/sites-available/default`
+```
+cd ~
+sudo apt-get install nginx
+sudo rm /etc/nginx/sites-available/default
+sudo nano /etc/nginx/sites-available/default
+```
 
 Paste in the following text:
 
-`server {
+```
+server {
     listen 80;
 
     server_name menubot.xyz;
@@ -78,16 +84,19 @@ Paste in the following text:
         proxy_set_header Host $host;
         proxy_cache_bypass $http_upgrade;
     }
-}`
+}
+```
 
 Write out with CTRL + O, then ENTER, then exit with CTRL + X
+```
 
-`sudo nginx -t`
-`sudo systemctl restart nginx`
-`sudo ufw allow 'Nginx Full'`
-`sudo ufw allow ssh`
-`sudo systemctl stop nginx`
-`sudo letsencrypt certonly --standalone`
+sudo nginx -t
+sudo systemctl restart nginx
+sudo ufw allow 'Nginx Full'
+sudo ufw allow ssh
+sudo systemctl stop nginx
+sudo letsencrypt certonly --standalone
+```
 
 Enter the domain name as menubot.xyz
 
@@ -95,13 +104,14 @@ Enter the domain name as menubot.xyz
 
 Remove the text there, and paste in the following text, with one alteration; change the placeholder [INTERNAL IP] to the server’s internal IP, found on the instances page on the Google Cloud console:
 
-`# HTTP - redirect all requests to HTTPS:
+```
+# HTTP - redirect all requests to HTTPS:
 server {
         listen 80;
         return 301 https://$host$request_uri;
 }
 
-# HTTPS - proxy requests on to local Node.js app:
+\# HTTPS - proxy requests on to local Node.js app:
 server {
         listen 443;
         server_name menubot.xyz;
@@ -126,18 +136,23 @@ server {
                 proxy_cache_bypass $http_upgrade;
                 proxy_redirect off;
         }
-}`
+}
+```
 
 Write out with CTRL + O, then ENTER, then exit with CTRL + X
 
-`sudo nginx -t`
-`sudo systemctl start nginx`
-`sudo crontab -e`
+```
+sudo nginx -t
+sudo systemctl start nginx
+sudo crontab -e
+```
 
 Add the following lines:
 
-`30 2 * * 1 /usr/bin/letsencrypt renew >> /var/log/le-renew.log
-35 2 * * 1 /bin/systemctl reload nginx`
+```
+30 2 * * 1 /usr/bin/letsencrypt renew >> /var/log/le-renew.log
+35 2 * * 1 /bin/systemctl reload nginx
+```
 
 Write out with CTRL + O, then ENTER, then exit with CTRL + X
 
