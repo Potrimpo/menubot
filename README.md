@@ -390,3 +390,19 @@ sudo /etc/init.d/postgresql restart
 ```
 
 > I can't remember why this is important.
+
+## Running the server
+
+#### installing things
+```
+npm i -g less
+```
+
+```
+sudo npm run build
+```
+> if this errors out during the LESS compilation stage, try
+```
+sudo -E env "PATH=$PATH" lessc public/css/bigAss.less dist/css/ index.css
+```
+because it doesnt have the right permissions to read files regularly, and when you use `sudo` it can't find the path to less
