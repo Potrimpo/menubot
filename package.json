@@ -17,7 +17,7 @@
     "test": "mocha",
     "dev": "webpack -d --progress --colors --watch",
     "build:jsx": "webpack -d -p --progress",
-    "build:less": "lessc -x public/css/bigAss.less dist/css/index.css"
+    "build:less": "lessc public/css/bigAss.less dist/css/index.css"
   },
   "repository": "https://github.com/Potrimpo/wit-ai-messenger-bot.git",
   "dependencies": {
