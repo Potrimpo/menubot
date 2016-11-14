@@ -2,6 +2,10 @@
  * Created by lewis.knoxstreader on 21/09/16.
  */
 
+// using webpack to bundle all javascript together for one big file to send
+const $ = require('./lib/jquery-2.1.3.min'),
+  _ = require('./lib/bootstrap.min');
+
 $(document).ready(function() {
   console.log("WE IN IT");
 

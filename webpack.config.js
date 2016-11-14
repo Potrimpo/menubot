@@ -1,11 +1,13 @@
 var path = require('path');
 
-var APP_DIR = path.resolve(__dirname, 'public/js/orders');
-var BUILD_DIR = path.resolve(__dirname, 'public/dist');
+const JSX_DIR = path.resolve(__dirname, 'public/jsx/orders'),
+      JS_DIR = path.resolve(__dirname, 'public/js'),
+      BUILD_DIR = path.resolve(__dirname, 'dist/js');
 
 var config = {
   entry: {
-   orders: `${APP_DIR}/index.jsx`,
+    orders: `${JSX_DIR}/index.jsx`,
+    jquery: `${JS_DIR}/submit.js`,
   },
   output: {
     path: BUILD_DIR,
@@ -15,12 +17,8 @@ var config = {
     loaders: [
       {
         test: /\.jsx?/,
-        include: APP_DIR,
+        include: [JSX_DIR, JS_DIR],
         loader: 'babel'
-      },
-      {
-        test: /\.less$/,
-        loader: "style!css!autoprefixer!less"
       }
     ]
   },
