@@ -186,18 +186,22 @@ pm2 kill
 
 
 ##### To remove previous logs, and only log new logs
-```pm2 kill
+```
+pm2 kill
 pm2 flush
 sudo pm2 start process.json
-pm2 logs --lines 1000```
+pm2 logs --lines 1000
+```
 
 > It's very easy to mix up logs from previous runs of the application, as there isn't any visible break point separating the two. This may confuse you into thinking the errors of the previous run are still around. This prevents just such a mix up.
 
 
 ##### To clone a fresh branch from git
-```cd [LOCATION OF MENUBOT DIRECTORY]
+```
+cd [LOCATION OF MENUBOT DIRECTORY]
 sudo rm -r menubot
-sudo git clone https://github.com/Potrimpo/menubot.git --branch [NAME OF BRANCH]```
+sudo git clone https://github.com/Potrimpo/menubot.git --branch [NAME OF BRANCH]
+```
 
 > Occasionally, the errors you've caused by fiddling about are too large to warrant a fix, and you just want to start fresh. Use these commands to totally delete the menubot directory, and replacing it with a fresh one from git.
 
@@ -220,39 +224,49 @@ sudo git clone https://github.com/Potrimpo/menubot.git --branch [NAME OF BRANCH]
 ### First time setup
 
 ##### Documentation begins
-```sudo apt-get update
+```
+sudo apt-get update
 sudo apt-get install postgresql postgresql-contrib
 sudo -u postgres createdb menubot
-sudo nano /etc/postgresql/{version}/main/postgresql.conf```
+sudo nano /etc/postgresql/{version}/main/postgresql.conf
+```
 
 replace `listen_addressses = 'localhost'` with `listen_addresses = '*'`
 
-```sudo vim /etc/postgresql/{version}/main/pg_hba.conf```
+```
+sudo vim /etc/postgresql/{version}/main/pg_hba.conf
+```
 
-add new lines
+add the new lines:
 
   ```
   # TYPE    DATABASE    USER            ADDRESS                           METHOD
     host    all         postgres      {postgres instance local ip}/32     md5
   ```
 
-```sudo service postgresql restart```
+```
+sudo service postgresql restart
+```
 ##### Congratulations, you're done with setting up the database server.
 
 
 ### Useful commands
 
 ##### Inspecting the database
-```sudo -u postgres psql menubot
+```
+sudo -u postgres psql menubot
 \d
-SELECT * FROM [TABLE NAME]```
+SELECT * FROM [TABLE NAME]
+```
 
 >Use this to inspect the contents of tables.
 
 
 ##### Renewing the database
-```sudo -u postgres dropdb menubot
-sudo -u postgres createdb menubot```
+```
+sudo -u postgres dropdb menubot
+sudo -u postgres createdb menubot
+```
 
 > Use this when you've made a change to the application that will effect the database's structure in anyway, otherwise the application will error out.
 
@@ -264,12 +278,15 @@ sudo -u postgres createdb menubot```
 #### First time setup
 
 ##### Documentation begins
-```cd [PREFERED LOCATION]
-sudo git clone https://github.com/Potrimpo/menubot.git```
+```
+cd [PREFERED LOCATION]
+sudo git clone https://github.com/Potrimpo/menubot.git
+```
 
 Download linux version of Ngrok
 
-```unzip [PATH TO NGROK]/ngrok.zip
+```
+unzip [PATH TO NGROK]/ngrok.zip
 sudo apt-get update
 sudo apt-get install postgresql postgresql-contrib
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
@@ -277,20 +294,25 @@ sudo apt-get install -y nodejs
 npm install pm2 -g
 cd [PATH TO MENUBOT DIR]/menubot
 sudo npm i
-sudo nano /etc/postgresql/[POSTGRESQL VERSION NUMBER]/main/pg_hba.conf```
+sudo nano /etc/postgresql/[POSTGRESQL VERSION NUMBER]/main/pg_hba.conf
+```
 
 Down the bottom, under the commented line `# IPv4 local connections:` change the final word on the line to `trust`
 
-```/etc/init.d/postgresql restart
+```
+/etc/init.d/postgresql restart
 sudo -i -u postgres
 cd /home/[USERNAME]/[PATH TO MENUBOT]/menubot
 pm2 start process.json --env development --watch
-pm2 logs```
+pm2 logs
+```
 
 Create a new terminal window
 
-```cd [PATH TO NGROK]/ngrok
-./ngrok http 8445```
+```
+cd [PATH TO NGROK]/ngrok
+./ngrok http 8445
+```
 
 Create a new Facebook developers app project and add the required products along with the appropriate configuration. The details of this arcane ritual have been lost to time, however clues may be gleaned from elder wizard Lewis Knox Streader.
 
@@ -313,15 +335,19 @@ Access the webpage with the Ngrok url you've generated.
 > This setup assumes you have already followed the first time setup, and now need to restart the server.
 
 ##### Documentation begins
-```sudo -i -u postgres
+```
+sudo -i -u postgres
 cd /home/[USERNAME]/[PATH TO MENUBOT]/menubot
 pm2 start process.json --env development --watch
-pm2 logs```
+pm2 logs
+```
 
 Create a new terminal window
 
-```cd [PATH TO NGROK]/ngrok
-./ngrok http 8445```
+```
+cd [PATH TO NGROK]/ngrok
+./ngrok http 8445
+```
 
 Add the ngrok url you have just generated to the Facebook development console. This will require several things:
 * In the settings section, add the domain to the “app domains” field.
