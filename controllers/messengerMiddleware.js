@@ -2,7 +2,7 @@
  * Created by lewis.knoxstreader on 18/09/16.
  */
 
-const { FB_VERIFY_TOKEN } = require('../envVariables'),
+const FB_VERIFY_TOKEN = process.env.FB_VERIFY_TOKEN,
   { sessions, findOrCreateSession } = require('../messengerSessions'),
   runActions = require('../messaging/runActions'),
   postbackHandler = require('../messaging/sending-menu'),

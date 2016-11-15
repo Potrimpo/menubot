@@ -19,6 +19,7 @@ router.get('/:companyId', (req, res) => {
     .then(data => {
       console.log("This is the object being passed to the .ejs files: " + JSON.stringify(data));
       return res.render('account/company', {
+        bot_status: data.bot_status,
         fbid: data.fbid,
         title: data.name,
         items: data.items,
@@ -42,6 +43,7 @@ function fullMenu (fbid, data) {
   const itemids = data.map(val => val.itemid);
   const wholeMenu = {
     name: data[0].name,
+    bot_status: data[0].bot_status,
     fbid,
     items: data
   };

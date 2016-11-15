@@ -24,7 +24,7 @@ const { sequelize } = require('./database/models/index'),
 
 // API keys and Passport configuration.
 const secrets = require('./config/secrets'),
-  { FB_APP_SECRET } = require('./envVariables'),
+  FB_APP_SECRET = process.env.FB_APP_SECRET,
   passportConf = require('./config/passport');
 
 // console.log(`/webhook is accepting Verify Token: "${FB_VERIFY_TOKEN}"`);

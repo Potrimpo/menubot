@@ -25,7 +25,7 @@ router.route('/activate/:fbid')
     return findCompany(req.params.fbid)
       .then(data => activateBot(data.access_token))
       .then(() => setBotStatus(req.params.fbid, true))
-      .then(() => res.redirect('/'));
+      .then(() => res.redirect(`/company/${req.params.fbid}`));
   });
 
 router.route('/photos/:fbid')
@@ -60,7 +60,7 @@ function syncPhotos (pageToken) {
       const photosWithTypeids = photos
         .map(val => {
           for (let x = data.length - 1; x >= 0; x--) {
-            if (data[x].type == val.name) {
+            if (data[x].type.toLowerCase() == val.name.toLowerCase()) {
               val.typeid = data[x].typeid;
               return val
             }

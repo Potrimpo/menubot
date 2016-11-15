@@ -15,7 +15,7 @@ exports.findCompany = (id) => Company.findById(id);
 
 exports.getCompanyMenu = id => {
   return sequelize.query(
-    "SELECT companies.name, items.item, items.itemid, items.photo, items.item_price FROM companies" +
+    "SELECT companies.name, companies.bot_status, items.item, items.itemid, items.photo, items.item_price FROM companies" +
     " INNER JOIN items ON companies.fbid = items.fbid" +
     " WHERE companies.fbid = $1" +
     " ORDER BY itemid ASC",
@@ -215,7 +215,7 @@ exports.addItemPhotos = (val, fbid) => {
     return sequelize.query(
       "UPDATE items" +
       " SET photo = :picture" +
-      " WHERE fbid = :fbid AND item = :name" +
+      " WHERE fbid = :fbid AND lower(item) = lower(:name)" +
       " RETURNING item, itemid",
       { replacements: { fbid, picture: val.picture, name: val.name }, type: sequelize.QueryTypes.UPDATE }
     );
@@ -228,7 +228,7 @@ exports.addTypePhotos = val => {
     return sequelize.query(
       "UPDATE types" +
       " SET photo = :picture" +
-      " WHERE typeid = :typeid AND type = :name",
+      " WHERE typeid = :typeid AND lower(type) = lower(:name)",
       { replacements: { typeid: val.typeid, picture: val.picture, name: val.name }, type: sequelize.QueryTypes.UPDATE }
     );
   }

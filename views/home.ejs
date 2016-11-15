@@ -30,11 +30,6 @@
         <div>
             <a href="/company/<%= companies[i].fbid %>" role="button" class="btn btn-default btn-space home-button">Change Menu Items</a>
         </div>
-        <% if (companies[i].bot_status == false) { %>
-            <div>
-                <a href="/api/activate/<%= companies[i].fbid %>" role="button" class="btn btn-default btn-space home-button">Activate Facebook Bot</a>
-            </div>
-        <% } %>
     </div>
     <% } %>
 
