@@ -32,12 +32,13 @@
   <body>
     <% include partials/header %>
 
+    <script type="text/javascript" src="/js/jquery.bundle.js" defer></script>
+
     <div class="container">
       <% include partials/flash %>
       <%- body %>
     </div>
 
-    <script type="text/javascript" href="/js/jquery.bundle.js" />
 
   <% if(gaCode) { %>
     <script>
