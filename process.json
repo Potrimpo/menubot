@@ -9,6 +9,7 @@
       "serverIP": "10.146.0.2",
       "postgresPassword": "45FeistyEggsFearY2k",
       "sessionTable": "Sessions",
+      "FACEBOOK_ID": 1112960105450189,
       "FB_APP_SECRET": "096eac9cb0c0ad06dd3204440515febc",
       "FB_VERIFY_TOKEN": "saveme"
     },
@@ -19,7 +20,6 @@
       "serverIP": "localhost",
       "postgresPassword": "45FeistyEggsFearY2k",
       "sessionTable": "Sessions",
-      "FB_APP_SECRET": "096eac9cb0c0ad06dd3204440515febc",
       "FB_VERIFY_TOKEN": "saveme"
     }
   }

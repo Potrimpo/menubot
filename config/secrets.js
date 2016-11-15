@@ -1,4 +1,5 @@
 'use strict';
+const { FACEBOOK_ID, FB_APP_SECRET } = require('../envVariables');
 
 module.exports = {
 
@@ -8,6 +9,8 @@ module.exports = {
 
   // used in passport verification
   facebook: {
+    clientID: process.env.FACEBOOK_ID || FACEBOOK_ID,
+    clientSecret: process.env.FB_APP_SECRET || FB_APP_SECRET,
     callbackURL: '/auth/facebook/callback',
     passReqToCallback: true,
     enableProof: true,
