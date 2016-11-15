@@ -3,9 +3,15 @@
 <div class="page-header text-center">
     <h2 class="company-head" id="<%= fbid %>"><%= title %></h2>
     <div>
-        <a href="/api/photos/<%= fbid %>" role="button" class="btn btn-default btn-space home-button">
+        <a href="/" class="btn btn-default btn-space">
+          <i class="fa fa-long-arrow-left" style="font-size:18px;" aria-hidden="true"></i>
+        </a>
+        <a href="/api/photos/<%= fbid %>" role="button" class="btn btn-default btn-space">
             Fetch photos from Facebook
         </a>
+        <% if (bot_status == false) { %>
+        <a href="/api/activate/<%= fbid %>" role="button" class="btn btn-default btn-space">Activate messenger bot</a>
+        <% } %>
     </div>
 </div>
 <div class="container">

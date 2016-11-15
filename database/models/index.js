@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize'),
-  { sessionTable } = require('../../envVariables'),
+  sessionTable = process.env.sessionTable,
   bcrypt = require('bcrypt-nodejs');
 
 const sequelize = new Sequelize(
