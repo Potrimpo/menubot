@@ -3,6 +3,7 @@ performanceLogs
 .idea
 *.log
 output.json
-dist
+dist/js
+dist/css
 envVariables.js
 icon.png
