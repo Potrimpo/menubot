@@ -3,6 +3,6 @@ performanceLogs
 .idea
 *.log
 output.json
-public/asyncDist
+dist
 envVariables.js
 icon.png

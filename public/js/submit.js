@@ -2,6 +2,12 @@
  * Created by lewis.knoxstreader on 21/09/16.
  */
 
+// using webpack to bundle all javascript together for one big file to send
+window.jQuery = window.$ = require('./lib/jquery-2.1.3.min');
+const _ = require('./lib/bootstrap.min');
+
+console.log("PRIOR TO BEING IN IT");
+
 $(document).ready(function() {
   console.log("WE IN IT");
 

@@ -1,19 +1,23 @@
 var path = require('path');
 
-var APP_DIR = path.resolve(__dirname, 'public/js/orders');
-var BUILD_DIR = path.resolve(__dirname, 'public/dist');
+const JSX_DIR = path.resolve(__dirname, 'public/jsx/orders'),
+      JS_DIR = path.resolve(__dirname, 'public/js'),
+      BUILD_DIR = path.resolve(__dirname, 'dist/js');
 
 var config = {
-  entry: `${APP_DIR}/index.jsx`,
+  entry: {
+    orders: `${JSX_DIR}/index.jsx`,
+    jquery: `${JS_DIR}/submit.js`,
+  },
   output: {
     path: BUILD_DIR,
-    filename: 'bundle.js'
+    filename: "[name].bundle.js"
   },
   module: {
     loaders: [
       {
         test: /\.jsx?/,
-        include: APP_DIR,
+        include: [JSX_DIR, JS_DIR],
         loader: 'babel'
       }
     ]
@@ -24,28 +28,3 @@ var config = {
 };
 
 module.exports = config;
-
-var ASYNC_DIR = path.resolve(__dirname, 'public/js/async');
-var ASYNC_BUILD = path.resolve(__dirname, 'public/asyncDist');
-
-var asyncConfig = {
-  entry: `${ASYNC_DIR}/index.jsx`,
-  output: {
-    path: ASYNC_BUILD,
-    filename: 'bundle.js'
-  },
-  module: {
-    loaders: [
-      {
-        test: /\.jsx?/,
-        include: ASYNC_DIR,
-        loader: 'babel'
-      }
-    ]
-  },
-  resolve: {
-    extensions: ['', '.js', '.jsx'],
-  }
-};
-
-module.exports = asyncConfig;

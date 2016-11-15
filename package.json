@@ -9,11 +9,14 @@
   ],
   "main": "index.js",
   "scripts": {
-    "start": "pm2 start process.json --env development | pm2 logs",
+    "start": "pm2 start process.json --env dev | pm2 logs",
     "prod": "pm2 start process.json",
+    "build": "npm run build:js && npm run build:less",
+
     "test": "mocha",
     "dev": "webpack -d --progress --colors --watch",
-    "build": "webpack -p"
+    "build:js": "sudo -E env \"PATH=$PATH\" webpack -d -p --progress",
+    "build:less": "sudo -E env \"PATH=$PATH\" lessc public/css/bigAss.less dist/css/index.css"
   },
   "repository": "https://github.com/Potrimpo/wit-ai-messenger-bot.git",
   "dependencies": {
@@ -21,7 +24,6 @@
     "body-parser": "^1.15.2",
     "chrono-node": "^1.2.4",
     "compression": "^1.6.1",
-    "connect-assets": "^5.2.1",
     "connect-pg-simple": "^3.1.0",
     "cookie-parser": "^1.4.1",
     "crypto": "0.0.3",
@@ -35,14 +37,13 @@
     "fbgraph": "^1.1.0",
     "less": "2.5.1",
     "lusca": "^1.4.1",
-    "material-ui": "^0.15.4",
     "method-override": "^2.3.5",
     "morgan": "^1.7.0",
-    "multer": "^1.1.0",
     "neo-async": "^1.8.2",
     "node-fetch": "^1.5.1",
     "passport": "^0.3.2",
     "passport-facebook": "^2.1.0",
+    "pg": "^4.5.5",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
     "react-redux": "^4.4.5",
@@ -61,6 +62,7 @@
     "chai": "^3.5.0",
     "chai-http": "^3.0.0",
     "expect.js": "^0.3.1",
+    "less": "^2.5.1",
     "mocha": "^3.0.2",
     "supertest": "^1.2.0",
     "webpack": "^1.13.2"

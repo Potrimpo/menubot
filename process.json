@@ -8,17 +8,17 @@
       "postgresURL": "10.146.0.3",
       "serverIP": "10.146.0.2",
       "postgresPassword": "45FeistyEggsFearY2k",
-      "sessionTable": "session",
+      "sessionTable": "Sessions",
       "FB_APP_SECRET": "096eac9cb0c0ad06dd3204440515febc",
       "FB_VERIFY_TOKEN": "saveme"
     },
-    "env_development": {
+    "env_dev": {
       "NODE_ENV": "development",
       "PORT": 8445,
       "postgresURL": "localhost",
       "serverIP": "localhost",
       "postgresPassword": "45FeistyEggsFearY2k",
-      "sessionTable": "session",
+      "sessionTable": "Sessions",
       "FB_APP_SECRET": "096eac9cb0c0ad06dd3204440515febc",
       "FB_VERIFY_TOKEN": "saveme"
     }

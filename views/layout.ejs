@@ -27,18 +27,18 @@
     <title><%= title %></title>
 
     <!-- Bootstrap -->
-    <%- css('main') %>
-    <%- css('menubot') %>
+      <link rel="stylesheet" type="text/css" href="/css/index.css" />
   </head>
   <body>
     <% include partials/header %>
+
+    <script type="text/javascript" src="/js/jquery.bundle.js" defer></script>
 
     <div class="container">
       <% include partials/flash %>
       <%- body %>
     </div>
 
-    <%- js('common') %>
 
   <% if(gaCode) { %>
     <script>

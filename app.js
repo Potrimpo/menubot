@@ -12,13 +12,11 @@ const express = require('express'),
   errorHandler = require('errorhandler'),
   lusca = require('lusca'),
   methodOverride = require('method-override'),
-  multer = require('multer'),
   ejsEngine = require('ejs-mate'),
   flash = require('express-flash'),
   path = require('path'),
   passport = require('passport'),
-  expressValidator = require('express-validator'),
-  connectAssets = require('connect-assets');
+  expressValidator = require('express-validator');
 
 
 const { sequelize } = require('./database/models/index'),
@@ -26,7 +24,7 @@ const { sequelize } = require('./database/models/index'),
 
 // API keys and Passport configuration.
 const secrets = require('./config/secrets'),
-  { FB_APP_SECRET, sessionTable } = require('./envVariables'),
+  { FB_APP_SECRET } = require('./envVariables'),
   passportConf = require('./config/passport');
 
 // console.log(`/webhook is accepting Verify Token: "${FB_VERIFY_TOKEN}"`);
@@ -41,7 +39,8 @@ app.use(({method, url}, rsp, next) => {
 });
 app.use(bodyParser.json({ verify: verifyRequestSignature }));
 // app.use('/static', express.static(__dirname + 'public'));
-app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
+
+app.use(express.static(path.join(__dirname, 'dist'), { maxAge: 31557600000 }));
 
 // Express configuration.
 app.engine('ejs', ejsEngine);
@@ -49,13 +48,9 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.enable("trust proxy");
 app.use(compress());
-app.use(connectAssets({
-  paths: [path.join(__dirname, 'public/css'), path.join(__dirname, 'public/js')]
-}));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(multer({ dest: path.join(__dirname, 'uploads') }).single());
 app.use(expressValidator());
 app.use(methodOverride());
 app.use(cookieParser());
@@ -64,7 +59,7 @@ app.use(cookieParser());
 app.use(session({
   store: new pgSession({
     conString: `postgres://postgres:${process.env.postgresPassword}@${process.env.postgresURL}:5432/menubot`,
-    tableName: sessionTable
+    tableName: process.env.sessionTable
   }),
   secret: secrets.sessionSecret,
   saveUninitialized: true,
