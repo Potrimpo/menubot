@@ -24,7 +24,7 @@ const { sequelize } = require('./database/models/index'),
 
 // API keys and Passport configuration.
 const secrets = require('./config/secrets'),
-  { FB_APP_SECRET, sessionTable } = require('./envVariables'),
+  { FB_APP_SECRET } = require('./envVariables'),
   passportConf = require('./config/passport');
 
 // console.log(`/webhook is accepting Verify Token: "${FB_VERIFY_TOKEN}"`);
@@ -59,7 +59,7 @@ app.use(cookieParser());
 app.use(session({
   store: new pgSession({
     conString: `postgres://postgres:${process.env.postgresPassword}@${process.env.postgresURL}:5432/menubot`,
-    tableName: sessionTable
+    tableName: process.env.sessionTable
   }),
   secret: secrets.sessionSecret,
   saveUninitialized: true,
