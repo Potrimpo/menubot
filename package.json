@@ -14,7 +14,7 @@
     "build": "npm run build:js && npm run build:less",
     "test": "mocha",
     "dev": "webpack -d --progress --colors --watch",
-    "build:js": "sudo webpack -d -p --progress",
+    "build:js": "sudo -E env \"PATH=$PATH\" webpack -d -p --progress",
     "build:less": "sudo -E env \"PATH=$PATH\" lessc public/css/bigAss.less dist/css/index.css"
   },
   "repository": "https://github.com/Potrimpo/wit-ai-messenger-bot.git",

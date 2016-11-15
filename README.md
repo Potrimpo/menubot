@@ -54,7 +54,7 @@ sudo apt-get install nodejs build-essential letsencrypt
 sudo git clone https://github.com/Potrimpo/menubot.git --branch ssl/tsl
 cd menubot/
 sudo npm i
-sudo npm install -g pm2
+sudo npm -g pm2 webpack less
 pm2 start process.json
 pm2 startup systemd
 ```
@@ -393,11 +393,16 @@ sudo /etc/init.d/postgresql restart
 
 ## Running the server
 
-#### installing things
-```
-npm i -g less
-```
-
 ```
 npm run build
 ```
+
+```
+npm run prod
+```
+> for live gcloud instance
+
+```
+npm start
+```
+> for local development
