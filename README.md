@@ -394,7 +394,7 @@ sudo /etc/init.d/postgresql restart
 ## Running the server
 
 ```
-npm run build
+sudo npm run build
 ```
 
 ```
