@@ -54,7 +54,7 @@ sudo apt-get install nodejs build-essential letsencrypt
 sudo git clone https://github.com/Potrimpo/menubot.git --branch ssl/tsl
 cd menubot/
 sudo npm i
-sudo npm -g pm2 webpack less
+sudo npm -g pm2 webpack less less-plugin-clean-css
 pm2 start process.json
 pm2 startup systemd
 ```
@@ -187,10 +187,9 @@ pm2 kill
 
 ##### To remove previous logs, and only log new logs
 ```
-pm2 kill
 pm2 flush
-sudo pm2 start process.json
-pm2 logs --lines 1000
+sudo pm2 restart process.json
+pm2 logs
 ```
 
 > It's very easy to mix up logs from previous runs of the application, as there isn't any visible break point separating the two. This may confuse you into thinking the errors of the previous run are still around. This prevents just such a mix up.
@@ -393,9 +392,11 @@ sudo /etc/init.d/postgresql restart
 
 ## Running the server
 
+First, build the static assets (LESS --> CSS, JSX --> JS, etc.)
 ```
-sudo npm run build
+./build.sh
 ```
+> may need to be run with `sudo`
 
 ```
 npm run prod
@@ -406,3 +407,5 @@ npm run prod
 npm start
 ```
 > for local development
+
+See `process.json` for the PM2 commands that are being run through npm

@@ -1,13 +1,13 @@
-var path = require('path');
+const path = require('path');
 
-const JSX_DIR = path.resolve(__dirname, 'public/jsx/orders'),
-      JS_DIR = path.resolve(__dirname, 'public/js'),
-      BUILD_DIR = path.resolve(__dirname, 'dist/js');
+const JSX_DIR = path.resolve(__dirname, './public/jsx/orders'),
+      JS_DIR = path.resolve(__dirname, './public/js'),
+      BUILD_DIR = path.resolve(__dirname, './dist/js');
 
-var config = {
+const config = {
   entry: {
-    orders: `${JSX_DIR}/index.jsx`,
-    jquery: `${JS_DIR}/submit.js`,
+    orders: `${JSX_DIR}/index`,
+    jquery: `${JS_DIR}/submit`,
   },
   output: {
     path: BUILD_DIR,

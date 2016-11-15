@@ -11,12 +11,8 @@
   "scripts": {
     "start": "pm2 start process.json --env dev | pm2 logs",
     "prod": "pm2 start process.json",
-    "build": "npm run build:js && npm run build:less",
-
     "test": "mocha",
-    "dev": "webpack -d --progress --colors --watch",
-    "build:js": "sudo -E env \"PATH=$PATH\" webpack -d -p --progress",
-    "build:less": "sudo -E env \"PATH=$PATH\" lessc public/css/bigAss.less dist/css/index.css"
+    "dev": "webpack -d --progress --colors --watch"
   },
   "repository": "https://github.com/Potrimpo/wit-ai-messenger-bot.git",
   "dependencies": {
@@ -62,9 +58,7 @@
     "chai": "^3.5.0",
     "chai-http": "^3.0.0",
     "expect.js": "^0.3.1",
-    "less": "^2.5.1",
     "mocha": "^3.0.2",
-    "supertest": "^1.2.0",
-    "webpack": "^1.13.2"
+    "supertest": "^1.2.0"
   }
 }
