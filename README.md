@@ -188,8 +188,7 @@ pm2 kill
 ##### To remove previous logs, and only log new logs
 ```
 pm2 flush
-sudo pm2 restart process.json
-pm2 logs
+npm start | pm2 logs
 ```
 
 > It's very easy to mix up logs from previous runs of the application, as there isn't any visible break point separating the two. This may confuse you into thinking the errors of the previous run are still around. This prevents just such a mix up.
