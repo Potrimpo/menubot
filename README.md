@@ -1,6 +1,5 @@
 # Menubot
 
-
 ## DNS forwarding
 
 ### First time setup
@@ -45,17 +44,25 @@ Made using:
 First create an Ubuntu 16 instance on Google Cloud.
 
 ```
-cd ~
+sudo adduser pm2er
+```
+
+Add password as listed on business password doc, if you enter a different password, be sure to make a note if it on the doc. Leave user information as default.
+
+```
+sudo usermod -aG sudo pm2er
+sudo -i
+sudo -u pm2er -i
 sudo apt-get update
 curl -sL https://deb.nodesource.com/setup_6.x -o nodesource_setup.sh
-nano nodesource_setup.sh
 sudo bash nodesource_setup.sh
 sudo apt-get install nodejs build-essential letsencrypt
-sudo git clone https://github.com/Potrimpo/menubot.git --branch ssl/tsl
+sudo git clone https://github.com/Potrimpo/menubot.git
 cd menubot/
 sudo npm i
-sudo npm -g pm2 webpack less less-plugin-clean-css
-pm2 start process.json
+sudo npm i pm2 webpack less less-plugin-clean-css -g
+sudo ./build.sh
+npm run prod
 pm2 startup systemd
 ```
 
@@ -164,13 +171,42 @@ Secondarily, the app must be configured to work with Facebook. This has been exc
 ##### Congratulations, you're done with setting up the application server. However, the database server still needs to be setup.
 
 
-### Useful commands
+### Day to day application server setup
+> This setup process is used to run the server when the first time setup process has already been followed. This might when you've pulled a new version of the server from git, or when you've otherwise changed the live version, and now need to restart to implement your changes.
 
-##### To start PM2
+##### Documentation begins
+
+##### Assure you are logged in as the pm2er user
+```
+sudo -i
+sudo -u pm2er -i
+```
+
+##### Preform any changes you wanted to implement, such as pulling in a new update from git.
+
+##### Build the static assets
+
 ```
 cd [LOCATION OF MENUBOT DIRECTORY]/menubot
-pm2 start process.json
+sudo ./build.sh
 ```
+
+##### Finally, start the PM2 daemon and view logs
+```
+npm run prod
+pm2 logs --lines 1000
+```
+##### Congratulations, the server has been started once again.
+
+### Useful commands
+
+##### To log on as pm2er user
+```
+sudo -i
+sudo -u pm2er -i
+```
+
+> A PM2 daemon started by a user cannot be interacted with, or seen by any other user. This makes it difficult when different developers are using different accounts. One process has to be stopped for the other developer to have access to PM2. By running the process on a third party user, anyone can access PM2 by changing to this pm2er user.
 
 
 ##### To totally stop PM2
@@ -178,12 +214,12 @@ pm2 start process.json
 pm2 kill
 ```
 
-
 ##### To view logs
-```pm2 logs --lines 1000```
+```
+pm2 logs --lines 1000
+```
 
 > Streams new logs, and shows the previous 1000 lines of logs.
-
 
 ##### To remove previous logs, and only log new logs
 ```
@@ -194,7 +230,6 @@ pm2 logs
 
 > It's very easy to mix up logs from previous runs of the application, as there isn't any visible break point separating the two. This may confuse you into thinking the errors of the previous run are still around. This prevents just such a mix up.
 
-
 ##### To clone a fresh branch from git
 ```
 cd [LOCATION OF MENUBOT DIRECTORY]
@@ -204,15 +239,17 @@ sudo git clone https://github.com/Potrimpo/menubot.git --branch [NAME OF BRANCH]
 
 > Occasionally, the errors you've caused by fiddling about are too large to warrant a fix, and you just want to start fresh. Use these commands to totally delete the menubot directory, and replacing it with a fresh one from git.
 
-
 ##### To check port activity
-```netstat -tulpn```
+```
+netstat -tulpn
+```
 
 > Use this command to check if nginx and PM2 are listening on ports.
 
-
 ##### To see if ngnix is running
-```ps waux | grep nginx```
+```
+ps waux | grep nginx
+```
 
 > This command checks if Nginx is running. Note, this command will often also pick up the grep command running. For each line returned by this command, check to the far right entry. If it is "grep nginx", you’re picking up on the grep command.
 
@@ -306,7 +343,7 @@ Down the bottom, under the commented line `# IPv4 local connections:` change the
 /etc/init.d/postgresql restart
 sudo -i -u postgres
 cd /home/[USERNAME]/[PATH TO MENUBOT]/menubot
-pm2 start process.json --env development --watch
+npm start
 pm2 logs
 ```
 
@@ -330,7 +367,7 @@ Add the ngrok url you have just generated to the Facebook development console. T
 Assure the Facebook development app ID and secret ID are correct in envVariables.js and secrets.js for the Facebook development account you are using.
 
 Access the webpage with the Ngrok url you've generated.
-##### Congratulations, you may be able to develop application now. Probably not however.
+##### Congratulations, you may be able to develop the application now. Probably not however.
 
 
 
@@ -341,7 +378,7 @@ Access the webpage with the Ngrok url you've generated.
 ```
 sudo -i -u postgres
 cd /home/[USERNAME]/[PATH TO MENUBOT]/menubot
-pm2 start process.json --env development --watch
+npm start
 pm2 logs
 ```
 
@@ -389,23 +426,3 @@ sudo /etc/init.d/postgresql restart
 ```
 
 > I can't remember why this is important.
-
-## Running the server
-
-First, build the static assets (LESS --> CSS, JSX --> JS, etc.)
-```
-./build.sh
-```
-> may need to be run with `sudo`
-
-```
-npm run prod
-```
-> for live gcloud instance
-
-```
-npm start
-```
-> for local development
-
-See `process.json` for the PM2 commands that are being run through npm
