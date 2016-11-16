@@ -354,7 +354,18 @@ cd [PATH TO NGROK]/ngrok
 ./ngrok http 8445
 ```
 
-Create a new Facebook developers app project and add the required products along with the appropriate configuration. The details of this arcane ritual have been lost to time, however clues may be gleaned from elder wizard Lewis Knox Streader.
+#### Create new Facebook developers app project (assumed URL = `menubot.xyz`)
+1. Go to `https://developers.facebook.com/apps` and click create app in the top right
+2. Click 'get started' on Facebook Login
+3. 'Valid OAuth redirect URIs' => `http://menubot.xyz/facebook/auth/callback`
+4. Go to 'settings' in the left sidebar, click 'add platform' at the bottom, select 'website'
+5. 'site URL' => `https://menubot.xyz/`
+6. 'App Domains' => `menubot.xyz`
+7. Go to '+ Add Product' in the left sidebar, select 'Webhooks'
+8. Click 'new Subscription', select 'page'
+9. 'Callback URL' => `https://menubot.xyz/webhook`, verify token = whatever the verify token in `process.json` is (currently 'saveme')
+10. 'fields' => messages, messaging_optins, messaging_postbacks
+11. Go to 'Dashboard' in the left sidebar, copy the App ID & App Secret into your `process.json` file
 
 Add the ngrok url you have just generated to the Facebook development console. This will require several things:
 * In the settings section, add the domain to the “app domains” field.
