@@ -29,6 +29,36 @@ Made using:
 
 ##### Congratulations, you’re done. The changes should propagate in no more than 48 hours.
 
+## Facebook app
+
+### First time setup
+> Note: This process cannot be completed without a running version of the site. As of such, only follow this guide when another process instructs you to.
+
+##### Documentation begins
+1. First create a Facebook profile, or log on to your existing profile.
+2. Navigate to https://developers.facebook.com/apps and click the green "+ Add a New App" button.
+3. Enter an appropriate name, contact email address, and enter the category as messenger bot. Click "Create App ID" to proceed.
+4. On the sidebar, click "+ Add Product", then click "Get Started" for Facebook Login.
+5. Add your url (either from Ngrok or the live site url) to the “Valid OAuth redirect URIs” field with two amendments:
+    1. Change `https` to `http`
+    2. Add the suffix `/auth/facebook/callback`
+6. Save your changes with the blue button in the bottom right corner.
+7. Once again, on the sidebar, click "+ Add Product", but this time click "Get Started" for Webhooks.
+8. Click the green "New Subscription" button.
+9. Add your domain to the “callback url” field with the `/webhook` extension.
+10. Enter the application's current verify token. This can be found in the `process.json` file in the `menubot` directory. The verify token is stored under `"FB_VERIFY_TOKEN"`. Be sure to copy the one for the env you intend to run the application as.
+11. Tick the following checkboxes:
+    * `messages`
+    * `messaging_optins`
+    * `messaging_postbacks`
+12. Click "Verify and Save", then click the "Settings" button.
+13. Click the "+ Add Platform" button.
+14. Click the "Website" button.
+15. Add your domain to the “App Domains” field, and “Site URL” field.
+16. Add an appropriate "App Icon". You can find one in `menubot/dist/images/menubotlogo.png`
+17. Save your changes with the blue button in the bottom right corner.
+18. Note down the App ID and App Secret. In the process.json file enter these respectively under '"FACEBOOK_ID"', and `"FB_APP_SECRET"`.
+##### Congratulations, you have set up Facebook integration for MenuBot, you may now return to where you were in the process that directed you here.
 
 
 ## Application server
@@ -165,9 +195,11 @@ Add the following lines:
 
 Write out with CTRL + O, then ENTER, then exit with CTRL + X
 
-Note that the application assumes the application server will be running on internal IP: 10.146.0.2 and the database server will be running on internal IP: 10.146.0.3 .
-Check that this is the case on the Google Clould console instances page, and change the configuration in process.json .
-Secondarily, the app must be configured to work with Facebook. This has been excluded from the documentation because we haven't done it yet.
+> Note that the application assumes the application server will be running on internal IP: 10.146.0.2 and the database server will be running on internal IP: 10.146.0.3 .
+> Check that this is the case on the Google Clould console instances page, and if needed, change the configuration in process.json .
+
+Please now follow the "Facebook app: First time setup" process you can find earlier in this documentation page.
+
 ##### Congratulations, you're done with setting up the application server. However, the database server still needs to be setup.
 
 
@@ -175,24 +207,16 @@ Secondarily, the app must be configured to work with Facebook. This has been exc
 > This setup process is used to run the server when the first time setup process has already been followed. This might when you've pulled a new version of the server from git, or when you've otherwise changed the live version, and now need to restart to implement your changes.
 
 ##### Documentation begins
-
-##### Assure you are logged in as the pm2er user
 ```
 sudo -i
 sudo -u pm2er -i
 ```
 
-##### Preform any changes you wanted to implement, such as pulling in a new update from git.
-
-##### Build the static assets
+Preform any changes you wanted to implement, such as pulling in a new update from git.
 
 ```
 cd [LOCATION OF MENUBOT DIRECTORY]/menubot
 sudo ./build.sh
-```
-
-##### Finally, start the PM2 daemon and view logs
-```
 npm run prod
 pm2 logs --lines 1000
 ```
@@ -354,28 +378,7 @@ cd [PATH TO NGROK]/ngrok
 ./ngrok http 8445
 ```
 
-#### Create new Facebook developers app project (assumed URL = `menubot.xyz`)
-1. Go to `https://developers.facebook.com/apps` and click create app in the top right
-2. Click 'get started' on Facebook Login
-3. 'Valid OAuth redirect URIs' => `http://menubot.xyz/facebook/auth/callback`
-4. Go to 'settings' in the left sidebar, click 'add platform' at the bottom, select 'website'
-5. 'site URL' => `https://menubot.xyz/`
-6. 'App Domains' => `menubot.xyz`
-7. Go to '+ Add Product' in the left sidebar, select 'Webhooks'
-8. Click 'new Subscription', select 'page'
-9. 'Callback URL' => `https://menubot.xyz/webhook`, verify token = whatever the verify token in `process.json` is (currently 'saveme')
-10. 'fields' => messages, messaging_optins, messaging_postbacks
-11. Go to 'Dashboard' in the left sidebar, copy the App ID & App Secret into your `process.json` file
-
-Add the ngrok url you have just generated to the Facebook development console. This will require several things:
-* In the settings section, add the domain to the “app domains” field.
-* In the settings section, add the domain to the “site URL” field.
-* In the Webhooks section, add the domain to the “callback url” field with the /webhook extension.
-* In the products-Facebook login section, add the url to the “Valid OAuth redirect URIs” field with two amendments.
-    1. Change https to http
-    2. Add the suffix /auth/facebook/callback . This suffix can be found in the config/secrets.js file if it changes.
-
-Assure the Facebook development app ID and secret ID are correct in envVariables.js and secrets.js for the Facebook development account you are using.
+Please now follow the "Facebook app: First time setup" process you can find earlier in this documentation page.
 
 Access the webpage with the Ngrok url you've generated.
 ##### Congratulations, you may be able to develop the application now. Probably not however.
@@ -400,13 +403,13 @@ cd [PATH TO NGROK]/ngrok
 ./ngrok http 8445
 ```
 
-Add the ngrok url you have just generated to the Facebook development console. This will require several things:
-* In the settings section, add the domain to the “app domains” field.
-* In the settings section, add the domain to the “site URL” field.
-* In the Webhooks section, add the domain to the “callback url” field with the /webhook extension.
+Add the ngrok url you have just generated to the Facebook app development console. This will require several things:
+* In the settings section, add the domain to the “App Domains” field.
+* In the settings section, add the domain to the “Site URL” field.
+* In the Webhooks section, add the domain to the “Callback URL” field with the `/webhook` extension.
 * In the products-Facebook login section, add the url to the “Valid OAuth redirect URIs” field with two amendments.
-    1. Change https to http
-    2. Add the suffix /auth/facebook/callback . This suffix can be found in the config/secrets.js file if it changes.
+    1. Change `https` to `http`.
+    2. Add the suffix `/auth/facebook/callback`.
 
 Access the webpage with the Ngrok url you've generated.
 ##### Congratulations, the development application is running.
