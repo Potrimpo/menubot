@@ -57,7 +57,22 @@ Made using:
 15. Add your domain to the “App Domains” field, and “Site URL” field.
 16. Add an appropriate "App Icon". You can find one in `menubot/dist/images/menubotlogo.png`
 17. Save your changes with the blue button in the bottom right corner.
-18. Note down the App ID and App Secret. In the process.json file enter these respectively under '"FACEBOOK_ID"', and `"FB_APP_SECRET"`.
+18. Note down the App ID and App Secret.
+    > Live production server
+
+    * In `process.json` add App ID under '"FACEBOOK_ID"', and App Secret under "FB_APP_SECRET".
+
+    > Development environment
+
+    * Add your App ID & App Secret to `envVariables.js` (file under gitignore, may have to be created at this stage)
+    file should look like this
+    ```
+    module.exports = {
+        FACEBOOK_ID: <App ID>,
+        FB_APP_SECRET: <App Secret>
+    };
+    ```
+    
 ##### Congratulations, you have set up Facebook integration for MenuBot, you may now return to where you were in the process that directed you here.
 
 
@@ -402,7 +417,6 @@ Create a new terminal window
 sudo -i -u postgres
 cd /home/[USERNAME]/[PATH TO MENUBOT]/menubot
 npm start
-pm2 logs
 ```
 
 Create a new terminal window
@@ -448,4 +462,23 @@ sudo -u postgres createdb menubot
 sudo /etc/init.d/postgresql restart
 ```
 
-> I can't remember why this is important.
+> Changing values in the postgres config files requires a restart of the database
+
+
+#### Testing
+
+There are _some_ executable tests, though not a whole lot of coverage.
+Testing the bot is important, but very difficult to do, due to the way the server responds to requests.
+
+To run some of these tests, values must be added to the `envVariables.js` file
+```
+module.exports = {
+    tunnelURL: <your ngrok url>,
+    senderID: <page-scoped facebook ID of the user to spoof messages from>,
+    testPageID: <the facebook ID of the facebook page you're using for testing purposes>,
+
+    // these should already be in your file, for running the server in a development environment
+    FACEBOOK_ID: <App ID>,
+    FB_APP_SECRET: <App Secret>
+};
+```
