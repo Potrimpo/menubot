@@ -24,7 +24,7 @@ const { sequelize } = require('./database/models/index'),
 
 // API keys and Passport configuration.
 const secrets = require('./config/secrets'),
-  FB_APP_SECRET = process.env.FB_APP_SECRET,
+  envVar = require('./envVariables'),
   passportConf = require('./config/passport');
 
 // console.log(`/webhook is accepting Verify Token: "${FB_VERIFY_TOKEN}"`);
@@ -169,13 +169,14 @@ function verifyRequestSignature(req, res, buf) {
     var method = elements[0];
     var signatureHash = elements[1];
 
-    var expectedHash = crypto.createHmac('sha1', FB_APP_SECRET)
+    var expectedHash = crypto.createHmac('sha1', process.env.FB_APP_SECRET || envVar.FB_APP_SECRET)
                         .update(buf)
                         .digest('hex');
 
     if (signatureHash != expectedHash) {
       console.log(`signatureHash: ${signatureHash}`);
       console.log(`expectedHash: ${expectedHash}`);
+      console.log(`app secret: ${process.env.FB_APP_SECRET || envVar.FB_APP_SECRET}`);
       throw new Error("Couldn't validate the request signature.");
     }
   }
