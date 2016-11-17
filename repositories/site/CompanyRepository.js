@@ -165,12 +165,13 @@ exports.deleteItem = data => {
 };
 
 exports.ordersByFbid = (fbid, today) => {
+  // join from top down (items -> types -> sizes) so that most detailed information is preferred (eg. photos)
   return sequelize.query(
     "SELECT * FROM orders AS o" +
     " INNER JOIN customers ON o.customer_id = customers.customer_id" +
-    " LEFT OUTER JOIN sizes ON o.sizeid = sizes.sizeid" +
-    " LEFT OUTER JOIN types ON o.typeid = types.typeid" +
     " LEFT OUTER JOIN items ON o.itemid = items.itemid" +
+    " LEFT OUTER JOIN types ON o.typeid = types.typeid" +
+    " LEFT OUTER JOIN sizes ON o.sizeid = sizes.sizeid" +
     " WHERE o.fbid = :fbid AND o.pickuptime >= :today" +
     " ORDER BY o.pickuptime ASC",
     { replacements: {fbid, today}, type: sequelize.QueryTypes.SELECT }

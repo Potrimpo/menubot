@@ -73,8 +73,8 @@ exports.getTypes = itemid => {
 exports.getSizes = typeid => {
   return Size.findAll({
     attributes: ['typeid', 'sizeid', 'size', 'size_price'],
-    where: { typeid }
-  })
+    where: { typeid, size_price: { $ne: null } }
+  });
 };
 
 exports.orderDetails = orderid => {

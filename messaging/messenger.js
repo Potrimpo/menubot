@@ -23,7 +23,8 @@ const fbMessage = (id, token, message) => {
         throw new Error(json.error.message);
       }
       return json;
-    });
+    })
+    .catch(err => console.error("error sending message", err));
 };
 
 module.exports = fbMessage;
