@@ -44,7 +44,7 @@ Made using:
     2. Add the suffix `/auth/facebook/callback`
 6. Save your changes with the blue button in the bottom right corner.
 7. Once again, on the sidebar, click "+ Add Product", but this time click "Get Started" for Webhooks.
-8. Click the green "New Subscription" button.
+8. Click the green "New Subscription" button, then select page.
 9. Add your domain to the “callback url” field with the `/webhook` extension.
 10. Enter the application's current verify token. This can be found in the `process.json` file in the `menubot` directory. The verify token is stored under `"FB_VERIFY_TOKEN"`. Be sure to copy the one for the env you intend to run the application as.
 11. Tick the following checkboxes:
