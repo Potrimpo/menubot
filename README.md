@@ -216,6 +216,7 @@ Preform any changes you wanted to implement, such as pulling in a new update fro
 
 ```
 cd [LOCATION OF MENUBOT DIRECTORY]/menubot
+sudo npm i
 sudo ./build.sh
 npm run prod
 pm2 logs --lines 1000
