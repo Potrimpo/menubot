@@ -9,8 +9,8 @@
       "serverIP": "10.146.0.2",
       "postgresPassword": "45FeistyEggsFearY2k",
       "sessionTable": "Sessions",
-      "FACEBOOK_ID": 1112960105450189,
-      "FB_APP_SECRET": "096eac9cb0c0ad06dd3204440515febc",
+      "FACEBOOK_ID": 567873923403025,
+      "FB_APP_SECRET": "175e617e489723a33f9461691198225c",
       "FB_VERIFY_TOKEN": "saveme"
     },
     "env_dev": {
