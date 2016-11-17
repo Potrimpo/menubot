@@ -38,4 +38,4 @@ exports.orders = (req, res) => {
 
 exports.priv = (req,res) => {
   return res.render('priv', {title: "Privacy Policy"});
-}
+};
