@@ -10,6 +10,26 @@ exports.activateBot = pageToken => {
     .then(() => initializePersistentMenu(pageToken))
 };
 
+exports.deactivateBot = pageToken => {
+  pageToken = encodeURIComponent((pageToken));
+  const body = `access_token=${pageToken}`;
+  const query = `https://graph.facebook.com/me/subscribed_apps`;
+  return fetch(query, {
+    method: 'DELETE',
+    headers: {'Content-Type': 'application/json'},
+    body
+  })
+    .then(rsp => rsp.json())
+    .then(json => {
+      if (json.error && json.error.message) {
+        throw new Error(json.error.message);
+      }
+      console.log(json);
+      return json;
+    })
+    .catch(err => console.error("error deactivating bot for this page!!", err));
+};
+
 function subscribeToWebhook (pageToken) {
   pageToken = encodeURIComponent((pageToken));
   const body = `access_token=${pageToken}`;

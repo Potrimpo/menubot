@@ -7,7 +7,7 @@ const express = require('express'),
   { findCompany, setBotStatus,
     addItemPhotos, getTypesThroughFbid,
     addTypePhotos } = require('../repositories/site/CompanyRepository'),
-  { activateBot } = require('./activateAccount');
+  { activateBot, deactivateBot } = require('./activateAccount');
 
 
 // absolute path is /api/orders/:fbid
@@ -25,6 +25,14 @@ router.route('/activate/:fbid')
     return findCompany(req.params.fbid)
       .then(data => activateBot(data.access_token))
       .then(() => setBotStatus(req.params.fbid, true))
+      .then(() => res.redirect(`/company/${req.params.fbid}`));
+  });
+
+router.route('/deactivate/:fbid')
+  .get((req, res) => {
+    return findCompany(req.params.fbid)
+      .then(data => deactivateBot(data.access_token))
+      .then(() => setBotStatus(req.params.fbid, false))
       .then(() => res.redirect(`/company/${req.params.fbid}`));
   });
 
