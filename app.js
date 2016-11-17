@@ -133,6 +133,9 @@ app.use('/company', passportConf.isAuthenticated, passportConf.isAuthorized, com
 app.get('/auth/facebook', passport.authenticate('facebook', secrets.facebook.authOptions));
 app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/', failureRedirect: '/landing', failureFlash: true }) );
 
+// Privacy policy route
+app.get('/priv', homeController.priv);
+
 // Error Handler.
 app.use(errorHandler());
 
