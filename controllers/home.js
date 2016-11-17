@@ -35,3 +35,7 @@ exports.orders = (req, res) => {
   console.log("fbid for order page =", req.params.fbid);
   return res.render('orders/orders', { title: 'Orders', fbid: req.params.fbid });
 };
+
+exports.priv = (req,res) => {
+  return res.render('priv', {title: "Privacy Policy"});
+}

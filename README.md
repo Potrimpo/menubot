@@ -216,6 +216,7 @@ Preform any changes you wanted to implement, such as pulling in a new update fro
 
 ```
 cd [LOCATION OF MENUBOT DIRECTORY]/menubot
+sudo npm i
 sudo ./build.sh
 npm run prod
 pm2 logs --lines 1000
@@ -355,7 +356,7 @@ sudo apt-get update
 sudo apt-get install postgresql postgresql-contrib
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 sudo apt-get install -y nodejs
-npm install pm2 -g
+npm install pm2 webpack less less-plugin-clean-css -g
 cd [PATH TO MENUBOT DIR]/menubot
 sudo npm i
 sudo nano /etc/postgresql/[POSTGRESQL VERSION NUMBER]/main/pg_hba.conf
@@ -389,6 +390,15 @@ Access the webpage with the Ngrok url you've generated.
 > This setup assumes you have already followed the first time setup, and now need to restart the server.
 
 ##### Documentation begins
+
+```
+cd [PATH TO MENUBOT]/menubot
+sudo npm i
+sudo ./build.sh
+```
+
+Create a new terminal window
+
 ```
 sudo -i -u postgres
 cd /home/[USERNAME]/[PATH TO MENUBOT]/menubot
