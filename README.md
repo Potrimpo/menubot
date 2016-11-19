@@ -294,7 +294,7 @@ ps waux | grep nginx
 
 
 
-## Database server
+## Postgres Database
 
 ### First time setup
 
@@ -352,6 +352,21 @@ sudo /etc/init.d/postgresql restart
 
 > I can't remember why this is important.
 
+## Redis
+Used for storage of people's pending orders in messenger bot interactions.
+Separated from the node.js server so that if it crashes and restarts, the conversation context for our users is not lost
+### Setup for development environment
+```
+wget http://download.redis.io/redis-stable.tar.gz
+tar xvzf redis-stable.tar.gz
+cd redis-stable
+make
+sudo make install
+```
+Run with `redis-server`
+
+Inspect with `redis-cli` (like `psql`)
+
 ## Development setup
 
 ### Ubuntu development: First time setup
@@ -392,6 +407,7 @@ Create a new terminal window
 cd [PATH TO NGROK]/ngrok
 ./ngrok http 8445
 ```
+If you have a reserved ngrok url `ngrok http -subdomain=<url> 8445`
 
 Please now follow the "Facebook app: First time setup" process you can find earlier in this documentation page.
 
@@ -465,19 +481,20 @@ sudo /etc/init.d/postgresql restart
 > Changing values in the postgres config files requires a restart of the database
 
 
-#### Testing
+### Testing
 
 There are _some_ executable tests, though not a whole lot of coverage.
 Testing the bot is important, but very difficult to do, due to the way the server responds to requests.
 
 To run some of these tests, values must be added to the `envVariables.js` file
+
 ```
 module.exports = {
     tunnelURL: <your ngrok url>,
-    senderID: <page-scoped facebook ID of the user to spoof messages from>,
-    testPageID: <the facebook ID of the facebook page you're using for testing purposes>,
+    senderID: <page-scoped facebook ID of user to spoof messages from>,
+    testPageID: <the ID of the facebook page you're using for testing>,
 
-    // these should already be in your file, for running the server in a development environment
+    // these should already be in your file, for running server in dev environment
     FACEBOOK_ID: <App ID>,
     FB_APP_SECRET: <App Secret>
 };

@@ -1,11 +1,11 @@
 const chrono = require('chrono-node'),
-  { sessions, retrieveOrder } = require('./../messengerSessions'),
+  { redisRetrieveOrder, redisGetToken } = require('./../messengerSessions'),
   fbMessage = require('./messenger'),
   db = require('../repositories/bot/botQueries');
 
 // Our bot actions
 const actions = {
-  send({sessionId}, message) {
+  send(fbUserId, message) {
     if (message.text) { console.log(`replying >> ${message.text}`); }
     if (message.quickreplies) {
       message.quick_replies = message.quickreplies.map(x => {
@@ -13,26 +13,21 @@ const actions = {
       });
       delete message.quickreplies;
     }
-    // retrieve the Facebook user whose session belongs to
-    const recipientId = sessions[sessionId].fbUserId;
-    const token = sessions[sessionId].access_token;
-    if (recipientId) {
-      return fbMessage(recipientId, token, message)
-        .then(() => null)
-        .catch((err) => {
-          console.error(
-            'Oops! An error occurred while forwarding the response to',
-            recipientId,
-            ':',
-            err.stack || err
-          );
-          console.log(`was trying to send: ${text}`);
-        });
-    } else {
-      console.error('Oops! Couldn\'t find user for session:', sessionId);
-      // Giving the wheel back to our bot
-      return Promise.resolve()
-    }
+    // get the access token for this user's interaction (page access token for messenger)
+    return redisGetToken(fbUserId)
+      .then(token => {
+        return fbMessage(fbUserId, token, message)
+          .then(() => null)
+          .catch((err) => {
+            console.error(
+              'Oops! An error occurred while forwarding the response to',
+              fbUserId,
+              ':',
+              err.stack || err
+            );
+            console.log(`was trying to send: ${text}`);
+          });
+      })
   },
 
   // [ NO LONGER USED] check if item x is in database
@@ -62,12 +57,12 @@ const actions = {
   },
 
   // specify the time of an order
-  orderTime({fbPageId, fbUserId }, request) {
+  orderTime(fbUserId, fbPageId, request) {
     return new Promise((res, rej) => {
       const orderInfo = {};
       const time = chrono.parseDate(request);
       if(time) {
-        return retrieveOrder(fbUserId)
+        return redisRetrieveOrder(fbUserId)
           .then(data => {
             console.log("order from redis!", data);
             return db.makeOrder(fbPageId, fbUserId, time, data)
