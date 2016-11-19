@@ -11,30 +11,31 @@ const client = redis.createClient();
 client.onAsync('connect').then(() => console.log('----> redis connected'));
 
 const findOrCreateSession = (fbUserId, fbPageId) => {
-  return new Promise((res, rej) => {
-    return client.hgetallAsync(fbUserId)
-      .then(data => {
-        if (data) {
-          console.log("found session in redis:", data);
-          res(fbUserId);
-        }
-        console.log("---->     creating new session      <----");
-        return getCompanyAccessToken(fbPageId)
-      })
-      .then(data => {
-        // finding or creating an entry in the Customer database table to store customer info
-        findOrCreateCustomer(fbUserId, fbPageId, data.access_token)
-          .catch(err => console.error("error finding or creating customer!", err));
+  return client.hgetallAsync(fbUserId)
+    .then(data => {
+      if (data) {
+        console.log("found session in redis:", data);
+        // every message extends the session expiration time to 3 minutes from last received message
+        return client.expireAsync(fbUserId, 3*60);
+      }
+      console.log("---->     creating new session      <----");
+      return getCompanyAccessToken(fbPageId)
+        .then(data => {
+          // finding or creating an entry in the Customer database table to store customer info
+          findOrCreateCustomer(fbUserId, fbPageId, data.access_token)
+            .catch(err => console.error("error finding or creating customer!", err));
 
-        // create session in redis for this interaction, indexed by user id
-        return client.hmsetAsync(fbUserId, {
-          pageID: fbPageId,
-          access_token: data.access_token,
+          // create session in redis for this interaction, indexed by user id
+          // will be used for storing information on orders as they are made
+          return client.hmsetAsync(fbUserId, {
+            access_token: data.access_token,
+          })
+            // redis session expires after 3 minutes
+            .then(() => client.expireAsync(fbUserId, 3*60));
         });
-      })
-      .then(data => res(fbUserId))
-      .catch(e => console.error("error generating session for bot interaction!!", e));
-  });
+    })
+    .then(() => fbUserId)
+    .catch(e => console.error("error generating session for bot interaction!!", e));
 };
 
 const redisRecordOrder = (fbUserId, order) => {
