@@ -1,20 +1,7 @@
 const chrono = require('chrono-node'),
   { sessions } = require('./../messengerSessions'),
   fbMessage = require('./messenger'),
-  // { findItem, makeOrder, orderDetails } = require('./../sql'),
   db = require('../repositories/bot/botQueries');
-
-const firstEntityValue = (entities, entity) => {
-  const val = entities && entities[entity] &&
-    Array.isArray(entities[entity]) &&
-    entities[entity].length > 0 &&
-    entities[entity][0].value;
-  if (!val) {
-    return null;
-  }
-  return typeof val === 'object' ? val.value : val;
-};
-
 
 // Our bot actions
 const actions = {
@@ -48,7 +35,7 @@ const actions = {
     }
   },
 
-  // check if item x is in database
+  // [ NO LONGER USED] check if item x is in database
   checkProduct({context, entities, fbPageId }) {
     const prod = firstEntityValue(entities, 'product');
     return new Promise((res, rej) => {
