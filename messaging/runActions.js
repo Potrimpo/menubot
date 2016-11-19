@@ -6,16 +6,16 @@ const { sessions } = require('../messengerSessions'),
 
 function runActions (sessionId, request, context) {
   return actions.orderTime(sessions[sessionId], request)
-    .then(ctx => {
+    .then(orderInfo => {
 
-      if (ctx.pickupTime && (ctx.item || ctx.type || ctx.size) && !ctx.noLuck) {
+      if (orderInfo.pickupTime && (orderInfo.item || orderInfo.type || orderInfo.size) && !orderInfo.noLuck) {
         const success = "Success!";
         return actions.send({sessionId}, {text: success})
           .then(() => {
             let orderResponse;
-            if (ctx.size) orderResponse = `Order for one ${ctx.size} ${ctx.type} ${ctx.item} @ ${ctx.pickupTime}`;
-            else if (ctx.type) orderResponse = `Order for one ${ctx.type} ${ctx.item} @ ${ctx.pickupTime}`;
-            else orderResponse = `Order for one ${ctx.item} @ ${ctx.pickupTime}`;
+            if (orderInfo.size) orderResponse = `Order for one ${orderInfo.size} ${orderInfo.type} ${orderInfo.item} @ ${orderInfo.pickupTime}`;
+            else if (orderInfo.type) orderResponse = `Order for one ${orderInfo.type} ${orderInfo.item} @ ${orderInfo.pickupTime}`;
+            else orderResponse = `Order for one ${orderInfo.item} @ ${orderInfo.pickupTime}`;
             return actions.send({sessionId}, {text: orderResponse});
           })
       }

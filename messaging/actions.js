@@ -62,9 +62,9 @@ const actions = {
   },
 
   // specify the time of an order
-  orderTime({context, fbPageId, fbUserId }, request) {
+  orderTime({fbPageId, fbUserId }, request) {
     return new Promise((res, rej) => {
-      context = context ? context : {};
+      const orderInfo = {};
       const time = chrono.parseDate(request);
       if(time) {
         const order = sessions[fbUserId].order;
@@ -72,21 +72,20 @@ const actions = {
         return db.makeOrder(fbPageId, fbUserId, time, order)
           .then(data => {
             if (data) {
-              if (context.noLuck) delete context.noLuck;
-              context.pickupTime = String(chrono.parseDate(String(data.pickuptime)));
+              orderInfo.pickupTime = String(chrono.parseDate(String(data.pickuptime)));
               return db.orderDetails(data.orderid);
             }
             else {
-              context.noLuck = true;
-              if (context.pickupTime) delete context.pickupTime;
-              if (context.item) delete context.item;
-              return res(context);
+              orderInfo.noLuck = true;
+              if (orderInfo.pickupTime) delete orderInfo.pickupTime;
+              if (orderInfo.item) delete orderInfo.item;
+              return res(orderInfo);
             }
           })
           .then(function (data) {
-            delete context.order;
-            Object.assign(context, data[0]);
-            return res(context);
+            delete orderInfo.order;
+            Object.assign(orderInfo, data[0]);
+            return res(orderInfo);
           })
           .catch(err => {
             console.error("Error in orderTime", err.message || err);
