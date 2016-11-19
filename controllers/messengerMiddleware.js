@@ -2,12 +2,10 @@
  * Created by lewis.knoxstreader on 18/09/16.
  */
 
-const FB_VERIFY_TOKEN = process.env.FB_VERIFY_TOKEN,
-  { sessions, findOrCreateSession } = require('../messengerSessions'),
+const { findOrCreateSession } = require('../messengerSessions'),
   runActions = require('../messaging/runActions'),
   postbackHandler = require('../messaging/sending-menu'),
-  actions = require('../messaging/actions'),
-  fbMessage = require('../messaging/messenger');
+  actions = require('../messaging/actions');
 
 exports.postWebhook = (req, res) => {
   // Parse the Messenger payload
@@ -19,25 +17,21 @@ exports.postWebhook = (req, res) => {
     data.entry.forEach(entry => {
       entry.messaging.forEach(event => {
         if (event.message) {
-          // Yay! We got a new message!
-          // We retrieve the Facebook user ID of the sender
+          // We got a new message!
           let outerSession = {};
-          // console.log(`sender ID: ${sender}`);
           // We retrieve the user's current session, or create one if it doesn't exist
           // This is needed for our bot to figure out the conversation history
           return findOrCreateSession(event.sender.id, event.recipient.id)
             .then(sessionId => {
-              outerSession = sessionId;
               const { text, attatchments, quick_reply } = event.message;
-              // Let's forward the message to the Wit.ai Bot Engine
-              // This will run all actions until our bot has nothing left to do
               if (attatchments) {
-                return actions.send({sessionId}, {text: 'Sorry, I can only handle text messages!'});
+                // bot currently does not process images, video, or audio messages
+                return actions.send(sessionId, {text: 'Sorry, I can only handle text messages!'});
               }
               else if (quick_reply) {
-                return postbackHandler(quick_reply.payload, sessions[sessionId])
+                return postbackHandler(quick_reply.payload, event.sender.id, event.recipient.id)
                   .then(response => {
-                    actions.send({sessionId}, response)
+                    actions.send(sessionId, response)
                   })
                   .catch(err => {
                     console.log(`Error sending postback: ${err}`);
@@ -46,26 +40,16 @@ exports.postWebhook = (req, res) => {
               }
               else if (text) {
                 return runActions(
-                  sessionId,
-                  text,
-                  sessions[sessionId].context
+                  event.sender.id,
+                  event.recipient.id,
+                  text
                 );
               }
             })
-            .then((context) => {
+            .then(() => {
                 // Our bot did everything it has to do.
                 // Now it's waiting for further messages to proceed.
                 console.log('Waiting for next user messages');
-
-                // Based on the session state, you might want to reset the session.
-                // This depends heavily on the business logic of your bot.
-                // Example:
-                // if (context['done']) {
-                //   delete sessions[sessionId];
-                // }
-
-                // Updating the user's current session state
-                sessions[outerSession].context = context;
               })
               .catch((err) => {
                 console.error('Oops! Got an error dealing with this message: ', err.stack || err);
@@ -73,9 +57,9 @@ exports.postWebhook = (req, res) => {
         } else if(event.postback) {
           return findOrCreateSession(event.sender.id, event.recipient.id)
             .then(sessionId => {
-              return postbackHandler(event.postback.payload, sessions[sessionId])
+              return postbackHandler(event.postback.payload, event.sender.id, event.recipient.id)
                 .then(response => {
-                  actions.send({sessionId}, response)
+                  actions.send(sessionId, response)
                 })
                 .catch(err => {
                   console.log(`Error sending postback: ${err}`);

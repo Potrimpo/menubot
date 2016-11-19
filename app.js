@@ -27,10 +27,9 @@ const secrets = require('./config/secrets'),
   envVar = require('./envVariables'),
   passportConf = require('./config/passport');
 
-// console.log(`/webhook is accepting Verify Token: "${FB_VERIFY_TOKEN}"`);
-
 // Starting our webserver and putting it all together
 const app = express();
+
 app.use(({method, url}, rsp, next) => {
   rsp.on('finish', () => {
     console.log(`${rsp.statusCode} ${method} ${url}`);

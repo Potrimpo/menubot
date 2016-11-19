@@ -3,12 +3,12 @@
  */
 
 const actions = require('./actions'),
+  { redisRecordOrder } = require('../messengerSessions'),
   db = require('./../repositories/bot/botQueries');
 
-function postbackHandler (payload, userSession) {
+function postbackHandler (payload, fbUserId, fbPageId) {
   return new Promise(function (res, rej) {
     payload = JSON.parse(payload);
-    const { fbPageId, fbUserId } = userSession;
 
     switch (payload.intent) {
       case 'MENU':
@@ -33,11 +33,10 @@ function postbackHandler (payload, userSession) {
           .catch(err => console.error(`Error in postback:`, err));
 
       case 'ORDER':
-        // make sure wit.ai doesn't reuse data from a previous order!
-        if (userSession.context && userSession.context.pickupTime) delete userSession.context.pickupTime;
-        // wit.ai resets the context after sending, so we cant store this data there
-        userSession.order = payload;
-        return res({ text: "what time would you like that? (include am/pm)" });
+        return redisRecordOrder(fbUserId, payload)
+          .then(() => {
+            return res({ text: "what time would you like that? (include am/pm)" });
+          });
 
       case 'MY_ORDERS':
         return db.ordersbyUserid(fbUserId)

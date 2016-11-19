@@ -1,24 +1,11 @@
 const chrono = require('chrono-node'),
-  { sessions } = require('./../messengerSessions'),
+  { redisRetrieveOrder, redisGetToken } = require('./../messengerSessions'),
   fbMessage = require('./messenger'),
-  // { findItem, makeOrder, orderDetails } = require('./../sql'),
   db = require('../repositories/bot/botQueries');
-
-const firstEntityValue = (entities, entity) => {
-  const val = entities && entities[entity] &&
-    Array.isArray(entities[entity]) &&
-    entities[entity].length > 0 &&
-    entities[entity][0].value;
-  if (!val) {
-    return null;
-  }
-  return typeof val === 'object' ? val.value : val;
-};
-
 
 // Our bot actions
 const actions = {
-  send({sessionId}, message) {
+  send(fbUserId, message) {
     if (message.text) { console.log(`replying >> ${message.text}`); }
     if (message.quickreplies) {
       message.quick_replies = message.quickreplies.map(x => {
@@ -26,29 +13,24 @@ const actions = {
       });
       delete message.quickreplies;
     }
-    // retrieve the Facebook user whose session belongs to
-    const recipientId = sessions[sessionId].fbUserId;
-    const token = sessions[sessionId].access_token;
-    if (recipientId) {
-      return fbMessage(recipientId, token, message)
-        .then(() => null)
-        .catch((err) => {
-          console.error(
-            'Oops! An error occurred while forwarding the response to',
-            recipientId,
-            ':',
-            err.stack || err
-          );
-          console.log(`was trying to send: ${text}`);
-        });
-    } else {
-      console.error('Oops! Couldn\'t find user for session:', sessionId);
-      // Giving the wheel back to our bot
-      return Promise.resolve()
-    }
+    // get the access token for this user's interaction (page access token for messenger)
+    return redisGetToken(fbUserId)
+      .then(token => {
+        return fbMessage(fbUserId, token, message)
+          .then(() => null)
+          .catch((err) => {
+            console.error(
+              'Oops! An error occurred while forwarding the response to',
+              fbUserId,
+              ':',
+              err.stack || err
+            );
+            console.log(`was trying to send: ${text}`);
+          });
+      })
   },
 
-  // check if item x is in database
+  // [ NO LONGER USED] check if item x is in database
   checkProduct({context, entities, fbPageId }) {
     const prod = firstEntityValue(entities, 'product');
     return new Promise((res, rej) => {
@@ -75,31 +57,32 @@ const actions = {
   },
 
   // specify the time of an order
-  orderTime({context, fbPageId, fbUserId }, request) {
+  orderTime(fbUserId, fbPageId, request) {
     return new Promise((res, rej) => {
-      context = context ? context : {};
+      const orderInfo = {};
       const time = chrono.parseDate(request);
       if(time) {
-        const order = sessions[fbUserId].order;
-        // fbUserId becomes customer_id
-        return db.makeOrder(fbPageId, fbUserId, time, order)
+        return redisRetrieveOrder(fbUserId)
           .then(data => {
-            if (data) {
-              if (context.noLuck) delete context.noLuck;
-              context.pickupTime = String(chrono.parseDate(String(data.pickuptime)));
-              return db.orderDetails(data.orderid);
+            console.log("order from redis!", data);
+            return db.makeOrder(fbPageId, fbUserId, time, data)
+          })
+          .then(order => {
+            if (order) {
+              orderInfo.pickupTime = String(chrono.parseDate(String(order.pickuptime)));
+              return db.orderDetails(order.orderid);
             }
             else {
-              context.noLuck = true;
-              if (context.pickupTime) delete context.pickupTime;
-              if (context.item) delete context.item;
-              return res(context);
+              orderInfo.noLuck = true;
+              if (orderInfo.pickupTime) delete orderInfo.pickupTime;
+              if (orderInfo.item) delete orderInfo.item;
+              return res(orderInfo);
             }
           })
-          .then(function (data) {
-            delete context.order;
-            Object.assign(context, data[0]);
-            return res(context);
+          .then(function (details) {
+            delete orderInfo.order;
+            Object.assign(orderInfo, details[0]);
+            return res(orderInfo);
           })
           .catch(err => {
             console.error("Error in orderTime", err.message || err);
