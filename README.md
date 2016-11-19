@@ -218,7 +218,7 @@ Please now follow the "Facebook app: First time setup" process you can find earl
 ##### Congratulations, you're done with setting up the application server. However, the database server still needs to be setup.
 
 
-### Day to day application server setup
+### Running the Live server (Google Cloud instance)
 > This setup process is used to run the server when the first time setup process has already been followed. This might when you've pulled a new version of the server from git, or when you've otherwise changed the live version, and now need to restart to implement your changes.
 
 ##### Documentation begins
@@ -234,7 +234,7 @@ cd [LOCATION OF MENUBOT DIRECTORY]/menubot
 sudo npm i
 sudo ./build.sh
 npm run prod
-pm2 logs --lines 1000
+pm2 logs --lines 100
 ```
 ##### Congratulations, the server has been started once again.
 
@@ -249,27 +249,32 @@ sudo -u pm2er -i
 > A PM2 daemon started by a user cannot be interacted with, or seen by any other user. This makes it difficult when different developers are using different accounts. One process has to be stopped for the other developer to have access to PM2. By running the process on a third party user, anyone can access PM2 by changing to this pm2er user.
 
 
-##### To totally stop PM2
+###### To stop PM2
+```
+pm2 stop all
+```
+
+###### To kill the pm2 daemon
 ```
 pm2 kill
 ```
 
-##### To view logs
+###### To view logs
 ```
 pm2 logs --lines 1000
 ```
 
 > Streams new logs, and shows the previous 1000 lines of logs.
 
-##### To remove previous logs, and only log new logs
+###### To remove previous logs, and only log new logs
 ```
 pm2 flush
-npm start | pm2 logs
+npm start
 ```
 
 > It's very easy to mix up logs from previous runs of the application, as there isn't any visible break point separating the two. This may confuse you into thinking the errors of the previous run are still around. This prevents just such a mix up.
 
-##### To clone a fresh branch from git
+###### To clone a fresh branch from git
 ```
 cd [LOCATION OF MENUBOT DIRECTORY]
 sudo rm -r menubot
@@ -278,14 +283,14 @@ sudo git clone https://github.com/Potrimpo/menubot.git --branch [NAME OF BRANCH]
 
 > Occasionally, the errors you've caused by fiddling about are too large to warrant a fix, and you just want to start fresh. Use these commands to totally delete the menubot directory, and replacing it with a fresh one from git.
 
-##### To check port activity
+###### To check port activity
 ```
 netstat -tulpn
 ```
 
 > Use this command to check if nginx and PM2 are listening on ports.
 
-##### To see if ngnix is running
+###### To see if ngnix is running
 ```
 ps waux | grep nginx
 ```
@@ -352,42 +357,35 @@ sudo /etc/init.d/postgresql restart
 
 > I can't remember why this is important.
 
-## Redis
-Used for storage of people's pending orders in messenger bot interactions.
-Separated from the node.js server so that if it crashes and restarts, the conversation context for our users is not lost
-### Setup for development environment
+
+
+# Development environment setup
+
+### Ubuntu development: First time setup
+
+##### Cloning the server code
 ```
+cd [PREFERED LOCATION]
+sudo git clone https://github.com/Potrimpo/menubot.git
+```
+
+##### Setting up ngrok
+[Download ngrok](https://ngrok.com/download)
+
+```
+unzip [PATH TO NGROK]/ngrok.zip
 wget http://download.redis.io/redis-stable.tar.gz
 tar xvzf redis-stable.tar.gz
 cd redis-stable
 make
 sudo make install
 ```
-Run with `redis-server`
 
-Inspect with `redis-cli` (like `psql`)
-
-## Development setup
-
-### Ubuntu development: First time setup
-
-##### Documentation begins
-```
-cd [PREFERED LOCATION]
-sudo git clone https://github.com/Potrimpo/menubot.git
-```
-
-Download linux version of Ngrok
+##### Install & configure postgres
 
 ```
-unzip [PATH TO NGROK]/ngrok.zip
 sudo apt-get update
 sudo apt-get install postgresql postgresql-contrib
-curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-sudo apt-get install -y nodejs
-npm install pm2 webpack less less-plugin-clean-css -g
-cd [PATH TO MENUBOT DIR]/menubot
-sudo npm i
 sudo nano /etc/postgresql/[POSTGRESQL VERSION NUMBER]/main/pg_hba.conf
 ```
 
@@ -396,18 +394,55 @@ Down the bottom, under the commented line `# IPv4 local connections:` change the
 ```
 /etc/init.d/postgresql restart
 sudo -i -u postgres
-cd /home/[USERNAME]/[PATH TO MENUBOT]/menubot
-npm start
-pm2 logs
 ```
 
-Create a new terminal window
+##### Redis
+
+>Used for storage of people's pending orders in messenger bot interactions.
+Separated from the node.js server so that if it crashes and restarts, the conversation context for our users is not lost
+
+```
+wget http://download.redis.io/redis-stable.tar.gz
+tar xvzf redis-stable.tar.gz
+cd redis-stable
+make
+sudo make install
+```
+>Run with `redis-server`
+
+>Inspect with `redis-cli` (like `psql`)
+
+##### Install node.js & the server dependencies
+
+```
+curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+sudo apt-get install -y nodejs
+npm install pm2 webpack less less-plugin-clean-css -g
+cd [PATH TO MENUBOT DIR]/menubot
+sudo npm i
+sudo ./build.sh
+
+```
+
+##### Starting the server for real
+
+Open 3 terminal windows
+
+
+```
+redis-server
+```
+
+```
+npm start
+```
 
 ```
 cd [PATH TO NGROK]/ngrok
 ./ngrok http 8445
 ```
-If you have a reserved ngrok url `ngrok http -subdomain=<url> 8445`
+
+>If you have a reserved ngrok url use `ngrok http -subdomain=<url> 8445`
 
 Please now follow the "Facebook app: First time setup" process you can find earlier in this documentation page.
 
@@ -419,7 +454,7 @@ Access the webpage with the Ngrok url you've generated.
 ### Ubuntu development: Day to day setup
 > This setup assumes you have already followed the first time setup, and now need to restart the server.
 
-##### Documentation begins
+Create 4 terminal windows
 
 ```
 cd [PATH TO MENUBOT]/menubot
@@ -427,15 +462,15 @@ sudo npm i
 sudo ./build.sh
 ```
 
-Create a new terminal window
+```
+redis-server
+```
 
 ```
 sudo -i -u postgres
 cd /home/[USERNAME]/[PATH TO MENUBOT]/menubot
 npm start
 ```
-
-Create a new terminal window
 
 ```
 cd [PATH TO NGROK]/ngrok
