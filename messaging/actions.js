@@ -1,5 +1,5 @@
 const chrono = require('chrono-node'),
-  { sessions } = require('./../messengerSessions'),
+  { sessions, retrieveOrder } = require('./../messengerSessions'),
   fbMessage = require('./messenger'),
   db = require('../repositories/bot/botQueries');
 
@@ -67,13 +67,15 @@ const actions = {
       const orderInfo = {};
       const time = chrono.parseDate(request);
       if(time) {
-        const order = sessions[fbUserId].order;
-        // fbUserId becomes customer_id
-        return db.makeOrder(fbPageId, fbUserId, time, order)
+        return retrieveOrder(fbUserId)
           .then(data => {
-            if (data) {
-              orderInfo.pickupTime = String(chrono.parseDate(String(data.pickuptime)));
-              return db.orderDetails(data.orderid);
+            console.log("order from redis!", data);
+            return db.makeOrder(fbPageId, fbUserId, time, data)
+          })
+          .then(order => {
+            if (order) {
+              orderInfo.pickupTime = String(chrono.parseDate(String(order.pickuptime)));
+              return db.orderDetails(order.orderid);
             }
             else {
               orderInfo.noLuck = true;
@@ -82,9 +84,9 @@ const actions = {
               return res(orderInfo);
             }
           })
-          .then(function (data) {
+          .then(function (details) {
             delete orderInfo.order;
-            Object.assign(orderInfo, data[0]);
+            Object.assign(orderInfo, details[0]);
             return res(orderInfo);
           })
           .catch(err => {

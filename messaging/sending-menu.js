@@ -3,6 +3,7 @@
  */
 
 const actions = require('./actions'),
+  { recordOrder } = require('../messengerSessions'),
   db = require('./../repositories/bot/botQueries');
 
 function postbackHandler (payload, userSession) {
@@ -36,8 +37,11 @@ function postbackHandler (payload, userSession) {
         // make sure wit.ai doesn't reuse data from a previous order!
         if (userSession.context && userSession.context.pickupTime) delete userSession.context.pickupTime;
         // wit.ai resets the context after sending, so we cant store this data there
-        userSession.order = payload;
-        return res({ text: "what time would you like that? (include am/pm)" });
+        return recordOrder(fbUserId, payload)
+          .then(() => {
+            userSession.order = payload;
+            return res({ text: "what time would you like that? (include am/pm)" });
+          });
 
       case 'MY_ORDERS':
         return db.ordersbyUserid(fbUserId)

@@ -16,9 +16,8 @@ const findOrCreateSession = (fbUserId, fbPageId) => {
   console.log('sessions.fbUserId =', sessions[fbUserId]);
   client.hgetallAsync(fbUserId)
     .then(data => {
-      console.log("after checking redis");
       if (data) {
-        console.log("found in redis:", data);
+        console.log("found session in redis:", data);
         return null;
       }
     });
@@ -38,7 +37,11 @@ const findOrCreateSession = (fbUserId, fbPageId) => {
         access_token: data.access_token,
         context: {}
       };
-      return client.hmsetAsync(fbUserId, 'pageID', fbPageId, 'access_token', data.access_token)
+      return client.hmsetAsync(fbUserId, {
+        userID: fbUserId,
+        pageID: fbPageId,
+        access_token: data.access_token,
+      });
     })
     .then(data => {
       console.log("redis set status", data);
@@ -47,7 +50,30 @@ const findOrCreateSession = (fbUserId, fbPageId) => {
     .catch(e => console.error("error generating session for bot interaction!!", e));
 };
 
+const recordOrder = (fbUserId, order) => {
+  return client.hmsetAsync(fbUserId, {
+    itemid: order.itemid ? order.itemid : '',
+    typeid: order.typeid ? order.typeid : '',
+    sizeid: order.sizeid ? order.sizeid : ''
+  })
+    .catch(err => console.error("error adding order to redis", err));
+};
+
+const retrieveOrder = fbUserId => {
+  return client.hgetallAsync(fbUserId)
+    .then(data => {
+      return {
+        itemid: data.itemid ? data.itemid : undefined,
+        typeid: data.typeid ? data.typeid : undefined,
+        sizeid: data.sizeid ? data.sizeid : undefined
+      }
+    })
+    .catch(err => console.error("error retrieving order from redis", err));
+};
+
 module.exports = {
   sessions,
-  findOrCreateSession
+  findOrCreateSession,
+  recordOrder,
+  retrieveOrder
 };

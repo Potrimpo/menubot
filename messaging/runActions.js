@@ -26,7 +26,7 @@ function runActions (sessionId, request, context) {
     })
     .catch(err => {
       console.error("error in runActions", err);
-      return actions.send({sessionId}, {text: "Sorry! We ran into an error doing that.", err});
+      return actions.send({sessionId}, {text: `Sorry! We ran into an error doing that: ${err}`});
     })
 }
 
