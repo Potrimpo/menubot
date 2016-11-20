@@ -6,7 +6,8 @@ const sequelize = new Sequelize(
   `postgres://postgres:${process.env.postgresPassword}@${process.env.postgresURL}:5432/menubot`,
   {
     dialect: 'postgres',
-    maxConcurrentQueries: 100
+    maxConcurrentQueries: 100,
+    logging: false
   }
 );
 
