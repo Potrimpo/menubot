@@ -2,6 +2,9 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { fetchOrders, reload } from '../actions'
 import VisibleOrders from './VisibleOrders'
+import io from 'socket.io-client'
+
+const socket = io.connect();
 
 class OrdersBox extends Component {
   static propTypes = {
@@ -18,7 +21,10 @@ class OrdersBox extends Component {
 
   componentDidMount() {
     this.getOrdersQuietly();
-    return setInterval(this.getOrdersQuietly.bind(this), 3000);
+    socket.on('news', function (data) {
+      console.log(data);
+      socket.emit('my other event', {my: 'data'});
+    });
   }
 
   static componentWillReceiveProps(nextProps) {

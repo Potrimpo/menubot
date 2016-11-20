@@ -27,8 +27,10 @@ const secrets = require('./config/secrets'),
   envVar = require('./envVariables'),
   passportConf = require('./config/passport');
 
-// Starting our webserver and putting it all together
-const app = express();
+// Starting express server and socket.io
+const app = express(),
+  http = require('http').createServer(app),
+  io = require('socket.io')(http);
 
 app.use(({method, url}, rsp, next) => {
   rsp.on('finish', () => {
@@ -47,7 +49,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.enable("trust proxy");
 app.use(compress());
-app.use(logger('dev'));
+// app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator());
@@ -130,7 +132,10 @@ app.use('/company', passportConf.isAuthenticated, passportConf.isAuthorized, com
 
 // OAuth authentication routes. (Sign in)
 app.get('/auth/facebook', passport.authenticate('facebook', secrets.facebook.authOptions));
-app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/', failureRedirect: '/landing', failureFlash: true }) );
+app.get(
+  '/auth/facebook/callback',
+  passport.authenticate('facebook', { successRedirect: '/', failureRedirect: '/landing', failureFlash: true })
+);
 
 // Privacy policy route
 app.get('/priv', homeController.priv);
@@ -181,12 +186,22 @@ function verifyRequestSignature(req, res, buf) {
   }
 }
 
-
 sequelize.sync({ force: false })
   .then(() => {
     console.log("sequelize is synced");
-    app.listen(process.env.PORT, process.env.serverIP);
-    console.log('Listening on :' + process.env.PORT + '...');
+    http.listen(process.env.PORT, process.env.serverIP);
+    console.log(`Listening on :${process.env.PORT} at address ${process.env.serverIP}`);
+  })
+  .then(() => {
+    console.log("got to io part");
+    io.on('connection', function (socket) {
+      console.log("     successful connection!");
+      socket.emit('news', { hello: 'world' });
+      socket.on('my other event', function (data) {
+        console.log(data);
+      });
+    });
+
   })
   .catch(err => {
     console.log("postgresURL =", process.env.postgresURL);
