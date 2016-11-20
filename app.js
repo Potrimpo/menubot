@@ -117,9 +117,7 @@ const homeController = require('./controllers/home'),
 app.get('/', passportConf.isAuthenticated, passportConf.isAuthorized, homeController.index);
 app.get('/landing', homeController.landing);
 app.get('/logout', userController.logout);
-app.route('/contact')
-  .get(contactController.getContact)
-  .post(contactController.postContact);
+app.route('/contact').get(contactController.getContact)
 app.get('/account', passportConf.isAuthenticated, passportConf.isAuthorized, facebookController.getFacebook);
 app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);
 app.get('/orders/:fbid', passportConf.isAuthenticated, passportConf.isAuthorized, homeController.orders);

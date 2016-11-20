@@ -5,6 +5,6 @@ module.exports = {
   testPageID: '1221932621201964', // the page you'll be testing the bot through
 
   // facebook.developers app = menubot
-  FACEBOOK_ID: 1112960105450189,
-  FB_APP_SECRET: "096eac9cb0c0ad06dd3204440515febc"
+  FACEBOOK_ID: 1016842041753695,
+  FB_APP_SECRET: "8d52435598ca3a63e4960a4b55aa0b30"
 };
