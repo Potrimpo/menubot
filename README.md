@@ -76,7 +76,7 @@ Made using:
 ##### Congratulations, you have set up Facebook integration for MenuBot, you may now return to where you were in the process that directed you here.
 
 
-## Application server
+## Node.js server setup
 
 ### First time setup
 
@@ -218,7 +218,116 @@ Please now follow the "Facebook app: First time setup" process you can find earl
 ##### Congratulations, you're done with setting up the application server. However, the database server still needs to be setup.
 
 
-### Running the Live server (Google Cloud instance)
+## Postgres database setup
+
+### First time setup
+
+##### Documentation begins
+```
+sudo apt-get update
+sudo apt-get install postgresql postgresql-contrib
+sudo -u postgres createdb menubot
+sudo nano /etc/postgresql/{version}/main/postgresql.conf
+```
+
+replace `listen_addressses = 'localhost'` with `listen_addresses = '*'`
+
+```
+sudo vim /etc/postgresql/{version}/main/pg_hba.conf
+```
+
+add the new lines:
+
+  ```
+  # TYPE    DATABASE    USER            ADDRESS                           METHOD
+    host    all         postgres      {postgres instance local ip}/32     md5
+  ```
+
+```
+sudo service postgresql restart
+```
+##### Congratulations, you're done with setting up the database server.
+
+
+### Useful commands
+
+##### Inspecting the database
+```
+sudo -u postgres psql menubot
+\d
+SELECT * FROM [TABLE NAME]
+```
+
+>Use this to inspect the contents of tables.
+
+
+##### Renewing the database
+```
+sudo -u postgres dropdb menubot
+sudo -u postgres createdb menubot
+```
+
+> Use this when you've made a change to the application that will effect the database's structure in anyway, otherwise the application will error out.
+
+##### Restarting postgres
+```
+sudo /etc/init.d/postgresql restart
+```
+
+> I can't remember why this is important.
+
+## Redis setup
+### First time setup
+
+We will use the standard port `6379` and name many files accordingly.
+
+This port can be changed, as long as _all_ instances are changed
+
+```
+wget http://download.redis.io/redis-stable.tar.gz
+tar xvzf redis-stable.tar.gz
+cd redis-stable
+cp ./redis-server /usr/bin
+cp ./redis-cli /usr/bin
+sudo mkdir /etc/redis
+sudo cp utils/redis_init_script /etc/init.d/redis_6379
+sudo nano /etc/init.d/redis_6379
+```
+Change `REDISPORT` to 6379
+
+```
+sudo cp redis.conf /etc/redis/6379.conf
+```
+
+Create a directory inside /var/redis that will work as data and working directory for this Redis instance
+
+```
+sudo mkdir /var/redis/6379
+sudo nano	/etc/redis/6379.conf
+```
+
+* Set daemonize to yes (by default it is set to no).
+* Set the pidfile to /var/run/redis_6379.pid
+* Change the port accordingly. In our example it is not needed as the default * port is already 6379.
+* Set your preferred loglevel.
+* Set the logfile to /var/log/redis_6379.log
+* Set the dir to /var/redis/6379 (very important step!)
+
+Finally add the new Redis init script to all the default runlevels using the following command
+```
+sudo update-rc.d redis_6379 defaults
+```
+
+Run with `sudo /etc/init.d/redis_6379 start`
+
+Test things out
+
+* Try pinging your instance with redis-cli.
+* Do a test save with redis-cli save and check that the dump file is correctly stored into /var/redis/6379/ (you should find a file called dump.rdb).
+* Check that your Redis instance is correctly logging in the log file.
+* If it's a new machine where you can try it without problems make sure that after a reboot everything is still working.
+
+## Running the Live server (Google Cloud instance)
 > This setup process is used to run the server when the first time setup process has already been followed. This might when you've pulled a new version of the server from git, or when you've otherwise changed the live version, and now need to restart to implement your changes.
 
 ##### Documentation begins
@@ -296,68 +405,6 @@ ps waux | grep nginx
 ```
 
 > This command checks if Nginx is running. Note, this command will often also pick up the grep command running. For each line returned by this command, check to the far right entry. If it is "grep nginx", you’re picking up on the grep command.
-
-
-
-## Postgres Database
-
-### First time setup
-
-##### Documentation begins
-```
-sudo apt-get update
-sudo apt-get install postgresql postgresql-contrib
-sudo -u postgres createdb menubot
-sudo nano /etc/postgresql/{version}/main/postgresql.conf
-```
-
-replace `listen_addressses = 'localhost'` with `listen_addresses = '*'`
-
-```
-sudo vim /etc/postgresql/{version}/main/pg_hba.conf
-```
-
-add the new lines:
-
-  ```
-  # TYPE    DATABASE    USER            ADDRESS                           METHOD
-    host    all         postgres      {postgres instance local ip}/32     md5
-  ```
-
-```
-sudo service postgresql restart
-```
-##### Congratulations, you're done with setting up the database server.
-
-
-### Useful commands
-
-##### Inspecting the database
-```
-sudo -u postgres psql menubot
-\d
-SELECT * FROM [TABLE NAME]
-```
-
->Use this to inspect the contents of tables.
-
-
-##### Renewing the database
-```
-sudo -u postgres dropdb menubot
-sudo -u postgres createdb menubot
-```
-
-> Use this when you've made a change to the application that will effect the database's structure in anyway, otherwise the application will error out.
-
-##### Restarting postgres
-```
-sudo /etc/init.d/postgresql restart
-```
-
-> I can't remember why this is important.
-
-
 
 # Development environment setup
 
