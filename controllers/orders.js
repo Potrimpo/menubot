@@ -4,6 +4,7 @@
 
 const { ordersByFbid, orderComplete } = require('../repositories/site/CompanyRepository');
 
+// express routes
 exports.retrieveOrders = (req, res, next) => {
   const today = dateParsing();
   return ordersByFbid(req.params.fbid, today)
@@ -18,6 +19,13 @@ exports.setOrderComplete = (req, res, next) => {
   return orderComplete(req.body.orderid)
     .then(data => next())
     .catch(err => console.error("error in setOrderComplete", err));
+};
+
+// universally callable functions
+exports.fetchOrders = fbid => {
+  const today = dateParsing();
+  return ordersByFbid(fbid, today)
+    .catch(err => res.status(500).send('error getting orders'));
 };
 
 function dateParsing () {

@@ -81,10 +81,6 @@ app.route('/webhook')
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
-app.use((req, res, next) => {
-  console.log("req.body === ", req.body);
-  return next();
-});
 // app.use(lusca({
 //   csrf: true,
 //   xframe: 'SAMEORIGIN',
@@ -174,8 +170,8 @@ function verifyRequestSignature(req, res, buf) {
     var signatureHash = elements[1];
 
     var expectedHash = crypto.createHmac('sha1', process.env.FB_APP_SECRET || envVar.FB_APP_SECRET)
-                        .update(buf)
-                        .digest('hex');
+      .update(buf)
+      .digest('hex');
 
     if (signatureHash != expectedHash) {
       console.log(`signatureHash: ${signatureHash}`);
@@ -186,22 +182,20 @@ function verifyRequestSignature(req, res, buf) {
   }
 }
 
+io.on('connection', function (socket) {
+  console.log("     socket.io connection!");
+  socket.on('request-orders', function (fbid) {
+    return ordersController.fetchOrders(fbid)
+      .then(orders => socket.emit('orders-list', orders))
+      .catch(err => console.error("error in socket business", err));
+  });
+});
+
 sequelize.sync({ force: false })
   .then(() => {
     console.log("sequelize is synced");
     http.listen(process.env.PORT, process.env.serverIP);
     console.log(`Listening on :${process.env.PORT} at address ${process.env.serverIP}`);
-  })
-  .then(() => {
-    console.log("got to io part");
-    io.on('connection', function (socket) {
-      console.log("     successful connection!");
-      socket.emit('news', { hello: 'world' });
-      socket.on('my other event', function (data) {
-        console.log(data);
-      });
-    });
-
   })
   .catch(err => {
     console.log("postgresURL =", process.env.postgresURL);

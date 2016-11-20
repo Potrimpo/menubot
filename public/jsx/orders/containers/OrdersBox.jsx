@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { fetchOrders, reload } from '../actions'
+import { fetchOrders, receiveAndParse } from '../actions'
 import VisibleOrders from './VisibleOrders'
 import io from 'socket.io-client'
 
@@ -13,31 +13,25 @@ class OrdersBox extends Component {
     fbid: PropTypes.string
   };
 
-  getOrdersQuietly () {
-    const { dispatch, fbid } = this.props;
+  getOrdersQuietly (orders) {
+    const { dispatch } = this.props;
     console.log("getting thos orders");
-    return dispatch(fetchOrders(fbid));
+    return dispatch(receiveAndParse(orders));
   };
 
   componentDidMount() {
-    this.getOrdersQuietly();
-    socket.on('news', function (data) {
-      console.log(data);
-      socket.emit('my other event', {my: 'data'});
+    const { fbid } = this.props;
+    socket.on('connect', function (data) {
+      console.log("we connected baby");
+      socket.emit('request-orders', fbid);
     });
+    socket.on('orders-list', orders => this.getOrdersQuietly(orders))
   }
 
   static componentWillReceiveProps(nextProps) {
     const { dispatch, fbid } = nextProps;
     dispatch(fetchOrders(fbid));
   }
-
-  handleRefreshClick = e => {
-    e.preventDefault();
-    const { dispatch, fbid } = this.props;
-    dispatch(reload());
-    return dispatch(fetchOrders(fbid));
-  };
 
   render() {
     const { forceReload } = this.props;
