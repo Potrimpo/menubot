@@ -72,7 +72,7 @@ Made using:
         FB_APP_SECRET: <App Secret>
     };
     ```
-    
+
 ##### Congratulations, you have set up Facebook integration for MenuBot, you may now return to where you were in the process that directed you here.
 
 
@@ -83,6 +83,7 @@ Made using:
 Made using:
 * https://www.digitalocean.com/community/tutorials/how-to-set-up-a-node-js-application-for-production-on-ubuntu-16-04
 * https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-16-04#step-6-set-up-auto-renewal
+* http://redis.io/topics/quickstart
 
 
 ##### Documentation begins
@@ -212,6 +213,57 @@ Write out with CTRL + O, then ENTER, then exit with CTRL + X
 
 > Note that the application assumes the application server will be running on internal IP: 10.146.0.2 and the database server will be running on internal IP: 10.146.0.3 .
 > Check that this is the case on the Google Clould console instances page, and if needed, change the configuration in process.json .
+
+```
+cd ~
+wget http://download.redis.io/redis-stable.tar.gz
+tar xvzf redis-stable.tar.gz
+cd redis-stable
+make
+sudo make install
+sudo mkdir /etc/redis
+sudo mkdir /var/redis
+sudo cp utils/redis_init_script /etc/init.d/redis_6379
+sudo nano /etc/init.d/redis_6379
+```
+
+Add the following text at the top of the file:
+
+```
+### BEGIN INIT INFO
+# Provides: redis_6379
+# Required-Start:    $network $remote_fs $local_fs
+# Required-Stop:     $network $remote_fs $local_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: start and stop redis_6379
+# Description: Redis daemon
+### END INIT INFO
+```
+
+Write out with CTRL + O, then ENTER, then exit with CTRL + X
+
+```
+sudo cp redis.conf /etc/redis/6379.conf
+sudo mkdir /var/redis/6379
+sudo nano /etc/redis/6379.conf
+```
+
+Make the following changes
+* Set daemonize to yes (by default it is set to no).
+* Set the pidfile to /var/run/redis_6379.pid (modify the port if needed).
+* Set the logfile to /var/log/redis_6379.log
+* Set the dir to /var/redis/6379 (very important step!)
+
+```
+sudo update-rc.d redis_6379 defaults
+sudo /etc/init.d/redis_6379 start
+```
+
+If you feel like it, make sure that everything is working as expected:
+* Check redis is working with `redis-cli ping`, it should return PONG.
+* Do a test save with `redis-cli save` and check that the dump file is correctly stored into `/var/redis/6379/` (you should find a file called `dump.rdb`).
+* Check that your Redis instance is correctly logging in the log file `sudo nano /var/log/redis_6379.log`.
 
 Please now follow the "Facebook app: First time setup" process you can find earlier in this documentation page.
 
