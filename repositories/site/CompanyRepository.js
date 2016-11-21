@@ -211,6 +211,11 @@ exports.setBotStatus = (id, status) => sequelize.query(
   { replacements: { id, status}, type: sequelize.QueryTypes.UPDATE}
 );
 
+exports.setLocation = (id, loc) => sequelize.query(
+  "UPDATE companies SET location = :loc WHERE fbid = :id",
+  { replacements: { id, loc }, type: sequelize.QueryTypes.UPDATE }
+);
+
 exports.addItemPhotos = (val, fbid) => {
   if (val.picture && val.name) {
     return sequelize.query(

@@ -38,6 +38,12 @@ function getMenu (id) {
     })
     .catch(err => console.error("error in getMenu", err.message || err));
 }
+router.route('/location/:companyId')
+  .post((req, res) => {
+    return companyRepo.setLocation(req.body.id, req.body.location)
+      .then(() => res.status(200))
+      .catch(err => console.error("error updating location field", err));
+  });
 
 function fullMenu (fbid, data) {
   const itemids = data.map(val => val.itemid);
@@ -67,14 +73,6 @@ function fullMenu (fbid, data) {
       return wholeMenu
     });
 }
-
-
-
-// can't handle changing photos
-router.post('/:companyId', add_to_menu, (req, res) => {
-  console.log("----- POST RECEIVED ------", req.body);
-  return res.sendStatus(200);
-});
 
 router.get('/create/:companyId', (req, res) => {
   console.log("----- ADDING COMPANY ------", req.body.id);
