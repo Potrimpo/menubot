@@ -391,7 +391,7 @@ sudo -u pm2er -i
 Preform any changes you wanted to implement, such as pulling in a new update from git.
 
 ```
-cd [LOCATION OF MENUBOT DIRECTORY]/menubot
+cd ~/menubot
 sudo npm i
 sudo ./build.sh
 npm run prod
