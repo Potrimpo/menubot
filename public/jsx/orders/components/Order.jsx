@@ -2,7 +2,10 @@ import React, { PropTypes } from 'react'
 
 const Order = ({ onClick, pending, type, size, item, userid, pickuptime, photo, profile_pic, customer_name }) => (
   <div onClick={onClick} className="row">
-    <div className="col-lg-offset-3 col-lg-6 col-md-offset-3 col-md-6 col-sm-offset-2 col-sm-8 col-xs-12 order-active-container">
+    <div
+      className="col-lg-offset-3 col-lg-6 col-md-offset-3 col-md-6 col-sm-offset-2 col-sm-8 col-xs-12 order-basic-container"
+      style={ pending ? {backgroundColor:"#e0e0e0", border: "1px solid #b5b5b5" } : {backgroundColor:"#f2f2f2", border: "1px solid #e8e8e8"} }
+    >
       <div className="row">
         <div className="order-content-container">
           <img className="order-photo" src={photo}/>

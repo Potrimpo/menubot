@@ -156,7 +156,7 @@ sudo systemctl stop nginx
 sudo letsencrypt certonly --standalone
 ```
 
-Enter the domain name as `www.menubot.xyz`
+Enter the domain name as `www.menubot.xyz, menubot.xyz`
 
 ```
 sudo nano /etc/nginx/sites-enabled/default
