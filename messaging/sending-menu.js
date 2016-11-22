@@ -18,8 +18,7 @@ function postbackHandler (payload, fbUserId, fbPageId) {
 
       case 'LOCATION':
         return db.findLocation(fbPageId)
-          // a text response must be returned in the 'text' field of an object
-          .then(data => res({ text: "Wellington, 1234 gdfsg" }) )
+          .then(data => res({ text: data.location ? data.location : "Sorry, I don't know where I am!" }))
           .catch(err => console.error(`Error in postback:`, err));
 
       case 'DETAILS':
