@@ -1,14 +1,6 @@
-const redis = require('redis'),
-  bluebird = require('bluebird'),
+const { client } = require('./order-list-sessions'),
   { getCompanyAccessToken } = require('./repositories/site/CompanyRepository'),
   { findOrCreateCustomer } = require('./repositories/bot/botQueries');
-
-bluebird.promisifyAll(redis.RedisClient.prototype);
-bluebird.promisifyAll(redis.Multi.prototype);
-
-const client = redis.createClient();
-
-client.onAsync('connect').then(() => console.log('----> redis connected'));
 
 const findOrCreateSession = (fbUserId, fbPageId) => {
   return client.hgetallAsync(fbUserId)

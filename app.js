@@ -18,19 +18,18 @@ const express = require('express'),
   passport = require('passport'),
   expressValidator = require('express-validator');
 
+// Starting express server & redis & postgres
+const app = express(),
+  http = require('http').createServer(app),
+  { sequelize } = require('./database/models/index');
 
-const { sequelize } = require('./database/models/index'),
-  messengerMiddleware = require('./controllers/messengerMiddleware');
+const { initSockets } = require('./order-list-sessions');
+initSockets(http);
 
 // API keys and Passport configuration.
 const secrets = require('./config/secrets'),
   envVar = require('./envVariables'),
   passportConf = require('./config/passport');
-
-// Starting express server and socket.io
-const app = express(),
-  http = require('http').createServer(app),
-  io = require('socket.io')(http);
 
 app.use(({method, url}, rsp, next) => {
   rsp.on('finish', () => {
@@ -71,6 +70,8 @@ app.use(session({
     //, secure: true // only when on HTTPS
   }
 }));
+
+const messengerMiddleware = require('./controllers/messengerMiddleware');
 
 // WEBHOOK HANDLERS MUST COME BEFORE SECURITY CHECKS (LUSCA)
 // Webhook GET (facebook pings this with heartbeat)
@@ -182,15 +183,6 @@ function verifyRequestSignature(req, res, buf) {
   }
 }
 
-io.on('connection', function (socket) {
-  console.log("     socket.io connection!");
-  socket.on('request-orders', function (fbid) {
-    return ordersController.fetchOrders(fbid)
-      .then(orders => socket.emit('orders-list', orders))
-      .catch(err => console.error("error in socket business", err));
-  });
-});
-
 sequelize.sync({ force: false })
   .then(() => {
     console.log("sequelize is synced");
@@ -201,6 +193,5 @@ sequelize.sync({ force: false })
     console.log("postgresURL =", process.env.postgresURL);
     console.error("error syncing sequelize db", err)
   });
-
 
 module.exports = app;

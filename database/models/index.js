@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize'),
   sessionTable = process.env.sessionTable,
   bcrypt = require('bcrypt-nodejs');
+  // { newOrder } = require('../../order-list-sessions');
 
 const sequelize = new Sequelize(
   `postgres://postgres:${process.env.postgresPassword}@${process.env.postgresURL}:5432/menubot`,
@@ -227,6 +228,9 @@ const Order = sequelize.define('Order', {
   tableName: 'orders',
   // could benefit from adding timestamps in future
   timestamps: false,
+  // hooks: {
+  //   afterCreate: newOrder
+  // }
 });
 
 const Customer = sequelize.define('Customer', {

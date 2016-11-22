@@ -13,19 +13,22 @@ class OrdersBox extends Component {
     fbid: PropTypes.string
   };
 
-  getOrdersQuietly (orders) {
+  recieveOrders (orders) {
     const { dispatch } = this.props;
-    console.log("getting thos orders");
+    console.log("recieved orders");
     return dispatch(receiveAndParse(orders));
   };
 
   componentDidMount() {
     const { fbid } = this.props;
-    socket.on('connect', function (data) {
+
+    socket.on('connect', function () {
       console.log("we connected baby");
       socket.emit('request-orders', fbid);
     });
-    socket.on('orders-list', orders => this.getOrdersQuietly(orders))
+
+    socket.on('orders-list', orders => this.recieveOrders(orders));
+    socket.on('new-order', order => console.log("got new order!", order));
   }
 
   static componentWillReceiveProps(nextProps) {
