@@ -119,8 +119,6 @@ $(document).ready(function() {
     // stop the form from submitting the normal way
     event.preventDefault();
 
-    console.log("in form submit jquery");
-
     const inputElems = $(`#${this.id} :text`);
     const values = $(inputElems).map(function() {
       console.log("val name =", this.name);

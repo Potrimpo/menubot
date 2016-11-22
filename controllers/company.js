@@ -13,22 +13,28 @@ router.param('companyId', (req, res, next, id) => {
   return next();
 });
 
-router.get('/:companyId', (req, res) => {
-  console.log("------ getting company menu -------", req.params.companyId);
-  return getMenu(req.params.companyId)
-    .then(data => {
-      console.log("This is the object being passed to the .ejs files: " + JSON.stringify(data));
-      return res.render('account/company', {
-        bot_status: data.bot_status,
-        location: data.location,
-        fbid: data.fbid,
-        title: data.name,
-        items: data.items,
-        types: data.types,
-        sizes: data.sizes
-      });
-    })
-});
+router.route('/:companyId')
+  .get((req, res) => {
+    console.log("------ getting company menu -------", req.params.companyId);
+    return getMenu(req.params.companyId)
+      .then(data => {
+        console.log("This is the object being passed to the .ejs files: " + JSON.stringify(data));
+        return res.render('account/company', {
+          bot_status: data.bot_status,
+          location: data.location,
+          fbid: data.fbid,
+          title: data.name,
+          items: data.items,
+          types: data.types,
+          sizes: data.sizes
+        });
+      })
+  })
+  .post(add_to_menu, (req, res) => {
+    console.log("----- POST RECEIVED ------", req.body);
+    return res.sendStatus(200);
+  });
+
 
 function getMenu (id) {
   return companyRepo.getCompanyMenu(id)
