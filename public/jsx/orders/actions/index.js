@@ -20,13 +20,10 @@ export const receiveAndParse = json => {
   console.log("returned orders =", json);
   return {
     type: RECEIVE_ORDERS,
-  orders: json
-    .map(order => {
-      return {
-        ...order,
-        pickuptime: timeParsing(order.pickuptime)
-      };
-    })
+    orders: json.map(order => ({
+      ...order,
+      pickuptime: timeParsing(order.pickuptime)
+    }))
   };
 };
 
