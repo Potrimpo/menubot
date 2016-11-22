@@ -12,13 +12,8 @@ const express = require('express'),
 
 // absolute path is /api/orders/:fbid
 router.route('/orders/:fbid')
-  .get(retrieveOrders, (req, res) => {
-    console.log("orders ==", req.orders);
-    return res.json(req.orders);
-  })
-  .post(setOrderComplete, (req, res) => {
-    return res.send('ur postin 2 me & i think it done worked');
-  });
+  .get(retrieveOrders)
+  .post(setOrderComplete, (req, res) => res.status(200).send());
 
 router.route('/activate/:fbid')
   .get((req, res) => {
@@ -48,14 +43,13 @@ router.route('/photos/:fbid')
   });
 
 function syncPhotos (pageToken) {
-  let fbid = "";
+  let fbid;
   let photos = [];
   return fetchPhotos(pageToken)
     .then(response => {
       fbid = response.id;
       const rightAlbum = response.albums.data.filter(album => album.name == "menu");
       photos = rightAlbum[0].photos.data;
-      console.log("PHOTOS NAMES ===", photos.map(val => val.name));
       // add photos to items table, matching the name in the description of the facebook photo to item names
       return Promise.all(
         photos.map(val => addItemPhotos(val, fbid))
@@ -63,8 +57,6 @@ function syncPhotos (pageToken) {
     })
     .then(() => getTypesThroughFbid(fbid))
     .then(data => {
-      console.log("DATA FROM GETTING TYPES ==", data);
-      console.log("HPTOOSO ====", photos);
       const photosWithTypeids = photos
         .map(val => {
           for (let x = data.length - 1; x >= 0; x--) {
@@ -76,7 +68,6 @@ function syncPhotos (pageToken) {
           return null;
         })
         .filter(val => val);
-      console.log("HPTOSO WITH TYPEIDS =======^^^^^==== ", photosWithTypeids);
       return Promise.all(
         photosWithTypeids.map(val => addTypePhotos(val))
       );

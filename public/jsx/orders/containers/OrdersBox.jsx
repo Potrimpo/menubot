@@ -1,11 +1,10 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { fetchOrders, reload } from '../actions'
+import { fetchOrders } from '../actions'
 import VisibleOrders from './VisibleOrders'
 
 class OrdersBox extends Component {
   static propTypes = {
-    forceReload: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired,
     fbid: PropTypes.string
   };
@@ -16,25 +15,17 @@ class OrdersBox extends Component {
     return dispatch(fetchOrders(fbid));
   };
 
-  componentDidMount() {
+  componentDidMount () {
     this.getOrdersQuietly();
     return setInterval(this.getOrdersQuietly.bind(this), 3000);
   }
 
-  static componentWillReceiveProps(nextProps) {
+  static componentWillReceiveProps (nextProps) {
     const { dispatch, fbid } = nextProps;
     dispatch(fetchOrders(fbid));
   }
 
-  handleRefreshClick = e => {
-    e.preventDefault();
-    const { dispatch, fbid } = this.props;
-    dispatch(reload());
-    return dispatch(fetchOrders(fbid));
-  };
-
-  render() {
-    const { forceReload } = this.props;
+  render () {
     return (
       <div>
         <VisibleOrders/>
@@ -44,10 +35,9 @@ class OrdersBox extends Component {
 }
 
 const mapStateToProps = state => {
-  const { status, fbid } = state || { forceReload: true, fbid: "" };
+  const { fbid } = state || { fbid: "" };
 
   return {
-    forceReload: status.forceReload,
     fbid
   }
 };

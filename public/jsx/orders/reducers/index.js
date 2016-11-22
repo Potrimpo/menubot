@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { RELOAD, REQUEST_ORDERS, RECEIVE_ORDERS, REQUEST_FBID, TOGGLE_ORDER } from '../actions'
+import { REQUEST_ORDERS, RECEIVE_ORDERS, TOGGLE_ORDER } from '../actions'
 import filter from './filter'
 
 const order = (state, action) => {
@@ -29,42 +29,24 @@ const orders = (state = [], action) => {
   }
 };
 
-const status = (state = {
-  isFetching: false,
-  forceReload: false,
-}, action) => {
+const status = (state = { isFetching: false }, action) => {
   switch (action.type) {
-    case RELOAD:
-      return {
-        ...state,
-        isFetching: true,
-        forceReload: true
-      };
     case REQUEST_ORDERS:
       return {
         ...state,
-        isFetching: true,
-        forceReload: false
+        isFetching: true
       };
     case RECEIVE_ORDERS:
       return {
         ...state,
-        isFetching: false,
-        forceReload: false,
+        isFetching: false
       };
     default:
       return state
   }
 };
 
-const fbid = (state = "", action) => {
-  switch(action.type) {
-    case REQUEST_FBID:
-      return action.fbid || "";
-    default:
-      return state;
-  }
-};
+const fbid = (state = "", action) => state;
 
 const rootReducer = combineReducers({
   fbid,
