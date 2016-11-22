@@ -20,6 +20,7 @@ router.get('/:companyId', (req, res) => {
       console.log("This is the object being passed to the .ejs files: " + JSON.stringify(data));
       return res.render('account/company', {
         bot_status: data.bot_status,
+        location: data.location,
         fbid: data.fbid,
         title: data.name,
         items: data.items,
@@ -41,7 +42,7 @@ function getMenu (id) {
 router.route('/location/:companyId')
   .post((req, res) => {
     return companyRepo.setLocation(req.body.id, req.body.location)
-      .then(() => res.status(200))
+      .then(() => res.status(200).send())
       .catch(err => console.error("error updating location field", err));
   });
 
@@ -50,6 +51,7 @@ function fullMenu (fbid, data) {
   const wholeMenu = {
     name: data[0].name,
     bot_status: data[0].bot_status,
+    location: data[0].location,
     fbid,
     items: data
   };
