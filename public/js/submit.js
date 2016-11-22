@@ -88,14 +88,14 @@ $(document).ready(function() {
   $('form#location-setter').submit(function (event) {
     event.preventDefault();
 
-    const location = $(this).find('input').val();
-    console.log("location??", location);
+    const locVal = $(this).find('input').val();
+    console.log("locVal??", locVal);
     console.log("fbid =", fbid);
 
     $.ajax({
       type: 'POST',
       url: '/company/location/' + fbid,
-      data: { id: fbid, location },
+      data: { id: fbid, location: locVal },
       encode: true,
       success(data) {
         console.log("SUCCESS");

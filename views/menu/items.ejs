@@ -4,7 +4,7 @@
         <div class="col-xs-12 ">
           <div class="row item-heading-inner-container">
             <div class="col-xs-6">
-              <button type="button" name="item-<%= items[i].itemid %>" class="item-remove-button">
+              <button class="delete-entry item-remove-button" type="button" name="item-<%= items[i].itemid %>">
                 <i class="fa fa-trash-o item-remove-button-glyph" aria-hidden="true"></i>
               </button>
               <p class="item-title"><%= items[i].item %></p>
@@ -23,7 +23,7 @@
 
             <% } else { %>
               <div class="col-xs-6">
-                <form id="new-iprice-<%= items[i].itemid %>" name="<%= items[i].itemid %>"
+                <form class="menu-entry" id="new-iprice-<%= items[i].itemid %>" name="<%= items[i].itemid %>"
                       style="float:right;" class="form-inline"
                 >
                   <div class="form-group-lg" >

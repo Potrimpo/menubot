@@ -10,7 +10,7 @@
 
               <div class="row type-heading-inner-container">
                 <div class="col-xs-6">
-                  <button type="button" name="type-<%= types[x].typeid %>" class="type-remove-button">
+                  <button type="button" name="type-<%= types[x].typeid %>" class="type-remove-button delete-entry">
                     <i class="fa fa-trash-o type-remove-button-glyph" aria-hidden="true"></i></button>
                   <p class="type-title"><%= types[x].type %></p>
                 </div>
@@ -28,7 +28,7 @@
 
                 <% } else { %>
                   <div class="col-xs-6">
-                    <form id="new-tprice-<%= types[x].typeid %>" name="<%= types[x].typeid %>"
+                    <form class="menu-entry" id="new-tprice-<%= types[x].typeid %>" name="<%= types[x].typeid %>"
                           style="float:right;" class="form-inline">
                       <div class="form-group-lg" >
                         <div class="input-group">
