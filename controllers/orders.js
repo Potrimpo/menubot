@@ -4,12 +4,11 @@
 
 const { ordersByFbid, orderComplete } = require('../repositories/site/CompanyRepository');
 
-exports.retrieveOrders = (req, res, next) => {
-  const today = dateParsing();
-  return ordersByFbid(req.params.fbid, today)
-    .then(data => {
-      req.orders = data;
-      return next();
+exports.retrieveOrders = (req, res) => {
+  return ordersByFbid(req.params.fbid, today())
+    .then(orders => {
+      console.log("orders ==", orders);
+      return res.json(orders)
     })
     .catch(err => res.status(500).send('error getting orders'));
 };
@@ -20,7 +19,7 @@ exports.setOrderComplete = (req, res, next) => {
     .catch(err => console.error("error in setOrderComplete", err));
 };
 
-function dateParsing () {
+function today () {
   const today = new Date();
   let dd = today.getDate(),
     mm = today.getMonth() + 1, //January is 0!
