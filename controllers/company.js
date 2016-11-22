@@ -13,21 +13,28 @@ router.param('companyId', (req, res, next, id) => {
   return next();
 });
 
-router.get('/:companyId', (req, res) => {
-  console.log("------ getting company menu -------", req.params.companyId);
-  return getMenu(req.params.companyId)
-    .then(data => {
-      console.log("This is the object being passed to the .ejs files: " + JSON.stringify(data));
-      return res.render('account/company', {
-        bot_status: data.bot_status,
-        fbid: data.fbid,
-        title: data.name,
-        items: data.items,
-        types: data.types,
-        sizes: data.sizes
-      });
-    })
-});
+router.route('/:companyId')
+  .get((req, res) => {
+    console.log("------ getting company menu -------", req.params.companyId);
+    return getMenu(req.params.companyId)
+      .then(data => {
+        console.log("This is the object being passed to the .ejs files: " + JSON.stringify(data));
+        return res.render('account/company', {
+          bot_status: data.bot_status,
+          location: data.location,
+          fbid: data.fbid,
+          title: data.name,
+          items: data.items,
+          types: data.types,
+          sizes: data.sizes
+        });
+      })
+  })
+  .post(add_to_menu, (req, res) => {
+    console.log("----- POST RECEIVED ------", req.body);
+    return res.sendStatus(200);
+  });
+
 
 function getMenu (id) {
   return companyRepo.getCompanyMenu(id)
@@ -38,12 +45,19 @@ function getMenu (id) {
     })
     .catch(err => console.error("error in getMenu", err.message || err));
 }
+router.route('/location/:companyId')
+  .post((req, res) => {
+    return companyRepo.setLocation(req.body.id, req.body.location)
+      .then(() => res.status(200).send())
+      .catch(err => console.error("error updating location field", err));
+  });
 
 function fullMenu (fbid, data) {
   const itemids = data.map(val => val.itemid);
   const wholeMenu = {
     name: data[0].name,
     bot_status: data[0].bot_status,
+    location: data[0].location,
     fbid,
     items: data
   };
@@ -67,14 +81,6 @@ function fullMenu (fbid, data) {
       return wholeMenu
     });
 }
-
-
-
-// can't handle changing photos
-router.post('/:companyId', add_to_menu, (req, res) => {
-  console.log("----- POST RECEIVED ------", req.body);
-  return res.sendStatus(200);
-});
 
 router.get('/create/:companyId', (req, res) => {
   console.log("----- ADDING COMPANY ------", req.body.id);

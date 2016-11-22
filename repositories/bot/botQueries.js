@@ -57,7 +57,7 @@ exports.findItem = (fbid, item) => {
 
 exports.getMenu = fbid => {
   return Item.findAll({
-    attributes: ['item', 'itemid', 'photo', 'item_price'],
+    attributes: ['item', 'itemid', 'item_photo', 'item_price'],
     where: { fbid }
   })
 };
@@ -65,7 +65,7 @@ exports.getMenu = fbid => {
 
 exports.getTypes = itemid => {
   return Type.findAll({
-    attributes: ['itemid', 'typeid', 'type', 'photo', 'type_price'],
+    attributes: ['itemid', 'typeid', 'type', 'type_photo', 'type_price'],
     where: { itemid }
   })
 };

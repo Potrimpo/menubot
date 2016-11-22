@@ -14,6 +14,13 @@
         <% } else if (bot_status == false) { %>
         <a href="/api/activate/<%= fbid %>" role="button" class="btn btn-default btn-space">Activate messenger bot</a>
         <% } %>
+        <form id="location-setter" >
+            <div class="form-group">
+                <input type="text" class="form-control btn-space" placeholder="Location" autocomplete="off"
+                       <% if (location) { %> value="<%= location %>" <% } %>
+                >
+            </div>
+        </form>
     </div>
 </div>
 <div class="container">
