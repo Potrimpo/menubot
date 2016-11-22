@@ -25,7 +25,7 @@ exports.getCompanyMenu = id => {
 
 exports.getMenuTypes = itemids => {
   return sequelize.query(
-    "SELECT types.itemid, type, typeid, types.photo, types.type_price FROM items" +
+    "SELECT types.itemid, type, typeid, types.type_photo, types.type_price FROM items" +
     " INNER JOIN types ON items.itemid = types.itemid" +
     " WHERE items.itemid IN (:itemids)" +
     " ORDER BY typeid ASC",
@@ -220,7 +220,7 @@ exports.addItemPhotos = (val, fbid) => {
   if (val.picture && val.name) {
     return sequelize.query(
       "UPDATE items" +
-      " SET photo = :picture" +
+      " SET item_photo = :picture" +
       " WHERE fbid = :fbid AND lower(item) = lower(:name)" +
       " RETURNING item, itemid",
       { replacements: { fbid, picture: val.picture, name: val.name }, type: sequelize.QueryTypes.UPDATE }
@@ -233,7 +233,7 @@ exports.addTypePhotos = val => {
   if (val.picture && val.name && val.typeid) {
     return sequelize.query(
       "UPDATE types" +
-      " SET photo = :picture" +
+      " SET type_photo = :picture" +
       " WHERE typeid = :typeid AND lower(type) = lower(:name)",
       { replacements: { typeid: val.typeid, picture: val.picture, name: val.name }, type: sequelize.QueryTypes.UPDATE }
     );

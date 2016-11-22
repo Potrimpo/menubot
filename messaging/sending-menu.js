@@ -58,7 +58,7 @@ function parseItems(menu) {
   template.attachment.payload.elements = menu.map(val => {
     const items = {
       title: `${val.item.toUpperCase()}`,
-      image_url: val.photo,
+      image_url: val.item_photo,
       buttons: []
     };
     if (val.item_price) {
@@ -85,7 +85,7 @@ function parseProductTypes(types, itemid) {
   template.attachment.payload.elements = types.map(val => {
     const types = {
       title: val.type.toUpperCase(),
-      image_url: val.photo,
+      image_url: val.type_photo,
       buttons: []
     };
     if (val.type_price) {

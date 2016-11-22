@@ -106,7 +106,7 @@ const Item = sequelize.define('Item', {
   item: {
     type: Sequelize.STRING
   },
-  photo: {
+  item_photo: {
     type: Sequelize.STRING
   },
   item_price: {
@@ -134,7 +134,7 @@ const Type = sequelize.define('Type', {
   type: {
     type: Sequelize.STRING
   },
-  photo: {
+  type_photo: {
     type: Sequelize.STRING
   },
   type_price: {
