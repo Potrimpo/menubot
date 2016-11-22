@@ -7,12 +7,6 @@ const chrono = require('chrono-node'),
 const actions = {
   send(fbUserId, message) {
     if (message.text) { console.log(`replying >> ${message.text}`); }
-    if (message.quickreplies) {
-      message.quick_replies = message.quickreplies.map(x => {
-        return {"title": x, "content_type": "text", "payload": x.toUpperCase()};
-      });
-      delete message.quickreplies;
-    }
     // get the access token for this user's interaction (page access token for messenger)
     return redisGetToken(fbUserId)
       .then(token => {
