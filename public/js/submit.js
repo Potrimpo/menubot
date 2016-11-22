@@ -38,8 +38,12 @@ $(document).ready(function() {
     "Blood, sweat and tears by ",
     "Lovingly crafted by "
   ];
-  var quoteRandom = Math.floor(Math.random()*myQuote.length);
-  $('#myQuote').html(myQuote[quoteRandom]);
+  if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+
+  } else {
+    var quoteRandom = Math.floor(Math.random()*myQuote.length);
+    $('#myQuote').html(myQuote[quoteRandom]);
+  }
 
   console.log("WE IN IT");
 
