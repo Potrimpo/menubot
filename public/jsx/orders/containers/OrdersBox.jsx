@@ -25,7 +25,7 @@ class OrdersBox extends Component {
     dispatch(fetchOrders(fbid));
   }
 
-  static render () {
+  render () {
     return (
       <div>
         <VisibleOrders/>
