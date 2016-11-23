@@ -1,7 +1,7 @@
 const redis = require('redis'),
   bluebird = require('bluebird'),
-  { getCompanyAccessToken } = require('./repositories/site/CompanyRepository'),
-  { findOrCreateCustomer } = require('./repositories/bot/botQueries');
+  { getCompanyAccessToken } = require('../repositories/site/CompanyRepository'),
+  { findOrCreateCustomer } = require('../repositories/bot/botQueries');
 
 bluebird.promisifyAll(redis.RedisClient.prototype);
 bluebird.promisifyAll(redis.Multi.prototype);

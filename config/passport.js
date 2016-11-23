@@ -1,11 +1,11 @@
 'use strict';
 
-var passport = require('passport');
-var FacebookStrategy = require('passport-facebook').Strategy;
+const passport = require('passport'),
+  FacebookStrategy = require('passport-facebook').Strategy;
 
-var secrets = require('./secrets');
-var { User } = require('../database/models/index');
-var UserRepo = require('../repositories/site/UserRepository');
+const secrets = require('./secrets'),
+  { User } = require('../database/models/index'),
+ UserRepo = require('../repositories/site/UserRepository');
 
 passport.serializeUser((user, done) => done(null, user.id));
 

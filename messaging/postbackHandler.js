@@ -3,7 +3,7 @@
  */
 
 const actions = require('./actions'),
-  { redisRecordOrder } = require('../messengerSessions'),
+  { redisRecordOrder } = require('./messengerSessions'),
   db = require('./../repositories/bot/botQueries');
 
 function postbackHandler (payload, fbUserId, fbPageId) {
