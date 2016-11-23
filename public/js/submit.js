@@ -63,7 +63,7 @@ $(document).ready(function() {
     };
 
     $.ajax({
-      type: 'POST',
+      type: 'DELETE',
       url: '/company/' + fbid,
       data: deleteSpec,
       encode: true,

@@ -32,7 +32,14 @@ router.route('/:companyId')
   })
   .post(add_to_menu, (req, res) => {
     console.log("----- POST RECEIVED ------", req.body);
-    return res.sendStatus(200);
+    return res.status(200).send();
+  })
+  .delete((req, res) => {
+    console.log("DELETAIN *********");
+    console.log("body = ", req.body);
+    return companyRepo.deleteItem(req.body)
+      .then(() => res.status(200).send())
+      .catch(err => console.error("error deleting menu item", err));
   });
 
 router.route('/init/:companyId')
@@ -118,12 +125,6 @@ function add_to_menu(req, res, next) {
 
     case "sprice":
       return companyRepo.updateSPrice(req.body)
-        .then(() => next());
-
-    case "delete":
-      console.log("DELETAIN *********");
-      console.log("body = ", req.body);
-      return companyRepo.deleteItem(req.body)
         .then(() => next());
 
     default:
