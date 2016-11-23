@@ -7,21 +7,20 @@ const express = require('express'),
   path = require('path'),
   passport = require('passport');
 
-
-const { sequelize } = require('./database/models/index'),
-  messengerMiddleware = require('./controllers/messengerMiddleware'),
-  expressConfig = require('./express-config');
-
 // API keys and Passport configuration.
 const secrets = require('./config/secrets'),
   passportConf = require('./config/passport');
 
-// Starting our webserver and putting it all together
+// Database, express setup code,
+const { sequelize } = require('./database/models/index'),
+  expressConfig = require('./express-config');
+
+// Initialising express app
 const app = express();
 
 expressConfig(app, express);
 
-//PostgreSQL Store
+// postgres sessions for users on the site
 app.use(session({
   store: new pgSession({
     conString: `postgres://postgres:${process.env.postgresPassword}@${process.env.postgresURL}:5432/menubot`,
@@ -37,7 +36,16 @@ app.use(session({
   }
 }));
 
-// WEBHOOK HANDLERS MUST COME BEFORE SECURITY CHECKS (LUSCA)
+// Controllers (route handlers).
+const homeController = require('./controllers/home'),
+  userController = require('./controllers/user'),
+  apiController = require('./controllers/api'),
+  facebookController = require('./controllers/facebook'),
+  companyController = require('./controllers/company'),
+  contactController = require('./controllers/contact'),
+  messengerMiddleware = require('./controllers/messengerMiddleware');
+
+// WEBHOOK HANDLERS MUST COME BEFORE SECURITY CHECKS (that we are no longer using lmao)
 // Webhook GET (facebook pings this with heartbeat)
 app.route('/webhook')
   .get(messengerMiddleware.getWebhook)
@@ -45,14 +53,6 @@ app.route('/webhook')
 
 app.use(passport.initialize());
 app.use(passport.session());
-// Controllers (route handlers).
-const homeController = require('./controllers/home'),
-  userController = require('./controllers/user'),
-  apiController = require('./controllers/api'),
-  facebookController = require('./controllers/facebook'),
-  companyController = require('./controllers/company'),
-  contactController = require('./controllers/contact');
-
 
 // Primary app routes.
 app.get('/', passportConf.isAuthenticated, passportConf.isAuthorized, homeController.index);
@@ -73,7 +73,10 @@ app.use('/company', passportConf.isAuthenticated, passportConf.isAuthorized, com
 
 // OAuth authentication routes. (Sign in)
 app.get('/auth/facebook', passport.authenticate('facebook', secrets.facebook.authOptions));
-app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/', failureRedirect: '/landing', failureFlash: true }) );
+app.get(
+  '/auth/facebook/callback',
+  passport.authenticate('facebook', { successRedirect: '/', failureRedirect: '/landing', failureFlash: true })
+);
 
 // syncing with postgres database, then assigning ports & IP to the server
 sequelize.sync({ force: false })
