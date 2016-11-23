@@ -6,13 +6,13 @@
         <a href="/" class="btn btn-default btn-space">
           <i class="fa fa-long-arrow-left" style="font-size:18px;" aria-hidden="true"></i>
         </a>
-        <a href="/api/photos/<%= fbid %>" role="button" class="btn btn-default btn-space">
+        <a href="/api/photos/<%= fbid %>" role="button" class="btn btn-default btn-space misc-async">
             Fetch photos from Facebook
         </a>
         <% if (bot_status == true) { %>
-        <a href="/api/deactivate/<%= fbid %>" role="button" class="btn btn-default btn-space">Deactivate messenger bot</a>
+        <a href="/api/deactivate/<%= fbid %>" role="button" class="btn btn-default btn-space misc-async">Deactivate messenger bot</a>
         <% } else if (bot_status == false) { %>
-        <a href="/api/activate/<%= fbid %>" role="button" class="btn btn-default btn-space">Activate messenger bot</a>
+        <a href="/api/activate/<%= fbid %>" role="button" class="btn btn-default btn-space misc-async">Activate messenger bot</a>
         <% } %>
         <form id="location-setter" >
             <div class="form-group">

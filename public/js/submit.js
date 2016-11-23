@@ -57,9 +57,8 @@ $(document).ready(function() {
   $('button.delete-entry').click(function (event) {
     console.log("button click");
     console.log(this);
-    $('html,body').scrollTop(0);
-    $('#spinner-overlay').show();
-    $('body').addClass('overlay-container')
+    event.preventDefault();
+    showSpinner();
 
     const [_, type, deleteId] = /(\w+)-(\d+)/.exec(this.name);
     console.log("type =", type);
@@ -127,9 +126,7 @@ $(document).ready(function() {
   $('form.menu-entry').submit(function(event) {
     // stop the form from submitting the normal way
     event.preventDefault();
-    $('html,body').scrollTop(0);
-    $('#spinner-overlay').show();
-    $('body').addClass('overlay-container')
+    showSpinner();
     console.log("in form submit jquery");
 
     const inputElems = $(`#${this.id} :text`);
@@ -187,6 +184,16 @@ $(document).ready(function() {
         location.reload();
       });
   });
+
+  $('.misc-async').click(function () {
+    showSpinner();
+  });
+
+  function showSpinner () {
+    $('html,body').scrollTop(0);
+    $('#spinner-overlay').show();
+    $('body').addClass('overlay-container');
+  }
 
 });
 
