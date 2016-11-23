@@ -4,7 +4,7 @@
 
 const { findOrCreateSession } = require('../messengerSessions'),
   runActions = require('../messaging/runActions'),
-  postbackHandler = require('../messaging/sending-menu'),
+  postbackHandler = require('../messaging/postbackHandler'),
   actions = require('../messaging/actions');
 
 exports.postWebhook = (req, res) => {
