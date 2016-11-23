@@ -49,7 +49,11 @@
         </a>
 
         <div>
-            <a href="/company/create/<%= accounts[a].fbid %>" role="button" class="btn btn-default btn-space home-button">Create Menu for Page</a>
+            <form action="/company/init/<%= accounts[a].fbid %>" method="post">
+                <button class="btn btn-default btn-space home-button btn-link" type="submit">
+                    Create Menu for Page
+                </button>
+            </form>
         </div>
     </div>
     <% } %>

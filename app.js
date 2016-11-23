@@ -51,30 +51,31 @@ const homeController = require('./controllers/home'),
   apiController = require('./controllers/api'),
   facebookController = require('./controllers/facebook'),
   companyController = require('./controllers/company'),
-  contactController = require('./controllers/contact'),
-  ordersController = require('./controllers/orders');
+  contactController = require('./controllers/contact');
 
 
 // Primary app routes.
 app.get('/', passportConf.isAuthenticated, passportConf.isAuthorized, homeController.index);
 app.get('/landing', homeController.landing);
 app.get('/logout', userController.logout);
-app.route('/contact').get(contactController.getContact);
+app.get('/contact', contactController.getContact);
 app.get('/account', passportConf.isAuthenticated, passportConf.isAuthorized, facebookController.getFacebook);
 app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);
 app.get('/orders/:fbid', passportConf.isAuthenticated, passportConf.isAuthorized, homeController.orders);
+app.get('/priv', homeController.priv);
 
+
+// API router used for asynchronous actions like fetching photos from Facebook
 app.use('/api', passportConf.isAuthenticated, passportConf.isAuthorized, apiController);
 
+// Router for dealing with company creation & updates, including menu changes
 app.use('/company', passportConf.isAuthenticated, passportConf.isAuthorized, companyController);
 
 // OAuth authentication routes. (Sign in)
 app.get('/auth/facebook', passport.authenticate('facebook', secrets.facebook.authOptions));
 app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/', failureRedirect: '/landing', failureFlash: true }) );
 
-// Privacy policy route
-app.get('/priv', homeController.priv);
-
+// syncing with postgres database, then assigning ports & IP to the server
 sequelize.sync({ force: false })
   .then(() => {
     console.log("sequelize is synced");
