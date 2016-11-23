@@ -2,6 +2,7 @@
   "apps" : [{
     "name": "menubot",
     "script": "./app.js",
+    "autorestart": false,
     "env": {
       "NODE_ENV": "production",
       "PORT": 3000,
