@@ -2,7 +2,7 @@
  * Created by lewis.knoxstreader on 18/09/16.
  */
 
-const { findOrCreateSession } = require('../messengerSessions'),
+const { findOrCreateSession } = require('../messaging/messengerSessions'),
   runActions = require('../messaging/runActions'),
   postbackHandler = require('../messaging/postbackHandler'),
   actions = require('../messaging/actions');

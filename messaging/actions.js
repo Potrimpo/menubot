@@ -1,5 +1,5 @@
 const chrono = require('chrono-node'),
-  { redisRetrieveOrder, redisGetToken } = require('./../messengerSessions'),
+  { redisRetrieveOrder, redisGetToken } = require('./messengerSessions'),
   fbMessage = require('./fbMessage'),
   db = require('../repositories/bot/botQueries');
 
