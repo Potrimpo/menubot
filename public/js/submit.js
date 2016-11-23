@@ -9,6 +9,8 @@ const _ = require('./lib/bootstrap.min');
 console.log("PRIOR TO BEING IN IT");
 
 $(document).ready(function() {
+  $('#spinner-overlay').hide();
+  $('body').removeClass('overlay-container')
 // dumb Footer quote generator
   var myQuote = [
     "&quot;And into this website he poured all his cruelty, his malice and his will to dominate all life&quot; - ",
@@ -53,6 +55,9 @@ $(document).ready(function() {
   $('button').click(function (event) {
     console.log("button click");
     console.log(this);
+    $('html,body').scrollTop(0);
+    $('#spinner-overlay').show();
+    $('body').addClass('overlay-container')
 
     const [_, type, deleteId] = /(\w+)-(\d+)/.exec(this.name);
     console.log("type =", type);
@@ -90,7 +95,9 @@ $(document).ready(function() {
   $('form').submit(function(event) {
     // stop the form from submitting the normal way
     event.preventDefault();
-
+    $('html,body').scrollTop(0);
+    $('#spinner-overlay').show();
+    $('body').addClass('overlay-container')
     console.log("in form submit jquery");
 
     const inputElems = $(`#${this.id} :text`);
