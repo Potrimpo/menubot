@@ -208,6 +208,7 @@ const Order = sequelize.define('Order', {
   },
   itemid: {
     type: Sequelize.INTEGER,
+    allowNull: false,
     references: {
       model: 'items',
       key: 'itemid'
