@@ -58,6 +58,7 @@ const actions = {
       if(time) {
         return redisRetrieveOrder(fbUserId)
           .then(data => {
+            if (!data.itemid) throw "No order for this user in Redis";
             console.log("order from redis!", data);
             return db.makeOrder(fbPageId, fbUserId, time, data)
           })
