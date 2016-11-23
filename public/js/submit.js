@@ -6,42 +6,13 @@
 window.jQuery = window.$ = require('./lib/jquery-2.1.3.min');
 const _ = require('./lib/bootstrap.min');
 
-// dumb Footer quote generator
-var myQuote = [
-  "&quot;And into this website he poured all his cruelty, his malice and his will to dominate all life&quot; - ",
-  "Constructed mostly from crayons and construction paper by ",
-  "Put together by ",
-  "By ",
-  "Designed by ",
-  "Made by ",
-  "Developed by ",
-  "Fabricated by ",
-  "Erected to appease pagan deity ",
-  "1000 monkeys with 1000 type writers owned by ",
-  "Means of production seized by ",
-  "Put together by ",
-  "Hastily cobbled together by ",
-  "Hastily replated from floor by ",
-  "Brewed from knockbox waste by ",
-  "Ironically designed by ",
-  "Written by ",
-  "Manufactured by ",
-  "Powered by ",
-  "Assembled by ",
-  "Completed by ",
-  "Step one in world domination by ",
-  "Raised in the name of ",
-  "Laundering by ",
-  "Blood, sweat and tears by ",
-  "Lovingly crafted by "
-];
-
 console.log("PRIOR TO BEING IN IT");
 
 $(document).ready(function() {
   $('#spinner-overlay').hide();
   $('body').removeClass('overlay-container')
-// dumb Footer quote generator
+
+  // dumb Footer quote generator
   var myQuote = [
     "&quot;And into this website he poured all his cruelty, his malice and his will to dominate all life&quot; - ",
     "Constructed mostly from crayons and construction paper by ",

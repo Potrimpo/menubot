@@ -416,7 +416,7 @@ sudo /etc/init.d/postgresql restart
 > I can't remember why this is important.
 
 
-# Development environment setup
+## Development environment setup
 
 ### Ubuntu development: First time setup
 
