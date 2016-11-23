@@ -15,7 +15,7 @@ const cookieParser = require('cookie-parser'),
   expressValidator = require('express-validator');
 
 const secrets = require('./config/secrets'),
-  envVar = require('./envVariables');
+  devVar = require('./config/local-dev-variables');
 
 module.exports = function (app, express) {
 
@@ -92,14 +92,14 @@ module.exports = function (app, express) {
         method = elements[0],
         signatureHash = elements[1];
 
-      const expectedHash = crypto.createHmac('sha1', process.env.FB_APP_SECRET || envVar.FB_APP_SECRET)
+      const expectedHash = crypto.createHmac('sha1', process.env.FB_APP_SECRET || devVar.FB_APP_SECRET)
         .update(buf)
         .digest('hex');
 
       if (signatureHash != expectedHash) {
         console.log(`signatureHash: ${signatureHash}`);
         console.log(`expectedHash: ${expectedHash}`);
-        console.log(`app secret: ${process.env.FB_APP_SECRET || envVar.FB_APP_SECRET}`);
+        console.log(`app secret: ${process.env.FB_APP_SECRET || devVar.FB_APP_SECRET}`);
         throw new Error("Couldn't validate the request signature.");
       }
     }

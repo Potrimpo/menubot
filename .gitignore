@@ -5,6 +5,6 @@ performanceLogs
 output.json
 dist/js
 dist/css
-envVariables.js
+config/local-dev-variables.js
 icon.png
 dump.rdb

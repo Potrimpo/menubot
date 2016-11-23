@@ -64,7 +64,7 @@ Made using:
 
     > Development environment
 
-    * Add your App ID & App Secret to `envVariables.js` (file under gitignore, may have to be created at this stage)
+    * Add your App ID & App Secret to `local-dev-variables.js` (file under gitignore, may have to be created at this stage)
     file should look like this
     ```
     module.exports = {
@@ -620,7 +620,7 @@ sudo /etc/init.d/postgresql restart
 There are _some_ executable tests, though not a whole lot of coverage.
 Testing the bot is important, but very difficult to do, due to the way the server responds to requests.
 
-To run some of these tests, values must be added to the `envVariables.js` file
+To run some of these tests, values must be added to the `local-dev-variables.js` file
 
 ```
 module.exports = {

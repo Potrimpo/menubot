@@ -7,10 +7,6 @@ const express = require('express'),
   path = require('path'),
   passport = require('passport');
 
-// API keys and Passport configuration.
-const secrets = require('./config/secrets'),
-  passportConf = require('./config/passport');
-
 // Database, express setup code,
 const { sequelize } = require('./database/models/index'),
   expressConfig = require('./express-config');
@@ -19,6 +15,10 @@ const { sequelize } = require('./database/models/index'),
 const app = express();
 
 expressConfig(app, express);
+
+// API keys and Passport configuration.
+const secrets = require('./config/secrets'),
+  passportConf = require('./config/passport');
 
 // postgres sessions for users on the site
 app.use(session({

@@ -1,5 +1,5 @@
 'use strict';
-const { FACEBOOK_ID, FB_APP_SECRET } = require('../envVariables');
+const { FACEBOOK_ID, FB_APP_SECRET } = require('./local-dev-variables');
 
 module.exports = {
 
