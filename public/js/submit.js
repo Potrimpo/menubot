@@ -39,8 +39,43 @@ var myQuote = [
 console.log("PRIOR TO BEING IN IT");
 
 $(document).ready(function() {
-  var quoteRandom = Math.floor(Math.random()*myQuote.length);
-  $('#myQuote').html(myQuote[quoteRandom]);
+  $('#spinner-overlay').hide();
+  $('body').removeClass('overlay-container')
+// dumb Footer quote generator
+  var myQuote = [
+    "&quot;And into this website he poured all his cruelty, his malice and his will to dominate all life&quot; - ",
+    "Constructed mostly from crayons and construction paper by ",
+    "Put together by ",
+    "By ",
+    "Designed by ",
+    "Made by ",
+    "Developed by ",
+    "Fabricated by ",
+    "Erected to appease pagan deity ",
+    "1000 monkeys with 1000 type writers owned by ",
+    "Means of production seized by ",
+    "Put together by ",
+    "Hastily cobbled together by ",
+    "Hastily replated from floor by ",
+    "Brewed from knockbox waste by ",
+    "Ironically designed by ",
+    "Written by ",
+    "Manufactured by ",
+    "Powered by ",
+    "Assembled by ",
+    "Completed by ",
+    "Step one in world domination by ",
+    "Raised in the name of ",
+    "Laundering by ",
+    "Blood, sweat and tears by ",
+    "Lovingly crafted by "
+  ];
+  if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+
+  } else {
+    var quoteRandom = Math.floor(Math.random()*myQuote.length);
+    $('#myQuote').html(myQuote[quoteRandom]);
+  }
 
   console.log("WE IN IT");
 
@@ -51,6 +86,9 @@ $(document).ready(function() {
   $('button.delete-entry').click(function (event) {
     console.log("button click");
     console.log(this);
+    $('html,body').scrollTop(0);
+    $('#spinner-overlay').show();
+    $('body').addClass('overlay-container')
 
     const [_, type, deleteId] = /(\w+)-(\d+)/.exec(this.name);
     console.log("type =", type);
@@ -118,6 +156,10 @@ $(document).ready(function() {
   $('form.menu-entry').submit(function(event) {
     // stop the form from submitting the normal way
     event.preventDefault();
+    $('html,body').scrollTop(0);
+    $('#spinner-overlay').show();
+    $('body').addClass('overlay-container')
+    console.log("in form submit jquery");
 
     const inputElems = $(`#${this.id} :text`);
     const values = $(inputElems).map(function() {
