@@ -48,7 +48,7 @@ function syncPhotos (pageToken) {
   return fetchPhotos(pageToken)
     .then(response => {
       fbid = response.id;
-      const rightAlbum = response.albums.data.filter(album => album.name == "menu");
+      const rightAlbum = response.albums.data.filter(album => album.name.toLowerCase() == "menu");
       photos = rightAlbum[0].photos.data;
       // add photos to items table, matching the name in the description of the facebook photo to item names
       return Promise.all(
