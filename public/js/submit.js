@@ -96,6 +96,9 @@ $(document).ready(function() {
   // setting the company location
   $('form#location-setter').submit(function (event) {
     event.preventDefault();
+    $('html,body').scrollTop(0);
+    $('#spinner-overlay').show();
+    $('body').addClass('overlay-container')
 
     const locVal = $(this).find('input').val();
     console.log("locVal??", locVal);
@@ -183,7 +186,6 @@ $(document).ready(function() {
     })
       .done(function(data) {
         console.log("DONE", data);
-
         location.reload();
       });
   });
