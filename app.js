@@ -7,7 +7,7 @@ const express = require('express'),
 
 // Starting express server & redis & postgres
 const app = express(),
-  // http = require('http').createServer(app),
+  http = require('http').createServer(app),
   expressConfig = require('./express-config'),
   { sequelize } = require('./database/models/index');
 

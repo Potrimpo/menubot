@@ -4,7 +4,7 @@
 const cookieParser = require('cookie-parser'),
   path = require('path'),
   session = require('express-session'),
-  pgSession = require('connect-pg-simple'),
+  pgSession = require('connect-pg-simple')(session),
   flash = require('express-flash'),
   // lusca = require('lusca'),
   // toobusy = require('toobusy-js'),
