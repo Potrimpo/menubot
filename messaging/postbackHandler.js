@@ -2,8 +2,7 @@
  * Created by lewis.knoxstreader on 31/08/16.
  */
 
-const actions = require('./actions'),
-  { redisRecordOrder } = require('./messengerSessions'),
+const { redisRecordOrder } = require('./messengerSessions'),
   db = require('./../repositories/bot/botQueries');
 
 function postbackHandler (payload, fbUserId, fbPageId) {

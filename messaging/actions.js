@@ -24,32 +24,6 @@ const actions = {
       })
   },
 
-  // [ NO LONGER USED] check if item x is in database
-  checkProduct({context, entities, fbPageId }) {
-    const prod = firstEntityValue(entities, 'product');
-    return new Promise((res, rej) => {
-      if(prod) {
-        return db.findItem(fbPageId, prod)
-          .then(data => {
-            if (data) {
-              context.productInfo = data.item;
-              delete context.itemNotFound;
-              return res(context);
-            }
-            else {
-              context.itemNotFound = true;
-              delete context.productInfo;
-              return res(context);
-            }
-          })
-          .catch(err => {
-            console.error(err);
-            return rej(err);
-          });
-      }
-    });
-  },
-
   // specify the time of an order
   orderTime(fbUserId, fbPageId, request) {
     return new Promise((res, rej) => {

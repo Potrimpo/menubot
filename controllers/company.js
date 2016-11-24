@@ -5,7 +5,7 @@
 const express = require('express'),
   router = express.Router();
 
-const companyRepo = require('../repositories/site/CompanyRepository');
+const db = require('../repositories/site/CompanyRepository');
 
 router.param('companyId', (req, res, next, id) => {
   console.log("ID PROVIDED =", id);
@@ -30,41 +30,33 @@ router.route('/:companyId')
         });
       })
   })
-  .post(add_to_menu, (req, res) => {
-    console.log("----- POST RECEIVED ------", req.body);
-    return res.status(200).send();
-  })
+  .post(add_to_menu, (req, res) => res.status(200).send())
   .delete((req, res) => {
-    console.log("DELETAIN *********");
-    console.log("body = ", req.body);
-    return companyRepo.deleteItem(req.body)
+    return db.deleteItem(req.body)
       .then(() => res.status(200).send())
       .catch(err => console.error("error deleting menu item", err));
   });
 
 router.route('/init/:companyId')
   .post((req, res) => {
-  console.log("----- ADDING COMPANY ------", req.body.id);
-  return companyRepo.linkCompany(req.user.id, req.body.id)
-    .then(data => {
-      return res.redirect(`/company/${data[0].fbid}`)
-    });
+    return db.linkCompany(req.user.id, req.body.id)
+      .then(data => res.redirect(`/company/${data[0].fbid}`));
 });
 
 router.route('/location/:companyId')
   .post((req, res) => {
-    return companyRepo.setLocation(req.body.id, req.body.location)
+    return db.setLocation(req.body.id, req.body.location)
       .then(() => res.status(200).send())
       .catch(err => console.error("error updating location field", err));
   });
 
 
 function getMenu (id) {
-  return companyRepo.getCompanyMenu(id)
+  return db.getCompanyMenu(id)
     .then(data => {
       if (!data) throw "no company found";
       if (data.length > 0) return fullMenu(id, data);
-      else return companyRepo.findCompany(id)
+      else return db.findCompany(id)
     })
     .catch(err => console.error("error in getMenu", err.message || err));
 }
@@ -79,18 +71,14 @@ function fullMenu (fbid, data) {
     items: data
   };
 
-  return companyRepo.getMenuTypes(itemids)
+  return db.getMenuTypes(itemids)
     .then(types => {
       wholeMenu.types = types;
       const typeids = types.map(val => val.typeid);
 
       //If there aren't any types, doesn't ask the database to produce the sizes related to the (non-existant) types
       if (typeids.length !== 0) {
-        console.log("running getMenuSizes");
-        return companyRepo.getMenuSizes(typeids)
-      } else {
-        console.log("running resolved promise");
-        return Promise.resolve([])
+        return db.getMenuSizes(typeids)
       }
     })
     .then(sizes => {
@@ -103,28 +91,28 @@ function add_to_menu(req, res, next) {
   console.log(req.body);
   switch (req.body.intent) {
     case "item":
-      return companyRepo.insertMenuVal(req.body)
+      return db.insertMenuVal(req.body)
         .then(next());
     case "type":
-      return companyRepo.deleteItemPrice(req.body)
-        .then(companyRepo.insertType(req.body))
+      return db.deleteItemPrice(req.body)
+        .then(db.insertType(req.body))
         .then(next());
 
     case "size":
-      return companyRepo.deleteTypePrice(req.body)
-        .then(companyRepo.insertSize(req.body))
+      return db.deleteTypePrice(req.body)
+        .then(db.insertSize(req.body))
         .then(next());
 
     case "iprice":
-      return companyRepo.updateIPrice(req.body)
+      return db.updateIPrice(req.body)
         .then(() => next());
 
     case "tprice":
-      return companyRepo.updateTPrice(req.body)
+      return db.updateTPrice(req.body)
         .then(() => next());
 
     case "sprice":
-      return companyRepo.updateSPrice(req.body)
+      return db.updateSPrice(req.body)
         .then(() => next());
 
     default:
