@@ -1,5 +1,6 @@
 .centering {
   text-align: center;
+  padding-bottom: 2em;
 }
 
 .btn-facebook {
@@ -55,8 +56,7 @@
 
 //orders classes
 
-.order-active-container {
-  background-color: #FFE0B2;
+.order-basic-container {
   border-radius: 3px;
   padding-top: 20px;
   margin-bottom: 10px;
@@ -89,8 +89,81 @@
 
 //menu classes
 
+.overlay-container {
+  height: 100%;
+  overflow: hidden;
+}
+
+#spinner-overlay {
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  width: 100%;
+  min-height: 100%;
+  background-color:rgba(0, 0, 0, 0.60);
+  background: url(data:;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAABl0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuNUmK/OAAAAATSURBVBhXY2RgYNgHxGAAYuwDAA78AjwwRoQYAAAAAElFTkSuQmCC) repeat scroll transparent;
+  z-index:9999;
+  color: white;
+}
+
+.loader {
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #B9F6CA;
+  border-bottom: 16px solid #FFE0B2;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+  position: absolute;
+  top: 50vh;
+  left: 50%;
+  margin-top: -60px;
+  margin-left: -60px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 .testing-border {
   border: 1px black dotted;
+}
+
+@media (max-width: 767px) {
+ .company-head {
+   text-align: center;
+}
+}
+
+ @media (min-width: 768px) {
+ .company-head {
+}
+}
+
+@media (max-width: 767px) {
+ .location-setter-container {
+   float: none;
+}
+}
+
+ @media (min-width: 768px) {
+ .location-setter-container {
+  float: right;
+}
+}
+
+.the-magic-fix-that-fixes-everything-and-you-have-no-idea-why-it-does-that {
+  border: #e8e8e8 solid 1px;
+}
+
+.location-setter-container {
+  padding: 0.5em;
+  border: 1px solid #f2f2f2;
+  border-radius: 3px;
+  background-color: #e8e8e8;
 }
 
 .menu-photo {

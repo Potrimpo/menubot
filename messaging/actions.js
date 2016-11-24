@@ -1,18 +1,12 @@
 const chrono = require('chrono-node'),
-  { redisRetrieveOrder, redisGetToken } = require('./../messengerSessions'),
-  fbMessage = require('./messenger'),
+  { redisRetrieveOrder, redisGetToken } = require('./messengerSessions'),
+  fbMessage = require('./fbMessage'),
   db = require('../repositories/bot/botQueries');
 
 // Our bot actions
 const actions = {
   send(fbUserId, message) {
     if (message.text) { console.log(`replying >> ${message.text}`); }
-    if (message.quickreplies) {
-      message.quick_replies = message.quickreplies.map(x => {
-        return {"title": x, "content_type": "text", "payload": x.toUpperCase()};
-      });
-      delete message.quickreplies;
-    }
     // get the access token for this user's interaction (page access token for messenger)
     return redisGetToken(fbUserId)
       .then(token => {
@@ -30,32 +24,6 @@ const actions = {
       })
   },
 
-  // [ NO LONGER USED] check if item x is in database
-  checkProduct({context, entities, fbPageId }) {
-    const prod = firstEntityValue(entities, 'product');
-    return new Promise((res, rej) => {
-      if(prod) {
-        return db.findItem(fbPageId, prod)
-          .then(data => {
-            if (data) {
-              context.productInfo = data.item;
-              delete context.itemNotFound;
-              return res(context);
-            }
-            else {
-              context.itemNotFound = true;
-              delete context.productInfo;
-              return res(context);
-            }
-          })
-          .catch(err => {
-            console.error(err);
-            return rej(err);
-          });
-      }
-    });
-  },
-
   // specify the time of an order
   orderTime(fbUserId, fbPageId, request) {
     return new Promise((res, rej) => {
@@ -64,6 +32,7 @@ const actions = {
       if(time) {
         return redisRetrieveOrder(fbUserId)
           .then(data => {
+            if (!data.itemid) throw "No order for this user in Redis";
             console.log("order from redis!", data);
             return db.makeOrder(fbPageId, fbUserId, time, data)
           })

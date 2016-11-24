@@ -9,20 +9,56 @@ const _ = require('./lib/bootstrap.min');
 console.log("PRIOR TO BEING IN IT");
 
 $(document).ready(function() {
+  $('#spinner-overlay').hide();
+  $('body').removeClass('overlay-container')
+
+  // dumb Footer quote generator
+  var myQuote = [
+    "&quot;And into this website he poured all his cruelty, his malice and his will to dominate all life&quot; - ",
+    "Constructed mostly from crayons and construction paper by ",
+    "Put together by ",
+    "By ",
+    "Designed by ",
+    "Made by ",
+    "Developed by ",
+    "Fabricated by ",
+    "Erected to appease pagan deity ",
+    "1000 monkeys with 1000 type writers owned by ",
+    "Means of production seized by ",
+    "Put together by ",
+    "Hastily cobbled together by ",
+    "Hastily replated from floor by ",
+    "Brewed from knockbox waste by ",
+    "Ironically designed by ",
+    "Written by ",
+    "Manufactured by ",
+    "Powered by ",
+    "Assembled by ",
+    "Completed by ",
+    "Step one in world domination by ",
+    "Raised in the name of ",
+    "Laundering by ",
+    "Blood, sweat and tears by ",
+    "Lovingly crafted by "
+  ];
+  if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+
+  } else {
+    var quoteRandom = Math.floor(Math.random()*myQuote.length);
+    $('#myQuote').html(myQuote[quoteRandom]);
+  }
+
   console.log("WE IN IT");
 
   // document constants
   const fbid = $('.company-head').attr('id');
 
-  // $('input').focus(function() {
-  //   console.log("button");
-  //   console.log(this.name);
-  //   $(`#button-${this.name}`).show();
-  // });
-
-  $('button').click(function (event) {
+  // delete a menu entry
+  $('button.delete-entry').click(function (event) {
     console.log("button click");
     console.log(this);
+    event.preventDefault();
+    showSpinner();
 
     const [_, type, deleteId] = /(\w+)-(\d+)/.exec(this.name);
     console.log("type =", type);
@@ -35,7 +71,7 @@ $(document).ready(function() {
     };
 
     $.ajax({
-      type: 'POST',
+      type: 'DELETE',
       url: '/company/' + fbid,
       data: deleteSpec,
       encode: true,
@@ -56,11 +92,42 @@ $(document).ready(function() {
 
   });
 
+  // setting the company location
+  $('form#location-setter').submit(function (event) {
+    event.preventDefault();
+    showSpinner();
+
+    const locVal = $(this).find('input').val();
+    console.log("locVal??", locVal);
+    console.log("fbid =", fbid);
+
+    $.ajax({
+      type: 'POST',
+      url: '/company/location/' + fbid,
+      data: { id: fbid, location: locVal },
+      encode: true,
+      success(data) {
+        console.log("SUCCESS");
+        console.log(data);
+      },
+      error(smth, status, err) {
+        console.error("ERROR IN AJAX", status);
+        console.error("ERROR =", err);
+      }
+    })
+      .done(function(data) {
+        console.log("DONE", data);
+
+        location.reload();
+      });
+
+  });
+
   // process the form
-  $('form').submit(function(event) {
+  $('form.menu-entry').submit(function(event) {
     // stop the form from submitting the normal way
     event.preventDefault();
-
+    showSpinner();
     console.log("in form submit jquery");
 
     const inputElems = $(`#${this.id} :text`);
@@ -114,41 +181,23 @@ $(document).ready(function() {
     })
       .done(function(data) {
         console.log("DONE", data);
-
         location.reload();
       });
   });
 
-  // server can't deal with changing photos (client jquery code seems fine tho)
-  //
-  // $(':file').change(function (event) {
-  //   console.log("THE element =", this);
-  //   const elem = $(this).get(0);
-  //   console.log("file", elem.files[0]);
-  //   const multiPart = new FormData();
-  //   multiPart.append('file', elem.files[0]);
-  //
-  //   return $.ajax({
-  //     type: 'POST',
-  //     url: '/company' + fbid + '/' + elem.id,
-  //     data: multiPart,
-  //     processData: false,
-  //     contentType: false,
-  //     success(data) {
-  //       console.log("SUCCESS");
-  //       console.log(data);
-  //     },
-  //     error(smth, status, err) {
-  //       console.error("ERROR IN FILE UPLOAD", status);
-  //       console.error("ERROR =", err);
-  //     }
-  //   })
-  //     .done(data => console.log("DONE UPLOAD", data));
-  //
-  // });
+  $('.misc-async').click(function () {
+    showSpinner();
+  });
+
+  function showSpinner () {
+    $('html,body').scrollTop(0);
+    $('#spinner-overlay').show();
+    $('body').addClass('overlay-container');
+  }
 
 });
 
+// grey out price field on entries that have children
 $( function()
 {
   var targets = $( '[rel~=tooltip]' ),

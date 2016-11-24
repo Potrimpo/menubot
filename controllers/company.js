@@ -5,7 +5,7 @@
 const express = require('express'),
   router = express.Router();
 
-const companyRepo = require('../repositories/site/CompanyRepository');
+const db = require('../repositories/site/CompanyRepository');
 
 router.param('companyId', (req, res, next, id) => {
   console.log("ID PROVIDED =", id);
@@ -13,27 +13,50 @@ router.param('companyId', (req, res, next, id) => {
   return next();
 });
 
-router.get('/:companyId', (req, res) => {
-  console.log("------ getting company menu -------", req.params.companyId);
-  return getMenu(req.params.companyId)
-    .then(data => {
-      return res.render('account/company', {
-        bot_status: data.bot_status,
-        fbid: data.fbid,
-        title: data.name,
-        items: data.items,
-        types: data.types,
-        sizes: data.sizes
-      });
-    })
+router.route('/:companyId')
+  .get((req, res) => {
+    console.log("------ getting company menu -------", req.params.companyId);
+    return getMenu(req.params.companyId)
+      .then(data => {
+        console.log("This is the object being passed to the .ejs files: " + JSON.stringify(data));
+        return res.render('account/company', {
+          bot_status: data.bot_status,
+          location: data.location,
+          fbid: data.fbid,
+          title: data.name,
+          items: data.items,
+          types: data.types,
+          sizes: data.sizes
+        });
+      })
+  })
+  .post(add_to_menu, (req, res) => res.status(200).send())
+  .delete((req, res) => {
+    return db.deleteItem(req.body)
+      .then(() => res.status(200).send())
+      .catch(err => console.error("error deleting menu item", err));
+  });
+
+router.route('/init/:companyId')
+  .post((req, res) => {
+    return db.linkCompany(req.user.id, req.body.id)
+      .then(data => res.redirect(`/company/${data[0].fbid}`));
 });
 
+router.route('/location/:companyId')
+  .post((req, res) => {
+    return db.setLocation(req.body.id, req.body.location)
+      .then(() => res.status(200).send())
+      .catch(err => console.error("error updating location field", err));
+  });
+
+
 function getMenu (id) {
-  return companyRepo.getCompanyMenu(id)
+  return db.getCompanyMenu(id)
     .then(data => {
       if (!data) throw "no company found";
       if (data.length > 0) return fullMenu(id, data);
-      else return companyRepo.findCompany(id)
+      else return db.findCompany(id)
     })
     .catch(err => console.error("error in getMenu", err.message || err));
 }
@@ -43,22 +66,19 @@ function fullMenu (fbid, data) {
   const wholeMenu = {
     name: data[0].name,
     bot_status: data[0].bot_status,
+    location: data[0].location,
     fbid,
     items: data
   };
 
-  return companyRepo.getMenuTypes(itemids)
+  return db.getMenuTypes(itemids)
     .then(types => {
       wholeMenu.types = types;
       const typeids = types.map(val => val.typeid);
 
       //If there aren't any types, doesn't ask the database to produce the sizes related to the (non-existant) types
       if (typeids.length !== 0) {
-        console.log("running getMenuSizes");
-        return companyRepo.getMenuSizes(typeids)
-      } else {
-        console.log("running resolved promise");
-        return Promise.resolve([])
+        return db.getMenuSizes(typeids)
       }
     })
     .then(sizes => {
@@ -67,54 +87,32 @@ function fullMenu (fbid, data) {
     });
 }
 
-
-
-// can't handle changing photos
-router.post('/:companyId', add_to_menu, (req, res) => {
-  console.log("----- POST RECEIVED ------", req.body);
-  return res.sendStatus(200);
-});
-
-router.get('/create/:companyId', (req, res) => {
-  console.log("----- ADDING COMPANY ------", req.body.id);
-  return companyRepo.linkCompany(req.user.id, req.body.id)
-    .then(data => {
-      return res.redirect(`/company/${data[0].fbid}`)
-    });
-});
-
 function add_to_menu(req, res, next) {
   console.log(req.body);
   switch (req.body.intent) {
     case "item":
-      return companyRepo.insertMenuVal(req.body)
+      return db.insertMenuVal(req.body)
         .then(next());
     case "type":
-      return companyRepo.deleteItemPrice(req.body)
-        .then(companyRepo.insertType(req.body))
+      return db.deleteItemPrice(req.body)
+        .then(db.insertType(req.body))
         .then(next());
 
     case "size":
-      return companyRepo.deleteTypePrice(req.body)
-        .then(companyRepo.insertSize(req.body))
+      return db.deleteTypePrice(req.body)
+        .then(db.insertSize(req.body))
         .then(next());
 
     case "iprice":
-      return companyRepo.updateIPrice(req.body)
+      return db.updateIPrice(req.body)
         .then(() => next());
 
     case "tprice":
-      return companyRepo.updateTPrice(req.body)
+      return db.updateTPrice(req.body)
         .then(() => next());
 
     case "sprice":
-      return companyRepo.updateSPrice(req.body)
-        .then(() => next());
-
-    case "delete":
-      console.log("DELETAIN *********");
-      console.log("body = ", req.body);
-      return companyRepo.deleteItem(req.body)
+      return db.updateSPrice(req.body)
         .then(() => next());
 
     default:

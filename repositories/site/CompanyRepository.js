@@ -15,9 +15,9 @@ exports.findCompany = (id) => Company.findById(id);
 
 exports.getCompanyMenu = id => {
   return sequelize.query(
-    "SELECT companies.name, companies.bot_status, items.item, items.itemid, items.photo, items.item_price FROM companies" +
-    " INNER JOIN items ON companies.fbid = items.fbid" +
-    " WHERE companies.fbid = $1" +
+    "SELECT c.name, c.bot_status, c.location, i.* FROM companies AS c" +
+    " INNER JOIN items AS i ON c.fbid = i.fbid" +
+    " WHERE c.fbid = $1" +
     " ORDER BY itemid ASC",
     { bind: [id], type: sequelize.QueryTypes.SELECT }
   );
@@ -25,7 +25,7 @@ exports.getCompanyMenu = id => {
 
 exports.getMenuTypes = itemids => {
   return sequelize.query(
-    "SELECT types.itemid, type, typeid, types.photo, types.type_price FROM items" +
+    "SELECT types.itemid, type, typeid, types.type_photo, types.type_price FROM items" +
     " INNER JOIN types ON items.itemid = types.itemid" +
     " WHERE items.itemid IN (:itemids)" +
     " ORDER BY typeid ASC",
@@ -211,11 +211,16 @@ exports.setBotStatus = (id, status) => sequelize.query(
   { replacements: { id, status}, type: sequelize.QueryTypes.UPDATE}
 );
 
+exports.setLocation = (id, loc) => sequelize.query(
+  "UPDATE companies SET location = :loc WHERE fbid = :id",
+  { replacements: { id, loc }, type: sequelize.QueryTypes.UPDATE }
+);
+
 exports.addItemPhotos = (val, fbid) => {
   if (val.picture && val.name) {
     return sequelize.query(
       "UPDATE items" +
-      " SET photo = :picture" +
+      " SET item_photo = :picture" +
       " WHERE fbid = :fbid AND lower(item) = lower(:name)" +
       " RETURNING item, itemid",
       { replacements: { fbid, picture: val.picture, name: val.name }, type: sequelize.QueryTypes.UPDATE }
@@ -228,7 +233,7 @@ exports.addTypePhotos = val => {
   if (val.picture && val.name && val.typeid) {
     return sequelize.query(
       "UPDATE types" +
-      " SET photo = :picture" +
+      " SET type_photo = :picture" +
       " WHERE typeid = :typeid AND lower(type) = lower(:name)",
       { replacements: { typeid: val.typeid, picture: val.picture, name: val.name }, type: sequelize.QueryTypes.UPDATE }
     );

@@ -1,6 +1,6 @@
 "use strict";
 
-const companyRepo = require('../repositories/site/CompanyRepository');
+const db = require('../repositories/site/CompanyRepository');
 
 /**
  * GET /
@@ -8,7 +8,7 @@ const companyRepo = require('../repositories/site/CompanyRepository');
  */
 exports.index = (req, res) => {
   const accountIds = req.user.accounts.map(val => val.fbid);
-  return companyRepo.findUserCompanies(accountIds)
+  return db.findUserCompanies(accountIds)
     .then(companies => {
       const accounts = unregisteredCompanies(req.user.accounts, companies);
       return res.render('home', { title: 'home', companies, accounts })

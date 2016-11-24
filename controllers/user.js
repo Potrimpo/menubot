@@ -1,15 +1,6 @@
 'use strict';
 
-var UserRepo = require('../repositories/site/UserRepository.js');
-
-exports.getLogin = function(req, res) {
-  if (req.user)
-    return res.redirect('/account');
-
-  res.render('account/login', {
-    title: 'Login'
-  });
-};
+const db = require('../repositories/site/UserRepository.js');
 
 exports.logout = (req, res) => {
   req.logout();
@@ -18,7 +9,7 @@ exports.logout = (req, res) => {
 };
 
 exports.deleteAccount = function(req, res) {
-  UserRepo.removeUserById(req.user.id)
+  db.removeUserById(req.user.id)
     .then(function() {
       req.logout();
       req.flash('info', { msg: 'Your account has been deleted.' });
@@ -27,9 +18,9 @@ exports.deleteAccount = function(req, res) {
 };
 
 exports.getOauthUnlink = function(req, res, next) {
-  var provider = req.params.provider;
+  const provider = req.params.provider;
 
-  UserRepo.unlinkProviderFromAccount(provider, req.user.id)
+  db.unlinkProviderFromAccount(provider, req.user.id)
     .then(function() {
       req.flash('info', { msg: provider + ' account has been unlinked.' });
       res.redirect('/landing');

@@ -8,14 +8,14 @@
               <div class="row size-heading-inner-container">
 
                 <div class="col-xs-6">
-                  <button type="button" name="size-<%= sizes[y].sizeid %>" class="size-remove-button">
+                  <button type="button" name="size-<%= sizes[y].sizeid %>" class="delete-entry size-remove-button">
                     <i class="fa fa-trash-o size-remove-button-glyph" aria-hidden="true"></i>
                   </button>
                   <p class="size-title"><%= sizes[y].size %></p>
                 </div>
 
                 <div class="col-xs-6">
-                  <form id="new-sprice-<%= sizes[y].sizeid %>" name="<%= sizes[y].sizeid %>" style="float:right;"
+                  <form class="menu-entry" id="new-sprice-<%= sizes[y].sizeid %>" name="<%= sizes[y].sizeid %>" style="float:right;"
                         class="form-inline">
                     <div class="form-group" >
                       <div class="input-group">

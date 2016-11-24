@@ -2,9 +2,9 @@
  * Created by lewis.knoxstreader on 18/09/16.
  */
 
-const { findOrCreateSession } = require('../messengerSessions'),
+const { findOrCreateSession } = require('../messaging/messengerSessions'),
   runActions = require('../messaging/runActions'),
-  postbackHandler = require('../messaging/sending-menu'),
+  postbackHandler = require('../messaging/postbackHandler'),
   actions = require('../messaging/actions');
 
 exports.postWebhook = (req, res) => {
@@ -22,16 +22,16 @@ exports.postWebhook = (req, res) => {
           // We retrieve the user's current session, or create one if it doesn't exist
           // This is needed for our bot to figure out the conversation history
           return findOrCreateSession(event.sender.id, event.recipient.id)
-            .then(sessionId => {
+            .then(userID => {
               const { text, attatchments, quick_reply } = event.message;
               if (attatchments) {
                 // bot currently does not process images, video, or audio messages
-                return actions.send(sessionId, {text: 'Sorry, I can only handle text messages!'});
+                return actions.send(userID, {text: 'Sorry, I can only handle text messages!'});
               }
               else if (quick_reply) {
                 return postbackHandler(quick_reply.payload, event.sender.id, event.recipient.id)
                   .then(response => {
-                    actions.send(sessionId, response)
+                    actions.send(userID, response)
                   })
                   .catch(err => {
                     console.log(`Error sending postback: ${err}`);
@@ -40,10 +40,17 @@ exports.postWebhook = (req, res) => {
               }
               else if (text) {
                 return runActions(
-                  event.sender.id,
+                  userID,
                   event.recipient.id,
                   text
-                );
+                ).then(responses => {
+                  return Promise.all(
+                    responses.map(val => actions.send(userID, { text: val }))
+                  );
+                }).catch(err => {
+                  console.log("err sending", err);
+                  return actions.send(userID, { text: err })
+                });
               }
             })
             .then(() => {
@@ -58,9 +65,7 @@ exports.postWebhook = (req, res) => {
           return findOrCreateSession(event.sender.id, event.recipient.id)
             .then(sessionId => {
               return postbackHandler(event.postback.payload, event.sender.id, event.recipient.id)
-                .then(response => {
-                  actions.send(sessionId, response)
-                })
+                .then(response => actions.send(sessionId, response))
                 .catch(err => {
                   console.log(`Error sending postback: ${err}`);
                   console.log(err.stack);

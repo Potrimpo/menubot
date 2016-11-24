@@ -1,6 +1,10 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
+<<<<<<< HEAD
 import { fetchOrders, receiveAndParse } from '../actions'
+=======
+import { fetchOrders } from '../actions'
+>>>>>>> master
 import VisibleOrders from './VisibleOrders'
 import io from 'socket.io-client'
 
@@ -8,7 +12,6 @@ const socket = io.connect();
 
 class OrdersBox extends Component {
   static propTypes = {
-    forceReload: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired,
     fbid: PropTypes.string
   };
@@ -19,6 +22,7 @@ class OrdersBox extends Component {
     return dispatch(receiveAndParse(orders));
   };
 
+<<<<<<< HEAD
   componentDidMount() {
     const { fbid } = this.props;
 
@@ -29,15 +33,24 @@ class OrdersBox extends Component {
 
     socket.on('orders-list', orders => this.recieveOrders(orders));
     socket.on('new-order', order => console.log("got new order!", order));
+=======
+  componentDidMount () {
+    this.getOrdersQuietly();
+    return setInterval(this.getOrdersQuietly.bind(this), 3000);
+>>>>>>> master
   }
 
-  static componentWillReceiveProps(nextProps) {
+  static componentWillReceiveProps (nextProps) {
     const { dispatch, fbid } = nextProps;
     dispatch(fetchOrders(fbid));
   }
 
+<<<<<<< HEAD
   render() {
     const { forceReload } = this.props;
+=======
+  render () {
+>>>>>>> master
     return (
       <div>
         <VisibleOrders/>
@@ -47,10 +60,9 @@ class OrdersBox extends Component {
 }
 
 const mapStateToProps = state => {
-  const { status, fbid } = state || { forceReload: true, fbid: "" };
+  const { fbid } = state || { fbid: "" };
 
   return {
-    forceReload: status.forceReload,
     fbid
   }
 };

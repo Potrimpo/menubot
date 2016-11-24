@@ -1,6 +1,6 @@
-const { client } = require('./order-list-sessions'),
-  { getCompanyAccessToken } = require('./repositories/site/CompanyRepository'),
-  { findOrCreateCustomer } = require('./repositories/bot/botQueries');
+const { client } = require('../order-list-sessions'),
+  { getCompanyAccessToken } = require('../repositories/site/CompanyRepository'),
+  { findOrCreateCustomer } = require('../repositories/bot/botQueries');
 
 const findOrCreateSession = (fbUserId, fbPageId) => {
   return client.hgetallAsync(fbUserId)
@@ -13,17 +13,20 @@ const findOrCreateSession = (fbUserId, fbPageId) => {
       console.log("---->     creating new session      <----");
       return getCompanyAccessToken(fbPageId)
         .then(data => {
+
           // finding or creating an entry in the Customer database table to store customer info
-          findOrCreateCustomer(fbUserId, fbPageId, data.access_token)
+          return findOrCreateCustomer(fbUserId, fbPageId, data.access_token)
+            .then(() => {
+              // create session in redis for this interaction, indexed by user id
+              // will be used for storing information on orders as they are made
+              return client.hmsetAsync(fbUserId, {
+                access_token: data.access_token,
+              });
+            })
+            // redis session expires after 3 minutes
+            .then(() => client.expireAsync(fbUserId, 3*60))
             .catch(err => console.error("error finding or creating customer!", err));
 
-          // create session in redis for this interaction, indexed by user id
-          // will be used for storing information on orders as they are made
-          return client.hmsetAsync(fbUserId, {
-            access_token: data.access_token,
-          })
-            // redis session expires after 3 minutes
-            .then(() => client.expireAsync(fbUserId, 3*60));
         });
     })
     .then(() => fbUserId)

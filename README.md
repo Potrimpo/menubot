@@ -29,6 +29,8 @@ Made using:
 
 ##### Congratulations, you’re done. The changes should propagate in no more than 48 hours.
 
+
+
 ## Facebook app
 
 ### First time setup
@@ -64,7 +66,7 @@ Made using:
 
     > Development environment
 
-    * Add your App ID & App Secret to `envVariables.js` (file under gitignore, may have to be created at this stage)
+    * Add your App ID & App Secret to `local-dev-variables.js` (file under gitignore, may have to be created at this stage)
     file should look like this
     ```
     module.exports = {
@@ -72,17 +74,21 @@ Made using:
         FB_APP_SECRET: <App Secret>
     };
     ```
-    
+
 ##### Congratulations, you have set up Facebook integration for MenuBot, you may now return to where you were in the process that directed you here.
 
 
-## Application server
+
+## Node.js server setup
+
+
 
 ### First time setup
 
 Made using:
 * https://www.digitalocean.com/community/tutorials/how-to-set-up-a-node-js-application-for-production-on-ubuntu-16-04
 * https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-16-04#step-6-set-up-auto-renewal
+* http://redis.io/topics/quickstart
 
 
 ##### Documentation begins
@@ -150,7 +156,7 @@ sudo systemctl stop nginx
 sudo letsencrypt certonly --standalone
 ```
 
-Enter the domain name as menubot.xyz
+Enter the domain name as `www.menubot.xyz, menubot.xyz`
 
 ```
 sudo nano /etc/nginx/sites-enabled/default
@@ -172,8 +178,8 @@ server {
 
         ssl on;
         # Use certificate and key provided by Let's Encrypt:
-        ssl_certificate /etc/letsencrypt/live/menubot.xyz/fullchain.pem;
-        ssl_certificate_key /etc/letsencrypt/live/menubot.xyz/privkey.pem;
+        ssl_certificate /etc/letsencrypt/live/www.menubot.xyz/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/www.menubot.xyz/privkey.pem;
         ssl_session_timeout 5m;
         ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
         ssl_prefer_server_ciphers on;
@@ -213,12 +219,64 @@ Write out with CTRL + O, then ENTER, then exit with CTRL + X
 > Note that the application assumes the application server will be running on internal IP: 10.146.0.2 and the database server will be running on internal IP: 10.146.0.3 .
 > Check that this is the case on the Google Clould console instances page, and if needed, change the configuration in process.json .
 
+```
+cd ~
+wget http://download.redis.io/redis-stable.tar.gz
+tar xvzf redis-stable.tar.gz
+cd redis-stable
+make
+sudo make install
+sudo mkdir /etc/redis
+sudo mkdir /var/redis
+sudo cp utils/redis_init_script /etc/init.d/redis_6379
+sudo nano /etc/init.d/redis_6379
+```
+
+Add the following text at the top of the file:
+
+```
+### BEGIN INIT INFO
+# Provides: redis_6379
+# Required-Start:    $network $remote_fs $local_fs
+# Required-Stop:     $network $remote_fs $local_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: start and stop redis_6379
+# Description: Redis daemon
+### END INIT INFO
+```
+
+Write out with CTRL + O, then ENTER, then exit with CTRL + X
+
+```
+sudo cp redis.conf /etc/redis/6379.conf
+sudo mkdir /var/redis/6379
+sudo nano /etc/redis/6379.conf
+```
+
+Make the following changes
+* Set daemonize to yes (by default it is set to no).
+* Set the pidfile to /var/run/redis_6379.pid (modify the port if needed).
+* Set the logfile to /var/log/redis_6379.log
+* Set the dir to /var/redis/6379 (very important step!)
+
+```
+sudo update-rc.d redis_6379 defaults
+sudo /etc/init.d/redis_6379 start
+```
+
+If you feel like it, make sure that everything is working as expected:
+* Check redis is working with `redis-cli ping`, it should return PONG.
+* Do a test save with `redis-cli save` and check that the dump file is correctly stored into `/var/redis/6379/` (you should find a file called `dump.rdb`).
+* Check that your Redis instance is correctly logging in the log file `sudo nano /var/log/redis_6379.log`.
+
 Please now follow the "Facebook app: First time setup" process you can find earlier in this documentation page.
 
 ##### Congratulations, you're done with setting up the application server. However, the database server still needs to be setup.
 
 
-### Running the Live server (Google Cloud instance)
+
+### Day to day live server running
 > This setup process is used to run the server when the first time setup process has already been followed. This might when you've pulled a new version of the server from git, or when you've otherwise changed the live version, and now need to restart to implement your changes.
 
 ##### Documentation begins
@@ -230,13 +288,14 @@ sudo -u pm2er -i
 Preform any changes you wanted to implement, such as pulling in a new update from git.
 
 ```
-cd [LOCATION OF MENUBOT DIRECTORY]/menubot
+cd ~/menubot
 sudo npm i
 sudo ./build.sh
 npm run prod
 pm2 logs --lines 100
 ```
 ##### Congratulations, the server has been started once again.
+
 
 ### Useful commands
 
@@ -298,8 +357,7 @@ ps waux | grep nginx
 > This command checks if Nginx is running. Note, this command will often also pick up the grep command running. For each line returned by this command, check to the far right entry. If it is "grep nginx", you’re picking up on the grep command.
 
 
-
-## Postgres Database
+## Postgres database setup
 
 ### First time setup
 
@@ -358,8 +416,7 @@ sudo /etc/init.d/postgresql restart
 > I can't remember why this is important.
 
 
-
-# Development environment setup
+## Development environment setup
 
 ### Ubuntu development: First time setup
 
@@ -521,7 +578,7 @@ sudo /etc/init.d/postgresql restart
 There are _some_ executable tests, though not a whole lot of coverage.
 Testing the bot is important, but very difficult to do, due to the way the server responds to requests.
 
-To run some of these tests, values must be added to the `envVariables.js` file
+To run some of these tests, values must be added to the `local-dev-variables.js` file
 
 ```
 module.exports = {

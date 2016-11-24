@@ -2,8 +2,7 @@
  * Created by lewis.knoxstreader on 31/08/16.
  */
 
-const actions = require('./actions'),
-  { redisRecordOrder } = require('../messengerSessions'),
+const { redisRecordOrder } = require('./messengerSessions'),
   db = require('./../repositories/bot/botQueries');
 
 function postbackHandler (payload, fbUserId, fbPageId) {
@@ -18,8 +17,7 @@ function postbackHandler (payload, fbUserId, fbPageId) {
 
       case 'LOCATION':
         return db.findLocation(fbPageId)
-          // a text response must be returned in the 'text' field of an object
-          .then(data => res({ text: "Wellington, 1234 gdfsg" }) )
+          .then(data => res({ text: data.location ? data.location : "Sorry, I don't know where I am!" }))
           .catch(err => console.error(`Error in postback:`, err));
 
       case 'DETAILS':
@@ -58,7 +56,7 @@ function parseItems(menu) {
   template.attachment.payload.elements = menu.map(val => {
     const items = {
       title: `${val.item.toUpperCase()}`,
-      image_url: val.photo,
+      image_url: val.item_photo,
       buttons: []
     };
     if (val.item_price) {
@@ -85,7 +83,7 @@ function parseProductTypes(types, itemid) {
   template.attachment.payload.elements = types.map(val => {
     const types = {
       title: val.type.toUpperCase(),
-      image_url: val.photo,
+      image_url: val.type_photo,
       buttons: []
     };
     if (val.type_price) {
@@ -156,9 +154,14 @@ function parseOrders(orders) {
 }
 
 function getStarted () {
+  const payload = { intent: "MENU" };
   return {
     text: "Welcome to the menu.bot experience",
-    quickreplies:[ "Menu" ]
+    quick_replies: [{
+      content_type: "text",
+      title: "Menu",
+      payload: JSON.stringify(payload)
+    }]
   };
 }
 
