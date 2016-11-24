@@ -25,7 +25,7 @@ exports.setOrderComplete = (req, res, next) => {
 
 // universally callable functions
 exports.fetchOrders = fbid => {
-  return ordersByFbid(fbid, today())
+  return db.ordersByFbid(fbid, today())
     .catch(err => res.status(500).send('error getting orders'));
 };
 

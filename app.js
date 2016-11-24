@@ -13,8 +13,8 @@ const app = express(),
 
 expressConfig(app, express);
 
-// const { initSockets } = require('./order-list-sessions');
-// initSockets(http);
+const { initSockets } = require('./order-list-sessions');
+initSockets(http);
 
 // API keys and Passport configuration.
 const secrets = require('./config/secrets'),
@@ -97,7 +97,7 @@ function verifyRequestSignature(req, res, buf) {
 }
 
 // syncing with postgres database, then assigning ports & IP to the server
-sequelize.sync({ force: true })
+sequelize.sync({ force: false })
   .then(() => {
     console.log("sequelize is synced");
     http.listen(process.env.PORT, process.env.serverIP);

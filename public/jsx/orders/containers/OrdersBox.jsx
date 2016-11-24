@@ -1,10 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-<<<<<<< HEAD
-import { fetchOrders, receiveAndParse } from '../actions'
-=======
-import { fetchOrders } from '../actions'
->>>>>>> master
+import { receiveAndParse } from '../actions'
 import VisibleOrders from './VisibleOrders'
 import io from 'socket.io-client'
 
@@ -22,7 +18,6 @@ class OrdersBox extends Component {
     return dispatch(receiveAndParse(orders));
   };
 
-<<<<<<< HEAD
   componentDidMount() {
     const { fbid } = this.props;
 
@@ -33,24 +28,9 @@ class OrdersBox extends Component {
 
     socket.on('orders-list', orders => this.recieveOrders(orders));
     socket.on('new-order', order => console.log("got new order!", order));
-=======
-  componentDidMount () {
-    this.getOrdersQuietly();
-    return setInterval(this.getOrdersQuietly.bind(this), 3000);
->>>>>>> master
   }
 
-  static componentWillReceiveProps (nextProps) {
-    const { dispatch, fbid } = nextProps;
-    dispatch(fetchOrders(fbid));
-  }
-
-<<<<<<< HEAD
-  render() {
-    const { forceReload } = this.props;
-=======
   render () {
->>>>>>> master
     return (
       <div>
         <VisibleOrders/>

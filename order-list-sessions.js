@@ -17,8 +17,8 @@ client.onAsync('connect')
 
 const initSockets = function (http) {
   io = io(http);
-
   console.log("   --> in initSockets");
+
   io.on('connection', function (socket) {
     console.log("     socket.io connection!");
 
