@@ -1,4 +1,4 @@
-const { client } = require('../order-list-sessions'),
+const { client } = require('../redis-init'),
   { getCompanyAccessToken } = require('../repositories/site/CompanyRepository'),
   { findOrCreateCustomer } = require('../repositories/bot/botQueries');
 

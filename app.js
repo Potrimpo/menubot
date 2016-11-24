@@ -8,13 +8,15 @@ const express = require('express'),
 // Starting express server & redis & postgres
 const app = express(),
   http = require('http').createServer(app),
+  io = require('socket.io')(http),
   expressConfig = require('./express-config'),
   { sequelize } = require('./database/models/index');
 
 expressConfig(app, express);
 
-const { initSockets } = require('./order-list-sessions');
-initSockets(http);
+// socket.io listeners
+const listeners = require('./socket-functions');
+listeners.requestOrders(io);
 
 // API keys and Passport configuration.
 const secrets = require('./config/secrets'),
