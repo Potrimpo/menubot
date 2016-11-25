@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { receiveAndParse } from '../actions'
+import { initOrders, newOrder } from '../actions'
 import VisibleOrders from './VisibleOrders'
 import io from 'socket.io-client'
 
@@ -12,11 +12,19 @@ class OrdersBox extends Component {
     fbid: PropTypes.string
   };
 
-  recieveOrders (orders) {
+  firstOrders (orders) {
     const { dispatch } = this.props;
     console.log("recieved orders");
-    return dispatch(receiveAndParse(orders));
+    console.log(orders[0]);
+    return dispatch(initOrders(orders));
   };
+
+  moreOrders (orders) {
+    const { dispatch } = this.props;
+    console.log("ORDER UPDATE");
+    console.log(orders[0]);
+    return dispatch(newOrder(orders));
+  }
 
   componentDidMount() {
     const { fbid } = this.props;
@@ -26,8 +34,8 @@ class OrdersBox extends Component {
       socket.emit('request-orders', fbid);
     });
 
-    socket.on('orders-list', orders => this.recieveOrders(orders));
-    socket.on('new-order', order => console.log("got new order!", order));
+    socket.on('orders-list', orders => this.firstOrders(orders));
+    socket.on('new-order', order => this.moreOrders(JSON.parse(order)));
   }
 
   render () {

@@ -1,5 +1,6 @@
 export const REQUEST_ORDERS = 'REQUEST_ORDERS';
 export const RECEIVE_ORDERS = 'RECEIVE_ORDERS';
+export const NEW_ORDERS = 'NEW_ORDERS';
 export const TOGGLE_ORDER = 'TOGGLE_ORDER';
 
 export const requestOrders = () => ({
@@ -16,10 +17,21 @@ const toggleLocal = (orderid) => ({
   orderid
 });
 
-export const receiveAndParse = json => {
-  console.log("returned orders =", json);
+export const initOrders = json => {
+  console.log("first orders", json);
   return {
     type: RECEIVE_ORDERS,
+    orders: json.map(order => ({
+      ...order,
+      pickuptime: timeParsing(order.pickuptime)
+    }))
+  };
+};
+
+export const newOrder = json => {
+  console.log("new order =", json);
+  return {
+    type: NEW_ORDERS,
     orders: json.map(order => ({
       ...order,
       pickuptime: timeParsing(order.pickuptime)
