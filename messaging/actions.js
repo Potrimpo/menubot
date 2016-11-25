@@ -5,7 +5,7 @@ const fbMessage = require('./fbMessage'),
 // Our bot actions
 const actions = {
   send(fbUserId, message) {
-    if (message.text) { console.log(`replying >> ${message.text}`); }
+    if (message.text) console.log(`replying >> ${message.text}`);
     // get the access token for this user's interaction (page access token for messenger)
     return redisGetToken(fbUserId)
       .then(token => {

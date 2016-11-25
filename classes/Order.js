@@ -13,7 +13,7 @@ class Order {
     return Order.dbInsert(fbPageId, fbUserId, msg, data)
       .then(fields => {
         fields = fields[0];
-        console.log("fields =", fields);
+
         this.orderid = fields.orderid;
         this.fbid = fields.fbid;
         this.customer_id = fields.customer_id;
