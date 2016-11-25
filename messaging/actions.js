@@ -31,11 +31,7 @@ const actions = {
         console.log("order from redis!", data);
         return new Order(fbPageId, fbUserId, msg, data);
       })
-      .then(order => {
-        console.log("return from new Order", order);
-        // should return array of length 1
-        return order ? order : new Error("couldn't create order instance");
-      })
+      .then(order => order ? order : new Error("couldn't create order instance"))
       .catch(err => console.error("Error in orderTime", err));
   },
 

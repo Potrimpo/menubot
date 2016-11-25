@@ -9,18 +9,15 @@ function runActions (fbUserId, fbPageId, msg) {
   return actions.orderTime(fbUserId, fbPageId, msg)
     .then(order => {
       const responses = [];
-      if (order.orderid) {
-        responses.push("Success!");
-        responses.push(order.confirmationMsg);
+      responses.push("Success!");
+      responses.push(order.confirmationMsg);
 
-        return responses;
-      }
-      throw "runActions confused"
+      return responses;
     })
     .catch(err => {
       console.error("error in runActions", err);
       throw "Sorry! we couldn't place that order for some reason!";
-    })
+    });
 }
 
 module.exports = runActions;
