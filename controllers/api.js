@@ -4,14 +4,7 @@ const express = require('express'),
   router = express.Router(),
   fetch = require('node-fetch'),
   db = require('../repositories/site/CompanyRepository'),
-  { retrieveOrders, setOrderComplete } = require('./orders'),
   { activateBot, deactivateBot } = require('./activateAccount');
-
-
-// absolute path is /api/orders/:fbid
-router.route('/orders/:fbid')
-  .get(retrieveOrders)
-  .post(setOrderComplete);
 
 router.route('/activate/:fbid')
   .get((req, res) => {

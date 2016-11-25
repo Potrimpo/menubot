@@ -13,15 +13,11 @@ class OrdersBox extends Component {
 
   firstOrders (orders) {
     const { dispatch } = this.props;
-    console.log("recieved orders");
-    console.log(orders[0]);
     return dispatch(initOrders(orders));
   };
 
   moreOrders (orders) {
     const { dispatch } = this.props;
-    console.log("ORDER UPDATE");
-    console.log(orders[0]);
     return dispatch(newOrder(orders));
   }
 

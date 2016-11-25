@@ -4,17 +4,6 @@
 
 const db = require("../repositories/site/CompanyRepository");
 
-// express routes
-exports.retrieveOrders = (req, res) => {
-  return db.ordersByFbid(req.params.fbid, today())
-    .then(orders => res.json(orders))
-    .catch(err => {
-      console.log("error getting orders", err);
-      res.status(500).send("error getting orders")
-    });
-};
-
-
 // universally callable functions
 exports.fetchOrders = fbid => {
   return db.ordersByFbid(fbid, today())

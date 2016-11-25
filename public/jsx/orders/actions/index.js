@@ -1,13 +1,8 @@
 import socket from '../containers/socket'
 
-export const REQUEST_ORDERS = 'REQUEST_ORDERS';
 export const RECEIVE_ORDERS = 'RECEIVE_ORDERS';
 export const NEW_ORDERS = 'NEW_ORDERS';
 export const TOGGLE_ORDER = 'TOGGLE_ORDER';
-
-export const requestOrders = () => ({
-  type: REQUEST_ORDERS,
-});
 
 export const setVisibilityFilter = (filter) => ({
   type: 'SET_VISIBILITY_FILTER',
@@ -20,7 +15,6 @@ const toggleLocal = (orderid) => ({
 });
 
 export const initOrders = json => {
-  console.log("first orders", json);
   return {
     type: RECEIVE_ORDERS,
     orders: json.map(order => ({
@@ -31,7 +25,6 @@ export const initOrders = json => {
 };
 
 export const newOrder = json => {
-  console.log("new order =", json);
   return {
     type: NEW_ORDERS,
     orders: json.map(order => ({
