@@ -1,20 +1,11 @@
-const redis = require('redis'),
-  bluebird = require('bluebird'),
+const { client } = require('../redis-init'),
   { getCompanyAccessToken } = require('../repositories/site/CompanyRepository'),
   { findOrCreateCustomer } = require('../repositories/bot/botQueries');
-
-bluebird.promisifyAll(redis.RedisClient.prototype);
-bluebird.promisifyAll(redis.Multi.prototype);
-
-const client = redis.createClient();
-
-client.onAsync('connect').then(() => console.log('----> redis connected'));
 
 const findOrCreateSession = (fbUserId, fbPageId) => {
   return client.hgetallAsync(fbUserId)
     .then(data => {
       if (data) {
-        console.log("found session in redis:", data);
         // every message extends the session expiration time to 3 minutes from last received message
         return client.expireAsync(fbUserId, 3*60);
       }
@@ -53,7 +44,6 @@ const redisRecordOrder = (fbUserId, order) => {
 const redisRetrieveOrder = fbUserId => {
   return client.hgetallAsync(fbUserId)
     .then(data => {
-      console.log("retrieveOrder redis data", data);
       return {
         itemid: data.itemid ? data.itemid : undefined,
         typeid: data.typeid ? data.typeid : undefined,

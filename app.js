@@ -2,39 +2,25 @@
 
 const express = require('express'),
   crypto = require('crypto'),
-  session = require('express-session'),
-  pgSession = require('connect-pg-simple')(session),
   path = require('path'),
   passport = require('passport');
 
-// Database, express setup code,
-const { sequelize } = require('./database/models/index'),
-  expressConfig = require('./express-config');
-
-// Initialising express app
-const app = express();
+// Starting express server & redis & postgres
+const app = express(),
+  http = require('http').createServer(app),
+  io = require('socket.io')(http),
+  expressConfig = require('./express-config'),
+  { sequelize } = require('./database/models/index');
 
 expressConfig(app, express);
+
+// socket.io listeners
+const init = require('./socket-functions');
+init(io);
 
 // API keys and Passport configuration.
 const secrets = require('./config/secrets'),
   passportConf = require('./config/passport');
-
-// postgres sessions for users on the site
-app.use(session({
-  store: new pgSession({
-    conString: `postgres://postgres:${process.env.postgresPassword}@${process.env.postgresURL}:5432/menubot`,
-    tableName: process.env.sessionTable
-  }),
-  secret: secrets.sessionSecret,
-  saveUninitialized: true,
-  resave: false,
-  cookie: {
-    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-    httpOnly: true
-    //, secure: true // only when on HTTPS
-  }
-}));
 
 // Controllers (route handlers).
 const homeController = require('./controllers/home'),
@@ -64,7 +50,6 @@ app.get('/account/unlink/:provider', passportConf.isAuthenticated, userControlle
 app.get('/orders/:fbid', passportConf.isAuthenticated, passportConf.isAuthorized, homeController.orders);
 app.get('/priv', homeController.priv);
 
-
 // API router used for asynchronous actions like fetching photos from Facebook
 app.use('/api', passportConf.isAuthenticated, passportConf.isAuthorized, apiController);
 
@@ -82,13 +67,12 @@ app.get(
 sequelize.sync({ force: false })
   .then(() => {
     console.log("sequelize is synced");
-    app.listen(process.env.PORT, process.env.serverIP);
-    console.log('Listening on :' + process.env.PORT + '...');
+    http.listen(process.env.PORT, process.env.serverIP);
+    console.log(`Listening on :${process.env.PORT} at address ${process.env.serverIP}`);
   })
   .catch(err => {
     console.log("postgresURL =", process.env.postgresURL);
     console.error("error syncing sequelize db", err)
   });
-
 
 module.exports = app;

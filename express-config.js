@@ -3,6 +3,8 @@
  */
 const cookieParser = require('cookie-parser'),
   path = require('path'),
+  session = require('express-session'),
+  pgSession = require('connect-pg-simple')(session),
   flash = require('express-flash'),
   // lusca = require('lusca'),
   // toobusy = require('toobusy-js'),
@@ -33,76 +35,93 @@ module.exports = function (app, express) {
   app.use(expressValidator());
   app.use(methodOverride());
   app.use(cookieParser());
-  app.use(flash());
 
-  // app.use(lusca({
-  //   csrf: true,
-  //   xframe: 'SAMEORIGIN',
-  //   xssProtection: true
-  // }));
-  // app.use(lusca.csrf({
-  //   cookie: 'X-CSRF-TOKEN'
-  // }));
+// postgres sessions for users on the site
+app.use(session({
+  store: new pgSession({
+    conString: `postgres://postgres:${process.env.postgresPassword}@${process.env.postgresURL}:5432/menubot`,
+    tableName: process.env.sessionTable
+  }),
+  secret: secrets.sessionSecret,
+  saveUninitialized: true,
+  resave: false,
+  cookie: {
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    httpOnly: true
+    //, secure: true // only when on HTTPS
+  }
+}));
 
-  app.use(function(req, res, next) {
-    res.locals.user = req.user;
-    res.locals.gaCode = secrets.googleAnalyticsCode;
-    next();
-  });
+app.use(flash());
 
-  // app.use(function(req, res, next) {
-  //   console.log("COOKIE ====", req.cookies["X-CSRF-TOKEN"]);
-  //   console.log("LOCALS ===", res.locals._csrf);
-  //   res.cookie('X-CSRF-TOKEN', res.locals._csrf, {httpOnly: false});
-  //   next();
-  // });
+// app.use(lusca({
+//   csrf: true,
+//   xframe: 'SAMEORIGIN',
+//   xssProtection: true
+// }));
+// app.use(lusca.csrf({
+//   cookie: 'X-CSRF-TOKEN'
+// }));
 
-  // Error Handler.
-  app.use(errorHandler());
+app.use(function(req, res, next) {
+  res.locals.user = req.user;
+  res.locals.gaCode = secrets.googleAnalyticsCode;
+  next();
+});
 
-  // Avoid not responsing when server load is huge
-  // app.use(function(req, res, next) {
-  //   if (toobusy()) {
-  //     res.status(503).send("I'm busy right now, sorry. Please try again later.");
-  //   } else {
-  //     next();
-  //   }
-  // });
+// app.use(function(req, res, next) {
+//   console.log("COOKIE ====", req.cookies["X-CSRF-TOKEN"]);
+//   console.log("LOCALS ===", res.locals._csrf);
+//   res.cookie('X-CSRF-TOKEN', res.locals._csrf, {httpOnly: false});
+//   next();
+// });
 
-  app.use(bodyParser.json({ verify: verifyRequestSignature }));
+// Error Handler.
+app.use(errorHandler());
 
-  /*
-   * Verify that the callback came from Facebook. Using the App Secret from
-   * the App Dashboard, we can verify the signature that is sent with each
-   * callback in the x-hub-signature field, located in the header.
-   *
-   * https://developers.facebook.com/docs/graph-api/webhooks#setup
-   *
-   */
-  function verifyRequestSignature(req, res, buf) {
-    const signature = req.headers["x-hub-signature"];
+// Avoid not responsing when server load is huge
+// app.use(function(req, res, next) {
+//   if (toobusy()) {
+//     res.status(503).send("I'm busy right now, sorry. Please try again later.");
+//   } else {
+//     next();
+//   }
+// });
 
-    if (!signature) {
-      // For testing, let's log an error. In production, you should throw an
-      // error.
-      console.error("Couldn't validate the signature.");
-    } else {
-      // console.log(`signature: ${signature}`);
-      const elements = signature.split('='),
-        method = elements[0],
-        signatureHash = elements[1];
+app.use(bodyParser.json({ verify: verifyRequestSignature }));
 
-      const expectedHash = crypto.createHmac('sha1', process.env.FB_APP_SECRET || devVar.FB_APP_SECRET)
-        .update(buf)
-        .digest('hex');
+/*
+ * Verify that the callback came from Facebook. Using the App Secret from
+ * the App Dashboard, we can verify the signature that is sent with each
+ * callback in the x-hub-signature field, located in the header.
+ *
+ * https://developers.facebook.com/docs/graph-api/webhooks#setup
+ *
+ */
+function verifyRequestSignature(req, res, buf) {
+  const signature = req.headers["x-hub-signature"];
 
-      if (signatureHash != expectedHash) {
-        console.log(`signatureHash: ${signatureHash}`);
-        console.log(`expectedHash: ${expectedHash}`);
-        console.log(`app secret: ${process.env.FB_APP_SECRET || devVar.FB_APP_SECRET}`);
-        throw new Error("Couldn't validate the request signature.");
-      }
+  if (!signature) {
+    // For testing, let's log an error. In production, you should throw an
+    // error.
+    console.error("Couldn't validate the signature.");
+  } else {
+    // console.log(`signature: ${signature}`);
+    const elements = signature.split('='),
+      method = elements[0],
+      signatureHash = elements[1];
+
+    const expectedHash = crypto.createHmac('sha1', process.env.FB_APP_SECRET || devVar.FB_APP_SECRET)
+      .update(buf)
+      .digest('hex');
+
+    if (signatureHash != expectedHash) {
+      console.log(`signatureHash: ${signatureHash}`);
+      console.log(`expectedHash: ${expectedHash}`);
+      console.log(`app secret: ${process.env.FB_APP_SECRET || devVar.FB_APP_SECRET}`);
+      throw new Error("Couldn't validate the request signature.");
     }
   }
+}
 
 };

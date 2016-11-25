@@ -1,7 +1,9 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { fetchOrders } from '../actions'
+import { initOrders, newOrder } from '../actions'
 import VisibleOrders from './VisibleOrders'
+import socket from './socket'
+
 
 class OrdersBox extends Component {
   static propTypes = {
@@ -9,20 +11,26 @@ class OrdersBox extends Component {
     fbid: PropTypes.string
   };
 
-  getOrdersQuietly () {
-    const { dispatch, fbid } = this.props;
-    console.log("getting thos orders");
-    return dispatch(fetchOrders(fbid));
+  firstOrders (orders) {
+    const { dispatch } = this.props;
+    return dispatch(initOrders(orders));
   };
 
-  componentDidMount () {
-    this.getOrdersQuietly();
-    return setInterval(this.getOrdersQuietly.bind(this), 3000);
+  moreOrders (orders) {
+    const { dispatch } = this.props;
+    return dispatch(newOrder(orders));
   }
 
-  static componentWillReceiveProps (nextProps) {
-    const { dispatch, fbid } = nextProps;
-    dispatch(fetchOrders(fbid));
+  componentDidMount() {
+    const { fbid } = this.props;
+
+    socket.on('connect', function () {
+      console.log("we connected baby");
+      socket.emit('request-orders', fbid);
+    });
+
+    socket.on('orders-list', orders => this.firstOrders(orders));
+    socket.on('new-order', order => this.moreOrders(JSON.parse(order)));
   }
 
   render () {
