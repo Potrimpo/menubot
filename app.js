@@ -15,10 +15,8 @@ const app = express(),
 expressConfig(app, express);
 
 // socket.io listeners
-const listeners = require('./socket-functions');
-listeners.requestOrders(io);
-listeners.newOrder(io);
-listeners.orderStatus(io);
+const init = require('./socket-functions');
+init(io);
 
 // API keys and Passport configuration.
 const secrets = require('./config/secrets'),
