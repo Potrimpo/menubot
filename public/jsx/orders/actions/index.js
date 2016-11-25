@@ -1,3 +1,5 @@
+import socket from '../containers/socket'
+
 export const REQUEST_ORDERS = 'REQUEST_ORDERS';
 export const RECEIVE_ORDERS = 'RECEIVE_ORDERS';
 export const NEW_ORDERS = 'NEW_ORDERS';
@@ -39,42 +41,11 @@ export const newOrder = json => {
   };
 };
 
-export const fetchOrders = fbid => {
-  return dispatch => {
-    dispatch(requestOrders());
-    return fetch(`/api/orders/${fbid}`, { credentials : 'same-origin' })
-      .then(response => response.json())
-      .then(json => dispatch(receiveAndParse(json)))
-      .catch(e => console.error("something went wrong fetching the data:", e));
-  }
-};
-
 export const toggleOrder = (fbid, orderid) => {
   return dispatch => {
-    console.log("orderid =", orderid);
-    console.log("fbid =", fbid);
     dispatch(toggleLocal(orderid));
-    let data = {
-      orderid
-    };
-    return $.ajax({
-      type: 'POST',
-      url: `/api/orders/${fbid}`,
-      data,
-      encode: true,
-      success(data) {
-        console.log("SUCCESS");
-        console.log(data);
-      },
-      error(smth, status, err) {
-        console.error("ERROR IN AJAX", status);
-        console.error("ERROR =", err);
-      }
-    })
-      .done(function(data) {
-        console.log("DONE", data);
-      });
 
+    return socket.emit('order-status', orderid);
   };
 };
 

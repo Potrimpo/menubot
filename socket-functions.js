@@ -2,7 +2,7 @@
  * Created by lewis.knoxstreader on 20/11/16.
  */
 const { client, pub, sub } = require('./redis-init'),
-  { fetchOrders } = require('./controllers/orders');
+  { fetchOrders, setOrderComplete } = require('./controllers/orders');
 
 function requestOrders (io) {
   io.on('connection', function (socket) {
@@ -10,12 +10,6 @@ function requestOrders (io) {
 
     socket.on('request-orders', function (fbid) {
       sub.subscribe(fbid);
-
-      client.setAsync(fbid, socket.id)
-        .then(data => console.log(`set ${fbid} to socket id: ${data}`))
-        .then(() => client.getAsync(fbid))
-        .then(data => console.log(`retrieved ${data} from redis`))
-        .catch(err => console.error("error setting redis socket session", err));
 
       return fetchOrders(fbid)
         .then(orders => {
@@ -40,7 +34,19 @@ function newOrder (io) {
   });
 }
 
+function orderStatus (io) {
+  io.on('connection', function (socket) {
+
+    socket.on('order-status', function (orderid) {
+      console.log("setting order status");
+      return setOrderComplete(orderid);
+    })
+
+  });
+}
+
 module.exports = {
   requestOrders,
-  newOrder
+  newOrder,
+  orderStatus
 };

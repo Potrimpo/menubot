@@ -14,19 +14,16 @@ exports.retrieveOrders = (req, res) => {
     });
 };
 
-exports.setOrderComplete = (req, res, next) => {
-  return db.orderComplete(req.body.orderid)
-    .then(data => res.status(200).send())
-    .catch(err => {
-      console.log("error setting orders", err);
-      return res.status(500).send("error setting orders")
-    });
-};
 
 // universally callable functions
 exports.fetchOrders = fbid => {
   return db.ordersByFbid(fbid, today())
     .catch(err => res.status(500).send('error getting orders'));
+};
+
+exports.setOrderComplete = (orderid) => {
+  return db.orderComplete(orderid)
+    .catch(err => console.log("error setting orders", err));
 };
 
 function today () {

@@ -2,9 +2,8 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { initOrders, newOrder } from '../actions'
 import VisibleOrders from './VisibleOrders'
-import io from 'socket.io-client'
+import socket from './socket'
 
-const socket = io.connect();
 
 class OrdersBox extends Component {
   static propTypes = {
