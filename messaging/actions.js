@@ -1,6 +1,5 @@
-const chrono = require('chrono-node'),
+const fbMessage = require('./fbMessage'),
   { redisRetrieveOrder, redisGetToken } = require('./messengerSessions'),
-  fbMessage = require('./fbMessage'),
   Order = require('../classes/Order');
 
 // Our bot actions
@@ -30,10 +29,10 @@ const actions = {
       .then(data => {
         if (!data.itemid) throw "No order for this user in Redis";
         console.log("order from redis!", data);
-        return Order.dbInsert(fbPageId, fbUserId, msg, data);
+        return new Order(fbPageId, fbUserId, msg, data);
       })
-      .then(data => {
-        const order = new Order(data[0]);
+      .then(order => {
+        console.log("return from new Order", order);
         // should return array of length 1
         return order ? order : new Error("couldn't create order instance");
       })
