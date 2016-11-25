@@ -1,7 +1,7 @@
 /**
  * Created by lewis.knoxstreader on 20/11/16.
  */
-const client = require('./redis-init'),
+const { client, pub, sub } = require('./redis-init'),
   { fetchOrders } = require('./controllers/orders');
 
 function requestOrders (io) {
@@ -9,8 +9,12 @@ function requestOrders (io) {
     console.log("     socket.io connection!");
 
     socket.on('request-orders', function (fbid) {
-      console.log("REQUESTING ORDERS FOR", fbid);
+      sub.subscribe(fbid);
+
       client.setAsync(fbid, socket.id)
+        .then(data => console.log(`set ${fbid} to socket id: ${data}`))
+        .then(() => client.getAsync(fbid))
+        .then(data => console.log(`retrieved ${data} from redis`))
         .catch(err => console.error("error setting redis socket session", err));
 
       return fetchOrders(fbid)
@@ -24,14 +28,16 @@ function requestOrders (io) {
   });
 }
 
-function newOrder (io, client, order) {
-  console.log(" a new order is happen");
-  console.log(order.dataValues);
-  return client.getAsync(order.fbid)
-    .then(id => {
-      return io.to(id).emit('new-order', order.dataValues)
-    })
-    .catch(err => console.error("error emitting new order event"), err);
+function newOrder (io) {
+  io.on('connection', function (socket) {
+    console.log(" updateOrders connection");
+
+    sub.on('message', (channel, message) => {
+      console.log("redis channel =", channel);
+      return socket.emit('new-order', message)
+    });
+
+  });
 }
 
 module.exports = {

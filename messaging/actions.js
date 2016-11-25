@@ -1,4 +1,5 @@
 const chrono = require('chrono-node'),
+  { pub } = require('../redis-init'),
   { redisRetrieveOrder, redisGetToken } = require('./messengerSessions'),
   fbMessage = require('./fbMessage'),
   db = require('../repositories/bot/botQueries');
@@ -49,6 +50,10 @@ const actions = {
             }
           })
           .then(function (details) {
+            console.log("order details", details);
+            // broadcast order details
+            pub.publish(fbPageId, JSON.stringify(details));
+
             delete orderInfo.order;
             Object.assign(orderInfo, details[0]);
             return res(orderInfo);

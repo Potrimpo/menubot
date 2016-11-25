@@ -6,7 +6,6 @@ const findOrCreateSession = (fbUserId, fbPageId) => {
   return client.hgetallAsync(fbUserId)
     .then(data => {
       if (data) {
-        console.log("found session in redis:", data);
         // every message extends the session expiration time to 3 minutes from last received message
         return client.expireAsync(fbUserId, 3*60);
       }
@@ -45,7 +44,6 @@ const redisRecordOrder = (fbUserId, order) => {
 const redisRetrieveOrder = fbUserId => {
   return client.hgetallAsync(fbUserId)
     .then(data => {
-      console.log("retrieveOrder redis data", data);
       return {
         itemid: data.itemid ? data.itemid : undefined,
         typeid: data.typeid ? data.typeid : undefined,

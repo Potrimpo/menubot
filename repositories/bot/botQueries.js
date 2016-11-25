@@ -89,7 +89,6 @@ exports.orderDetails = orderid => {
 };
 
 exports.makeOrder = (fbid, customer_id, pickuptime, { itemid, typeid, sizeid })  => {
-  console.log("makeOrder pickuptime =", pickuptime);
   return Order.build({
     fbid, customer_id, pickuptime, itemid, typeid, sizeid
   })
