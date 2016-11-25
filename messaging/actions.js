@@ -1,7 +1,7 @@
 const chrono = require('chrono-node'),
-  { pub } = require('../redis-init'),
   { redisRetrieveOrder, redisGetToken } = require('./messengerSessions'),
   fbMessage = require('./fbMessage'),
+  Order = require('../classes/Order'),
   db = require('../repositories/bot/botQueries');
 
 // Our bot actions
@@ -28,7 +28,6 @@ const actions = {
   // specify the time of an order
   orderTime(fbUserId, fbPageId, request) {
     return new Promise((res, rej) => {
-      const orderInfo = {};
       const time = chrono.parseDate(request);
       if(time) {
         return redisRetrieveOrder(fbUserId)
@@ -37,26 +36,11 @@ const actions = {
             console.log("order from redis!", data);
             return db.makeOrder(fbPageId, fbUserId, time, data)
           })
-          .then(order => {
-            if (order) {
-              orderInfo.pickupTime = String(chrono.parseDate(String(order.pickuptime)));
-              return db.orderDetails(order.orderid);
-            }
-            else {
-              orderInfo.noLuck = true;
-              if (orderInfo.pickupTime) delete orderInfo.pickupTime;
-              if (orderInfo.item) delete orderInfo.item;
-              return res(orderInfo);
-            }
-          })
-          .then(function (details) {
-            console.log("order details", details);
-            // broadcast order details
-            pub.publish(fbPageId, JSON.stringify(details));
+          .then(data => {
+            const order = new Order(data[0]);
 
-            delete orderInfo.order;
-            Object.assign(orderInfo, details[0]);
-            return res(orderInfo);
+            // should return array of length 1
+            if (data && data.length == 1) return res(order);
           })
           .catch(err => {
             console.error("Error in orderTime", err.message || err);

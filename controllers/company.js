@@ -18,7 +18,6 @@ router.route('/:companyId')
     console.log("------ getting company menu -------", req.params.companyId);
     return getMenu(req.params.companyId)
       .then(data => {
-        console.log("This is the object being passed to the .ejs files: " + JSON.stringify(data));
         return res.render('account/company', {
           bot_status: data.bot_status,
           location: data.location,

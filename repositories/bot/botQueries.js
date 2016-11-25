@@ -89,10 +89,23 @@ exports.orderDetails = orderid => {
 };
 
 exports.makeOrder = (fbid, customer_id, pickuptime, { itemid, typeid, sizeid })  => {
-  return Order.build({
-    fbid, customer_id, pickuptime, itemid, typeid, sizeid
+  return sequelize.transaction(t => {
+
+    return Order.create({
+      fbid, customer_id, pickuptime, itemid, typeid, sizeid
+    }, { transaction: t })
+      .then(order => {
+        return sequelize.query(
+          "SELECT * FROM orders AS o" +
+          " LEFT OUTER JOIN sizes ON o.sizeid=sizes.sizeid" +
+          " LEFT OUTER JOIN types ON o.typeid=types.typeid" +
+          " LEFT OUTER JOIN items ON o.itemid=items.itemid" +
+          " WHERE o.orderid = :orderid",
+          { replacements: { orderid: order.orderid }, type: sequelize.QueryTypes.SELECT, transaction: t }
+        );
+      })
+
   })
-  .save();
 };
 
 exports.ordersbyUserid = customer_id => {
