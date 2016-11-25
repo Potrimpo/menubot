@@ -1,7 +1,7 @@
 import socket from '../containers/socket'
 
 export const RECEIVE_ORDERS = 'RECEIVE_ORDERS';
-export const NEW_ORDERS = 'NEW_ORDERS';
+export const NEW_ORDER = 'NEW_ORDER';
 export const TOGGLE_ORDER = 'TOGGLE_ORDER';
 
 export const setVisibilityFilter = (filter) => ({
@@ -24,13 +24,14 @@ export const initOrders = json => {
   };
 };
 
-export const newOrder = json => {
+export const newOrder = order => {
+  console.log("newOrder =", order);
   return {
-    type: NEW_ORDERS,
-    orders: json.map(order => ({
+    type: NEW_ORDER,
+    order: {
       ...order,
       pickuptime: timeParsing(order.pickuptime)
-    }))
+    }
   };
 };
 

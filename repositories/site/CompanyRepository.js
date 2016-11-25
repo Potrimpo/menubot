@@ -165,7 +165,6 @@ exports.deleteItem = data => {
 };
 
 exports.ordersByFbid = (fbid, today) => {
-  // join from top down (items -> types -> sizes) so that most detailed information is preferred (eg. photos)
   return sequelize.query(
     "SELECT * FROM orders AS o" +
     " INNER JOIN customers ON o.customer_id = customers.customer_id" +

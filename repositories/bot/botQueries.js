@@ -97,10 +97,12 @@ exports.makeOrder = (fbid, customer_id, pickuptime, { itemid, typeid, sizeid }) 
       .then(order => {
         return sequelize.query(
           "SELECT * FROM orders AS o" +
-          " LEFT OUTER JOIN sizes ON o.sizeid=sizes.sizeid" +
-          " LEFT OUTER JOIN types ON o.typeid=types.typeid" +
-          " LEFT OUTER JOIN items ON o.itemid=items.itemid" +
-          " WHERE o.orderid = :orderid",
+          " INNER JOIN customers AS c ON o.customer_id = c.customer_id" +
+          " LEFT OUTER JOIN sizes AS s ON o.sizeid = s.sizeid" +
+          " LEFT OUTER JOIN types AS t ON o.typeid = t.typeid" +
+          " LEFT OUTER JOIN items AS i ON o.itemid = i.itemid" +
+          " WHERE o.orderid = :orderid" +
+          " ORDER BY o.pickuptime ASC",
           { replacements: { orderid: order.orderid }, type: sequelize.QueryTypes.SELECT, transaction: t }
         );
       })

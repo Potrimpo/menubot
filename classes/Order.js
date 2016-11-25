@@ -3,6 +3,7 @@
  */
 const chrono = require('chrono-node'),
   { pub } = require('../redis-init'),
+  db = require('../repositories/bot/botQueries'),
   Item = require('./Item'),
   Type = require('./Type'),
   Size = require('./Size');
@@ -49,6 +50,11 @@ class Order {
   static publishOnCreate (fields) {
     // broadcast order details
     pub.publish(fields.fbid, JSON.stringify(fields));
+  }
+
+  static dbInsert (fbPageId, fbUserId, msg, order) {
+    const time = chrono.parseDate(msg);
+    return time ? db.makeOrder(fbPageId, fbUserId, time, order) : new Error("couldn't parse time from message");
   }
 
   readableTime () {

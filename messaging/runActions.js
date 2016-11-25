@@ -4,9 +4,9 @@
 
 const actions = require('./actions');
 
-function runActions (fbUserId, fbPageId, request) {
+function runActions (fbUserId, fbPageId, msg) {
   // the only text messages it knows how to deals with are order times
-  return actions.orderTime(fbUserId, fbPageId, request)
+  return actions.orderTime(fbUserId, fbPageId, msg)
     .then(order => {
       const responses = [];
       if (order.orderid) {

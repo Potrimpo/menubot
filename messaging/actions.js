@@ -1,8 +1,7 @@
 const chrono = require('chrono-node'),
   { redisRetrieveOrder, redisGetToken } = require('./messengerSessions'),
   fbMessage = require('./fbMessage'),
-  Order = require('../classes/Order'),
-  db = require('../repositories/bot/botQueries');
+  Order = require('../classes/Order');
 
 // Our bot actions
 const actions = {
@@ -26,28 +25,19 @@ const actions = {
   },
 
   // specify the time of an order
-  orderTime(fbUserId, fbPageId, request) {
-    return new Promise((res, rej) => {
-      const time = chrono.parseDate(request);
-      if(time) {
-        return redisRetrieveOrder(fbUserId)
-          .then(data => {
-            if (!data.itemid) throw "No order for this user in Redis";
-            console.log("order from redis!", data);
-            return db.makeOrder(fbPageId, fbUserId, time, data)
-          })
-          .then(data => {
-            const order = new Order(data[0]);
-
-            // should return array of length 1
-            if (data && data.length == 1) return res(order);
-          })
-          .catch(err => {
-            console.error("Error in orderTime", err.message || err);
-            return rej(err);
-          });
-      }
-    });
+  orderTime(fbUserId, fbPageId, msg) {
+    return redisRetrieveOrder(fbUserId)
+      .then(data => {
+        if (!data.itemid) throw "No order for this user in Redis";
+        console.log("order from redis!", data);
+        return Order.dbInsert(fbPageId, fbUserId, msg, data);
+      })
+      .then(data => {
+        const order = new Order(data[0]);
+        // should return array of length 1
+        return order ? order : new Error("couldn't create order instance");
+      })
+      .catch(err => console.error("Error in orderTime", err));
   },
 
 };
