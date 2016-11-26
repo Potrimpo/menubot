@@ -4,9 +4,10 @@
 const db = require('../repositories/site/CompanyRepository');
 
 class Item {
-  constructor ({ fbid, itemid, parentId, item, item_photo, item_price, price }) {
+  constructor ({ fbid, itemid, parentId, elemId, item, item_photo, item_price, price }) {
     this.fbid = fbid;
-    this.itemid = itemid || parentId;
+    // removed parentId option
+    this.itemid = itemid || elemId;
     this.item = item;
     this.item_photo = item_photo;
     this.item_price = item_price || price;
@@ -14,12 +15,12 @@ class Item {
 
   dbInsert () {
     return db.insertItem(this.fbid, this.item)
-      .then(data => data ? data : new Error("failed to insert Item into db"))
+      .catch(err => console.error("error inserting Item into database", err));
   }
 
   updatePrice () {
     return db.updateIPrice(this.itemid, this.item_price)
-      .then(data => data[0] > 0 ? data : new Error("failed to update Item price"));
+      .catch(err => console.error("error updating Item price", err));
   }
 }
 

@@ -89,7 +89,7 @@ function fullMenu (fbid, data) {
     });
 }
 
-function add_to_menu(req, res, next) {
+function add_to_menu(req, res) {
   console.log(req.body);
   return new Promise((resolve, reject) => {
     switch (req.body.intent) {
@@ -109,12 +109,12 @@ function add_to_menu(req, res, next) {
           .then(() => resolve());
 
       case "tprice":
-        return db.updateTPrice(req.body)
-          .then(() => next());
+        return new Type(req.body).updatePrice()
+          .then(() => resolve());
 
       case "sprice":
-        return db.updateSPrice(req.body)
-          .then(() => next());
+        return new Size(req.body).updatePrice()
+          .then(() => resolve());
 
       default:
         return reject(`no case for update intent: ${req.body.intent}`);

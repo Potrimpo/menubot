@@ -89,30 +89,28 @@ exports.insertSize = (size, typeid) => {
   }).catch(err => console.error("error in insertSize transaction", err));
 };
 
-exports.updateIPrice = (itemid, price) => {
+exports.updateIPrice = (itemid, item_price) => {
   return Item.update({
-    item_price: price
+    item_price
   }, {
     where: { itemid }
-  });
+  }).then(data => data[0] > 0 ? data : null);
 };
 
-exports.updateTPrice = data => {
-  return sequelize.query(
-    "UPDATE ONLY types" +
-    " SET type_price = :price" +
-    " WHERE typeid = :typeid",
-    { replacements: { typeid: data.parentId, price: data.price}, type: sequelize.QueryTypes.UPDATE }
-  );
+exports.updateTPrice = (typeid, type_price) => {
+  return Type.update({
+    type_price
+  }, {
+    where: { typeid }
+  }).then(data => data[0] > 0 ? data : null);
 };
 
-exports.updateSPrice = data => {
-  return sequelize.query(
-    "UPDATE ONLY sizes" +
-    " SET size_price = :price" +
-    " WHERE sizeid = :sizeid",
-    { replacements: { sizeid: data.parentId, price: data.price}, type: sequelize.QueryTypes.UPDATE }
-  );
+exports.updateSPrice = (sizeid, size_price) => {
+  return Size.update({
+    size_price
+  }, {
+    where: { sizeid }
+  }).then(data => data[0] > 0 ? data : null);
 };
 
 exports.deleteItem = data => {
