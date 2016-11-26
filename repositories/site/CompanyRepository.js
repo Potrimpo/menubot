@@ -89,13 +89,12 @@ exports.insertSize = (size, typeid) => {
   }).catch(err => console.error("error in insertSize transaction", err));
 };
 
-exports.updateIPrice = data => {
-  return sequelize.query(
-    "UPDATE ONLY items" +
-    " SET item_price = :price" +
-    " WHERE itemid = :itemid",
-    { replacements: { itemid: data.parentId, price: data.price}, type: sequelize.QueryTypes.UPDATE }
-  );
+exports.updateIPrice = (itemid, price) => {
+  return Item.update({
+    item_price: price
+  }, {
+    where: { itemid }
+  });
 };
 
 exports.updateTPrice = data => {

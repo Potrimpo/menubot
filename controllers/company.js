@@ -105,8 +105,8 @@ function add_to_menu(req, res, next) {
           .then(() => resolve());
 
       case "iprice":
-        return db.updateIPrice(req.body)
-          .then(() => next());
+        return new Item(req.body).updatePrice()
+          .then(() => resolve());
 
       case "tprice":
         return db.updateTPrice(req.body)
