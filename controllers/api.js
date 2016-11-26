@@ -82,7 +82,6 @@ function fetchPhotos (pageToken) {
       if (json.error && json.error.message) {
         throw new Error(json.error.message);
       }
-      console.log("JSON ====", json);
       return json;
     })
     .catch(err => console.error("error fetching photos for this menu!", err));

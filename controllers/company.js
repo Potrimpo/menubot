@@ -121,7 +121,10 @@ function add_to_menu(req, res) {
     }
   })
     .then(() => res.status(200).send())
-    .catch(err => console.error("error adding item to menu", err));
+    .catch(err => {
+      console.error("error adding item to menu", err);
+      return res.status(500).send("failed to update menu")
+    });
 }
 
 module.exports = router;

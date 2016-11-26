@@ -48,7 +48,8 @@ class Order {
   // insert order into database, returning values used to create Order instance
   static dbInsert (fbPageId, fbUserId, msg, order) {
     const time = chrono.parseDate(msg);
-    return time ? db.makeOrder(fbPageId, fbUserId, time, order) : new Error("couldn't parse time from message");
+    if (!time) throw new Error("couldn't parse time from message");
+    return db.makeOrder(fbPageId, fbUserId, time, order);
   }
 
   readableTime () {
