@@ -27,7 +27,7 @@
       </div>
       <div class="row reactive-centering">
         <a href="/" class="btn btn-default btn-space">
-          <i class="fa fa-long-arrow-left" style="font-size:18px;" aria-hidden="true"></i>
+          <i class="fa fa-long-arrow-left" style="font-size:18px; margin-right:1px;" aria-hidden="true"></i>
         </a>
         <a href="/api/photos/<%= fbid %>" role="button" class="btn btn-default btn-space misc-async">
             Fetch photos from Facebook
@@ -37,6 +37,9 @@
         <% } else if (bot_status == false) { %>
         <a href="/api/activate/<%= fbid %>" role="button" class="btn btn-default btn-space misc-async">Activate messenger bot</a>
         <% } %>
+        <a href="https://youtu.be/64S6wWF8DS0" target="_blank" role="button" class="btn btn-default btn-space">
+          <i class="fa fa-info-circle" style="font-size:18px; margin-left:-4px; margin-right:-3px;" aria-hidden="true"></i>
+        </a>
       </div>
     </div>
   </div>
