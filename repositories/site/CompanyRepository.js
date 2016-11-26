@@ -25,9 +25,8 @@ exports.getCompanyMenu = id => {
 
 exports.getMenuTypes = itemids => {
   return sequelize.query(
-    "SELECT types.itemid, type, typeid, types.type_photo, types.type_price FROM items" +
-    " INNER JOIN types ON items.itemid = types.itemid" +
-    " WHERE items.itemid IN (:itemids)" +
+    "SELECT t.itemid, t.type, t.typeid, t.type_photo, t.type_price FROM types AS t" +
+    " WHERE t.itemid IN (:itemids)" +
     " ORDER BY typeid ASC",
     { replacements: { itemids }, type: sequelize.QueryTypes.SELECT }
   );
@@ -35,9 +34,8 @@ exports.getMenuTypes = itemids => {
 
 exports.getMenuSizes = typeids => {
   return sequelize.query(
-    "SELECT sizes.typeid, size, sizeid, sizes.size_price FROM types" +
-    " INNER JOIN sizes ON types.typeid = sizes.typeid" +
-    " WHERE types.typeid IN (:typeids)" +
+    "SELECT s.typeid, s.size, s.sizeid, s.size_price FROM sizes" +
+    " WHERE s.typeid IN (:typeids)" +
     " ORDER BY sizeid ASC",
     { replacements: { typeids }, type: sequelize.QueryTypes.SELECT }
   );
