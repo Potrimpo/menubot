@@ -101,9 +101,8 @@ function add_to_menu(req, res, next) {
           .then(() => resolve());
 
       case "size":
-        return db.deleteTypePrice(req.body)
-          .then(db.insertSize(req.body))
-          .then(next());
+        return new Size(req.body).dbInsert()
+          .then(() => resolve());
 
       case "iprice":
         return db.updateIPrice(req.body)

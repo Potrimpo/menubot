@@ -73,21 +73,20 @@ exports.insertType = (type, itemid) => {
   }).catch(err => console.error("error in insertType transaction", err));
 };
 
-exports.insertSize = data => {
-  return sequelize.query(
-    "INSERT INTO sizes (typeid, size)" +
-    " VALUES (:typeid, :size)",
-    { replacements: { typeid: data.parentId, size: data.size}, type: sequelize.QueryTypes.INSERT }
-  );
-};
+exports.insertSize = (size, typeid) => {
+  return sequelize.transaction(function (t) {
 
-exports.deleteTypePrice = data => {
-  return sequelize.query(
-    "UPDATE types" +
-    " SET type_price = null" +
-    " WHERE typeid = :typeid",
-    { replacements: { typeid: data.parentId }, type: sequelize.QueryTypes.UPDATE }
-  );
+    return Size.create({ typeid, size }, { transaction: t })
+      .then(() => {
+        return Type.update({
+          type_price: null
+        }, {
+          where: { typeid },
+          transaction: t
+        });
+      })
+
+  }).catch(err => console.error("error in insertSize transaction", err));
 };
 
 exports.updateIPrice = data => {
