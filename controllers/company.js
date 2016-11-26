@@ -5,7 +5,10 @@
 const express = require('express'),
   router = express.Router();
 
-const db = require('../repositories/site/CompanyRepository');
+const db = require('../repositories/site/CompanyRepository'),
+  Item = require('../classes/Item'),
+  Type = require('../classes/Type'),
+  Size = require('../classes/Size');
 
 router.param('companyId', (req, res, next, id) => {
   console.log("ID PROVIDED =", id);
@@ -29,7 +32,7 @@ router.route('/:companyId')
         });
       })
   })
-  .post(add_to_menu, (req, res) => res.status(200).send())
+  .post(add_to_menu)
   .delete((req, res) => {
     return db.deleteItem(req.body)
       .then(() => res.status(200).send())
@@ -88,35 +91,38 @@ function fullMenu (fbid, data) {
 
 function add_to_menu(req, res, next) {
   console.log(req.body);
-  switch (req.body.intent) {
-    case "item":
-      return db.insertMenuVal(req.body)
-        .then(next());
-    case "type":
-      return db.deleteItemPrice(req.body)
-        .then(db.insertType(req.body))
-        .then(next());
+  return new Promise((resolve, reject) => {
+    switch (req.body.intent) {
+      case "item":
+        return new Item(req.body).dbInsert()
+          .then(() => resolve());
+      case "type":
+        return new Type(req.body).dbInsert()
+          .then(() => resolve());
 
-    case "size":
-      return db.deleteTypePrice(req.body)
-        .then(db.insertSize(req.body))
-        .then(next());
+      case "size":
+        return db.deleteTypePrice(req.body)
+          .then(db.insertSize(req.body))
+          .then(next());
 
-    case "iprice":
-      return db.updateIPrice(req.body)
-        .then(() => next());
+      case "iprice":
+        return db.updateIPrice(req.body)
+          .then(() => next());
 
-    case "tprice":
-      return db.updateTPrice(req.body)
-        .then(() => next());
+      case "tprice":
+        return db.updateTPrice(req.body)
+          .then(() => next());
 
-    case "sprice":
-      return db.updateSPrice(req.body)
-        .then(() => next());
+      case "sprice":
+        return db.updateSPrice(req.body)
+          .then(() => next());
 
-    default:
-      return console.error("no case for this update intent", req.body.intent);
+      default:
+        return reject(`no case for update intent: ${req.body.intent}`);
     }
+  })
+    .then(() => res.status(200).send())
+    .catch(err => console.error("error adding item to menu", err));
 }
 
 module.exports = router;

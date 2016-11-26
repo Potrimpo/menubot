@@ -52,33 +52,25 @@ exports.getTypesThroughFbid = fbid => {
   );
 };
 
-exports.insertMenuVal = (data) => {
-  return sequelize.query(
-    "INSERT INTO items (fbid, item)" +
-    " VALUES (:fbid, :item)" +
-    " RETURNING itemid",
-    { replacements: { fbid: data.fbid, item: data.item }, type: sequelize.QueryTypes.INSERT }
-  )
+exports.insertItem = (fbid, item) => {
+  return Item.create({ fbid, item })
     .catch(err => console.error("error inserting menu item:", err));
 };
 
-exports.insertType = data => {
-    return sequelize.query(
-      "INSERT INTO types (itemid, type)" +
-      " VALUES (:itemid, :type)" +
-      " RETURNING typeid",
-      { replacements: { type: data.type, itemid: data.parentId }, type: sequelize.QueryTypes.INSERT }
-    )
-    .catch(err => console.error("error inserting new type:", err));
-};
+exports.insertType = (type, itemid) => {
+  return sequelize.transaction(function (t) {
 
-exports.deleteItemPrice = data => {
-  return sequelize.query(
-    "UPDATE items" +
-    " SET item_price = null" +
-    " WHERE itemid = :itemid",
-    { replacements: { itemid: data.parentId }, type: sequelize.QueryTypes.UPDATE }
-  );
+    return Type.create({ itemid, type }, { transaction: t })
+      .then(() => {
+        return Item.update({
+          item_price: null
+        }, {
+          where: { itemid },
+          transaction: t
+        });
+    })
+
+  }).catch(err => console.error("error in insertType transaction", err));
 };
 
 exports.insertSize = data => {
