@@ -20,31 +20,17 @@ class Order {
         this.pickuptime = fields.pickuptime;
 
         if (fields.itemid) {
-          this.itemVals = new Item({
-            itemid: fields.itemid,
-            item: fields.item,
-            item_price: fields.item_price,
-            item_photo: fields.item_photo
-          });
+          this.itemVals = new Item(fields);
           this.depth = "item";
         }
 
         if (fields.typeid) {
-          this.typeVals = new Type({
-            typeid: fields.typeid,
-            type: fields.type,
-            type_price: fields.type_price,
-            type_photo: fields.type_photo
-          });
+          this.typeVals = new Type(fields);
           this.depth = "type";
         }
 
         if (fields.sizeid) {
-          this.sizeVals = new Size({
-            sizeid: fields.sizeid,
-            size: fields.size,
-            size_price: fields.size_price
-          });
+          this.sizeVals = new Size(fields);
           this.depth = "size";
         }
 
