@@ -42,7 +42,7 @@ function requestOrders (fbid) {
 function disco () {
   client.getAsync(this.id)
     .then(fbid => sub.unsubscribe(fbid))
-    .then(() => client.delAsync(socket.id))
+    .then(() => client.delAsync(this.id))
     .catch(err => console.error("error disconnecting socket", err));
 }
 

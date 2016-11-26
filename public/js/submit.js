@@ -143,9 +143,13 @@ $(document).ready(function() {
     const intent = /-(\w+)/.exec(this.id)[1];
     const sendData = {
       intent,
-      parentId: this.name,
       fbid
     };
+    // `this.name` refers to existing menu entry.
+    // if you're changing the price, that's the element you want to alter
+    // if you're adding an element, that's the parent of what you're creating
+    if (intent.slice(1) === "price") sendData.elemId = this.name;
+    else sendData.parentId = this.name;
 
     for (let x = values.length - 1; x >= 0; x--) {
       switch (values[x].kind) {

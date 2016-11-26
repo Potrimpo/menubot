@@ -25,9 +25,8 @@ exports.getCompanyMenu = id => {
 
 exports.getMenuTypes = itemids => {
   return sequelize.query(
-    "SELECT types.itemid, type, typeid, types.type_photo, types.type_price FROM items" +
-    " INNER JOIN types ON items.itemid = types.itemid" +
-    " WHERE items.itemid IN (:itemids)" +
+    "SELECT t.itemid, t.type, t.typeid, t.type_photo, t.type_price FROM types AS t" +
+    " WHERE t.itemid IN (:itemids)" +
     " ORDER BY typeid ASC",
     { replacements: { itemids }, type: sequelize.QueryTypes.SELECT }
   );
@@ -35,9 +34,8 @@ exports.getMenuTypes = itemids => {
 
 exports.getMenuSizes = typeids => {
   return sequelize.query(
-    "SELECT sizes.typeid, size, sizeid, sizes.size_price FROM types" +
-    " INNER JOIN sizes ON types.typeid = sizes.typeid" +
-    " WHERE types.typeid IN (:typeids)" +
+    "SELECT s.typeid, s.size, s.sizeid, s.size_price FROM sizes" +
+    " WHERE s.typeid IN (:typeids)" +
     " ORDER BY sizeid ASC",
     { replacements: { typeids }, type: sequelize.QueryTypes.SELECT }
   );
@@ -52,77 +50,65 @@ exports.getTypesThroughFbid = fbid => {
   );
 };
 
-exports.insertMenuVal = (data) => {
-  return sequelize.query(
-    "INSERT INTO items (fbid, item)" +
-    " VALUES (:fbid, :item)" +
-    " RETURNING itemid",
-    { replacements: { fbid: data.fbid, item: data.item }, type: sequelize.QueryTypes.INSERT }
-  )
+exports.insertItem = (fbid, item) => {
+  return Item.create({ fbid, item })
     .catch(err => console.error("error inserting menu item:", err));
 };
 
-exports.insertType = data => {
-    return sequelize.query(
-      "INSERT INTO types (itemid, type)" +
-      " VALUES (:itemid, :type)" +
-      " RETURNING typeid",
-      { replacements: { type: data.type, itemid: data.parentId }, type: sequelize.QueryTypes.INSERT }
-    )
-    .catch(err => console.error("error inserting new type:", err));
+exports.insertType = (type, itemid) => {
+  return sequelize.transaction(function (t) {
+
+    return Type.create({ itemid, type }, { transaction: t })
+      .then(() => {
+        return Item.update({
+          item_price: null
+        }, {
+          where: { itemid },
+          transaction: t
+        });
+    })
+
+  }).catch(err => console.error("error in insertType transaction", err));
 };
 
-exports.deleteItemPrice = data => {
-  return sequelize.query(
-    "UPDATE items" +
-    " SET item_price = null" +
-    " WHERE itemid = :itemid",
-    { replacements: { itemid: data.parentId }, type: sequelize.QueryTypes.UPDATE }
-  );
+exports.insertSize = (size, typeid) => {
+  return sequelize.transaction(function (t) {
+
+    return Size.create({ typeid, size }, { transaction: t })
+      .then(() => {
+        return Type.update({
+          type_price: null
+        }, {
+          where: { typeid },
+          transaction: t
+        });
+      })
+
+  }).catch(err => console.error("error in insertSize transaction", err));
 };
 
-exports.insertSize = data => {
-  return sequelize.query(
-    "INSERT INTO sizes (typeid, size)" +
-    " VALUES (:typeid, :size)",
-    { replacements: { typeid: data.parentId, size: data.size}, type: sequelize.QueryTypes.INSERT }
-  );
+exports.updateIPrice = (itemid, item_price) => {
+  return Item.update({
+    item_price
+  }, {
+    where: { itemid }
+  }).then(data => data[0] > 0 ? data : null);
 };
 
-exports.deleteTypePrice = data => {
-  return sequelize.query(
-    "UPDATE types" +
-    " SET type_price = null" +
-    " WHERE typeid = :typeid",
-    { replacements: { typeid: data.parentId }, type: sequelize.QueryTypes.UPDATE }
-  );
+exports.updateTPrice = (typeid, type_price) => {
+  return Type.update({
+    type_price
+  }, {
+    where: { typeid }
+  }).then(data => data[0] > 0 ? data : null);
 };
 
-exports.updateIPrice = data => {
-  return sequelize.query(
-    "UPDATE ONLY items" +
-    " SET item_price = :price" +
-    " WHERE itemid = :itemid",
-    { replacements: { itemid: data.parentId, price: data.price}, type: sequelize.QueryTypes.UPDATE }
-  );
-};
-
-exports.updateTPrice = data => {
-  return sequelize.query(
-    "UPDATE ONLY types" +
-    " SET type_price = :price" +
-    " WHERE typeid = :typeid",
-    { replacements: { typeid: data.parentId, price: data.price}, type: sequelize.QueryTypes.UPDATE }
-  );
-};
-
-exports.updateSPrice = data => {
-  return sequelize.query(
-    "UPDATE ONLY sizes" +
-    " SET size_price = :price" +
-    " WHERE sizeid = :sizeid",
-    { replacements: { sizeid: data.parentId, price: data.price}, type: sequelize.QueryTypes.UPDATE }
-  );
+exports.updateSPrice = (sizeid, size_price) => {
+  return Size.update({
+    size_price
+  }, {
+    where: { sizeid }
+  }).then(data => data[0] > 0 ? data : null);
 };
 
 exports.deleteItem = data => {

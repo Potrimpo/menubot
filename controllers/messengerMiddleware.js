@@ -8,75 +8,67 @@ const { findOrCreateSession } = require('../messaging/messengerSessions'),
   actions = require('../messaging/actions');
 
 exports.postWebhook = (req, res) => {
-  // Parse the Messenger payload
-  // See the Webhook reference
-  // https://developers.facebook.com/docs/messenger-platform/webhook-reference
   const data = req.body;
 
   if (data.object === 'page') {
     data.entry.forEach(entry => {
       entry.messaging.forEach(event => {
+
         if (event.message) {
-          // We got a new message!
-          let outerSession = {};
+          // Received message
           // We retrieve the user's current session, or create one if it doesn't exist
           // This is needed for our bot to figure out the conversation history
           return findOrCreateSession(event.sender.id, event.recipient.id)
             .then(userID => {
               const { text, attatchments, quick_reply } = event.message;
+
               if (attatchments) {
                 // bot currently does not process images, video, or audio messages
                 return actions.send(userID, {text: 'Sorry, I can only handle text messages!'});
               }
+
               else if (quick_reply) {
                 return postbackHandler(quick_reply.payload, event.sender.id, event.recipient.id)
-                  .then(response => {
-                    actions.send(userID, response)
-                  })
+                  .then(response => actions.send(userID, response))
+                  .catch(err => console.error("Error sending postback:", err));
+              }
+
+              else if (text) {
+                return runActions(userID, event.recipient.id, text)
+                  .then(responses => Promise.all(
+                    responses.map(val => actions.send(userID, { text: val }))
+                  ))
                   .catch(err => {
-                    console.log(`Error sending postback: ${err}`);
-                    console.log(err.stack);
+                    console.log("err sending", err);
+                    return actions.send(userID, { text: err })
                   });
               }
-              else if (text) {
-                return runActions(
-                  userID,
-                  event.recipient.id,
-                  text
-                ).then(responses => {
-                  return Promise.all(
-                    responses.map(val => actions.send(userID, { text: val }))
-                  );
-                }).catch(err => {
-                  console.log("err sending", err);
-                  return actions.send(userID, { text: err })
-                });
-              }
+
             })
             .then(() => {
-                // Our bot did everything it has to do.
-                // Now it's waiting for further messages to proceed.
-                console.log('Waiting for next user messages');
-              })
-              .catch((err) => {
-                console.error('Oops! Got an error dealing with this message: ', err.stack || err);
-              });
-        } else if(event.postback) {
+              // Our bot did everything it has to do.
+              // Now it's waiting for further messages to proceed.
+              console.log('Waiting for next user messages');
+            })
+            .catch((err) => {
+              console.error('Oops! Got an error dealing with this message: ', err.stack || err);
+            });
+        }
+
+        else if (event.postback) {
           return findOrCreateSession(event.sender.id, event.recipient.id)
             .then(sessionId => {
               return postbackHandler(event.postback.payload, event.sender.id, event.recipient.id)
                 .then(response => actions.send(sessionId, response))
-                .catch(err => {
-                  console.log(`Error sending postback: ${err}`);
-                  console.log(err.stack);
-                });
+                .catch(err => console.error("Error sending postback:", err));
             })
-        } else {
         }
+
       });
     });
   }
-  res.sendStatus(200);
+
+  return res.sendStatus(200);
 };
 
 exports.getWebhook = (req, res) => {
