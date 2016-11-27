@@ -26,7 +26,6 @@ const secrets = require('./config/secrets'),
 const homeController = require('./controllers/home'),
   userController = require('./controllers/user'),
   apiController = require('./controllers/api'),
-  facebookController = require('./controllers/facebook'),
   companyController = require('./controllers/company'),
   contactController = require('./controllers/contact'),
   messengerMiddleware = require('./controllers/messengerMiddleware');
@@ -42,8 +41,7 @@ app.get('/', passportConf.isAuthenticated, passportConf.isAuthorized, homeContro
 app.get('/landing', homeController.landing);
 app.get('/logout', userController.logout);
 app.get('/contact', contactController.getContact);
-app.get('/account', passportConf.isAuthenticated, passportConf.isAuthorized, facebookController.getFacebook);
-app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);
+// app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);
 app.get('/orders/:fbid', passportConf.isAuthenticated, passportConf.isAuthorized, homeController.orders);
 app.get('/priv', homeController.priv);
 
