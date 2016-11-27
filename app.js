@@ -37,9 +37,6 @@ app.route('/webhook')
   .get(messengerMiddleware.getWebhook)
   .post(messengerMiddleware.postWebhook);
 
-app.use(passport.initialize());
-app.use(passport.session());
-
 // Primary app routes.
 app.get('/', passportConf.isAuthenticated, passportConf.isAuthorized, homeController.index);
 app.get('/landing', homeController.landing);

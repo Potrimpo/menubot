@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser'),
   path = require('path'),
   session = require('express-session'),
   pgSession = require('connect-pg-simple')(session),
+  passport = require('passport'),
   flash = require('express-flash'),
   // lusca = require('lusca'),
   // toobusy = require('toobusy-js'),
@@ -51,6 +52,10 @@ app.use(session({
     //, secure: true // only when on HTTPS
   }
 }));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 app.use(flash());
 
