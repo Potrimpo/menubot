@@ -2,7 +2,7 @@
  * Created by lewis.knoxstreader on 18/09/16.
  */
 
-const { findOrCreateSession } = require('../messaging/messengerSessions'),
+const { findOrCreateSession, redisDeleteOrder } = require('../messaging/messengerSessions'),
   runActions = require('../messaging/runActions'),
   postbackHandler = require('../messaging/postbackHandler'),
   actions = require('../messaging/actions');
@@ -38,6 +38,7 @@ exports.postWebhook = (req, res) => {
                   .then(responses => Promise.all(
                     responses.map(val => actions.send(userID, { text: val }))
                   ))
+                  .then(() => redisDeleteOrder(userID))
                   .catch(err => {
                     console.log("err sending", err);
                     return actions.send(userID, { text: err })

@@ -53,6 +53,9 @@ const redisRetrieveOrder = fbUserId => {
     .catch(err => console.error("error retrieving order from redis", err));
 };
 
+const redisDeleteOrder = fbUserId => client.hmsetAsync(fbUserId, { itemid: '', typeid: '', sizeid: '' })
+    .catch(err => console.error("error deleting order from redis", err));
+
 const redisGetToken = fbUserId => {
   return client.hmgetAsync(fbUserId, 'access_token')
     .catch(err => console.error("error getting access token from redis", err));
@@ -62,5 +65,6 @@ module.exports = {
   findOrCreateSession,
   redisRecordOrder,
   redisRetrieveOrder,
+  redisDeleteOrder,
   redisGetToken
 };
