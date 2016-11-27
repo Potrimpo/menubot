@@ -43,9 +43,9 @@ exports.getMenuSizes = typeids => {
 
 exports.getTypesThroughFbid = fbid => {
   return sequelize.query(
-    "SELECT typeid, type FROM items" +
-    " INNER JOIN types ON items.itemid = types.itemid" +
-    " WHERE items.fbid = :fbid",
+    "SELECT typeid, type FROM items AS i" +
+    " INNER JOIN types AS t ON i.itemid = t.itemid" +
+    " WHERE i.fbid = :fbid",
     { replacements: { fbid }, type: sequelize.QueryTypes.SELECT }
   );
 };

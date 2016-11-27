@@ -31,6 +31,7 @@ router.route('/:companyId')
           sizes: data.sizes
         });
       })
+      .catch(err => console.error("error building menu", err));
   })
   .post(add_to_menu)
   .delete((req, res) => {
@@ -56,7 +57,6 @@ router.route('/location/:companyId')
 function getMenu (id) {
   return db.getCompanyMenu(id)
     .then(data => {
-      if (!data) throw "no company found";
       if (data.length > 0) return fullMenu(id, data);
       else return db.findCompany(id)
     })
