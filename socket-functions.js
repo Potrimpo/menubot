@@ -15,7 +15,7 @@ function init (io) {
       sub.on('message', (channel, message) => observer.onNext(message));
     });
 
-    newOrders
+    const subscription = newOrders
       .debounce(500)
       .subscribe(
       (message) => socket.emit('new-order', message),
@@ -24,7 +24,7 @@ function init (io) {
 
     socket.on('order-status', orderid => setOrderComplete(orderid));
 
-    socket.on("disconnect", disco);
+    socket.on("disconnect", disco(subscription));
   });
 
 }
@@ -49,7 +49,9 @@ function requestOrders (fbid) {
 // --> Disconnect socket & stop listening for new-order updates for our page
 // find the right fbid by searching redis with our socket id
 // unsubscribe from events on fbid frequency
-function disco () {
+function disco (subscription) {
+  subscription.dispose();
+
   client.getAsync(this.id)
     .then(fbid => sub.unsubscribe(fbid))
     .then(() => client.delAsync(this.id))
