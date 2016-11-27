@@ -6,8 +6,8 @@ const findOrCreateSession = (fbUserId, fbPageId) => {
   return client.hgetallAsync(fbUserId)
     .then(data => {
       if (data) {
-        // every message extends the session expiration time to 3 minutes from last received message
-        return client.expireAsync(fbUserId, 3*60);
+        // every message extends the session expiration time to 1 minute from last received message
+        return client.expireAsync(fbUserId, 60);
       }
       console.log("---->     creating new session      <----");
       return getCompanyAccessToken(fbPageId)
@@ -22,8 +22,8 @@ const findOrCreateSession = (fbUserId, fbPageId) => {
                 access_token: data.access_token,
               });
             })
-            // redis session expires after 3 minutes
-            .then(() => client.expireAsync(fbUserId, 3*60))
+            // redis session expires after 1 minute
+            .then(() => client.expireAsync(fbUserId, 60))
             .catch(err => console.error("error finding or creating customer!", err));
 
         });
