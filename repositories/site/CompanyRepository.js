@@ -18,7 +18,7 @@ exports.getCompanyMenu = id => {
     "SELECT c.name, c.bot_status, c.location, i.* FROM companies AS c" +
     " INNER JOIN items AS i ON c.fbid = i.fbid" +
     " WHERE c.fbid = $1" +
-    " ORDER BY itemid ASC",
+    " ORDER BY i.itemid ASC",
     { bind: [id], type: sequelize.QueryTypes.SELECT }
   );
 };
@@ -153,10 +153,10 @@ exports.deleteItem = data => {
 exports.ordersByFbid = (fbid, today) => {
   return sequelize.query(
     "SELECT * FROM orders AS o" +
-    " INNER JOIN customers ON o.customer_id = customers.customer_id" +
-    " LEFT OUTER JOIN items ON o.itemid = items.itemid" +
-    " LEFT OUTER JOIN types ON o.typeid = types.typeid" +
-    " LEFT OUTER JOIN sizes ON o.sizeid = sizes.sizeid" +
+    " INNER JOIN customers AS c ON o.customer_id = c.customer_id" +
+    " LEFT OUTER JOIN items AS i ON o.itemid = i.itemid" +
+    " LEFT OUTER JOIN types AS t ON o.typeid = t.typeid" +
+    " LEFT OUTER JOIN sizes AS s ON o.sizeid = s.sizeid" +
     " WHERE o.fbid = :fbid AND o.pickuptime >= :today" +
     " ORDER BY o.pickuptime ASC",
     { replacements: {fbid, today}, type: sequelize.QueryTypes.SELECT }
