@@ -4,29 +4,29 @@
 const fetch = require('node-fetch');
 
 exports.activateBot = pageToken => {
-  console.log("Activating messenger bot")
+  console.log("Activating messenger bot");
 
-  return subscribeToWebhook(pageToken)
-    .then(() => getStartedButton(pageToken))
-    .then(() => setupGreetingText(pageToken))
-    .then(() => initializePersistentMenu(pageToken))
+  return webhookSubscription(pageToken, true)
+    .then(() => getStartedButton(pageToken, true))
+    .then(() => greetingText(pageToken, true))
+    .then(() => persistentMenu(pageToken, true))
 };
 
 exports.deactivateBot = pageToken => {
   console.log("Deactivating messenger bot");
 
-  return removePersistentMenu(pageToken)
-    .then(() => removeGetStartedButton(pageToken))
-    .then(() => removeGreetingText(pageToken))
-    .then(() => unsubscribeToWebhook(pageToken))
+  return persistentMenu(pageToken, false)
+    .then(() => getStartedButton(pageToken, false))
+    .then(() => greetingText(pageToken, false))
+    .then(() => webhookSubscription(pageToken, false))
 };
 
-function subscribeToWebhook (pageToken) {
+function webhookSubscription (pageToken, intent) {
   pageToken = encodeURIComponent((pageToken));
   const body = `access_token=${pageToken}`;
   const query = `https://graph.facebook.com/me/subscribed_apps`;
   return fetch(query, {
-    method: 'POST',
+    method: intent ? 'POST' : 'DELETE',
     headers: {'Content-Type': 'application/json'},
     body
   })
@@ -39,35 +39,15 @@ function subscribeToWebhook (pageToken) {
       return json;
     })
     .catch(err => console.error("error activating bot for this page!!", err));
-};
+}
 
-function unsubscribeToWebhook (pageToken) {
-  pageToken = encodeURIComponent((pageToken));
-  const body = `access_token=${pageToken}`;
-  const query = `https://graph.facebook.com/me/subscribed_apps`;
-  return fetch(query, {
-    method: 'DELETE',
-    headers: {'Content-Type': 'application/json'},
-    body
-  })
-    .then(rsp => rsp.json())
-    .then(json => {
-      if (json.error && json.error.message) {
-        throw new Error(json.error.message);
-      }
-      console.log("Response to webhook unsubscription request: " + JSON.stringify(json));
-      return json;
-    })
-    .catch(err => console.error("error deactivating bot for this page!!", err));
-};
-
-
-
-function initializePersistentMenu (pageToken) {
+function persistentMenu (pageToken, intent) {
   const body = {
     setting_type: "call_to_actions",
     thread_state: "existing_thread",
-    call_to_actions:[
+  };
+  if (intent) {
+    body.call_to_actions = [
       {
         type: "postback",
         title: "Menu",
@@ -83,12 +63,12 @@ function initializePersistentMenu (pageToken) {
         title: "Location",
         payload: JSON.stringify({ intent: "LOCATION" })
       }
-    ]
-  };
+    ];
+  }
   pageToken = encodeURIComponent((pageToken));
   const url = `https://graph.facebook.com/me/thread_settings?access_token=${pageToken}`;
   return fetch(url, {
-    method: 'POST',
+    method: intent ? 'POST' : 'DELETE',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(body)
   })
@@ -101,44 +81,21 @@ function initializePersistentMenu (pageToken) {
       return json;
     })
     .catch(err => console.error("error initializing persistent menu!!", err));
-};
+}
 
-function removePersistentMenu (pageToken) {
-  const body = {
-    "setting_type":"call_to_actions",
-    "thread_state":"existing_thread"
-  };
-  pageToken = encodeURIComponent((pageToken));
-  const url = `https://graph.facebook.com/me/thread_settings?access_token=${pageToken}`;
-  return fetch (url, {
-    method: 'DELETE',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(body)
-  })
-    .then(rsp => rsp.json())
-    .then(json => {
-      if (json.error && json.error.message) {
-        throw new Error(json.error.message);
-      }
-      console.log("Response to persistent menu removal request: " + JSON.stringify(json));
-      return json;
-    })
-    .catch(err => console.error("error initializing persistent menu!!", err));
-};
-
-
-
-function setupGreetingText (pageToken) {
+function greetingText (pageToken, intent) {
   const body = {
     setting_type: "greeting",
-    greeting: {
+  };
+  if (intent) {
+    body.greeting = {
       text: "This is a Menubot.xyz activated page. View the menu and order ahead of time, straight from Facebook messenger."
     }
-  };
+  }
   pageToken = encodeURIComponent((pageToken));
   const url = `https://graph.facebook.com/me/thread_settings?access_token=${pageToken}`;
   return fetch(url, {
-    method: 'POST',
+    method: intent ? 'POST' : 'DELETE',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(body)
   })
@@ -151,46 +108,24 @@ function setupGreetingText (pageToken) {
       return json;
     })
     .catch(err => console.error("error setting greeting text!!", err));
-};
+}
 
-function removeGreetingText (pageToken) {
-  const body = {
-    setting_type: "greeting"
-  };
-  pageToken = encodeURIComponent((pageToken));
-  const url = `https://graph.facebook.com/me/thread_settings?access_token=${pageToken}`;
-  return fetch(url, {
-    method: 'DELETE',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(body)
-  })
-    .then(rsp => rsp.json())
-    .then(json => {
-      if (json.error && json.error.message) {
-        throw new Error(json.error.message);
-      }
-      console.log("Response to greeting text removal request: " + JSON.stringify(json));
-      return json;
-    })
-    .catch(err => console.error("error setting greeting text!!", err));
-};
-
-
-
-function getStartedButton (pageToken) {
+function getStartedButton (pageToken, intent) {
   const body = {
     setting_type: "call_to_actions",
-    thread_state: "new_thread",
-    call_to_actions: [
+    thread_state: "new_thread"
+  };
+  if (intent) {
+    body.call_to_actions = [
       {
         payload: JSON.stringify({ intent: "GET_STARTED" })
       }
-    ]
-  };
+    ];
+  }
   pageToken = encodeURIComponent((pageToken));
   const url = `https://graph.facebook.com/me/thread_settings?access_token=${pageToken}`;
   return fetch(url, {
-    method: 'POST',
+    method: intent ?'POST' : 'DELETE',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(body)
   })
@@ -200,29 +135,6 @@ function getStartedButton (pageToken) {
         throw new Error(json.error.message);
       }
       console.log("Response to Get Started btn setting request: " + JSON.stringify(json));
-      return json;
-    })
-    .catch(err => console.error("error adding get-started button!!", err));
-}
-
-function removeGetStartedButton (pageToken) {
-  const body = {
-    setting_type: "call_to_actions",
-    thread_state: "new_thread"
-  };
-  pageToken = encodeURIComponent((pageToken));
-  const url = `https://graph.facebook.com/me/thread_settings?access_token=${pageToken}`;
-  return fetch(url, {
-    method: 'DELETE',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(body)
-  })
-    .then(rsp => rsp.json())
-    .then(json => {
-      if (json.error && json.error.message) {
-        throw new Error(json.error.message);
-      }
-      console.log("Response to Get Started btn removal request: " + JSON.stringify(json));
       return json;
     })
     .catch(err => console.error("error adding get-started button!!", err));
