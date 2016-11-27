@@ -156,7 +156,7 @@ function parseOrders(orders) {
 function getStarted () {
   const payload = { intent: "MENU" };
   return {
-    text: "Welcome to the menu.bot experience",
+    text: "Welcome! Would you like to see our menu?",
     quick_replies: [{
       content_type: "text",
       title: "Menu",
