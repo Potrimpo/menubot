@@ -1,7 +1,7 @@
 import React from 'react'
 import FilterLink from '../containers/FilterLink'
 
-const Footer = () => (
+const FilterTab = () => (
   <div className="page-header text-center">
     <a href="/" className="btn btn-default btn-space" role="button">
       <i className="fa fa-long-arrow-left" style={{fontSize: "18px"}} aria-hidden="true"></i>
@@ -13,4 +13,4 @@ const Footer = () => (
   </div>
 );
 
-export default Footer
+export default FilterTab
