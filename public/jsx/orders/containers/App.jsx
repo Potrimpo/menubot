@@ -1,10 +1,10 @@
 import React, { Component, PropTypes } from 'react'
 import OrdersBox from './OrdersBox'
-import Footer from '../components/Footer'
+import FilterTab from '../components/FilterTab'
 
 const App = () => (
   <div>
-    <Footer/>
+    <FilterTab/>
     <OrdersBox/>
   </div>
 );
