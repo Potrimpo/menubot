@@ -2,6 +2,8 @@ import { combineReducers } from 'redux'
 import { RECEIVE_ORDERS, TOGGLE_ORDER, NEW_ORDER } from '../actions'
 import filter from './filter'
 
+const bongNoise = new Audio('/audio/bong.mp3');
+
 const order = (state, action) => {
   switch (action.type) {
     case TOGGLE_ORDER:
@@ -23,6 +25,7 @@ const orders = (state = [], action) => {
     case RECEIVE_ORDERS:
       return [ ...action.orders ];
     case NEW_ORDER:
+      bongNoise.play();
       return [ ...state, action.order ];
     case TOGGLE_ORDER:
       return state.map(o => order(o, action));
