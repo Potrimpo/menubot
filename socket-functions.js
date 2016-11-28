@@ -11,20 +11,20 @@ function init (io) {
 
     socket.on('request-orders', requestOrders);
 
-    const newOrders = Rx.Observable.create(observer => {
+    // assign to socket object so we can access & dispose of subscription at any point
+    socket.orderSubscription = Rx.Observable.create(observer => {
       sub.on('message', (channel, message) => observer.onNext(message));
-    });
-
-    const subscription = newOrders
-      .debounce(500)
-      .subscribe(
+      sub.on('unsubscribe', channel => observer.onCompleted());
+    })
+    .debounce(500)
+    .subscribe(
       (message) => socket.emit('new-order', message),
       err => console.error("error in this shit", err)
     );
 
     socket.on('order-status', orderid => setOrderComplete(orderid));
 
-    socket.on("disconnect", disco(subscription));
+    socket.on("disconnect", disco);
   });
 
 }
@@ -48,11 +48,9 @@ function requestOrders (fbid) {
 
 // --> Disconnect socket & stop listening for new-order updates for our page
 // find the right fbid by searching redis with our socket id
-// unsubscribe from events on fbid frequency
-function disco (subscription) {
-  subscription.dispose();
-
-  client.getAsync(this.id)
+// unsubscribe from redis messages on fbid frequency
+function disco () {
+  return client.getAsync(this.id)
     .then(fbid => sub.unsubscribe(fbid))
     .then(() => client.delAsync(this.id))
     .catch(err => console.error("error disconnecting socket", err));
