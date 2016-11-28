@@ -7,7 +7,14 @@
       </button>
 
       <a href="/" class="navbar-brand">
-        <img src="/images/menubotlogo-circle-long.png" class="header-logo d-inline-block align-top"/>
+        <img src="/images/menubotlogo-circle.png" style="display:inline" class="header-logo"/>
+        <p style="font-size: 20px; font-family: 'Roboto', sans-serif;display:inline;">
+          Menubot
+          <% if (typeof compName !== 'undefined') { %>
+            - <%= compName %>
+          <% } %>
+        </p>
+
       </a>
     </div>
     <div class="collapse navbar-collapse">

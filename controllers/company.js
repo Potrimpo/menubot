@@ -24,6 +24,7 @@ router.route('/:companyId')
         return res.render('account/company', {
           bot_status: data.bot_status,
           location: data.location,
+          compName: data.name,
           fbid: data.fbid,
           title: data.name,
           items: data.items,

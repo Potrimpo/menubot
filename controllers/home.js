@@ -32,7 +32,10 @@ function unregisteredCompanies (accounts, dbCompanies) {
 }
 
 exports.orders = (req, res) => {
-  return res.render('orders/orders', { title: 'Orders', fbid: req.params.fbid });
+  return db.findCompany(req.params.fbid)
+    .then((data) => {
+      return res.render('orders/orders', { title: 'Orders', fbid: req.params.fbid, compName: data.name });
+    })
 };
 
 exports.priv = (req,res) => {
