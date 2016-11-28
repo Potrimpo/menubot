@@ -150,17 +150,27 @@ function parseOrders(orders) {
       }
     }
   });
+
+  template.quick_replies = [{
+    content_type: "text",
+    title: "Menu",
+    payload: JSON.stringify({ intent: "MENU" })
+  }];
+
   return template;
 }
 
 function getStarted () {
-  const payload = { intent: "MENU" };
   return {
     text: "Welcome! Would you like to see our menu?",
     quick_replies: [{
       content_type: "text",
       title: "Menu",
-      payload: JSON.stringify(payload)
+      payload: JSON.stringify({ intent: "MENU" })
+    }, {
+      content_type: "text",
+      title: "Location",
+      payload: JSON.stringify({ intent: "LOCATION" })
     }]
   };
 }

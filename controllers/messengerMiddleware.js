@@ -35,9 +35,11 @@ exports.postWebhook = (req, res) => {
 
               else if (text) {
                 return runActions(userID, event.recipient.id, text)
-                  .then(responses => Promise.all(
-                    responses.map(val => actions.send(userID, { text: val }))
-                  ))
+                  .then(responses => {
+                    return Promise.all(
+                      responses.map(response => actions.send(userID, response ))
+                    )
+                  })
                   .catch(err => {
                     console.log("err sending", err);
                     return actions.send(userID, { text: err })
