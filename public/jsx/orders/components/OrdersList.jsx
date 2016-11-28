@@ -6,6 +6,7 @@ const OrdersList = ({ fbid, orders, onOrderClick }) => (
     {orders.map((order, i) =>
       <Order
         key={order.orderid}
+        child={lookback(orders, order, i)}
         {...order}
         onClick={() => onOrderClick(fbid, order.orderid)}
       />
@@ -17,5 +18,10 @@ OrdersList.propTypes = {
   orders: PropTypes.array.isRequired,
   onOrderClick: PropTypes.func.isRequired
 };
+
+function lookback (orders, o, i) {
+  if (i == 0) return false;
+  return o.userid === orders[i -1].userid && o.pickuptime === orders[i - 1].pickuptime;
+}
 
 export default OrdersList
