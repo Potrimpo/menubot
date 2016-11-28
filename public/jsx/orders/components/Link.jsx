@@ -1,10 +1,6 @@
 import React, { PropTypes } from 'react'
 
 const Link = ({ active, children, onClick }) => {
-  if (active) {
-    return <span>{children}</span>
-  }
-
   return (
     <a href="#"
        onClick={e => {
@@ -12,7 +8,11 @@ const Link = ({ active, children, onClick }) => {
          onClick()
        }}
     >
-      {children}
+      <button className={ active ? "btn btn-default btn-space active " : "btn btn-default btn-space" }
+         type="button"
+      >
+        {children}
+      </button>
     </a>
   )
 };

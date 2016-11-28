@@ -7,8 +7,8 @@ const FilterTab = () => (
       <i className="fa fa-long-arrow-left" style={{fontSize: "18px"}} aria-hidden="true"></i>
     </a>
     <div>
-      <FilterLink filter="SHOW_ACTIVE"><p className="btn btn-default btn-space" role="button">Active</p></FilterLink>
-      <FilterLink filter="SHOW_COMPLETED"><p className="btn btn-default btn-space" role="button">Completed</p></FilterLink>
+      <FilterLink filter="SHOW_ACTIVE">Active</FilterLink>
+      <FilterLink filter="SHOW_COMPLETED">Complete</FilterLink>
     </div>
   </div>
 );
