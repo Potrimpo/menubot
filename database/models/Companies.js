@@ -23,7 +23,17 @@ module.exports = function (sequelize, Sequelize) {
       type: Sequelize.STRING,
       allowNull: false
     },
-    location: Sequelize.STRING
+    location: Sequelize.STRING,
+    opentime: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      defaultValue: "9am",
+    },
+    closetime: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      defaultValue: "10pm",
+    }
   }, {
     tableName: 'companies',
     timestamps: false,

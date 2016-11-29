@@ -24,6 +24,8 @@ router.route('/:companyId')
         return res.render('account/company', {
           bot_status: data.bot_status,
           location: data.location,
+          opentime: data.opentime,
+          closetime: data.closetime,
           compName: data.name,
           fbid: data.fbid,
           title: data.name,
@@ -54,6 +56,19 @@ router.route('/location/:companyId')
       .catch(err => console.error("error updating location field", err));
   });
 
+router.route('/time/:companyId')
+  .post((req, res) => {
+    if (req.body.state == 'opentime') {
+      return db.setOpenTime(req.body.id, req.body.time, req.body.state)
+      .then(() => res.status(200).send())
+      .catch(err => console.error("error updating time field", err));
+    } else if (req.body.state == 'closetime') {
+      return db.setCloseTime(req.body.id, req.body.time, req.body.state)
+      .then(() => res.status(200).send())
+      .catch(err => console.error("error updating time field", err));
+    }
+  });
+
 
 function getMenu (id) {
   return db.getCompanyMenu(id)
@@ -70,6 +85,8 @@ function fullMenu (fbid, data) {
     name: data[0].name,
     bot_status: data[0].bot_status,
     location: data[0].location,
+    opentime: data[0].opentime,
+    closetime: data[0].closetime,
     fbid,
     items: data
   };

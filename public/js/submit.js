@@ -123,6 +123,38 @@ $(document).ready(function() {
 
   });
 
+  $('.time-setter').on('change', function (event) {
+    event.preventDefault();
+    showSpinner();
+
+    var time = this.value;
+    var state = this.id;
+    console.log("time??", time);
+    console.log("state??", state);
+    console.log("fbid =", fbid);
+
+    $.ajax({
+      type: 'POST',
+      url: '/company/time/' + fbid,
+      data: { id: fbid, time: time, state: state },
+      encode: true,
+      success(data) {
+        console.log("SUCCESS");
+        console.log(data);
+      },
+      error(smth, status, err) {
+        console.error("ERROR IN AJAX", status);
+        console.error("ERROR =", err);
+      }
+    })
+      .done(function(data) {
+        console.log("DONE", data);
+
+        location.reload();
+      });
+
+  });
+
   // process the form
   $('form.menu-entry').submit(function(event) {
     // stop the form from submitting the normal way
