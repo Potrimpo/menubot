@@ -14,26 +14,17 @@ const toggleLocal = (orderid) => ({
   orderid
 });
 
-export const initOrders = json => {
+export const initOrders = orders => {
   return {
     type: RECEIVE_ORDERS,
-    orders: json.map(order => ({
-      ...order,
-      pickuptime: timeParsing(order.pickuptime)
-    }))
+    orders
   };
 };
 
-export const newOrder = order => {
-  console.log("newOrder =", order);
-  return {
-    type: NEW_ORDER,
-    order: {
-      ...order,
-      pickuptime: timeParsing(order.pickuptime)
-    }
-  };
-};
+export const newOrder = order => ({
+  type: NEW_ORDER,
+  order
+});
 
 export const toggleOrder = (fbid, orderid) => {
   return dispatch => {
@@ -42,14 +33,3 @@ export const toggleOrder = (fbid, orderid) => {
     return socket.emit('order-status', orderid);
   };
 };
-
-function timeParsing (pickuptime) {
-  const ordertime = new Date(pickuptime);
-  let hours = ordertime.getHours(),
-    minutes = ordertime.getMinutes();
-
-  hours = hours > 10 ? hours : `0${hours}`;
-  minutes = minutes > 10 ? minutes : `0${minutes}`;
-
-  return `${hours}: ${minutes}`;
-}

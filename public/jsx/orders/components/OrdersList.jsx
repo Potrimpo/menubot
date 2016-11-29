@@ -8,6 +8,7 @@ const OrdersList = ({ fbid, orders, onOrderClick }) => (
         key={order.orderid}
         child={lookback(orders, order, i)}
         {...order}
+        pickuptime={timeFormatting(order.pickuptime)}
         onClick={() => onOrderClick(fbid, order.orderid)}
       />
     )}
@@ -25,3 +26,14 @@ function lookback (orders, o, i) {
 }
 
 export default OrdersList
+
+function timeFormatting (pickuptime) {
+  pickuptime = new Date(pickuptime);
+  let hours = pickuptime.getHours(),
+    minutes = pickuptime.getMinutes();
+
+  hours = hours > 10 ? hours : `0${hours}`;
+  minutes = minutes > 10 ? minutes : `0${minutes}`;
+
+  return `${hours}: ${minutes}`;
+}
