@@ -20,11 +20,6 @@ OrdersList.propTypes = {
   onOrderClick: PropTypes.func.isRequired
 };
 
-function lookback (orders, o, i) {
-  if (i == 0) return false;
-  return o.userid === orders[i -1].userid && o.pickuptime === orders[i - 1].pickuptime;
-}
-
 export default OrdersList
 
 function timeFormatting (pickuptime) {
@@ -36,4 +31,9 @@ function timeFormatting (pickuptime) {
   minutes = minutes > 10 ? minutes : `0${minutes}`;
 
   return `${hours}: ${minutes}`;
+}
+
+function lookback (orders, o, i) {
+  if (i == 0) return false;
+  return o.userid === orders[i -1].userid && o.pickuptime === orders[i - 1].pickuptime;
 }

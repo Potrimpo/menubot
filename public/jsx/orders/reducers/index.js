@@ -43,19 +43,15 @@ export default rootReducer
 
 function orderPlacement (state, newOrder) {
   let newState;
-
   for (let i = 0; i < state.length; i++) {
     if (new Date(newOrder.pickuptime) < new Date(state[i].pickuptime)) {
       newState = state.slice(0, i);
       newState.push(newOrder);
       newState.push(...state.slice(i));
-
       return newState;
     }
   }
-
   newState = state.slice(0);
   newState.push(newOrder);
-
   return newState;
 }
