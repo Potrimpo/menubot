@@ -21,7 +21,7 @@ const Order = ({onClick, pending, child, type, size, item, userid, pickuptime, p
         </div>
       }
 
-      <div className="order-line"></div>
+      { child ? null : <div className="order-line"></div> }
 
       <div className="row">
         <div className="order-content-container">
