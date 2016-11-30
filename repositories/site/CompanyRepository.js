@@ -15,11 +15,20 @@ exports.findCompany = (id) => Company.findById(id);
 
 exports.getCompanyMenu = id => {
   return sequelize.query(
-    "SELECT c.name, c.bot_status, c.location, i.* FROM companies AS c" +
+    "SELECT c.name, c.bot_status, c.location, c.opentime, c.closetime, i.* FROM companies AS c" +
     " INNER JOIN items AS i ON c.fbid = i.fbid" +
     " WHERE c.fbid = $1" +
     " ORDER BY i.itemid ASC",
     { bind: [id], type: sequelize.QueryTypes.SELECT }
+  );
+};
+
+exports.getMenuItemOptions = itemids => {
+  return sequelize.query(
+    "SELECT op.itemid, op.optionid, op.option, op.option_price FROM \"itemOptions\" AS op" +
+    " WHERE op.itemid IN (:itemids)" +
+    " ORDER BY optionid ASC",
+    { replacements: { itemids }, type: sequelize.QueryTypes.SELECT }
   );
 };
 
@@ -111,6 +120,23 @@ exports.updateSPrice = (sizeid, size_price) => {
   }).then(data => data[0] > 0 ? data : null);
 };
 
+exports.useOptionsSwitch = (itemid) => {
+  return sequelize.query(
+    "UPDATE items " +
+    "SET use_options = NOT use_options " +
+    "WHERE itemid = :itemid",
+    { replacements: { itemid }, type: sequelize.QueryTypes.UPDATE }
+  );
+};
+
+exports.addItemOption = (itemid, name, price) => {
+  return sequelize.query(
+    "INSERT INTO \"itemOptions\" (itemid, option, option_price)" +
+    " VALUES (:itemid, :name, :price)",
+    { replacements: { itemid, name, price }, type: sequelize.QueryTypes.UPDATE }
+  );
+};
+
 exports.deleteItem = data => {
   switch (data.type) {
 
@@ -139,6 +165,15 @@ exports.deleteItem = data => {
     return sequelize.query(
       "DELETE FROM sizes" +
       " WHERE sizeid = $1",
+      { bind: [data.deleteId], type: sequelize.QueryTypes.DELETE }
+    );
+      break;
+
+    case "option":
+    console.log("Deleting option: " + data.id );
+    return sequelize.query(
+      "DELETE FROM \"itemOptions\"" +
+      " WHERE optionid = $1",
       { bind: [data.deleteId], type: sequelize.QueryTypes.DELETE }
     );
       break;
