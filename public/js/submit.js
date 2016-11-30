@@ -98,8 +98,6 @@ $(document).ready(function() {
     showSpinner();
 
     const locVal = $(this).find('input').val();
-    console.log("locVal??", locVal);
-    console.log("fbid =", fbid);
 
     $.ajax({
       type: 'POST',
@@ -126,6 +124,7 @@ $(document).ready(function() {
   // update entry price
   $('form.price').submit(function (event) {
     event.preventDefault();
+    showSpinner();
 
     const val = $(`#${this.id}`).find(':text').val(),
       id = this.id,
@@ -161,10 +160,9 @@ $(document).ready(function() {
   $('form.menu-entry').submit(function(event) {
     // stop the form from submitting the normal way
     event.preventDefault();
-    // showSpinner();
-    console.log("in form submit jquery");
+    showSpinner();
 
-    const inputElems = $(`#${this.id} :text`);
+    const inputElems = $(`#${this.id}`).find(':text');
     const values = $(inputElems).map(function() {
       console.log("val name =", this.name);
       console.log("this =", this);
@@ -177,13 +175,9 @@ $(document).ready(function() {
     const intent = /-(\w+)/.exec(this.id)[1];
     const sendData = {
       intent,
-      fbid
+      fbid,
+      parentId: this.name
     };
-    // `this.name` refers to existing menu entry.
-    // if you're changing the price, that's the element you want to alter
-    // if you're adding an element, that's the parent of what you're creating
-    if (intent.slice(1) === "price") sendData.elemId = this.name;
-    else sendData.parentId = this.name;
 
     for (let x = values.length - 1; x >= 0; x--) {
       switch (values[x].kind) {
@@ -195,9 +189,6 @@ $(document).ready(function() {
           break;
         case "size":
           sendData.size = values[x].val;
-          break;
-        case "price":
-          sendData.price = values[x].val;
           break;
       }
     }
@@ -227,88 +218,12 @@ $(document).ready(function() {
     showSpinner();
   });
 
-  function showSpinner () {
-    $('html,body').scrollTop(0);
-    $('#spinner-overlay').show();
-    $('body').addClass('overlay-container');
-  }
-
 });
 
-// grey out price field on entries that have children
-$( function()
-{
-  var targets = $( '[rel~=tooltip]' ),
-      target  = false,
-      tooltip = false,
-      title   = false;
+function showSpinner () {
+  $('html,body').scrollTop(0);
+  $('#spinner-overlay').show();
+  $('body').addClass('overlay-container');
+}
 
-  targets.bind( 'mouseenter', function()
-  {
-      target  = $( this );
-      tip     = target.attr( 'title' );
-      tooltip = $( '<div id="tooltip"></div>' );
 
-      if( !tip || tip == '' )
-          return false;
-
-      target.removeAttr( 'title' );
-      tooltip.css( 'opacity', 0 )
-             .html( tip )
-             .appendTo( 'body' );
-
-      var init_tooltip = function()
-      {
-          if( $( window ).width() < tooltip.outerWidth() * 1.5 )
-              tooltip.css( 'max-width', $( window ).width() / 2 );
-          else
-              tooltip.css( 'max-width', 340 );
-
-          var pos_left = target.offset().left + ( target.outerWidth() / 2 ) - ( tooltip.outerWidth() / 2 ),
-              pos_top  = target.offset().top - tooltip.outerHeight() - 20;
-
-          if( pos_left < 0 )
-          {
-              pos_left = target.offset().left + target.outerWidth() / 2 - 20;
-              tooltip.addClass( 'left' );
-          }
-          else
-              tooltip.removeClass( 'left' );
-
-          if( pos_left + tooltip.outerWidth() > $( window ).width() )
-          {
-              pos_left = target.offset().left - tooltip.outerWidth() + target.outerWidth() / 2 + 20;
-              tooltip.addClass( 'right' );
-          }
-          else
-              tooltip.removeClass( 'right' );
-
-          if( pos_top < 0 )
-          {
-              var pos_top  = target.offset().top + target.outerHeight();
-              tooltip.addClass( 'top' );
-          }
-          else
-              tooltip.removeClass( 'top' );
-
-          tooltip.css( { left: pos_left, top: pos_top } )
-                 .animate( { top: '+=10', opacity: 1 }, 50 );
-      };
-
-      init_tooltip();
-      $( window ).resize( init_tooltip );
-
-      var remove_tooltip = function()
-      {
-          tooltip.animate( { top: '-=10', opacity: 0 }, 50, function()
-          {
-              $( this ).remove();
-          });
-
-          target.attr( 'title', tip );
-      };
-
-      target.bind( 'mouseleave', remove_tooltip );
-      tooltip.bind( 'click', remove_tooltip );
-  });
-});
