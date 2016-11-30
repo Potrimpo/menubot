@@ -23,13 +23,13 @@
 
             <% } else { %>
               <div class="col-xs-6">
-                <form id="new-iprice-<%= items[i].itemid %>" name="<%= items[i].itemid %>"
-                  style="float:right;" class="menu-entry form-inline"
+                <form id="<%= items[i].itemid %>" name="item"
+                  style="float:right;" class="price form-inline"
                 >
                   <div class="form-group-lg" >
                     <div class="input-group">
                       <div class="input-group-addon">$</div>
-                      <input name="price" type="text" <% if (items[i].item_price == null) { %> value="" <% }
+                      <input type="text" <% if (items[i].item_price == null) { %> value="" <% }
                          else { %> value="<%= items[i].item_price %>" <% } %>
                          size="10" class="form-control" placeholder="Price">
                     </div>

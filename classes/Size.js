@@ -4,9 +4,9 @@
 const db = require('../repositories/site/CompanyRepository');
 
 class Size {
-  constructor ({ typeid, parentId, sizeid, elemId, size, size_price, price }) {
+  constructor ({ typeid, parentId, sizeid, id, size, size_price, price }) {
     this.typeid = typeid || parentId;
-    this.sizeid = sizeid || elemId;
+    this.sizeid = sizeid || id;
     this.size = size;
     this.size_price = size_price || price;
   }

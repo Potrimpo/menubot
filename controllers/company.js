@@ -10,9 +10,9 @@ const db = require('../repositories/site/CompanyRepository'),
   Type = require('../classes/Type'),
   Size = require('../classes/Size');
 
-router.param('companyId', (req, res, next, id) => {
-  console.log("ID PROVIDED =", id);
-  req.body.id = id;
+router.param('companyId', (req, res, next, fbid) => {
+  console.log("FBID PROVIDED =", fbid);
+  req.body.fbid = fbid;
   return next();
 });
 
@@ -33,22 +33,25 @@ router.route('/:companyId')
       })
       .catch(err => console.error("error building menu", err));
   })
+  // add to menu
   .post(add_to_menu)
-  .delete((req, res) => {
-    return db.deleteItem(req.body)
+  // add price to existing menu entry
+  .put(updatePrice)
+  .delete((req, res) =>
+    db.deleteItem(req.body)
       .then(() => res.status(200).send())
-      .catch(err => console.error("error deleting menu item", err));
-  });
+      .catch(err => console.error("error deleting menu item", err))
+  );
 
 router.route('/init/:companyId')
   .post((req, res) => {
-    return db.linkCompany(req.user.id, req.body.id)
+    return db.linkCompany(req.user.id, req.body.fbid)
       .then(data => res.redirect(`/company/${data[0].fbid}`));
 });
 
 router.route('/location/:companyId')
   .post((req, res) => {
-    return db.setLocation(req.body.id, req.body.location)
+    return db.setLocation(req.body.fbid, req.body.location)
       .then(() => res.status(200).send())
       .catch(err => console.error("error updating location field", err));
   });
@@ -104,24 +107,40 @@ function add_to_menu(req, res) {
         return new Size(req.body).dbInsert()
           .then(() => resolve());
 
-      case "iprice":
-        return new Item(req.body).updatePrice()
-          .then(() => resolve());
-
-      case "tprice":
-        return new Type(req.body).updatePrice()
-          .then(() => resolve());
-
-      case "sprice":
-        return new Size(req.body).updatePrice()
-          .then(() => resolve());
-
       default:
         return reject(`no case for update intent: ${req.body.intent}`);
     }
   })
     .then(() => res.status(200).send())
     .catch(err => console.error("error adding item to menu", err));
+}
+
+function updatePrice (req, res) {
+ return new Promise((resolve, reject) => {
+   switch (req.body.kind) {
+     case "item":
+       return new Item(req.body).updatePrice()
+         .then(() => resolve());
+
+     case "type":
+       return new Type(req.body).updatePrice()
+         .then(() => resolve());
+
+     case "size":
+       return new Size(req.body).updatePrice()
+         .then(() => resolve());
+
+     default:
+       return reject(`no case for update kind: ${req.body.kind}`);
+   }
+ })
+   .then(() => res.status(200).send())
+   .catch(err => {
+     const msg = "error updating entry price";
+     console.error(msg, err);
+
+     return res.status(500).send(msg);
+   });
 }
 
 module.exports = router;

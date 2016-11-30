@@ -123,11 +123,45 @@ $(document).ready(function() {
 
   });
 
+  // update entry price
+  $('form.price').submit(function (event) {
+    event.preventDefault();
+
+    const val = $(`#${this.id}`).find(':text').val(),
+      id = this.id,
+      kind = this.name;
+
+    const data = {
+      price: val,
+      kind,
+      id
+    };
+
+    $.ajax({
+      type: 'PUT',
+      url: '/company/' + fbid,
+      data,
+      encode: true,
+      success(data) {
+        console.log("SUCCESS");
+        console.log(data);
+      },
+      error(smth, status, err) {
+        console.error("ERROR IN AJAX", status);
+        console.error("ERROR =", err);
+      }
+    })
+      .done(function(data) {
+        console.log("DONE", data);
+        location.reload();
+      });
+  });
+
   // process the form
   $('form.menu-entry').submit(function(event) {
     // stop the form from submitting the normal way
     event.preventDefault();
-    showSpinner();
+    // showSpinner();
     console.log("in form submit jquery");
 
     const inputElems = $(`#${this.id} :text`);

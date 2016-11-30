@@ -4,10 +4,9 @@
 const db = require('../repositories/site/CompanyRepository');
 
 class Item {
-  constructor ({ fbid, itemid, parentId, elemId, item, item_photo, item_price, price }) {
+  constructor ({ fbid, itemid, id, item, item_photo, item_price, price }) {
     this.fbid = fbid;
-    // removed parentId option
-    this.itemid = itemid || elemId;
+    this.itemid = itemid || id;
     this.item = item;
     this.item_photo = item_photo;
     this.item_price = item_price || price;
