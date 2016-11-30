@@ -17,11 +17,10 @@ router.param('companyId', (req, res, next, fbid) => {
 });
 
 router.route('/:companyId')
-  .get((req, res) => {
-    console.log("------ getting company menu -------", req.params.companyId);
-    return getMenu(req.params.companyId)
-      .then(data => {
-        return res.render('account/company', {
+  .get((req, res) =>
+    getMenu(req.params.companyId)
+      .then(data =>
+        res.render('account/company', {
           bot_status: data.bot_status,
           location: data.location,
           fbid: data.fbid,
@@ -29,10 +28,10 @@ router.route('/:companyId')
           items: data.items,
           types: data.types,
           sizes: data.sizes
-        });
-      })
-      .catch(err => console.error("error building menu", err));
-  })
+        })
+      )
+      .catch(err => console.error("error building menu", err))
+  )
   // add to menu
   .post(add_to_menu)
   // add price to existing menu entry
@@ -44,17 +43,17 @@ router.route('/:companyId')
   );
 
 router.route('/init/:companyId')
-  .post((req, res) => {
-    return db.linkCompany(req.user.id, req.body.fbid)
-      .then(data => res.redirect(`/company/${data[0].fbid}`));
-});
+  .post((req, res) =>
+    db.linkCompany(req.user.id, req.body.fbid)
+      .then(data => res.redirect(`/company/${data[0].fbid}`))
+  );
 
 router.route('/location/:companyId')
-  .post((req, res) => {
-    return db.setLocation(req.body.fbid, req.body.location)
+  .post((req, res) =>
+    db.setLocation(req.body.fbid, req.body.location)
       .then(() => res.status(200).send())
-      .catch(err => console.error("error updating location field", err));
-  });
+      .catch(err => console.error("error updating location field", err))
+  );
 
 
 function getMenu (id) {
@@ -112,7 +111,11 @@ function add_to_menu(req, res) {
     }
   })
     .then(() => res.status(200).send())
-    .catch(err => console.error("error adding item to menu", err));
+    .catch(err => {
+      const msg = "error adding item to menu";
+      console.error(msg, err);
+      return res.status(500).send(msg);
+    });
 }
 
 function updatePrice (req, res) {
