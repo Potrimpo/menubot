@@ -5,15 +5,13 @@
 const db = require("../repositories/site/CompanyRepository");
 
 // universally callable functions
-exports.fetchOrders = fbid => {
-  return db.ordersByFbid(fbid, today())
+exports.fetchOrders = fbid =>
+  db.ordersByFbid(fbid, today())
     .catch(err => res.status(500).send('error getting orders'));
-};
 
-exports.setOrderComplete = (orderid) => {
-  return db.orderComplete(orderid)
+exports.setOrderComplete = (orderid) =>
+  db.orderComplete(orderid)
     .catch(err => console.log("error setting orders", err));
-};
 
 function today () {
   const today = new Date();

@@ -7,32 +7,32 @@ const express = require('express'),
   { activateBot, deactivateBot } = require('./activateAccount');
 
 router.route('/activate/:fbid')
-  .get((req, res) => {
-    return db.findCompany(req.params.fbid)
+  .get((req, res) =>
+    db.findCompany(req.params.fbid)
       .then(data => activateBot(data.access_token))
       .then(() => db.setBotStatus(req.params.fbid, true))
       .then(() => res.redirect(`/company/${req.params.fbid}`))
-      .catch(() => res.status(500).redirect(`/company/${req.params.fbid}`));
-  });
+      .catch(() => res.status(500).redirect(`/company/${req.params.fbid}`))
+  );
 
 router.route('/deactivate/:fbid')
-  .get((req, res) => {
-    return db.findCompany(req.params.fbid)
+  .get((req, res) =>
+    db.findCompany(req.params.fbid)
       .then(data => deactivateBot(data.access_token))
       .then(() => db.setBotStatus(req.params.fbid, false))
-      .then(() => res.redirect(`/company/${req.params.fbid}`));
-  });
+      .then(() => res.redirect(`/company/${req.params.fbid}`))
+  );
 
 router.route('/photos/:fbid')
-  .get((req, res) => {
-    return db.findCompany(req.params.fbid)
+  .get((req, res) =>
+    db.findCompany(req.params.fbid)
       .then(data => syncPhotos(data.access_token))
       .then(() => res.redirect(`/company/${req.params.fbid}`))
       .catch(e => {
         console.error("error getting photos from facebook:", e);
         return res.status(500).redirect(`/company/${req.params.fbid}`);
       })
-  });
+  );
 
 function syncPhotos (pageToken) {
   let fbid;

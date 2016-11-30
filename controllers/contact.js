@@ -1,7 +1,6 @@
 "use strict";
 
-exports.getContact = function(req, res) {
+exports.getContact = (req, res) =>
   res.render('contact', {
     title: 'Contact'
   });
-};
