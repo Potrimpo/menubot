@@ -60,6 +60,15 @@ router.route('/location/:companyId')
 router.route('/time/:companyId')
   .post((req, res) => {
     switch (req.body.state) {
+      case "toggle":
+        return db.setOpenStatus(req.body)
+          .then(() => res.status(200).send())
+          .catch(err => {
+            const msg = "error updating the company status";
+            console.error(msg, err);
+            return res.status(500).send(msg);
+          });
+
       case "opentime":
         return db.setOpenTime(req.body)
         .then(() => res.status(200).send())

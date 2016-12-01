@@ -236,6 +236,11 @@ exports.setLocation = (id, loc) => sequelize.query(
   { replacements: { id, loc }, type: sequelize.QueryTypes.UPDATE }
 );
 
+exports.setOpenStatus = ({ fbid, status }) =>
+  Company.update({ status }, {
+    where: { fbid }
+  });
+
 exports.setOpenTime = ({ fbid, time }) => sequelize.query(
   "UPDATE companies " +
   "SET opentime = :time " +
