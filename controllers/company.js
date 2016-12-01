@@ -10,18 +10,17 @@ const db = require('../repositories/site/CompanyRepository'),
   Type = require('../classes/Type'),
   Size = require('../classes/Size');
 
-router.param('companyId', (req, res, next, id) => {
-  console.log("ID PROVIDED =", id);
-  req.body.id = id;
+router.param('companyId', (req, res, next, fbid) => {
+  console.log("FBID PROVIDED =", fbid);
+  req.body.fbid = fbid;
   return next();
 });
 
 router.route('/:companyId')
-  .get((req, res) => {
-    console.log("------ getting company menu -------", req.params.companyId);
-    return getMenu(req.params.companyId)
-      .then(data => {
-        return res.render('account/company', {
+  .get((req, res) =>
+    getMenu(req.params.companyId)
+      .then(data =>
+        res.render('account/company', {
           bot_status: data.bot_status,
           location: data.location,
           fbid: data.fbid,
@@ -29,29 +28,32 @@ router.route('/:companyId')
           items: data.items,
           types: data.types,
           sizes: data.sizes
-        });
-      })
-      .catch(err => console.error("error building menu", err));
-  })
+        })
+      )
+      .catch(err => console.error("error building menu", err))
+  )
+  // add to menu
   .post(add_to_menu)
-  .delete((req, res) => {
-    return db.deleteItem(req.body)
+  // add price to existing menu entry
+  .put(updatePrice)
+  .delete((req, res) =>
+    db.deleteItem(req.body)
       .then(() => res.status(200).send())
-      .catch(err => console.error("error deleting menu item", err));
-  });
+      .catch(err => console.error("error deleting menu item", err))
+  );
 
 router.route('/init/:companyId')
-  .post((req, res) => {
-    return db.linkCompany(req.user.id, req.body.id)
-      .then(data => res.redirect(`/company/${data[0].fbid}`));
-});
+  .post((req, res) =>
+    db.linkCompany(req.user.id, req.body.fbid)
+      .then(data => res.redirect(`/company/${data[0].fbid}`))
+  );
 
 router.route('/location/:companyId')
-  .post((req, res) => {
-    return db.setLocation(req.body.id, req.body.location)
+  .post((req, res) =>
+    db.setLocation(req.body.fbid, req.body.location)
       .then(() => res.status(200).send())
-      .catch(err => console.error("error updating location field", err));
-  });
+      .catch(err => console.error("error updating location field", err))
+  );
 
 
 function getMenu (id) {
@@ -104,24 +106,44 @@ function add_to_menu(req, res) {
         return new Size(req.body).dbInsert()
           .then(() => resolve());
 
-      case "iprice":
-        return new Item(req.body).updatePrice()
-          .then(() => resolve());
-
-      case "tprice":
-        return new Type(req.body).updatePrice()
-          .then(() => resolve());
-
-      case "sprice":
-        return new Size(req.body).updatePrice()
-          .then(() => resolve());
-
       default:
         return reject(`no case for update intent: ${req.body.intent}`);
     }
   })
     .then(() => res.status(200).send())
-    .catch(err => console.error("error adding item to menu", err));
+    .catch(err => {
+      const msg = "error adding item to menu";
+      console.error(msg, err);
+      return res.status(500).send(msg);
+    });
+}
+
+function updatePrice (req, res) {
+ return new Promise((resolve, reject) => {
+   switch (req.body.kind) {
+     case "item":
+       return new Item(req.body).updatePrice()
+         .then(() => resolve());
+
+     case "type":
+       return new Type(req.body).updatePrice()
+         .then(() => resolve());
+
+     case "size":
+       return new Size(req.body).updatePrice()
+         .then(() => resolve());
+
+     default:
+       return reject(`no case for update kind: ${req.body.kind}`);
+   }
+ })
+   .then(() => res.status(200).send())
+   .catch(err => {
+     const msg = "error updating entry price";
+     console.error(msg, err);
+
+     return res.status(500).send(msg);
+   });
 }
 
 module.exports = router;

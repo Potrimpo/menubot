@@ -31,10 +31,13 @@ function unregisteredCompanies (accounts, dbCompanies) {
   })
 }
 
-exports.orders = (req, res) => {
-  return res.render('orders/orders', { title: 'Orders', fbid: req.params.fbid });
-};
+exports.orders = (req, res) =>
+  res.render('orders/orders', {
+    title: 'Orders',
+    fbid: req.params.fbid
+  });
 
-exports.priv = (req,res) => {
-  return res.render('priv', {title: "Privacy Policy"});
-};
+exports.priv = (req,res) =>
+  res.render('priv', {
+    title: "Privacy Policy"
+  });

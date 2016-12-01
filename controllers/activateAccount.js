@@ -3,23 +3,17 @@
  */
 const fetch = require('node-fetch');
 
-exports.activateBot = pageToken => {
-  console.log("Activating messenger bot");
-
-  return webhookSubscription(pageToken, true)
+exports.activateBot = pageToken =>
+  webhookSubscription(pageToken, true)
     .then(() => getStartedButton(pageToken, true))
     .then(() => greetingText(pageToken, true))
-    .then(() => persistentMenu(pageToken, true))
-};
+    .then(() => persistentMenu(pageToken, true));
 
-exports.deactivateBot = pageToken => {
-  console.log("Deactivating messenger bot");
-
-  return persistentMenu(pageToken, false)
+exports.deactivateBot = pageToken =>
+  persistentMenu(pageToken, false)
     .then(() => getStartedButton(pageToken, false))
     .then(() => greetingText(pageToken, false))
-    .then(() => webhookSubscription(pageToken, false))
-};
+    .then(() => webhookSubscription(pageToken, false));
 
 function webhookSubscription (pageToken, intent) {
   pageToken = encodeURIComponent((pageToken));

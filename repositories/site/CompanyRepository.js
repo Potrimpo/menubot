@@ -13,103 +13,79 @@ exports.findUserCompanies = accounts => {
 
 exports.findCompany = (id) => Company.findById(id);
 
-exports.getCompanyMenu = id => {
-  return sequelize.query(
+exports.getCompanyMenu = id =>
+  sequelize.query(
     "SELECT c.name, c.bot_status, c.location, i.* FROM companies AS c" +
     " INNER JOIN items AS i ON c.fbid = i.fbid" +
     " WHERE c.fbid = $1" +
     " ORDER BY i.itemid ASC",
     { bind: [id], type: sequelize.QueryTypes.SELECT }
   );
-};
 
-exports.getMenuTypes = itemids => {
-  return sequelize.query(
+exports.getMenuTypes = itemids =>
+  sequelize.query(
     "SELECT t.itemid, t.type, t.typeid, t.type_photo, t.type_price FROM types AS t" +
     " WHERE t.itemid IN (:itemids)" +
     " ORDER BY typeid ASC",
     { replacements: { itemids }, type: sequelize.QueryTypes.SELECT }
   );
-};
 
-exports.getMenuSizes = typeids => {
-  return sequelize.query(
+exports.getMenuSizes = typeids =>
+  sequelize.query(
     "SELECT typeid, size, sizeid, size_price FROM sizes" +
     " WHERE typeid IN (:typeids)" +
     " ORDER BY sizeid ASC",
     { replacements: { typeids }, type: sequelize.QueryTypes.SELECT }
   );
-};
 
-exports.getTypesThroughFbid = fbid => {
-  return sequelize.query(
+exports.getTypesThroughFbid = fbid =>
+  sequelize.query(
     "SELECT typeid, type FROM items AS i" +
     " INNER JOIN types AS t ON i.itemid = t.itemid" +
     " WHERE i.fbid = :fbid",
     { replacements: { fbid }, type: sequelize.QueryTypes.SELECT }
   );
-};
 
-exports.insertItem = (fbid, item) => {
-  return Item.create({ fbid, item })
+exports.insertItem = (fbid, item) =>
+  Item.create({ fbid, item })
     .catch(err => console.error("error inserting menu item:", err));
-};
 
-exports.insertType = (type, itemid) => {
-  return sequelize.transaction(function (t) {
-
-    return Type.create({ itemid, type }, { transaction: t })
-      .then(() => {
-        return Item.update({
+exports.insertType = (type, itemid) =>
+  sequelize.transaction(t  =>
+    Type.create({ itemid, type }, { transaction: t })
+      .then(() =>
+        Item.update({
           item_price: null
         }, {
           where: { itemid },
           transaction: t
-        });
-    })
+        })
+      )
+  )
+    .catch(err => console.error("error in insertType transaction", err));
 
-  }).catch(err => console.error("error in insertType transaction", err));
-};
-
-exports.insertSize = (size, typeid) => {
-  return sequelize.transaction(function (t) {
-
-    return Size.create({ typeid, size }, { transaction: t })
-      .then(() => {
-        return Type.update({
+exports.insertSize = (size, typeid) =>
+  sequelize.transaction(t  =>
+    Size.create({ typeid, size }, { transaction: t })
+      .then(() =>
+        Type.update({
           type_price: null
         }, {
           where: { typeid },
           transaction: t
-        });
-      })
+        })
+      )
+  )
+    .catch(err => console.error("error in insertSize transaction", err));
 
-  }).catch(err => console.error("error in insertSize transaction", err));
-};
+exports.updateIPrice = (itemid, item_price) =>
+  Item.update({ item_price }, { where: { itemid } });
 
-exports.updateIPrice = (itemid, item_price) => {
-  return Item.update({
-    item_price
-  }, {
-    where: { itemid }
-  }).then(data => data[0] > 0 ? data : null);
-};
+exports.updateTPrice = (typeid, type_price) =>
+  Type.update({ type_price }, { where: { typeid } });
 
-exports.updateTPrice = (typeid, type_price) => {
-  return Type.update({
-    type_price
-  }, {
-    where: { typeid }
-  }).then(data => data[0] > 0 ? data : null);
-};
-
-exports.updateSPrice = (sizeid, size_price) => {
-  return Size.update({
-    size_price
-  }, {
-    where: { sizeid }
-  }).then(data => data[0] > 0 ? data : null);
-};
+exports.updateSPrice = (sizeid, size_price) =>
+  Size.update({ size_price }, { where: { sizeid } });
 
 exports.deleteItem = data => {
   switch (data.type) {
@@ -150,8 +126,8 @@ exports.deleteItem = data => {
 
 };
 
-exports.ordersByFbid = (fbid, today) => {
-  return sequelize.query(
+exports.ordersByFbid = (fbid, today) =>
+  sequelize.query(
     "SELECT * FROM orders AS o" +
     " INNER JOIN customers AS c ON o.customer_id = c.customer_id" +
     " LEFT OUTER JOIN items AS i ON o.itemid = i.itemid" +
@@ -161,19 +137,17 @@ exports.ordersByFbid = (fbid, today) => {
     " ORDER BY o.pickuptime ASC",
     { replacements: {fbid, today}, type: sequelize.QueryTypes.SELECT }
   ).catch(err => console.error("error getting orders in sql", err));
-};
 
-exports.orderComplete = orderid => {
-  return sequelize.query(
+exports.orderComplete = orderid =>
+  sequelize.query(
     "UPDATE orders" +
     " SET pending = NOT pending" +
     " WHERE orderid = $1",
     { bind: [orderid], type: sequelize.QueryTypes.UPDATE }
   );
-};
 
-exports.linkCompany = (id, facebookId) => {
-  return User.findOne({
+exports.linkCompany = (id, facebookId) =>
+  User.findOne({
     attributes: ['accounts'],
     where: { id }
   })
@@ -187,41 +161,36 @@ exports.linkCompany = (id, facebookId) => {
           type: sequelize.QueryTypes.INSERT }
       );
     });
-};
 
-exports.getCompanyAccessToken = id => Company.findById(id, { attributes: ['access_token']});
+exports.getCompanyAccessToken = id =>
+  Company.findById(id, {
+    attributes: ['access_token']
+  });
 
-exports.setBotStatus = (id, status) => sequelize.query(
-  "UPDATE companies SET bot_status = :status WHERE fbid = :id",
-  { replacements: { id, status}, type: sequelize.QueryTypes.UPDATE}
-);
+exports.setBotStatus = (id, status) =>
+  sequelize.query(
+    "UPDATE companies SET bot_status = :status WHERE fbid = :id",
+    { replacements: { id, status}, type: sequelize.QueryTypes.UPDATE}
+  );
 
-exports.setLocation = (id, loc) => sequelize.query(
-  "UPDATE companies SET location = :loc WHERE fbid = :id",
-  { replacements: { id, loc }, type: sequelize.QueryTypes.UPDATE }
-);
+exports.setLocation = (id, loc) =>
+  sequelize.query(
+    "UPDATE companies SET location = :loc WHERE fbid = :id",
+    { replacements: { id, loc }, type: sequelize.QueryTypes.UPDATE }
+  );
 
-exports.addItemPhotos = (val, fbid) => {
-  if (val.picture && val.name) {
-    return sequelize.query(
-      "UPDATE items" +
-      " SET item_photo = :picture" +
-      " WHERE fbid = :fbid AND lower(item) = lower(:name)" +
-      " RETURNING item, itemid",
-      { replacements: { fbid, picture: val.picture, name: val.name }, type: sequelize.QueryTypes.UPDATE }
-    );
-  }
-  else throw 'fields missing in database update db';
-};
+exports.addItemPhotos = (val, fbid) =>
+  sequelize.query(
+    "UPDATE items" +
+    " SET item_photo = :picture" +
+    " WHERE fbid = :fbid AND lower(item) = lower(:name)",
+    { replacements: { fbid, picture: val.picture, name: val.name }, type: sequelize.QueryTypes.UPDATE }
+  );
 
-exports.addTypePhotos = val => {
-  if (val.picture && val.name && val.typeid) {
-    return sequelize.query(
-      "UPDATE types" +
-      " SET type_photo = :picture" +
-      " WHERE typeid = :typeid AND lower(type) = lower(:name)",
-      { replacements: { typeid: val.typeid, picture: val.picture, name: val.name }, type: sequelize.QueryTypes.UPDATE }
-    );
-  }
-  else throw 'fields missing in database update db';
-};
+exports.addTypePhotos = val =>
+  sequelize.query(
+    "UPDATE types" +
+    " SET type_photo = :picture" +
+    " WHERE typeid = :typeid AND lower(type) = lower(:name)",
+    { replacements: { typeid: val.typeid, picture: val.picture, name: val.name }, type: sequelize.QueryTypes.UPDATE }
+  );

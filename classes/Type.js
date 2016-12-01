@@ -4,9 +4,9 @@
 const db = require('../repositories/site/CompanyRepository');
 
 class Type {
-  constructor ({ itemid, parentId, typeid, elemId, type, type_photo, type_price, price }) {
+  constructor ({ itemid, parentId, typeid, id, type, type_photo, type_price, price }) {
     this.itemid = itemid || parentId;
-    this.typeid = typeid || elemId;
+    this.typeid = typeid || id;
     this.type = type;
     this.type_photo = type_photo;
     this.type_price = type_price || price;
