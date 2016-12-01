@@ -6,11 +6,23 @@
 window.jQuery = window.$ = require('./lib/jquery-2.1.3.min');
 const _ = require('./lib/bootstrap.min');
 
+
 console.log("PRIOR TO BEING IN IT");
 
 $(document).ready(function() {
+  //Removing spinner
   $('#spinner-overlay').hide();
   $('body').removeClass('overlay-container')
+
+  //Defining spin boys
+  $('.misc-async').click(function () {
+    showSpinner();
+  });
+  function showSpinner () {
+    $('html,body').scrollTop(0);
+    $('#spinner-overlay').show();
+    $('body').addClass('overlay-container');
+  }
 
   // dumb Footer quote generator
   var myQuote = [
@@ -48,9 +60,10 @@ $(document).ready(function() {
     $('#myQuote').html(myQuote[quoteRandom]);
   }
 
+  //Initialising libraries
   $("[name='itemOptionsCheckbox']").bootstrapSwitch({size:"mini"});
 
-
+  //yay for us
   console.log("WE IN IT");
 
 
@@ -226,91 +239,85 @@ $(document).ready(function() {
       });
   });
 
-  $('.misc-async').click(function () {
+
+
+  //Toggle options fields
+  $('input[name="itemOptionsCheckbox"]').on('switchChange.bootstrapSwitch', function(event, state) {
+    event.preventDefault();
     showSpinner();
+    console.log(this); // DOM element
+    console.log(event); // jQuery event
+    console.log(state); // true | false
+    const itemid = /-(\w+)/.exec(this.id)[1];
+    console.log(itemid);
+    const changeSpec = {
+      intent: "switch",
+      itemid: itemid
+    };
+    console.log(changeSpec);
+
+
+    $.ajax({
+      type: 'POST',
+      url: '/company/option/' + fbid,
+      data: changeSpec,
+      encode: true,
+      success(data) {
+        console.log("SUCCESS");
+        console.log(data);
+      },
+      error(smth, status, err) {
+        console.error("ERROR IN AJAX", status);
+        console.error("ERROR =", err);
+      }
+    })
+      .done(function(data) {
+        console.log("DONE", data);
+
+        location.reload();
+      });
   });
 
-  function showSpinner () {
-    $('html,body').scrollTop(0);
-    $('#spinner-overlay').show();
-    $('body').addClass('overlay-container');
-  }
-});
 
+  // Add a new option
+  $('form[name="addOption"]').submit(function (event) {
+    event.preventDefault();
+    showSpinner();
 
-//Toggle options fields
-$('input[name="itemOptionsCheckbox"]').on('switchChange.bootstrapSwitch', function(event, state) {
-  event.preventDefault();
-  showSpinner();
-  console.log(this); // DOM element
-  console.log(event); // jQuery event
-  console.log(state); // true | false
-  const itemid = /-(\w+)/.exec(this.id)[1];
-  console.log(itemid);
-  const changeSpec = {
-    intent: "switch",
-    itemid: itemid
-  };
-  console.log(changeSpec);
-
-
-  $.ajax({
-    type: 'POST',
-    url: '/company/option/' + fbid,
-    data: changeSpec,
-    encode: true,
-    success(data) {
-      console.log("SUCCESS");
-      console.log(data);
-    },
-    error(smth, status, err) {
-      console.error("ERROR IN AJAX", status);
-      console.error("ERROR =", err);
+    const [_, itemid] = /-(\w+)/.exec(this.id);
+    const name = $(this).find('input[name="new-option-name"]').val();
+    const price = $(this).find('input[name="new-option-price"]').val();
+    const changeSpec = {
+      itemid,
+      name,
+      price,
+      intent: "add"
     }
-  })
-    .done(function(data) {
-      console.log("DONE", data);
 
-      location.reload();
-    });
+    $.ajax({
+      type: 'POST',
+      url: '/company/option/' + fbid,
+      data: changeSpec,
+      encode: true,
+      success(data) {
+        console.log("SUCCESS");
+        console.log(data);
+      },
+      error(smth, status, err) {
+        console.error("ERROR IN AJAX", status);
+        console.error("ERROR =", err);
+      }
+    })
+      .done(function(data) {
+        console.log("DONE", data);
+
+        location.reload();
+      });
+  });
 });
 
 
-// Add a new option
-$('form[name="addOption"]').submit(function (event) {
-  event.preventDefault();
-  showSpinner();
 
-  const [_, itemid] = /-(\w+)/.exec(this.id);
-  const name = $(this).find('input[name="new-option-name"]').val();
-  const price = $(this).find('input[name="new-option-price"]').val();
-  const changeSpec = {
-    itemid,
-    name,
-    price,
-    intent: "add"
-  }
-
-  $.ajax({
-    type: 'POST',
-    url: '/company/option/' + fbid,
-    data: changeSpec,
-    encode: true,
-    success(data) {
-      console.log("SUCCESS");
-      console.log(data);
-    },
-    error(smth, status, err) {
-      console.error("ERROR IN AJAX", status);
-      console.error("ERROR =", err);
-    }
-  })
-    .done(function(data) {
-      console.log("DONE", data);
-
-      location.reload();
-    });
-});
 
 
 
