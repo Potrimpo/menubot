@@ -35,36 +35,36 @@ router.route('/photos/:fbid')
   );
 
 function syncPhotos (pageToken) {
-  let fbid;
-  let photos = [];
   return fetchPhotos(pageToken)
     .then(response => {
-      fbid = response.id;
+      const fbid = response.id;
       const rightAlbum = response.albums.data.filter(album => album.name.toLowerCase() == "menu");
-      photos = rightAlbum[0].photos.data;
+      const photos = rightAlbum[0].photos.data
+        .filter(val => val && val.picture && val.name);
       // add photos to items table, matching the name in the description of the facebook photo to item names
       return Promise.all(
-        photos.map(val => db.addItemPhotos(val, fbid))
-      );
+        photos.map(val => db.addItemPhotos(val, fbid)).concat(syncTypePhotos(fbid, photos))
+      )
     })
-    .then(() => db.getTypesThroughFbid(fbid))
-    .then(data => {
+}
+
+function syncTypePhotos (fbid, photos) {
+  return db.getTypesThroughFbid(fbid)
+    .then(types => {
       const photosWithTypeids = photos.map(val => {
 
-          for (let x = data.length - 1; x >= 0; x--) {
-            if (data[x].type.toLowerCase() == val.name.toLowerCase()) {
-              val.typeid = data[x].typeid;
-              return val
-            }
+        for (let x = types.length - 1; x >= 0; x--) {
+          if (types[x].type.toLowerCase() == val.name.toLowerCase()) {
+            val.typeid = types[x].typeid;
+            return val
           }
+        }
 
-          return null;
-        })
+        return null;
+      })
         .filter(val => val);
 
-      return Promise.all(
-        photosWithTypeids.map(val => db.addTypePhotos(val))
-      );
+      return photosWithTypeids.map(val => db.addTypePhotos(val))
     });
 }
 
