@@ -145,16 +145,19 @@ $(document).ready(function() {
     event.preventDefault();
     showSpinner();
 
-    var time = this.value;
-    var state = this.id;
-    console.log("time??", time);
-    console.log("state??", state);
-    console.log("fbid =", fbid);
+    const time = this.value,
+      state = this.id;
+
+    const data = {
+      fbid,
+      time,
+      state
+    };
 
     $.ajax({
       type: 'POST',
       url: '/company/time/' + fbid,
-      data: { id: fbid, time: time, state: state },
+      data,
       encode: true,
       success(data) {
         console.log("SUCCESS");

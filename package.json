@@ -9,7 +9,7 @@
   ],
   "main": "index.js",
   "scripts": {
-    "start": "pm2 --no-daemon start process.json --watch --env dev",
+    "start": "pm2 --no-daemon start process.json --env dev",
     "prod": "pm2 start process.json",
     "test": "mocha",
     "dev": "webpack -d --progress --colors --watch"

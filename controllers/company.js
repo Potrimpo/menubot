@@ -59,14 +59,16 @@ router.route('/location/:companyId')
 
 router.route('/time/:companyId')
   .post((req, res) => {
-    if (req.body.state == 'opentime') {
-      return db.setOpenTime(req.body.id, req.body.time, req.body.state)
-      .then(() => res.status(200).send())
-      .catch(err => console.error("error updating time field", err));
-    } else if (req.body.state == 'closetime') {
-      return db.setCloseTime(req.body.id, req.body.time, req.body.state)
-      .then(() => res.status(200).send())
-      .catch(err => console.error("error updating time field", err));
+    switch (req.body.state) {
+      case "opentime":
+        return db.setOpenTime(req.body)
+        .then(() => res.status(200).send())
+        .catch(err => console.error("error updating time field", err));
+
+      case "closetime":
+        return db.setCloseTime(req.body)
+        .then(() => res.status(200).send())
+        .catch(err => console.error("error updating time field", err));
     }
   });
 
@@ -79,12 +81,11 @@ router.route('/time/:companyId')
           return db.useOptionsSwitch(req.body.itemid)
           .then(() => res.status(200).send())
           .catch(err => console.error("error toggling use_options: ", err));
-          break;
+
         case 'add':
           return db.addItemOption(req.body.itemid, req.body.name, req.body.price)
           .then(() => res.status(200).send())
           .catch(err => console.error("error toggling use_options: ", err));
-          break;
       }
   });
 

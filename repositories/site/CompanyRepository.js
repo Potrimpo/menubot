@@ -236,18 +236,18 @@ exports.setLocation = (id, loc) => sequelize.query(
   { replacements: { id, loc }, type: sequelize.QueryTypes.UPDATE }
 );
 
-exports.setOpenTime = (id, time, state) => sequelize.query(
+exports.setOpenTime = ({ fbid, time }) => sequelize.query(
   "UPDATE companies " +
   "SET opentime = :time " +
-  "WHERE fbid = :id",
-  { replacements: { id, time, state }, type: sequelize.QueryTypes.UPDATE }
+  "WHERE fbid = :fbid",
+  { replacements: { fbid, time }, type: sequelize.QueryTypes.UPDATE }
 );
 
-exports.setCloseTime = (id, time, state) => sequelize.query(
+exports.setCloseTime = ({ fbid, time }) => sequelize.query(
   "UPDATE companies " +
   "SET closetime = :time " +
-  "WHERE fbid = :id",
-  { replacements: { id, time, state }, type: sequelize.QueryTypes.UPDATE }
+  "WHERE fbid = :fbid",
+  { replacements: { fbid, time }, type: sequelize.QueryTypes.UPDATE }
 );
 
 exports.addItemPhotos = (val, fbid) => {
