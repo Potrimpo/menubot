@@ -17,7 +17,7 @@ function postbackHandler (payload, fbUserId, fbPageId) {
 
       case 'LOCATION':
         return db.findLocation(fbPageId)
-          .then(data => res({ text: data.location ? data.location : "Sorry, I don't know where I am!" }))
+          .then(data => res(data.location ? data.location : "Sorry, I don't know where I am!"))
           .catch(err => console.error(`Error in postback:`, err));
 
       case 'DETAILS':
@@ -33,7 +33,7 @@ function postbackHandler (payload, fbUserId, fbPageId) {
       case 'ORDER':
         return redisRecordOrder(fbUserId, payload)
           .then(() => {
-            return res({ text: "what time would you like that? (include am/pm)" });
+            return res("what time would you like that? (include am/pm)");
           });
 
       case 'MY_ORDERS':
