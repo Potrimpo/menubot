@@ -32,15 +32,27 @@
                           style="float:right;" class="price form-inline">
                       <div class="form-group-lg" >
                         <div class="input-group">
-                          <div class="input-group-addon">$</div>
+                          <div class="input-group-addon" style="padding: 0px">
+                            <p class="item-price-adder">
+                              $
+                            </p>
+                          </div>
                           <input type="text"
                               <% if (types[x].type_price === null) { %> value="" <% }
                               else { %> value="<%= types[x].type_price %>" <% } %>
                               size="10" class="form-control" placeholder="Price"
                           >
+                          <span class="input-group-btn">
+                             <button class="btn btn-default btn-lg type-price-button" type="submit">
+                               <p class="rotate" style="margin: 0px">
+                                 Set
+                               </p>
+                             </button>
+                          </span>
                         </div>
                       </div>
                     </form>
+
                   </div>
                 <% } %>
 
@@ -60,7 +72,6 @@
 
       <% } %>
     <% } %>
-
   <% } %>
 
   <div class="container">

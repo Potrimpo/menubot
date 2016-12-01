@@ -19,11 +19,22 @@
                         class="price form-inline">
                     <div class="form-group" >
                       <div class="input-group">
-                        <div class="input-group-addon">$</div>
+                        <div class="input-group-addon" style="padding: 0px">
+                          <p class="size-price-adder">
+                            $
+                          </p>
+                        </div>
                         <input type="text" <% if (sizes[y].size_price === null) { %> value="" <% }
                            else { %> value="<%= sizes[y].size_price %>" <% } %>
                            size="10" class="form-control" placeholder="Price"
                         >
+                        <span class="input-group-btn">
+                           <button class="btn btn-default size-price-button" type="submit">
+                             <p class="rotate" style="margin: 0px">
+                               Set
+                             </p>
+                           </button>
+                        </span>
                       </div>
                     </div>
                   </form>

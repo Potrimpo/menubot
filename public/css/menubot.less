@@ -133,27 +133,34 @@
 }
 
 @media (max-width: 767px) {
- .company-head {
+   .company-head {
+     text-align: center;
+   }
+
+  .location-setter-container {
+    float: none;
+  }
+
+  .reactive-centering {
    text-align: center;
-}
+  }
+
+  .size-price-adder {
+    margin: 0px 3px 0px 3px;
+  }
 }
 
  @media (min-width: 768px) {
- .company-head {
-}
+
+  .location-setter-container {
+   float: right;
+ }
+
+  .size-price-adder {
+    margin: 0px 6px 0px 6px;
+  }
 }
 
-@media (max-width: 767px) {
- .location-setter-container {
-   float: none;
-}
-}
-
- @media (min-width: 768px) {
- .location-setter-container {
-  float: right;
-}
-}
 
 .the-magic-fix-that-fixes-everything-and-you-have-no-idea-why-it-does-that {
   border: #e8e8e8 solid 1px;
@@ -166,15 +173,12 @@
   background-color: #e8e8e8;
 }
 
-@media (max-width: 767px) {
- .reactive-centering {
-   text-align: center;
-}
-}
-
- @media (min-width: 768px) {
- .reactive-centering {
-}
+.rotate {
+  -webkit-transform: rotate(-90deg);
+  -moz-transform: rotate(-90deg);
+  -ms-transform: rotate(-90deg);
+  -o-transform: rotate(-90deg);
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 }
 
 .menu-photo {
@@ -211,15 +215,14 @@
   font-size: 30px;
 }
 
-.item-price {
-  float: right;
-  font-size: 30px;
-  color: grey;
-  text-decoration: line-through;
+.item-price-adder {
+  margin: 0px 6px 0px 6px;
+  font-size: 17px;
 }
 
-.item-price-input {
-  margin-top:-10px;
+.item-price-button {
+  border-radius: 0px 4px 4px 0px;
+  padding: 10px 0px 10px 0px;
 }
 
 .item-content-inner-container {
@@ -263,6 +266,11 @@
 .type-title {
   float: left;
   font-size: 26px;
+}
+
+.type-price-button {
+  border-radius: 0px 4px 4px 0px;
+  padding: 10px 0px 10px 0px;
 }
 
 .type-content-inner-container {
@@ -312,6 +320,11 @@
 .size-title {
   float: left;
   font-size: 22px;
+}
+
+.size-price-button {
+  border-radius: 0px 4px 4px 0px;
+  padding: 6px 0px 6px 0px;
 }
 
 .size-content-inner-container {
