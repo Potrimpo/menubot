@@ -2,7 +2,8 @@
  * Created by lewis.knoxstreader on 31/08/16.
  */
 
-const { redisRecordOrder } = require('./messengerSessions'),
+const chrono = require('chrono-node'),
+  { redisRecordOrder } = require('./messengerSessions'),
   structured = require('./structured-messages'),
   db = require('./../repositories/bot/botQueries');
 
@@ -32,10 +33,10 @@ function postbackHandler (payload, fbUserId, fbPageId) {
           .catch(err => console.error(`Error in postback:`, err));
 
       case 'ORDER':
-        return redisRecordOrder(fbUserId, payload)
-          .then(() => {
-            return res("what time would you like that? (include am/pm)");
-          });
+        return db.checkOpenStatus(fbPageId)
+          .then(status => openStatus(status, fbUserId, payload))
+          .then(resp => res(resp))
+          .catch(err => console.error("error checking company status", err));
 
       case 'MY_ORDERS':
         return db.ordersbyUserid(fbUserId)
@@ -50,6 +51,31 @@ function postbackHandler (payload, fbUserId, fbPageId) {
     }
 
   });
+}
+
+function openStatus (data, fbUserId, payload) {
+  console.log("company status =", data.status);
+  switch (data.status) {
+    case true:
+      return filterHours({
+        opentime: data.opentime,
+        closetime: data.closetime
+      }, payload, fbUserId);
+
+    case false:
+      return "Sorry! We're not open today!";
+  }
+}
+
+function filterHours (hours, payload, fbUserId) {
+  const now = Date.now();
+  if (now > chrono.parseDate(hours.closetime)) {
+    return `Sorry! We're only open between ${hours.opentime} and ${hours.closetime} today!`;
+  }
+  else {
+    return redisRecordOrder(fbUserId, payload)
+      .then(() => "What time would you like that? (include am/pm)");
+  }
 }
 
 module.exports = postbackHandler;
