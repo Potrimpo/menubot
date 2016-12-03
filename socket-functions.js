@@ -1,7 +1,8 @@
 /**
  * Created by lewis.knoxstreader on 20/11/16.
  */
-const { client, sub } = require('./redis-init'),
+const Rx = require('rx'),
+  { client, sub } = require('./redis-init'),
   { fetchOrders, setOrderComplete } = require('./controllers/orders');
 
 function init (io) {
@@ -10,7 +11,16 @@ function init (io) {
 
     socket.on('request-orders', requestOrders);
 
-    sub.on('message', (channel, message) => socket.emit('new-order', message));
+    // assign to socket object so we can access & dispose of subscription at any point
+    socket.orderSubscription = Rx.Observable.create(observer => {
+      sub.on('message', (channel, message) => observer.onNext(message));
+      sub.on('unsubscribe', channel => observer.onCompleted());
+    })
+    .debounce(500)
+    .subscribe(
+      (message) => socket.emit('new-order', message),
+      err => console.error("error in this shit", err)
+    );
 
     socket.on('order-status', orderid => setOrderComplete(orderid));
 
@@ -38,9 +48,9 @@ function requestOrders (fbid) {
 
 // --> Disconnect socket & stop listening for new-order updates for our page
 // find the right fbid by searching redis with our socket id
-// unsubscribe from events on fbid frequency
+// unsubscribe from redis messages on fbid frequency
 function disco () {
-  client.getAsync(this.id)
+  return client.getAsync(this.id)
     .then(fbid => sub.unsubscribe(fbid))
     .then(() => client.delAsync(this.id))
     .catch(err => console.error("error disconnecting socket", err));
