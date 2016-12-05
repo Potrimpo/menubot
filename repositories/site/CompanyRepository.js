@@ -236,6 +236,15 @@ exports.setLocation = (id, loc) => sequelize.query(
   { replacements: { id, loc }, type: sequelize.QueryTypes.UPDATE }
 );
 
+exports.setOpenHours = ({ fbid, opentime, closetime, status }) =>
+  Company.update({
+    opentime,
+    closetime,
+    status,
+  }, {
+    where: { fbid }
+  });
+
 exports.addItemPhotos = (val, fbid) => {
   if (val.picture && val.name) {
     return sequelize.query(

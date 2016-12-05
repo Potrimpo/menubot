@@ -58,7 +58,15 @@ router.route('/location/:companyId')
   });
 
 router.route('/hours/:companyId')
-  .post((req, res) => console.log("setting open hours", req.body));
+  .post((req, res) =>
+    db.setOpenHours(req.body)
+      .then(() => res.status(200).send())
+      .catch(err => {
+        const msg = "error setting company open hours";
+        console.error(msg, err);
+        return res.status(500).send(msg);
+      })
+  );
 
   router.route('/option/:companyId')
     .post((req, res) => {

@@ -148,18 +148,18 @@ $(document).ready(function() {
 
     const opentime = $('#opentime').val(),
     closetime = $('#closetime').val(),
-    openStatus = $('input#openToday').prop('checked');
+    status = $('input#openToday').prop('checked');
 
     console.log("opentime =", opentime);
     console.log("closetime =", closetime);
-    console.log("#openToday =", openStatus);
+    console.log("#openToday =", status);
     console.log("state =", state);
 
     const data = {
       fbid,
       opentime,
       closetime,
-      openStatus
+      status
     };
 
     $.ajax({
