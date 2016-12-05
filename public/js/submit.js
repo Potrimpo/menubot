@@ -62,7 +62,7 @@ $(document).ready(function() {
 
   //Initialising libraries
   $("[name='itemOptionsCheckbox']").bootstrapSwitch({size:"mini"});
-
+  $("[name='openToday']").bootstrapSwitch({size: "small", onText: "Open", offText: Closed});
   //yay for us
   console.log("WE IN IT");
 
@@ -141,17 +141,19 @@ $(document).ready(function() {
 
   });
 
-  $('.time-setter').on('change', function (event) {
+  $('form#timeSettingForm').submit(function (event) {
     event.preventDefault();
     showSpinner();
 
-    const time = this.value,
-      state = this.id;
+    const opentime = $('#opentime').val(),
+    closetime = $('#closetime').val(),
+    businessState = $('#openToday').val();
 
     const data = {
       fbid,
-      time,
-      state
+      opentime,
+      closetime,
+      businessState
     };
 
     $.ajax({
