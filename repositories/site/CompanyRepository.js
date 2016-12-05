@@ -15,7 +15,8 @@ exports.findCompany = (id) => Company.findById(id);
 
 exports.getCompanyMenu = id => {
   return sequelize.query(
-    "SELECT c.name, c.bot_status, c.location, c.opentime, c.closetime, i.* FROM companies AS c" +
+    "SELECT c.name, c.bot_status, c.location, c.opentime, c.closetime, c.status, i.*" +
+    " FROM companies AS c" +
     " INNER JOIN items AS i ON c.fbid = i.fbid" +
     " WHERE c.fbid = $1" +
     " ORDER BY i.itemid ASC",

@@ -26,6 +26,7 @@ router.route('/:companyId')
           location: data.location,
           opentime: data.opentime,
           closetime: data.closetime,
+          status: data.status,
           compName: data.name,
           fbid: data.fbid,
           title: data.name,
@@ -103,6 +104,7 @@ function fullMenu (fbid, data) {
     location: data[0].location,
     opentime: data[0].opentime,
     closetime: data[0].closetime,
+    status: data[0].status,
     fbid,
     items: data
   };
