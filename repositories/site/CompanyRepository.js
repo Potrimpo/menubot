@@ -24,15 +24,6 @@ exports.getCompanyMenu = id => {
   );
 };
 
-exports.getMenuItemOptions = itemids => {
-  return sequelize.query(
-    "SELECT op.itemid, op.optionid, op.option, op.option_price FROM \"itemOptions\" AS op" +
-    " WHERE op.itemid IN (:itemids)" +
-    " ORDER BY optionid ASC",
-    { replacements: { itemids }, type: sequelize.QueryTypes.SELECT }
-  );
-};
-
 exports.getMenuTypes = itemids => {
   return sequelize.query(
     "SELECT t.itemid, t.type, t.typeid, t.type_photo, t.type_price FROM types AS t" +
@@ -127,14 +118,6 @@ exports.useOptionsSwitch = (itemid) => {
     "SET use_options = NOT use_options " +
     "WHERE itemid = :itemid",
     { replacements: { itemid }, type: sequelize.QueryTypes.UPDATE }
-  );
-};
-
-exports.addItemOption = (itemid, name, price) => {
-  return sequelize.query(
-    "INSERT INTO \"itemOptions\" (itemid, option, option_price)" +
-    " VALUES (:itemid, :name, :price)",
-    { replacements: { itemid, name, price }, type: sequelize.QueryTypes.UPDATE }
   );
 };
 

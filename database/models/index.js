@@ -14,7 +14,6 @@ const Session = sequelize.import("./Sessions"),
   User = sequelize.import("./Users"),
   Company = sequelize.import("./Companies"),
   Item = sequelize.import("./Items"),
-  ItemOptions = sequelize.import("./ItemOptions"),
   Type = sequelize.import("./Types"),
   Size = sequelize.import("./Sizes"),
   Order = sequelize.import("./Orders"),
@@ -22,7 +21,6 @@ const Session = sequelize.import("./Sessions"),
 
 // Relations
 Item.belongsTo(Company, { foreignKey: 'fbid', onDelete: 'cascade' });
-ItemOptions.belongsTo(Item, { foreignKey: 'itemid', onDelete: 'cascade' });
 Type.belongsTo(Item, { foreignKey: 'itemid', onDelete: 'cascade' });
 Size.belongsTo(Type, { foreignKey: 'typeid', onDelete: 'cascade' });
 
@@ -41,7 +39,6 @@ module.exports = {
   User,
   Company,
   Item,
-  ItemOptions,
   Type,
   Size,
   Order,

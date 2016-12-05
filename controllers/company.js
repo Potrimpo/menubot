@@ -31,7 +31,6 @@ router.route('/:companyId')
           fbid: data.fbid,
           title: data.name,
           items: data.items,
-          itemOptions: data.itemOptions,
           types: data.types,
           sizes: data.sizes
         });
@@ -69,24 +68,6 @@ router.route('/hours/:companyId')
       })
   );
 
-  router.route('/option/:companyId')
-    .post((req, res) => {
-      console.log(req.body);
-
-      switch (req.body.intent) {
-        case 'switch':
-          return db.useOptionsSwitch(req.body.itemid)
-          .then(() => res.status(200).send())
-          .catch(err => console.error("error toggling use_options: ", err));
-
-        case 'add':
-          return db.addItemOption(req.body.itemid, req.body.name, req.body.price)
-          .then(() => res.status(200).send())
-          .catch(err => console.error("error toggling use_options: ", err));
-      }
-  });
-
-
 function getMenu (id) {
   return db.getCompanyMenu(id)
     .then(data => {
@@ -109,11 +90,7 @@ function fullMenu (fbid, data) {
     items: data
   };
 
-  return db.getMenuItemOptions(itemids)
-    .then(options => {
-      wholeMenu.itemOptions = options;
-      return db.getMenuTypes(itemids)
-    })
+  return db.getMenuTypes(itemids)
     .then(types => {
       wholeMenu.types = types;
       const typeids = types.map(val => val.typeid);
