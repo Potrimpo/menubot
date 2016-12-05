@@ -57,20 +57,8 @@ router.route('/location/:companyId')
       .catch(err => console.error("error updating location field", err));
   });
 
-router.route('/time/:companyId')
-  .post((req, res) => {
-    switch (req.body.state) {
-      case "opentime":
-        return db.setOpenTime(req.body)
-        .then(() => res.status(200).send())
-        .catch(err => console.error("error updating time field", err));
-
-      case "closetime":
-        return db.setCloseTime(req.body)
-        .then(() => res.status(200).send())
-        .catch(err => console.error("error updating time field", err));
-    }
-  });
+router.route('/hours/:companyId')
+  .post((req, res) => console.log("setting open hours", req.body));
 
   router.route('/option/:companyId')
     .post((req, res) => {
