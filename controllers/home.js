@@ -31,20 +31,15 @@ function unregisteredCompanies (accounts, dbCompanies) {
   })
 }
 
-exports.orders = (req, res) => {
-  return db.findCompany(req.params.fbid)
-
-    .then(company) => {
-
-      res.render('orders/orders', {
-        title: 'Orders',
-        fbid: req.params.fbid,
-        compName: company.name
-      });
-      
-    }
-};
-
+exports.orders = (req, res) =>
+  db.findCompany(req.params.fbid)
+    .then(company =>
+        res.render('orders/orders', {
+          title: 'Orders',
+          fbid: req.params.fbid,
+          compName: company.name
+        })
+    );
 
 exports.priv = (req,res) =>
   res.render('priv', {
