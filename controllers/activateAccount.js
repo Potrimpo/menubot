@@ -56,6 +56,11 @@ function persistentMenu (pageToken, intent) {
         type: "postback",
         title: "Location",
         payload: JSON.stringify({ intent: "LOCATION" })
+      },
+      {
+        type: "postback",
+        title: "Hours",
+        payload: JSON.stringify({ intent: "HOURS" })
       }
     ];
   }

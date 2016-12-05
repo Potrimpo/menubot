@@ -43,6 +43,10 @@ function postbackHandler (payload, fbUserId, fbPageId) {
           .then(orders => res(structured.parseOrders(orders)))
           .catch(err => console.error(`Error in postback`, err));
 
+      case 'HOURS':
+        return db.checkOpenStatus(fbPageId)
+          .then(hours => res(postbackHours(hours)));
+
       case 'GET_STARTED':
        return res(structured.getStarted());
 
@@ -51,6 +55,16 @@ function postbackHandler (payload, fbUserId, fbPageId) {
     }
 
   });
+}
+
+function postbackHours (hours) {
+  switch (hours.status) {
+    case false:
+      return "Sorry! We're not open today";
+
+    case true:
+      return `We're open between ${hours.opentime} and ${hours.closetime} today`;
+  }
 }
 
 function openStatus (data, fbUserId, payload) {
