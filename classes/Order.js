@@ -89,7 +89,9 @@ class Order {
   get confirmationMsg () {
     const responses = [];
 
-    responses.push("Success!");
+    responses.push(
+      orderConfirm("Success!")
+    );
     switch (this.depth) {
       case "item":
         responses.push(

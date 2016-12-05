@@ -34,7 +34,7 @@ class Message {
   // has to deal with JavaScript's terribad type system in order to figure out how to respond
   reply (message) {
     if (typeof message === 'string') {
-      return actions.send(this.sender, message);
+      return actions.send(this.sender, { text: message });
     }
 
     else if (Array.isArray(message)) {
