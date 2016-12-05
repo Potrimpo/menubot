@@ -26,46 +26,30 @@
             </div>
           </div>
           <div class="row">
-            <div class="location-setter-container text-center" style="margin-top:1em; min-width: 310px;">
-              <form id="poopies" class="form-inline the-magic-fix-that-fixes-everything-and-you-have-no-idea-why-it-does-that">
-                  <!-- <div class="form-group"> -->
+            <div class="location-setter-container" style="margin-top:1em; min-width: 310px;">
+              <form id="timeSettingForm" class="form-inline the-magic-fix-that-fixes-everything-and-you-have-no-idea-why-it-does-that">
+                  <div class="col-xs-12" style="padding:0">
                     <div class="input-group reactive-distr">
                       <span class="input-group-addon">Opening</span>
-                      <select id="opentime" name="openTime" class="form-control time-setter">
-                        <option <% if (opentime == '12am') { %> selected <% } %>value ="12am">	12:00	 AM	</option>
-                        <option <% if (opentime == '1am') { %> selected <% } %>value ="1am">	01:00	 AM	</option>
-                        <option <% if (opentime == '2am') { %> selected <% } %>value ="2am">	02:00	 AM	</option>
-                        <option <% if (opentime == '3am') { %> selected <% } %>value ="3am">	03:00	 AM	</option>
-                        <option <% if (opentime == '4am') { %> selected <% } %>value ="4am">	04:00	 AM	</option>
-                        <option <% if (opentime == '5am') { %> selected <% } %>value ="5am">	05:00	 AM	</option>
-                        <option <% if (opentime == '6am') { %> selected <% } %>value ="6am">	06:00	 AM	</option>
-                        <option <% if (opentime == '7am') { %> selected <% } %>value ="7am">	07:00	 AM	</option>
-                        <option <% if (opentime == '8am') { %> selected <% } %>value ="8am">	08:00	 AM	</option>
-                        <option <% if (opentime == '9am') { %> selected <% } %>value ="9am">	09:00	 AM	</option>
-                        <option <% if (opentime == '10am') { %> selected <% } %>value ="10am">	10:00	 AM	</option>
-                        <option <% if (opentime == '11am') { %> selected <% } %>value ="11am">	11:00	 AM	</option>
-                      </select>
+                      <input type="time" id="opentime" name="openTime" class="form-control time-setter">
                     </div>
                     <div class="input-group">
                       <span class="input-group-addon">Closing</span>
-                      <select id="closetime" name="closeTime" class="form-control time-setter">
-                        <option <% if (closetime == '12pm') { %> selected <% } %> value="12pm">	12:00	 PM	</option>
-                        <option <% if (closetime == '1pm') { %> selected <% } %> value="1pm">	01:00	 PM	</option>
-                        <option <% if (closetime == '2pm') { %> selected <% } %> value="2pm">	02:00	 PM	</option>
-                        <option <% if (closetime == '3pm') { %> selected <% } %> value="3pm">	03:00	 PM	</option>
-                        <option <% if (closetime == '4pm') { %> selected <% } %> value="4pm">	04:00	 PM	</option>
-                        <option <% if (closetime == '5pm') { %> selected <% } %> value="5pm">	05:00	 PM	</option>
-                        <option <% if (closetime == '6pm') { %> selected <% } %> value="6pm">	06:00	 PM	</option>
-                        <option <% if (closetime == '7pm') { %> selected <% } %> value="7pm">	07:00	 PM	</option>
-                        <option <% if (closetime == '8pm') { %> selected <% } %> value="8pm">	08:00	 PM	</option>
-                        <option <% if (closetime == '9pm') { %> selected <% } %> value="9pm">	09:00	 PM	</option>
-                        <option <% if (closetime == '10pm') { %> selected <% } %> value="10pm">	10:00	 PM	</option>
-                        <option <% if (closetime == '11pm') { %> selected <% } %> value="11pm">	11:00	 PM	</option>
-                      </select>
+                      <input type="time" id="closetime" name="closeTime" class="form-control time-setter">
                     </div>
-
-                  <!-- </div> -->
+                  </div>
                   <div style="clear:both;"></div>
+
+                  <div class="col-xs-10" style="padding:0; margin-top:5px;">
+                    <label class="checkbox-inline" style="padding:0; margin-top:3px;">
+                      Open today? <input type="checkbox" name="openToday" id="openToday">
+                    </label>
+                  </div>
+                  <div class="col-xs-2" style="padding:0; margin-top:5px;">
+                    <button type="submit" style="float:right;" class="btn btn-default">Set</button>
+                  </div>
+                  <div style="clear:both;"></div>
+
               </form>
             </div>
           </div>

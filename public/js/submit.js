@@ -62,7 +62,7 @@ $(document).ready(function() {
 
   //Initialising libraries
   $("[name='itemOptionsCheckbox']").bootstrapSwitch({size:"mini"});
-
+  $("[name='openToday']").bootstrapSwitch({size: "small", onText: "Open", offText: "Closed"});
   //yay for us
   console.log("WE IN IT");
 
@@ -141,22 +141,30 @@ $(document).ready(function() {
 
   });
 
-  $('.time-setter').on('change', function (event) {
+  // setting company open hours
+  $('#timeSettingForm').submit(function (event, state) {
     event.preventDefault();
     showSpinner();
 
-    const time = this.value,
-      state = this.id;
+    const opentime = $('#opentime').val(),
+    closetime = $('#closetime').val(),
+    openStatus = $('input#openToday').prop('checked');
+
+    console.log("opentime =", opentime);
+    console.log("closetime =", closetime);
+    console.log("#openToday =", openStatus);
+    console.log("state =", state);
 
     const data = {
       fbid,
-      time,
-      state
+      opentime,
+      closetime,
+      openStatus
     };
 
     $.ajax({
       type: 'POST',
-      url: '/company/time/' + fbid,
+      url: '/company/hours/' + fbid,
       data,
       encode: true,
       success(data) {
@@ -317,6 +325,7 @@ $(document).ready(function() {
         location.reload();
       });
   });
+
 });
 
 
