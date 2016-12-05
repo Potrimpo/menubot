@@ -15,7 +15,8 @@ exports.findCompany = (id) => Company.findById(id);
 
 exports.getCompanyMenu = id =>
   sequelize.query(
-    "SELECT c.name, c.bot_status, c.location, i.* FROM companies AS c" +
+    "SELECT c.name, c.bot_status, c.location, c.opentime, c.closetime, c.status, i.*" +
+    " FROM companies AS c" +
     " INNER JOIN items AS i ON c.fbid = i.fbid" +
     " WHERE c.fbid = $1" +
     " ORDER BY i.itemid ASC",
@@ -119,7 +120,6 @@ exports.deleteItem = data => {
     );
       break;
 
-
     default:
       console.log("Attempt to delete failed, type not recognised");
   }
@@ -186,6 +186,15 @@ exports.addItemPhotos = (val, fbid) =>
     " WHERE fbid = :fbid AND lower(item) = lower(:name)",
     { replacements: { fbid, picture: val.picture, name: val.name }, type: sequelize.QueryTypes.UPDATE }
   );
+
+exports.setOpenHours = ({ fbid, opentime, closetime, status }) =>
+  Company.update({
+    opentime,
+    closetime,
+    status,
+  }, {
+    where: { fbid }
+  });
 
 exports.addTypePhotos = val =>
   sequelize.query(

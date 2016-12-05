@@ -41,6 +41,12 @@ function customerDetails (fbUserId, pageToken) {
     .catch(err => console.error("error fetching customer data", err));
 }
 
+exports.checkOpenStatus = fbid =>
+  Company.findOne({
+    attributes: ['status', 'opentime', 'closetime'],
+    where: { fbid }
+  });
+
 exports.findLocation = fbid => {
     return Company.findOne({
       attributes: ['location'],
