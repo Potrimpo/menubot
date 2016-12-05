@@ -31,12 +31,12 @@ module.exports = function (sequelize, Sequelize) {
       opentime: {
         type: Sequelize.STRING,
         allowNull: false,
-        defaultValue: "9am",
+        defaultValue: "09:00",
       },
       closetime: {
         type: Sequelize.STRING,
         allowNull: false,
-        defaultValue: "5pm",
+        defaultValue: "17:00",
       }
     }, {
       tableName: 'companies',

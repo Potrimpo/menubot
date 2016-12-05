@@ -79,7 +79,7 @@ class Order {
   }
 
   toMessage () {
-    return this.error ? [this.error] : this.confirmationMsg;
+    return this.error ? this.error : this.confirmationMsg;
   }
 
   get readableTime () {
