@@ -12,7 +12,6 @@ exports.findOrCreateCustomer = (fbUserId, fbPageId, pageToken) => {
       }
       return customerDetails(fbUserId, pageToken)
         .then(data => {
-          console.log("data from customer fb request", data);
           return Customer.build({
             customer_id: fbUserId,
             profile_pic: data.profile_pic,
@@ -35,7 +34,6 @@ function customerDetails (fbUserId, pageToken) {
       if (json.error && json.error.message) {
         throw new Error(json.error.message);
       }
-      console.log("JSON ====", json);
       return json;
     })
     .catch(err => console.error("error fetching customer data", err));

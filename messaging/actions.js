@@ -28,7 +28,6 @@ const actions = {
     return redisRetrieveOrder(fbUserId)
       .then(data => {
         if (!data.itemid) throw "No order for this user in Redis";
-        console.log("order from redis!", data);
         return new Order(fbPageId, fbUserId, msg, data);
       })
       .then(order => order ? order : new Error("couldn't create order instance"))

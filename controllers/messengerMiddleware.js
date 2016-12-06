@@ -15,7 +15,6 @@ exports.postWebhook = (req, res) => {
         return msg
           .session()
           .then(() => msg.process())
-          .then(resp => msg.reply(resp))
           .catch(err => console.error("error processing message:", err));
       });
     });

@@ -1,7 +1,7 @@
 /**
  * Created by lewis.knoxstreader on 2/12/16.
  */
-const { findOrCreateSession } = require('../messaging/messengerSessions'),
+const { findOrCreateSession, redisDeleteOrder } = require('../messaging/messengerSessions'),
   runActions = require('../messaging/runActions'),
   postbackHandler = require('../messaging/postbackHandler'),
   actions = require('../messaging/actions');
@@ -25,9 +25,12 @@ class Message {
     const x = this.quick_reply || this.postback;
     if (x) {
       return postbackHandler(x.payload, this.sender, this.recipient)
+        .then(resp => this.reply(resp));
     }
     else if (this.text) {
       return runActions(this.sender, this.recipient, this.text)
+        .then(resp => this.reply(resp))
+        .then(() => redisDeleteOrder(this.sender));
     }
   }
 
