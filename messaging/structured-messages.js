@@ -10,12 +10,6 @@ const button = payload => ({
   payload: JSON.stringify(payload)
 });
 
-const backButton = payload => ({
-  type: 'postback',
-  title: 'Back',
-  payload: JSON.stringify(payload)
-});
-
 function parseItems(menu) {
   const template = genericTemplate();
 
@@ -61,7 +55,6 @@ function parseProductTypes(types, itemid) {
     if (val.type_price) {
       types.title = types.title.concat(` - $${val.type_price}`);
       types.buttons = [
-        backButton(back),
         button({ intent: 'Order', itemid, typeid: val.typeid })
       ];
       return types;
@@ -69,7 +62,6 @@ function parseProductTypes(types, itemid) {
 
     else {
       types.buttons = [
-        backButton(back),
         button({ intent: 'Sizes', itemid, typeid: val.typeid })
       ];
       return types;
@@ -96,7 +88,6 @@ function parseProductSizes(sizes, typeid, itemid) {
     return {
       title: `${val.size.toUpperCase()} - $${val.size_price}`,
       buttons: [
-        backButton(back),
         button(order)
       ]
     };
