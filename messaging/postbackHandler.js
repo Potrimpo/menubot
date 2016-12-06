@@ -7,45 +7,46 @@ const chrono = require('chrono-node'),
   structured = require('./structured-messages'),
   db = require('./../repositories/bot/botQueries');
 
-function postbackHandler (payload, fbUserId, fbPageId) {
+function postbackHandler (jsonPayload, fbUserId, fbPageId) {
   return new Promise(function (res, rej) {
-    payload = JSON.parse(payload);
+    const payload = JSON.parse(jsonPayload);
 
     switch (payload.intent) {
       case 'MENU':
         return db.getMenu(fbPageId)
           .then((menu) => res(structured.parseItems(menu)) )
-          .catch(err => console.error(`Error in postback:`, err));
+          .catch(err => rej(err));
 
       case 'LOCATION':
         return db.findLocation(fbPageId)
           .then(data => res(data.location ? data.location : "Sorry, I don't know where I am!"))
-          .catch(err => console.error(`Error in postback:`, err));
+          .catch(err => rej(err));
 
       case 'DETAILS':
         return db.getTypes(payload.itemid)
           .then(types => res(structured.parseProductTypes(types, payload.itemid)) )
-          .catch(err => console.error(`Error in postback:`, err));
+          .catch(err => rej(err));
 
       case 'SIZES':
         return db.getSizes(payload.typeid)
           .then(sizes => res(structured.parseProductSizes(sizes, payload.typeid, payload.itemid)) )
-          .catch(err => console.error(`Error in postback:`, err));
+          .catch(err => rej(err));
 
       case 'ORDER':
         return db.checkOpenStatus(fbPageId)
           .then(status => openStatus(status, fbUserId, payload))
           .then(resp => res(resp))
-          .catch(err => console.error("error checking company status", err));
+          .catch(err => rej(err));
 
       case 'MY_ORDERS':
         return db.ordersbyUserid(fbUserId)
           .then(orders => res(structured.parseOrders(orders)))
-          .catch(err => console.error(`Error in postback`, err));
+          .catch(err => rej(err));
 
       case 'HOURS':
         return db.checkOpenStatus(fbPageId)
-          .then(hours => res(postbackHours(hours)));
+          .then(hours => res(postbackHours(hours)))
+          .catch(err => rej(err));
 
       case 'GET_STARTED':
        return res(structured.getStarted());
@@ -54,7 +55,11 @@ function postbackHandler (payload, fbUserId, fbPageId) {
         return rej(new Error("couldn't deal with this postbackHandler input"));
     }
 
-  });
+  })
+    .catch(err => {
+      const payload = JSON.parse(jsonPayload);
+      console.error(`Error in ${payload.intent} postback:`, err)
+    });
 }
 
 function postbackHours (hours) {
