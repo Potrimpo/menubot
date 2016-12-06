@@ -44,7 +44,7 @@ class Order {
       })
       .catch(err => {
         console.error("error creating Order", err);
-        this.error = err.message;
+        this.error = err;
         return this;
       });
   }
@@ -56,7 +56,7 @@ class Order {
 
   // insert order into database, returning values used to create Order instance
   static dbInsert (fbPageId, fbUserId, time, order) {
-    if (!time) throw new Error("couldn't parse time from message");
+    if (!time) throw "Sorry, we couldn't understand the time you gave us";
     return db.makeOrder(fbPageId, fbUserId, time, order);
   }
 
@@ -66,16 +66,17 @@ class Order {
       .then(data => {
         switch (data.status) {
           case false:
-            throw new Error("Sorry! We aren't open today");
+            throw "Sorry! We aren't open today";
 
           case true:
             const opentime = chrono.parseDate(data.opentime),
               closetime = chrono.parseDate(data.closetime);
+            if (!requestTime) throw "Sorry, we couldn't understand the time you gave us";
             if (requestTime <  opentime || requestTime > closetime) {
-              throw new Error(`Sorry! We're only open between ${data.opentime} and ${data.closetime} today`);
+              throw `Sorry! We're only open between ${data.opentime} and ${data.closetime} today`;
             }
         }
-      })
+      });
   }
 
   toMessage () {
