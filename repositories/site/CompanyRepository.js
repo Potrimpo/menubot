@@ -138,12 +138,12 @@ exports.ordersByFbid = (fbid, today) =>
     { replacements: {fbid, today}, type: sequelize.QueryTypes.SELECT }
   ).catch(err => console.error("error getting orders in sql", err));
 
-exports.orderComplete = orderid =>
+exports.orderComplete = (fbid, customer_id, pickuptime) =>
   sequelize.query(
     "UPDATE orders" +
     " SET pending = NOT pending" +
-    " WHERE orderid = $1",
-    { bind: [orderid], type: sequelize.QueryTypes.UPDATE }
+    " WHERE fbid = :fbid AND customer_id = :customer_id AND pickuptime = :pickuptime",
+    { replacements: { fbid, customer_id, pickuptime }, type: sequelize.QueryTypes.UPDATE }
   );
 
 exports.linkCompany = (id, facebookId) =>

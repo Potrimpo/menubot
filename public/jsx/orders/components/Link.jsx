@@ -9,7 +9,7 @@ const Link = ({ active, children, onClick }) => {
        }}
     >
       <button className={ active ? "btn btn-default btn-space active " : "btn btn-default btn-space" }
-         type="button"
+         type="button" name="filterLink"
       >
         {children}
       </button>

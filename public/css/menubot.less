@@ -56,10 +56,33 @@
 
 //orders classes
 
-.order-basic-container {
+.order-top-container {
+  border-style: solid;
+  border-width: 1px 1px 0px 1px;
+  border-radius: 3px 3px 0px 0px;
+  padding-top: 20px;
+}
+
+.order-mid-container {
+  border-style: solid;
+  border-width: 0px 1px 0px 1px;
+  padding-top: 0px;
+}
+
+.order-bottom-container {
+  border-style: solid;
+  border-width: 0px 1px 1px 1px;
+  border-radius: 0px 3px 3px 0px;
+  padding-top: 0px;
+  margin-bottom: 0px;
+}
+
+.order-alone-container {
+  border-style: solid;
+  border-width: 1px;
   border-radius: 3px;
   padding-top: 20px;
-  margin-bottom: 10px;
+  margin-top: 10px;
 }
 
 .order-photo {
@@ -71,6 +94,10 @@
 }
 
 .order-text {
+  font-size: 15px;
+}
+
+.big-order-text {
   font-size: 19px;
 }
 
@@ -174,14 +201,6 @@
   background-color: #e8e8e8;
 }
 
-.rotate {
-  -webkit-transform: rotate(-90deg);
-  -moz-transform: rotate(-90deg);
-  -ms-transform: rotate(-90deg);
-  -o-transform: rotate(-90deg);
-  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
-}
-
 .menu-photo {
   width: 7em;
   height: 7em;
@@ -216,13 +235,15 @@
   font-size: 30px;
 }
 
-.item-price-adder {
-  margin: 0px 6px 0px 6px;
-  font-size: 17px;
+.item-price {
+  float: right;
+  font-size: 30px;
+  color: grey;
+  text-decoration: line-through;
 }
 
-.item-price-button {
-  border-radius: 0px 4px 4px 0px;
+.item-price-input {
+  margin-top:-10px;
 }
 
 .item-content-inner-container {
@@ -280,11 +301,6 @@
   font-size: 26px;
 }
 
-.type-price-button {
-  border-radius: 0px 4px 4px 0px;
-  padding: 10px 0px 10px 0px;
-}
-
 .type-content-inner-container {
   margin-left: 16px;
   margin-right: 16px;
@@ -332,14 +348,6 @@
 .size-title {
   float: left;
   font-size: 22px;
-}
-
-.size-price-adder {
-  margin: 0px 3px 0px 3px;
-}
-
-.size-price-button {
-  border-radius: 0px 4px 4px 0px;
 }
 
 .size-content-inner-container {

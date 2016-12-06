@@ -12,7 +12,7 @@ function init (io) {
 
     sub.on('message', (channel, message) => socket.emit('new-order', message));
 
-    socket.on('order-status', orderid => setOrderComplete(orderid));
+    socket.on('order-status', (fbid, customer_id, pickuptime) => setOrderComplete(fbid, customer_id, pickuptime));
 
     socket.on("disconnect", disco);
   });

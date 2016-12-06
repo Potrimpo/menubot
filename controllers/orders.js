@@ -9,8 +9,8 @@ exports.fetchOrders = fbid =>
   db.ordersByFbid(fbid, today())
     .catch(err => res.status(500).send('error getting orders'));
 
-exports.setOrderComplete = (orderid) =>
-  db.orderComplete(orderid)
+exports.setOrderComplete = (fbid, customer_id, pickuptime) =>
+  db.orderComplete(fbid, customer_id, pickuptime)
     .catch(err => console.log("error setting orders", err));
 
 function today () {
