@@ -25,16 +25,18 @@ function openStatus (data, fbUserId, payload) {
   const response = {
     quick_replies: QR.hoursReplies()
   };
-  console.log("company status =", data.status);
   switch (data.status) {
     case true:
-      return filterHours({
+      const hours = {
         opentime: data.opentime,
         closetime: data.closetime
-      }, payload, fbUserId)
-        .then(text => {
-          response.text = text;
-          return response;
+      };
+
+      // no quickreplies if successful
+      return filterHours(hours, fbUserId, payload)
+        .catch(err => {
+          response.text = err;
+          return response
         });
 
     case false:
@@ -43,18 +45,18 @@ function openStatus (data, fbUserId, payload) {
   }
 }
 
-function filterHours (hours, payload, fbUserId) {
+function filterHours (hours, fbUserId, payload) {
   return new Promise((res, rej) => {
     const now = Date.now();
+
     if (now > chrono.parseDate(hours.closetime)) {
-      return res(`Sorry! We're only open between ${hours.opentime} and ${hours.closetime} today!`);
+      return rej(`Sorry! We're only open between ${hours.opentime} and ${hours.closetime} today!`);
     }
-    else {
-      return redisRecordOrder(fbUserId, payload)
-        .then(() => res("What time would you like that? (include am/pm)"))
-        .catch(err => rej(err));
-    }
-  })
+
+    return redisRecordOrder(fbUserId, payload)
+      .then(() => res("What time would you like that? (include am/pm)"))
+      .catch(err => rej("Sorry, we had some trouble processing that"));
+  });
 }
 
 module.exports = {
