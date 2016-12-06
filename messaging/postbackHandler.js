@@ -11,7 +11,7 @@ function postbackHandler (jsonPayload, fbUserId, fbPageId) {
   return new Promise(function (res, rej) {
     const payload = JSON.parse(jsonPayload);
 
-    switch (payload.intent) {
+    switch (payload.intent.toUpperCase()) {
       case 'MENU':
         return db.getMenu(fbPageId)
           .then((menu) => res(structured.parseItems(menu)) )

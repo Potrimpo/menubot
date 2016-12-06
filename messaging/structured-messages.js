@@ -2,59 +2,81 @@
  * Created by lewis.knoxstreader on 2/12/16.
  */
 
+const QR = require('./quick-replies');
+
+const button = payload => ({
+  type: 'postback',
+  title: payload.intent,
+  payload: JSON.stringify(payload)
+});
+
+const backButton = payload => ({
+  type: 'postback',
+  title: 'Back',
+  payload: JSON.stringify(payload)
+});
+
 function parseItems(menu) {
   const template = genericTemplate();
+
   template.attachment.payload.elements = menu.map(val => {
     const items = {
       title: `${val.item.toUpperCase()}`,
       image_url: val.item_photo,
-      buttons: []
     };
+
     if (val.item_price) {
-      const order = {
-        intent: 'ORDER',
-        itemid: val.itemid
-      };
       items.title = items.title.concat(` - $${val.item_price}`);
-      items.buttons.push({ type: 'postback', title: 'Order', payload: JSON.stringify(order) });
+      items.buttons = [
+        button({ intent: 'Order', itemid: val.itemid })
+      ];
       return items;
     }
-    const details = {
-      intent: 'DETAILS',
-      itemid: val.itemid
-    };
-    items.buttons.push({ type: 'postback', title: 'Details', payload: JSON.stringify(details) });
-    return items;
+
+    else {
+      items.buttons = [
+        button({ intent: 'Details', itemid: val.itemid })
+      ];
+      return items;
+    }
   });
+
   return template;
 }
 
 function parseProductTypes(types, itemid) {
   const template = genericTemplate();
+
   template.attachment.payload.elements = types.map(val => {
     const types = {
       title: val.type.toUpperCase(),
       image_url: val.type_photo,
-      buttons: []
     };
+
+    const back = {
+      intent: 'Menu',
+      itemid
+    };
+
     if (val.type_price) {
-      const order = {
-        intent: 'ORDER',
-        itemid,
-        typeid: val.typeid
-      };
       types.title = types.title.concat(` - $${val.type_price}`);
-      types.buttons.push({ type: 'postback', title: 'Order', payload: JSON.stringify(order) });
+      types.buttons = [
+        backButton(back),
+        button({ intent: 'Order', itemid, typeid: val.typeid })
+      ];
       return types;
     }
-    const sizes = {
-      intent: 'SIZES',
-      itemid,
-      typeid: val.typeid
-    };
-    types.buttons.push({ type: 'postback', title: 'Sizes', payload: JSON.stringify(sizes) });
-    return types;
+
+    else {
+      types.buttons = [
+        backButton(back),
+        button({ intent: 'Sizes', itemid, typeid: val.typeid })
+      ];
+      return types;
+    }
+
   });
+
   return template;
 }
 
@@ -62,22 +84,24 @@ function parseProductSizes(sizes, typeid, itemid) {
   const template = genericTemplate();
   template.attachment.payload.elements = sizes.map(val => {
     const order = {
-      intent: 'ORDER',
+      intent: 'Order',
       itemid,
       typeid,
       sizeid: val.sizeid
     };
+    const back = {
+      intent: 'Details',
+      itemid
+    };
     return {
       title: `${val.size.toUpperCase()} - $${val.size_price}`,
       buttons: [
-        {
-          type: 'postback',
-          title: 'Order',
-          payload: JSON.stringify(order)
-        },
+        backButton(back),
+        button(order)
       ]
     };
   });
+
   return template;
 }
 
@@ -101,25 +125,15 @@ function parseOrders(orders) {
       }
     }
   });
+  template.quick_replies = QR.basicReplies();
+
   return template;
 }
 
 function getStarted () {
   return {
     text: "Welcome! Would you like to see our menu?",
-    quick_replies: [{
-      content_type: "text",
-      title: "Menu",
-      payload: JSON.stringify({ intent: "MENU" })
-    }, {
-      content_type: "text",
-      title: "Location",
-      payload: JSON.stringify({ intent: "LOCATION" })
-    }, {
-      content_type: "text",
-      title: "Hours",
-      payload: JSON.stringify({ intent: "HOURS" })
-    }]
+    quick_replies: QR.basicReplies()
   };
 }
 
