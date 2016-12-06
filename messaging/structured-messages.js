@@ -105,13 +105,20 @@ function parseOrders(orders) {
 }
 
 function getStarted () {
-  const payload = { intent: "MENU" };
   return {
     text: "Welcome! Would you like to see our menu?",
     quick_replies: [{
       content_type: "text",
       title: "Menu",
-      payload: JSON.stringify(payload)
+      payload: JSON.stringify({ intent: "MENU" })
+    }, {
+      content_type: "text",
+      title: "Location",
+      payload: JSON.stringify({ intent: "LOCATION" })
+    }, {
+      content_type: "text",
+      title: "Hours",
+      payload: JSON.stringify({ intent: "HOURS" })
     }]
   };
 }
