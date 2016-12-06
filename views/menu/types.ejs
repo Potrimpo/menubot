@@ -9,7 +9,7 @@
             <div class="row type-outer-container">
 
               <div class="row type-heading-inner-container">
-                <div class="col-xs-6">
+                <div class="col-xs-12 col-sm-6">
                   <button type="button" name="type-<%= types[x].typeid %>" class="type-remove-button delete-entry">
                     <i class="fa fa-trash-o type-remove-button-glyph" aria-hidden="true"></i></button>
                   <p class="type-title"><%= types[x].type %></p>
@@ -27,7 +27,7 @@
                  if (hasSizeChild) { %>
 
                 <% } else { %>
-                  <div class="col-xs-6">
+                  <div class="col-xs-9 col-sm-6">
                     <form id="<%= types[x].typeid %>" name="type"
                           style="float:right;" class="price form-inline">
                       <div class="form-group-lg" >
@@ -44,9 +44,9 @@
                           >
                           <span class="input-group-btn">
                              <button class="btn btn-default btn-lg type-price-button" type="submit">
-                               <p class="rotate" style="margin: 0px">
-                                 Set
-                               </p>
+                               <button class="btn btn-default btn-lg item-price-button" type="submit">
+                                   Set
+                               </button>
                              </button>
                           </span>
                         </div>
@@ -58,7 +58,7 @@
 
               </div>
 
-              <div class="row type-content-inner-container">
+              <div class="row type-content-inner-container" style="margin-top: 20px">
                 <img src="<%= types[x].type_photo ? types[x].type_photo : "" %>" class="thumbnail menu-photo" />
               </div>
 

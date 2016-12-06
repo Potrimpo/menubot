@@ -3,7 +3,7 @@
       <div class="row item-outer-container">
         <div class="col-xs-12 ">
           <div class="row item-heading-inner-container">
-            <div class="col-xs-6">
+            <div class="col-xs-12 col-sm-6">
               <button class="delete-entry item-remove-button" type="button" name="item-<%= items[i].itemid %>">
                 <i class="fa fa-trash-o item-remove-button-glyph" aria-hidden="true"></i>
               </button>
@@ -22,7 +22,7 @@
              if (hasTypeChild) { %>
 
             <% } else { %>
-              <div class="col-xs-6">
+              <div class="col-xs-8 col-sm-6">
                 <form id="<%= items[i].itemid %>" name="item"
                   style="float:right;" class="price form-inline"
                 >
@@ -38,9 +38,7 @@
                          size="10" class="form-control" placeholder="Price">
                        <span class="input-group-btn">
                           <button class="btn btn-default btn-lg item-price-button" type="submit">
-                            <p class="rotate" style="margin:0px;">
                               Set
-                            </p>
                           </button>
                        </span>
                     </div>
@@ -51,7 +49,7 @@
 
             <div style="clear:both;"></div>
           </div>
-          <div class="row item-content-inner-container">
+          <div class="row item-content-inner-container" style="margin-top: 20px">
             <img src="<%= items[i].item_photo ? items[i].item_photo : "" %>" class="thumbnail menu-photo" />
           </div>
           <div class="row">
