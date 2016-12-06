@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import Order from './Order'
 
 const OrdersList = ({ fbid, orders, onOrderClick }) => (
-  <div>
+  <div style={{margin: "0 5px 0 5px"}}>
     {orders.map((order, i) =>
       <Order
         key={order.orderid}
