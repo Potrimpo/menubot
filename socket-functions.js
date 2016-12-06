@@ -1,8 +1,7 @@
 /**
  * Created by lewis.knoxstreader on 20/11/16.
  */
-const Rx = require('rx'),
-  { client, sub } = require('./redis-init'),
+const { client, sub } = require('./redis-init'),
   { fetchOrders, setOrderComplete } = require('./controllers/orders');
 
 function init (io) {
@@ -11,16 +10,7 @@ function init (io) {
 
     socket.on('request-orders', requestOrders);
 
-    // assign to socket object so we can access & dispose of subscription at any point
-    socket.orderSubscription = Rx.Observable.create(observer => {
-      sub.on('message', (channel, message) => observer.onNext(message));
-      sub.on('unsubscribe', channel => observer.onCompleted());
-    })
-    .debounce(500)
-    .subscribe(
-      (message) => socket.emit('new-order', message),
-      err => console.error("error in this shit", err)
-    );
+    sub.on('message', (channel, message) => socket.emit('new-order', message));
 
     socket.on('order-status', orderid => setOrderComplete(orderid));
 
