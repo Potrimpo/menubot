@@ -33,10 +33,18 @@ const basicReplies = () =>
     hours
   ];
 
+const hoursReplies = () =>
+  [
+    menu,
+    location,
+    myOrders
+  ];
+
 module.exports = {
   menu,
   location,
   hours,
   myOrders,
-  basicReplies
+  basicReplies,
+  hoursReplies
 };

@@ -2,9 +2,8 @@
  * Created by lewis.knoxstreader on 31/08/16.
  */
 
-const chrono = require('chrono-node'),
-  { redisRecordOrder } = require('./messengerSessions'),
-  structured = require('./structured-messages'),
+const structured = require('./structured-messages'),
+  text = require('./text-messages'),
   db = require('./../repositories/bot/botQueries');
 
 function postbackHandler (jsonPayload, fbUserId, fbPageId) {
@@ -34,7 +33,7 @@ function postbackHandler (jsonPayload, fbUserId, fbPageId) {
 
       case 'ORDER':
         return db.checkOpenStatus(fbPageId)
-          .then(status => openStatus(status, fbUserId, payload))
+          .then(status => text.openStatus(status, fbUserId, payload))
           .then(resp => res(resp))
           .catch(err => rej(err));
 
@@ -45,7 +44,7 @@ function postbackHandler (jsonPayload, fbUserId, fbPageId) {
 
       case 'HOURS':
         return db.checkOpenStatus(fbPageId)
-          .then(hours => res(postbackHours(hours)))
+          .then(hours => res(text.postbackHours(hours)))
           .catch(err => rej(err));
 
       case 'GET_STARTED':
@@ -60,41 +59,6 @@ function postbackHandler (jsonPayload, fbUserId, fbPageId) {
       const payload = JSON.parse(jsonPayload);
       console.error(`Error in ${payload.intent} postback:`, err)
     });
-}
-
-function postbackHours (hours) {
-  switch (hours.status) {
-    case false:
-      return "Sorry! We're not open today";
-
-    case true:
-      return `We're open between ${hours.opentime} and ${hours.closetime} today`;
-  }
-}
-
-function openStatus (data, fbUserId, payload) {
-  console.log("company status =", data.status);
-  switch (data.status) {
-    case true:
-      return filterHours({
-        opentime: data.opentime,
-        closetime: data.closetime
-      }, payload, fbUserId);
-
-    case false:
-      return "Sorry! We're not open today!";
-  }
-}
-
-function filterHours (hours, payload, fbUserId) {
-  const now = Date.now();
-  if (now > chrono.parseDate(hours.closetime)) {
-    return `Sorry! We're only open between ${hours.opentime} and ${hours.closetime} today!`;
-  }
-  else {
-    return redisRecordOrder(fbUserId, payload)
-      .then(() => "What time would you like that? (include am/pm)");
-  }
 }
 
 module.exports = postbackHandler;
