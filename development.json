@@ -1,0 +1,19 @@
+{
+  "apps" : [{
+    "name": "menubot-dev",
+    "script": "./app.js",
+    "autorestart": false,
+    "env": {
+      "NODE_ENV": "development",
+      "PORT": 8445,
+      "postgresURL": "localhost",
+      "serverIP": "localhost",
+      "postgresPassword": "45FeistyEggsFearY2k",
+      "sessionTable": "Sessions",
+      "FACEBOOK_ID": "",
+      "FB_APP_SECRET": "",
+      "FB_VERIFY_TOKEN": "saveme"
+    }
+  }
+  ]
+}
