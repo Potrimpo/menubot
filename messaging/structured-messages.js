@@ -4,6 +4,18 @@
 
 const QR = require('./quick-replies');
 
+const getStarted = () => ({
+  text: "Welcome! Would you like to see our menu?",
+  quick_replies: QR.basicReplies()
+});
+
+const genericTemplate  = () => ({
+  attachment: {
+    type:"template",
+    payload: { template_type:"generic" }
+  }
+});
+
 const button = payload => ({
   type: 'postback',
   title: payload.intent,
@@ -47,11 +59,6 @@ function parseProductTypes(types, itemid) {
       image_url: val.type_photo,
     };
 
-    const back = {
-      intent: 'Menu',
-      itemid
-    };
-
     if (val.type_price) {
       types.title = types.title.concat(` - $${val.type_price}`);
       types.buttons = [
@@ -81,10 +88,7 @@ function parseProductSizes(sizes, typeid, itemid) {
       typeid,
       sizeid: val.sizeid
     };
-    const back = {
-      intent: 'Details',
-      itemid
-    };
+
     return {
       title: `${val.size.toUpperCase()} - $${val.size_price}`,
       buttons: [
@@ -119,22 +123,6 @@ function parseOrders(orders) {
   template.quick_replies = QR.basicReplies();
 
   return template;
-}
-
-function getStarted () {
-  return {
-    text: "Welcome! Would you like to see our menu?",
-    quick_replies: QR.basicReplies()
-  };
-}
-
-function genericTemplate () {
-  return {
-    attachment: {
-      type:"template",
-      payload: { template_type:"generic" }
-    }
-  };
 }
 
 module.exports = {
