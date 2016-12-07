@@ -41,7 +41,9 @@
             <div style="clear:both;"></div>
           </div>
           <div class="row item-content-inner-container">
-            <img src="<%= items[i].item_photo ? items[i].item_photo : "" %>" class="thumbnail menu-photo" />
+            <div class="col-sm-6 col-xs-12">
+              <img src="<%= items[i].item_photo ? items[i].item_photo : "" %>" style="float:left" class="thumbnail menu-photo" />
+            </div>
           </div>
           <div class="row">
             <%- include types %>

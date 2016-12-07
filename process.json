@@ -2,7 +2,6 @@
   "apps" : [{
     "name": "menubot",
     "script": "./app.js",
-    "autorestart": false,
     "env": {
       "NODE_ENV": "production",
       "PORT": 3000,
@@ -12,17 +11,6 @@
       "sessionTable": "Sessions",
       "FACEBOOK_ID": 567873923403025,
       "FB_APP_SECRET": "175e617e489723a33f9461691198225c",
-      "FB_VERIFY_TOKEN": "saveme"
-    },
-    "env_dev": {
-      "NODE_ENV": "development",
-      "PORT": 8445,
-      "postgresURL": "localhost",
-      "serverIP": "localhost",
-      "postgresPassword": "45FeistyEggsFearY2k",
-      "sessionTable": "Sessions",
-      "FACEBOOK_ID": "",
-      "FB_APP_SECRET": "",
       "FB_VERIFY_TOKEN": "saveme"
     }
   }

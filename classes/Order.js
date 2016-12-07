@@ -10,7 +10,12 @@ const chrono = require('chrono-node'),
 
 class Order {
   constructor (fbPageId, fbUserId, msg, data) {
-    return Order.dbInsert(fbPageId, fbUserId, msg, data)
+    const time = chrono.parseDate(msg);
+
+    return Order.checkHours(fbPageId, time)
+      .then(() =>
+        Order.dbInsert(fbPageId, fbUserId, time, data)
+      )
       .then(fields => {
         fields = fields[0];
 
@@ -37,7 +42,11 @@ class Order {
         Order.publishOnCreate(fields);
         return this;
       })
-      .catch(err => console.error("error creating Order", err));
+      .catch(err => {
+        console.error("error creating Order", err);
+        this.error = err;
+        return this;
+      });
   }
 
   // broadcast order details via Redis
@@ -46,27 +55,81 @@ class Order {
   }
 
   // insert order into database, returning values used to create Order instance
-  static dbInsert (fbPageId, fbUserId, msg, order) {
-    const time = chrono.parseDate(msg);
-    return time ? db.makeOrder(fbPageId, fbUserId, time, order) : new Error("couldn't parse time from message");
+  static dbInsert (fbPageId, fbUserId, time, order) {
+    if (!time) throw "Sorry, we couldn't understand the time you gave us";
+    return db.makeOrder(fbPageId, fbUserId, time, order);
   }
 
-  readableTime () {
+  // check the company is open & requested time is within open hours
+  static checkHours (fbPageId, requestTime) {
+    return db.checkOpenStatus(fbPageId)
+      .then(data => {
+        switch (data.status) {
+          case false:
+            throw "Sorry! We aren't open today";
+
+          case true:
+            const opentime = chrono.parseDate(data.opentime),
+              closetime = chrono.parseDate(data.closetime);
+            if (!requestTime) throw "Sorry, we couldn't understand the time you gave us";
+            if (requestTime <  opentime || requestTime > closetime) {
+              throw `Sorry! We're only open between ${data.opentime} and ${data.closetime} today`;
+            }
+        }
+      });
+  }
+
+  toMessage () {
+    return this.error ? this.error : this.confirmationMsg;
+  }
+
+  get readableTime () {
     return chrono.parseDate(String(this.pickuptime));
   }
 
   get confirmationMsg () {
+    const responses = [];
+
+    responses.push(
+      orderConfirm("Success!")
+    );
     switch (this.depth) {
       case "item":
-        return `Order for one ${this.itemVals.item} @ ${this.readableTime()}`;
+        responses.push(
+          orderConfirm(`Order for one ${this.itemVals.item} @ ${this.readableTime}`)
+        );
+        break;
 
       case "type":
-        return `Order for one ${this.typeVals.type} ${this.itemVals.item} @ ${this.readableTime()}`;
+        responses.push(
+          orderConfirm(`Order for one ${this.typeVals.type} ${this.itemVals.item} @ ${this.readableTime}`)
+        );
+        break;
 
       case "size":
-        return `Order for one ${this.sizeVals.size} ${this.typeVals.type} ${this.itemVals.item} @ ${this.readableTime()}`;
+        responses.push(
+          orderConfirm(`Order for one ${this.sizeVals.size} ${this.typeVals.type} ${this.itemVals.item} @ ${this.readableTime}`)
+        );
+        break;
     }
+    return responses;
   }
 }
+
+function orderConfirm (text) {
+  return {
+    text: text,
+    quick_replies: [{
+      content_type: "text",
+      title: "Menu",
+      payload: JSON.stringify({ intent: "MENU" })
+    }, {
+      content_type: "text",
+      title: "My Orders",
+      payload: JSON.stringify({ intent: "MY_ORDERS" })
+    }]
+  };
+}
+
 
 module.exports = Order;

@@ -219,6 +219,9 @@ Write out with CTRL + O, then ENTER, then exit with CTRL + X
 > Note that the application assumes the application server will be running on internal IP: 10.146.0.2 and the database server will be running on internal IP: 10.146.0.3 .
 > Check that this is the case on the Google Clould console instances page, and if needed, change the configuration in process.json .
 
+
+## Redis Server setup
+
 ```
 cd ~
 wget http://download.redis.io/redis-stable.tar.gz
@@ -273,8 +276,6 @@ If you feel like it, make sure that everything is working as expected:
 Please now follow the "Facebook app: First time setup" process you can find earlier in this documentation page.
 
 ##### Congratulations, you're done with setting up the application server. However, the database server still needs to be setup.
-
-
 
 ### Day to day live server running
 > This setup process is used to run the server when the first time setup process has already been followed. This might when you've pulled a new version of the server from git, or when you've otherwise changed the live version, and now need to restart to implement your changes.
@@ -386,6 +387,15 @@ add the new lines:
 sudo service postgresql restart
 ```
 ##### Congratulations, you're done with setting up the database server.
+
+> Unsure whether this needs to be part of the setup docs.
+
+> After setting the database running, you may need to create the user that we connect as.
+
+```
+sudo -u postgres psql menubot
+CREATE USER postgres WITH PASSWORD '<postgresPassword>';
+```
 
 
 ### Useful commands

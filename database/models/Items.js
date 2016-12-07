@@ -26,6 +26,11 @@ module.exports = function (sequelize, Sequelize) {
     },
     item_price: {
       type: Sequelize.DECIMAL
+    },
+    use_options: {
+      type: Sequelize.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
     }
   }, {
     tableName: 'items',

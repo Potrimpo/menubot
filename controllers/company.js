@@ -23,6 +23,10 @@ router.route('/:companyId')
         res.render('account/company', {
           bot_status: data.bot_status,
           location: data.location,
+          opentime: data.opentime,
+          closetime: data.closetime,
+          status: data.status,
+          compName: data.name,
           fbid: data.fbid,
           title: data.name,
           items: data.items,
@@ -55,12 +59,22 @@ router.route('/location/:companyId')
       .catch(err => console.error("error updating location field", err))
   );
 
+router.route('/hours/:companyId')
+  .post((req, res) =>
+    db.setOpenHours(req.body)
+      .then(() => res.status(200).send())
+      .catch(err => {
+        const msg = "error setting company open hours";
+        console.error(msg, err);
+        return res.status(500).send(msg);
+      })
+  );
 
 function getMenu (id) {
   return db.getCompanyMenu(id)
     .then(data => {
       if (data.length > 0) return fullMenu(id, data);
-      else return db.findCompany(id)
+        else return db.findCompany(id)
     })
     .catch(err => console.error("error in getMenu", err.message || err));
 }
@@ -71,6 +85,9 @@ function fullMenu (fbid, data) {
     name: data[0].name,
     bot_status: data[0].bot_status,
     location: data[0].location,
+    opentime: data[0].opentime,
+    closetime: data[0].closetime,
+    status: data[0].status,
     fbid,
     items: data
   };

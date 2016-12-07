@@ -38,9 +38,9 @@ function requestOrders (fbid) {
 
 // --> Disconnect socket & stop listening for new-order updates for our page
 // find the right fbid by searching redis with our socket id
-// unsubscribe from events on fbid frequency
+// unsubscribe from redis messages on fbid frequency
 function disco () {
-  client.getAsync(this.id)
+  return client.getAsync(this.id)
     .then(fbid => sub.unsubscribe(fbid))
     .then(() => client.delAsync(this.id))
     .catch(err => console.error("error disconnecting socket", err));
