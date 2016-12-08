@@ -2,10 +2,6 @@
 
 const db = require('../repositories/site/CompanyRepository');
 
-/**
- * GET /
- * Home page.
- */
 exports.index = (req, res) => {
   const accountIds = req.user.accounts.map(val => val.fbid);
   return db.findUserCompanies(accountIds)
@@ -15,21 +11,19 @@ exports.index = (req, res) => {
     } );
 };
 
+function unregisteredCompanies (accounts, dbCompanies) {
+  return accounts.filter(val =>
+    dbCompanies.map(comp => comp.fbid)
+      .indexOf(val.fbid) === -1
+  );
+}
+
 exports.landing = (req, res) => {
   if (req.user && req.isAuthenticated()) return res.redirect('/');
   res.render('landing', {
     title: 'landing'
   });
 };
-
-function unregisteredCompanies (accounts, dbCompanies) {
-  return accounts.filter(val => {
-    for (let i = dbCompanies.length - 1; i >= 0; i--) {
-      if (dbCompanies[i].fbid === val.fbid) return false
-    }
-    return true;
-  })
-}
 
 exports.orders = (req, res) =>
   res.render('orders/orders', {
