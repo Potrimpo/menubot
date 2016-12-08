@@ -60,11 +60,48 @@ $(document).ready(function() {
     $('#myQuote').html(myQuote[quoteRandom]);
   }
 
-  //Initialising libraries
-  $("[name='openToday']").bootstrapSwitch({size: "small", onText: "Open", offText: "Closed"});
   //yay for us
   console.log("WE IN IT");
 
+  //initialising orders page guffery
+  if(document.location.pathname.indexOf('/orders/') == 0) {
+    $("[name='filterLink']").mouseup(function(){
+      $(this).blur();
+    });
+  };
+
+  //initialising menu page guffery
+  if (document.location.pathname.indexOf('/company/') == 0) {
+    $("[name='openToday']").bootstrapSwitch({size: "small", onText: "Open", offText: "Closed"});
+  };
+
+  //initialising landing page guffery
+  if (window.location.pathname == '/landing') {
+    var colWidth = $('#landingVidCol').width();
+    var vidHeight = colWidth/1.777777;
+    $('#landingVid').attr("width", colWidth);
+    $('#landingVid').attr("height", vidHeight);
+
+    if ($(window).width() < 992) {
+      $('#landingText').hide()
+      $('#landingVid').css("margin-top", "45px")
+    }
+
+    $("[name='filterLink']").mouseup(function(){
+        $(this).blur();
+    });
+
+    $("[name='hider-btn']").click(function () {
+      var value = this.id;
+      if ( $(`[name=hider-content]#${value}`).is( ":hidden" ) ) {
+        $(`[name='hider-btn']#${value}`).html('Hide details «')
+        $(`[name=hider-content]#${value}`).slideDown();
+      } else {
+        $(`[name='hider-btn']#${value}`).html('View details »')
+        $(`[name=hider-content]#${value}`).slideUp();
+      }
+    });
+  }
 
   // document constants
   const fbid = $('.company-head').attr('id');
