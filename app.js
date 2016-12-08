@@ -39,6 +39,7 @@ app.route('/webhook')
 // Primary app routes.
 app.get('/', passportConf.isAuthenticated, passportConf.isAuthorized, homeController.index);
 app.get('/landing', homeController.landing);
+app.get('/login', userController.validKey, homeController.landing);
 app.get('/logout', userController.logout);
 app.get('/contact', contactController.getContact);
 // app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);

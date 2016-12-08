@@ -1,6 +1,19 @@
 'use strict';
 
-const db = require('../repositories/site/UserRepository.js');
+const bcrypt = require('bcrypt'),
+  db = require('../repositories/site/UserRepository.js');
+
+exports.validKey = (req, res, next) =>
+  db.checkKey(req.body.password)
+    .then(hash => {
+      console.log("hash from db =", hash);
+      return bcrypt.compare(req.body.password, hash)
+        .then(status => status ? next() : res.redirect('/landing'))
+    })
+    .catch(err => {
+      console.log("error validating key", err);
+      return res.status(500).redirect('/landing');
+    });
 
 exports.logout = (req, res) => {
   req.logout();

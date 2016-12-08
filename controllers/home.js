@@ -25,6 +25,13 @@ exports.landing = (req, res) => {
   });
 };
 
+exports.login = (req, res) => {
+  if (req.user && req.isAuthenticated()) return res.redirect('/');
+  res.render('landing', {
+    title: 'landing'
+  });
+};
+
 exports.orders = (req, res) =>
   res.render('orders/orders', {
     title: 'Orders',

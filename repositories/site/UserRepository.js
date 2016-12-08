@@ -1,7 +1,7 @@
 'use strict';
 
-var { User } = require('../../database/models/index');
-const fetch = require('node-fetch');
+const { User, Key } = require('../../database/models/index'),
+  fetch = require('node-fetch');
 
 exports.getUserById = function(id) {
   return User.findById(id);
@@ -10,6 +10,8 @@ exports.getUserById = function(id) {
 exports.removeUserById = function(userId) {
   return User.destroy({ where: { id: userId } });
 };
+
+exports.checkKey = key => Key.findById(key);
 
 exports.unlinkProviderFromAccount = function(provider, userId) {
   return User.findById(userId)
