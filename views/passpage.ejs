@@ -65,14 +65,26 @@
   <div class="col-xs-12" style="margin-top:30px;">
     <h1 class="text-center">Want to try Menubot?</h1>
     <h2 class="text-center">Only $10/month. To get an access code, contact us at:</h2>
-    <h2 class="text-center"><a href="mailto:daish@piric.io">daish@piric.io</a> or +021 151 6781</h2>
-    <form class="form-inline text-center" style="margin-top:45px;">
+    <h2 class="text-center"><a href="mailto:daish@piric.io">daish@piric.io</a> or <span style="white-space: nowrap;">+021 151 6781</span></h2>
+    <form id="authCodeForm1" class="form-inline text-center" style="margin-top:45px;">
       <div class="form-group">
         <div class="input-group">
           <input type="text" class="form-control input-lg" id="exampleInputAmount" placeholder="Code" required>
         </div>
       </div>
       <button type="submit" class="btn btn-primary btn-lg">Enter code</button>
+    </form>
+    <form id="authCodeForm2" class="form-inline text-center" hidden style="margin-top:45px;">
+      <div class="col-xs-7">
+        <div class="form-group">
+          <div class="input-group" style="float:right">
+            <input type="text" class="form-control input-lg" id="authCodeInput" placeholder="Code" required>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-5">
+        <button type="submit" style="float: left" class="btn btn-primary btn-lg">Enter code</button>
+      </div>
     </form>
   </div>
 </div>

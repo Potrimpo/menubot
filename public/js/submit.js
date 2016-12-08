@@ -87,6 +87,11 @@ $(document).ready(function() {
       $('#landingVid').css("margin-top", "45px")
     }
 
+    if ($(window).width() < 768) {
+      $('#authCodeForm1').hide();
+      $('#authCodeForm2').show();
+    }
+
     $("[name='filterLink']").mouseup(function(){
         $(this).blur();
     });
