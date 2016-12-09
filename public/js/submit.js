@@ -77,12 +77,6 @@ $(document).ready(function() {
 
   //initialising landing page guffery
   if (window.location.pathname == '/landing') {
-    const colWidth = $('#landingVidCol').width();
-    const vidHeight = colWidth/1.777777;
-    const landingVideo = $('#landingVid');
-
-    landingVideo.attr("width", colWidth);
-    landingVideo.attr("height", vidHeight);
 
     if ($(window).width() < 992) {
       $('#landingText').hide();
@@ -93,10 +87,6 @@ $(document).ready(function() {
       $('#authCodeForm1').hide();
       $('#authCodeForm2').show();
     }
-
-    $("[name='filterLink']").mouseup(function(){
-        $(this).blur();
-    });
 
     $("[name='hider-btn']").click(function () {
       const value = this.id;
@@ -109,6 +99,7 @@ $(document).ready(function() {
         hider.slideUp();
       }
     });
+
   }
 
   // document constants

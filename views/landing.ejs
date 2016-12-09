@@ -57,7 +57,11 @@
 
 
   <div class="col-sm-12 col-md-offset-1 col-md-6" id="landingVidCol">
-    <iframe id="landingVid" src="https://www.youtube.com/embed/iZugt3fiBe0" frameborder="1" allowfullscreen></iframe>
+    <div style="position:relative;">
+      <img class="demoVidRatio" src="https://placehold.it/16x9"/>
+      <iframe src="https://www.youtube.com/embed/iZugt3fiBe0" frameborder="1" class="demoVid" allowfullscreen></iframe>
+    </div>
+
   </div>
 
 </div>
@@ -69,6 +73,7 @@
     <form id="authCodeForm1" method="POST" action="/login" class="form-inline text-center" style="margin-top:45px;">
       <div class="form-group">
         <div class="input-group">
+          <input name="number" type="text" class="form-control input-lg" placeholder="Number" required>
           <input name="password" type="text" class="form-control input-lg" id="exampleInputAmount" placeholder="Code" required>
         </div>
       </div>
