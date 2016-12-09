@@ -8,7 +8,6 @@ module.exports = function (sequelize, Sequelize) {
       fbid: {
         type: Sequelize.BIGINT,
         unique: true,
-        allowNull: false,
         primaryKey: true
       },
       access_token: {

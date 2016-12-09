@@ -10,7 +10,6 @@ module.exports = function (sequelize, Sequelize) {
   return sequelize.define('Session', {
     sid: {
       type: Sequelize.STRING,
-      allowNull: false,
       primaryKey: true
     },
     sess: {
