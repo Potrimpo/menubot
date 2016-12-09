@@ -68,18 +68,18 @@ module.exports = function (app, express) {
   //   cookie: 'X-CSRF-TOKEN'
   // }));
 
-  app.use(function(req, res, next) {
-    res.locals.user = req.user;
-    res.locals.gaCode = secrets.googleAnalyticsCode;
-    next();
-  });
-
   // app.use(function(req, res, next) {
   //   console.log("COOKIE ====", req.cookies["X-CSRF-TOKEN"]);
   //   console.log("LOCALS ===", res.locals._csrf);
   //   res.cookie('X-CSRF-TOKEN', res.locals._csrf, {httpOnly: false});
   //   next();
   // });
+
+  app.use(function(req, res, next) {
+    res.locals.user = req.user;
+    res.locals.gaCode = secrets.googleAnalyticsCode;
+    next();
+  });
 
   // Error Handler.
   app.use(errorHandler());

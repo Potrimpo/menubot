@@ -23,24 +23,19 @@ exports.logout = (req, res) => {
   return res.redirect('/landing');
 };
 
-exports.deleteAccount = function(req, res) {
-  db.removeUserById(req.user.id)
-    .then(function() {
-      req.logout();
-      req.flash('info', { msg: 'Your account has been deleted.' });
-      res.json({ success: true });
-    });
-};
-
-exports.getOauthUnlink = function(req, res, next) {
-  const provider = req.params.provider;
-
-  db.unlinkProviderFromAccount(provider, req.user.id)
-    .then(function() {
-      req.flash('info', { msg: provider + ' account has been unlinked.' });
-      res.redirect('/landing');
-    })
-    .catch(function(err) {
-      return next(err);
-    });
-};
+// exports.deleteAccount = (req, res) =>
+//   db.removeUserById(req.user.id)
+//     .then(() => {
+//       req.logout();
+//       return res.json({ success: true });
+//     });
+//
+// exports.getOauthUnlink = (req, res, next) => {
+//   const provider = req.params.provider;
+//
+//   return db.unlinkProviderFromAccount(provider, req.user.id)
+//     .then(() => {
+//       req.flash('info', { msg: provider + ' account has been unlinked.' });
+//       return res.redirect('/landing');
+//     });
+// };
