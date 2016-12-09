@@ -9,8 +9,8 @@ const express = require('express'),
 const app = express(),
   http = require('http').createServer(app),
   io = require('socket.io')(http),
-  expressConfig = require('./express-config'),
-  { sequelize } = require('./database/models/index');
+  { sequelize } = require('./database/models/index'),
+  expressConfig = require('./express-config');
 
 expressConfig(app, express);
 
@@ -39,7 +39,7 @@ app.route('/webhook')
 // Primary app routes.
 app.get('/', passportConf.isAuthenticated, passportConf.isAuthorized, homeController.index);
 app.get('/landing', homeController.landing);
-app.get('/login', userController.validKey, homeController.landing);
+app.post('/login', userController.validKey, homeController.login);
 app.get('/logout', userController.logout);
 app.get('/contact', contactController.getContact);
 // app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);

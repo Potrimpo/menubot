@@ -11,7 +11,12 @@ exports.removeUserById = function(userId) {
   return User.destroy({ where: { id: userId } });
 };
 
-exports.checkKey = key => Key.findById(key);
+exports.getKey = num =>
+  Key.findById(num)
+    .then(key => {
+      if (!key) throw new Error("Password not found");
+      return key;
+    });
 
 exports.unlinkProviderFromAccount = function(provider, userId) {
   return User.findById(userId)

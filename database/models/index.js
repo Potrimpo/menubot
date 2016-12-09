@@ -20,8 +20,6 @@ const Session = sequelize.import("./Sessions"),
   Customer = sequelize.import("./Customers");
 
 // Relations
-Key.belongsTo(User, { foreignKey: 'id', onDelete: 'cascade' });
-
 Item.belongsTo(Company, { foreignKey: 'fbid', onDelete: 'cascade' });
 Type.belongsTo(Item, { foreignKey: 'itemid', onDelete: 'cascade' });
 Size.belongsTo(Type, { foreignKey: 'typeid', onDelete: 'cascade' });

@@ -18,19 +18,17 @@ function unregisteredCompanies (accounts, dbCompanies) {
   );
 }
 
-exports.landing = (req, res) => {
-  if (req.user && req.isAuthenticated()) return res.redirect('/');
-  res.render('landing', {
-    title: 'landing'
-  });
-};
+exports.landing = (req, res) =>
+  req.user && req.isAuthenticated() ? res.redirect('/') :
+    res.render('landing', {
+      title: 'landing'
+    });
 
-exports.login = (req, res) => {
-  if (req.user && req.isAuthenticated()) return res.redirect('/');
-  res.render('landing', {
-    title: 'landing'
-  });
-};
+exports.login = (req, res) =>
+  req.user && req.isAuthenticated() ? res.redirect('/') :
+    res.render('login', {
+      title: 'login'
+    });
 
 exports.orders = (req, res) =>
   res.render('orders/orders', {
