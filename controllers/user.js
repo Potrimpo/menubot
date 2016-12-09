@@ -5,23 +5,18 @@ const bcrypt = require('bcrypt'),
 
 const rounds = 12;
 
-exports.validKey = (req, res, next) => {
-  console.log("req.body =", req.body);
+exports.validKey = (req, res, next) =>
   db.getKey(req.body.number)
-    .then(key => {
-      console.log("key from db =", key.dataValues);
-      return bcrypt.compare(req.body.password, key.password);
-    })
-    .then(status => {
-      console.log("compare status =", status);
-      return status ? next() : res.redirect('/landing')
-    }
+    .then(key =>
+      bcrypt.compare(req.body.password, key.password)
     )
-    .catch(err => {
-      console.error("error validating key", err);
-      return res.status(500).redirect('/landing');
-    });
-};
+    .then(status =>
+      status ? next() : res.redirect('/landing')
+    )
+    .catch(() =>
+      res.status(500).redirect('/landing')
+    );
+
 exports.logout = (req, res) => {
   req.logout();
   res.locals.user = null;
