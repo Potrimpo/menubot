@@ -37,6 +37,17 @@ exports.logout = (req, res) => {
   return res.redirect('/landing');
 };
 
+const rounds = 12;
+const insertKey = ({ key, password }) =>
+  bcrypt.hash(password, rounds)
+    .then(hash =>
+      db.newPassword(key, hash));
+
+exports.newCode = (req, res) =>
+  insertKey(req.body)
+    .then(_ => res.status(200).send("success!"))
+    .catch(e => res.status(500).send(e));
+
 // exports.deleteAccount = (req, res) =>
 //   db.removeUserById(req.user.id)
 //     .then(() => {
