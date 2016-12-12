@@ -53,7 +53,6 @@ $(document).ready(function() {
 
     if ($(window).width() < 992) {
       $('#landingText').hide();
-      landingVideo.css("margin-top", "45px")
     }
 
     if ($(window).width() < 768) {
