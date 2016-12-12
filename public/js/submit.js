@@ -6,13 +6,15 @@
 window.jQuery = window.$ = require('./lib/jquery-2.1.3.min');
 const _ = require('./lib/bootstrap.min');
 
+const myQuote = require('./quotes');
+
 
 console.log("PRIOR TO BEING IN IT");
 
 $(document).ready(function() {
   //Removing spinner
   $('#spinner-overlay').hide();
-  $('body').removeClass('overlay-container')
+  $('body').removeClass('overlay-container');
 
   //Defining spin boys
   $('.misc-async').click(function () {
@@ -24,35 +26,6 @@ $(document).ready(function() {
     $('body').addClass('overlay-container');
   }
 
-  // dumb Footer quote generator
-  var myQuote = [
-    "&quot;And into this website he poured all his cruelty, his malice and his will to dominate all life&quot; - ",
-    "Constructed mostly from crayons and construction paper by ",
-    "Put together by ",
-    "By ",
-    "Designed by ",
-    "Made by ",
-    "Developed by ",
-    "Fabricated by ",
-    "Erected to appease pagan deity ",
-    "1000 monkeys with 1000 type writers owned by ",
-    "Means of production seized by ",
-    "Put together by ",
-    "Hastily cobbled together by ",
-    "Hastily replated from floor by ",
-    "Brewed from knockbox waste by ",
-    "Ironically designed by ",
-    "Written by ",
-    "Manufactured by ",
-    "Powered by ",
-    "Assembled by ",
-    "Completed by ",
-    "Step one in world domination by ",
-    "Raised in the name of ",
-    "Laundering by ",
-    "Blood, sweat and tears by ",
-    "Lovingly crafted by "
-  ];
   if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
 
   } else {
