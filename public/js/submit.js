@@ -6,7 +6,7 @@
 window.jQuery = window.$ = require('./lib/jquery-2.1.3.min');
 const _ = require('./lib/bootstrap.min');
 
-const myQuote = require('./quotes');
+import myQuote from './quotes';
 
 
 console.log("PRIOR TO BEING IN IT");
