@@ -1,6 +1,6 @@
 'use strict';
 
-const { User, Key } = require('../../database/models/index'),
+const { sequelize, User, Key } = require('../../database/models/index'),
   fetch = require('node-fetch');
 
 exports.getUserById = function(id) {
@@ -17,6 +17,12 @@ exports.getKey = num =>
       if (!key) throw new Error("Password not found");
       return key;
     });
+
+exports.newPassword = (key, hash) =>
+  sequelize.query(
+    "INSERT INTO keys (number, password)" +
+    " VALUES (:key, :hash)",
+    { replacements: { key, hash }, type: sequelize.QueryTypes.INSERT });
 
 exports.unlinkProviderFromAccount = function(provider, userId) {
   return User.findById(userId)
