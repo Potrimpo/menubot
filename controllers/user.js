@@ -1,21 +1,35 @@
 'use strict';
 
 const bcrypt = require('bcrypt'),
+  R = require('ramda'),
   db = require('../repositories/site/UserRepository.js');
 
-const rounds = 12;
+const parseCode = str =>
+  str.match(/\d+/g);
+
+const codeToObj = xs => ({
+  number: xs[0],
+  password: xs[1]
+});
+
+const getAndCompare = obj =>
+  db.getKey(obj.number)
+    .then(hash =>
+      bcrypt.compare(obj.password, hash.password));
+
+// :: String -> Promise
+const parseAndCompare =
+  R.pipe(
+    parseCode,
+    codeToObj,
+    getAndCompare);
 
 exports.validKey = (req, res, next) =>
-  db.getKey(req.body.number)
-    .then(key =>
-      bcrypt.compare(req.body.password, key.password)
-    )
+  parseAndCompare(req.body.code)
     .then(status =>
-      status ? next() : res.redirect('/landing')
-    )
-    .catch(() =>
-      res.status(500).redirect('/landing')
-    );
+      status ? next() : res.redirect('/landing'))
+    .catch(e =>
+      res.status(500).redirect('/landing'));
 
 exports.logout = (req, res) => {
   req.logout();

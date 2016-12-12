@@ -25,7 +25,8 @@ exports.landing = (req, res) =>
     });
 
 exports.login = (req, res) =>
-  req.user && req.isAuthenticated() ? res.redirect('/') :
+  req.user && req.isAuthenticated() ?
+    res.redirect('/') :
     res.render('login', {
       title: 'login'
     });
