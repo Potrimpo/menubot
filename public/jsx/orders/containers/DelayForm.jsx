@@ -3,17 +3,12 @@ import { setDelayTime } from '../actions'
 import Delay from '../components/Delay'
 
 const mapStateToProps = (state) => ({
-  currentDelayTime: () => {
-    console.log("state.delayTime in DelayForm.jsx");
-    console.log(state.delayTime);
-    return state.delayTime
-  }
+  currentDelayTime: state.delay
 });
 
 const mapDispatchToProps = (dispatch) => ({
   handleChange: (event) => {
-    console.log("event.target.value in DelayForm.jsx");
-    console.log(event.target.value);
+    event.preventDefault();
     dispatch(setDelayTime(event.target.value))
   }
 });

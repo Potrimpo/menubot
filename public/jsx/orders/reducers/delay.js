@@ -1,18 +1,12 @@
 export const SET_DELAY = 'SET_DELAY';
 
-const delayTime = (state = "", action) => {
-  console.log("action.time in reducers");
-  console.log(action.time);
+const delayTime = (state = 5, action) => {
   switch (action.type) {
     case 'SET_DELAY':
-      return {
-        ...state,
-        delayTime: action.time
-      }
-      break;
+      return Number(action.time);
     default:
-    return state;
+      return state;
   }
-}
+};
 
 export default delayTime
