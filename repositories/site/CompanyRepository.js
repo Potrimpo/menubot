@@ -145,21 +145,21 @@ exports.orderComplete = orderid =>
     " WHERE orderid = $1",
     { bind: [orderid], type: sequelize.QueryTypes.UPDATE }
   );
+const matchFbid = R.find(R.propEq('fbid'));
 
 exports.linkCompany = (id, facebookId) =>
   User.findOne({
     attributes: ['accounts'],
     where: { id }
   })
-    .then(val => {
-      const page = val.accounts.filter(v => v.fbid == facebookId);
+    .then(user => {
+      const { fbid, name, access_token } = matchFbid(user.accounts, facebookId);
       return sequelize.query(
         "INSERT INTO companies (fbid, name, access_token)" +
         " VALUES (:fbid, :name, :access_token)" +
         " RETURNING fbid",
-        { replacements: { fbid: page[0].fbid, name: page[0].name, access_token: page[0].access_token },
-          type: sequelize.QueryTypes.INSERT }
-      );
+        { replacements: { fbid, name, access_token },
+          type: sequelize.QueryTypes.INSERT });
     });
 
 exports.getCompanyAccessToken = id =>

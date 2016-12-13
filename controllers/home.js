@@ -14,12 +14,12 @@ const companiesFromAccounts =
 const matchUncurried = (companies, val) =>
   R.contains(val.fbid, fbid(companies));
 
+// :: [{}] -> {} -> Bool
 const matchFbid = R.curry(matchUncurried);
 
-const unregisteredUncurried = (companies, accounts) =>
+// :: [{}] -> [{}] -> [{}]
+const unregisteredAccounts = (companies, accounts) =>
   R.reject(matchFbid(companies), accounts);
-
-const unregisteredAccounts = R.curry(unregisteredUncurried);
 
 exports.index = (req, res) =>
   companiesFromAccounts(req.user.accounts)
