@@ -43,11 +43,19 @@ exports.login = (req, res) =>
       title: 'login'
     });
 
+const getDelay = fbid =>
+  db.getDelayTime(fbid);
+
 exports.orders = (req, res) =>
-  res.render('orders/orders', {
-    title: 'Orders',
-    fbid: req.params.fbid
-  });
+  getDelay(req.params.fbid)
+    .then(company =>
+      res.render('orders/orders', {
+        title: 'Orders',
+        fbid: company.fbid,
+        delay: company.delay
+      }))
+    .catch(e =>
+      res.status(500).send());
 
 exports.priv = (req,res) =>
   res.render('priv', {

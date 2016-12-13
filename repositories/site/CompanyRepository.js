@@ -192,6 +192,9 @@ exports.setDelayTime = (fbid, time) =>
     where: { fbid }
   });
 
+exports.getDelayTime = fbid =>
+  Company.findById(fbid);
+
 exports.addTypePhotos = val =>
   sequelize.query(
     "UPDATE types" +
