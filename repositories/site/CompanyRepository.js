@@ -2,14 +2,14 @@
  * Created by lewis.knoxstreader on 20/09/16.
  */
 
-const { sequelize, Company, User, Item, Type, Size, Order } = require('../../database/models/index');
+const R = require('ramda'),
+  { sequelize, Company, User, Item, Type, Size, Order } = require('../../database/models/index');
 
-exports.findUserCompanies = accounts => {
-  return Company.findAll({
+exports.findUserCompanies = accounts =>
+  Company.findAll({
     attributes: ['fbid', 'name', 'bot_status'],
     where: {fbid: {$or: accounts}}
   });
-};
 
 exports.findCompany = (id) => Company.findById(id);
 
@@ -20,32 +20,28 @@ exports.getCompanyMenu = id =>
     " INNER JOIN items AS i ON c.fbid = i.fbid" +
     " WHERE c.fbid = $1" +
     " ORDER BY i.itemid ASC",
-    { bind: [id], type: sequelize.QueryTypes.SELECT }
-  );
+    { bind: [id], type: sequelize.QueryTypes.SELECT });
 
 exports.getMenuTypes = itemids =>
   sequelize.query(
     "SELECT t.itemid, t.type, t.typeid, t.type_photo, t.type_price FROM types AS t" +
     " WHERE t.itemid IN (:itemids)" +
     " ORDER BY typeid ASC",
-    { replacements: { itemids }, type: sequelize.QueryTypes.SELECT }
-  );
+    { replacements: { itemids }, type: sequelize.QueryTypes.SELECT });
 
 exports.getMenuSizes = typeids =>
   sequelize.query(
     "SELECT typeid, size, sizeid, size_price FROM sizes" +
     " WHERE typeid IN (:typeids)" +
     " ORDER BY sizeid ASC",
-    { replacements: { typeids }, type: sequelize.QueryTypes.SELECT }
-  );
+    { replacements: { typeids }, type: sequelize.QueryTypes.SELECT });
 
 exports.getTypesThroughFbid = fbid =>
   sequelize.query(
     "SELECT typeid, type FROM items AS i" +
     " INNER JOIN types AS t ON i.itemid = t.itemid" +
     " WHERE i.fbid = :fbid",
-    { replacements: { fbid }, type: sequelize.QueryTypes.SELECT }
-  );
+    { replacements: { fbid }, type: sequelize.QueryTypes.SELECT });
 
 exports.insertItem = (fbid, item) =>
   Item.create({ fbid, item })
@@ -60,9 +56,7 @@ exports.insertType = (type, itemid) =>
         }, {
           where: { itemid },
           transaction: t
-        })
-      )
-  )
+        })))
     .catch(err => console.error("error in insertType transaction", err));
 
 exports.insertSize = (size, typeid) =>
@@ -74,9 +68,7 @@ exports.insertSize = (size, typeid) =>
         }, {
           where: { typeid },
           transaction: t
-        })
-      )
-  )
+        })))
     .catch(err => console.error("error in insertSize transaction", err));
 
 exports.updateIPrice = (itemid, item_price) =>
@@ -135,16 +127,16 @@ exports.ordersByFbid = (fbid, today) =>
     " LEFT OUTER JOIN sizes AS s ON o.sizeid = s.sizeid" +
     " WHERE o.fbid = :fbid AND o.pickuptime >= :today" +
     " ORDER BY o.pickuptime ASC",
-    { replacements: {fbid, today}, type: sequelize.QueryTypes.SELECT }
-  ).catch(err => console.error("error getting orders in sql", err));
+    { replacements: {fbid, today}, type: sequelize.QueryTypes.SELECT })
+    .catch(err => console.error("error getting orders in sql", err));
 
 exports.orderComplete = orderid =>
   sequelize.query(
     "UPDATE orders" +
     " SET pending = NOT pending" +
     " WHERE orderid = $1",
-    { bind: [orderid], type: sequelize.QueryTypes.UPDATE }
-  );
+    { bind: [orderid], type: sequelize.QueryTypes.UPDATE });
+
 const matchFbid = R.find(R.propEq('fbid'));
 
 exports.linkCompany = (id, facebookId) =>
@@ -170,22 +162,22 @@ exports.getCompanyAccessToken = id =>
 exports.setBotStatus = (id, status) =>
   sequelize.query(
     "UPDATE companies SET bot_status = :status WHERE fbid = :id",
-    { replacements: { id, status}, type: sequelize.QueryTypes.UPDATE}
-  );
+    { replacements: { id, status}, type: sequelize.QueryTypes.UPDATE});
 
 exports.setLocation = (id, loc) =>
   sequelize.query(
     "UPDATE companies SET location = :loc WHERE fbid = :id",
-    { replacements: { id, loc }, type: sequelize.QueryTypes.UPDATE }
-  );
+    { replacements: { id, loc }, type: sequelize.QueryTypes.UPDATE });
 
 exports.addItemPhotos = (val, fbid) =>
   sequelize.query(
     "UPDATE items" +
     " SET item_photo = :picture" +
     " WHERE fbid = :fbid AND lower(item) = lower(:name)",
-    { replacements: { fbid, picture: val.picture, name: val.name }, type: sequelize.QueryTypes.UPDATE }
-  );
+    {
+      replacements: { fbid, picture: val.picture, name: val.name },
+      type: sequelize.QueryTypes.UPDATE
+    });
 
 exports.setOpenHours = ({ fbid, opentime, closetime, status }) =>
   Company.update({
@@ -208,5 +200,7 @@ exports.addTypePhotos = val =>
     "UPDATE types" +
     " SET type_photo = :picture" +
     " WHERE typeid = :typeid AND lower(type) = lower(:name)",
-    { replacements: { typeid: val.typeid, picture: val.picture, name: val.name }, type: sequelize.QueryTypes.UPDATE }
-  );
+    {
+      replacements: { typeid: val.typeid, picture: val.picture, name: val.name },
+      type: sequelize.QueryTypes.UPDATE
+    });
