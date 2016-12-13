@@ -1,22 +1,34 @@
 "use strict";
 
-const db = require('../repositories/site/CompanyRepository');
+const R = require('ramda'),
+  db = require('../repositories/site/CompanyRepository');
 
-exports.index = (req, res) => {
-  const accountIds = req.user.accounts.map(val => val.fbid);
-  return db.findUserCompanies(accountIds)
-    .then(companies => {
-      const accounts = unregisteredCompanies(req.user.accounts, companies);
-      return res.render('home', { title: 'home', companies, accounts })
-    } );
-};
+const fbid = R.pluck('fbid');
 
-function unregisteredCompanies (accounts, dbCompanies) {
-  return accounts.filter(val =>
-    dbCompanies.map(comp => comp.fbid)
-      .indexOf(val.fbid) === -1
-  );
-}
+// :: [{}] -> Promise
+const companiesFromAccounts =
+  R.pipe(
+    fbid,
+    db.findUserCompanies);
+
+const matchUncurried = (companies, val) =>
+  R.contains(val.fbid, fbid(companies));
+
+const matchFbid = R.curry(matchUncurried);
+
+const unregisteredUncurried = (companies, accounts) =>
+  R.reject(matchFbid(companies), accounts);
+
+const unregisteredAccounts = R.curry(unregisteredUncurried);
+
+exports.index = (req, res) =>
+  companiesFromAccounts(req.user.accounts)
+    .then(companies =>
+      res.render('home', {
+        title: 'home',
+        companies,
+        accounts: unregisteredAccounts(companies, req.user.accounts)
+      }));
 
 exports.landing = (req, res) =>
   req.user && req.isAuthenticated() ? res.redirect('/') :
