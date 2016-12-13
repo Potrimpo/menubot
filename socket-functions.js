@@ -1,6 +1,7 @@
 /**
  * Created by lewis.knoxstreader on 20/11/16.
  */
+
 const { client, sub } = require('./redis-init'),
   control = require('./controllers/orders');
 
@@ -14,7 +15,7 @@ function init (io) {
 
     socket.on('order-status', control.setOrderComplete);
 
-    socket.on('set-delay', time => setDelay(this, time));
+    socket.on('set-delay', setDelay);
 
     socket.on("disconnect", disco);
   });
@@ -22,11 +23,12 @@ function init (io) {
 }
 
 // :: socket -> Promise
-const fbid = socket => client.getAsync(socket.id);
+const getFbid = socket => client.getAsync(socket.id);
 
-const setDelay = (socket, time) =>
-  fbid(socket)
+function setDelay (time) {
+  return getFbid(this)
     .then(fbid => control.setDelay(fbid, time));
+}
 
 // --> Register interest in new orders for our page
 // create redis entry for our fbid, indexed by the socket id
@@ -45,7 +47,7 @@ function requestOrders (fbid) {
 // find the right fbid by searching redis with our socket id
 // unsubscribe from redis messages on fbid frequency
 function disco () {
-  return fbid(this)
+  return getFbid(this)
     .then(fbid => sub.unsubscribe(fbid))
     .then(() => client.delAsync(this.id))
     .catch(err => console.error("error disconnecting socket", err));
