@@ -2,7 +2,7 @@
  * Created by lewis.knoxstreader on 20/11/16.
  */
 const { client, sub } = require('./redis-init'),
-  { fetchOrders, setOrderComplete } = require('./controllers/orders');
+  control = require('./controllers/orders');
 
 function init (io) {
   io.on('connection', function (socket) {
@@ -12,26 +12,31 @@ function init (io) {
 
     sub.on('message', (channel, message) => socket.emit('new-order', message));
 
-    socket.on('order-status', orderid => setOrderComplete(orderid));
+    socket.on('order-status', control.setOrderComplete);
+
+    socket.on('set-delay', time => setDelay(this, time));
 
     socket.on("disconnect", disco);
   });
 
 }
 
+// :: socket -> Promise
+const fbid = socket => client.getAsync(socket.id);
+
+const setDelay = (socket, time) =>
+  fbid(socket)
+    .then(fbid => control.setDelay(fbid, time));
+
 // --> Register interest in new orders for our page
 // create redis entry for our fbid, indexed by the socket id
 // subscribe to redis events on our fbid's frequency
 function requestOrders (fbid) {
-  console.log("subscribing");
   client.setAsync(this.id, fbid)
     .then(() => sub.subscribe(fbid))
-    .catch(err => {
-      console.error("error setting redis socket session", err);
-      return sub.unsubscribe(fbid);
-    });
+    .catch(_ => sub.unsubscribe(fbid));
 
-  return fetchOrders(fbid)
+  return control.fetchOrders(fbid)
     .then(orders => this.emit('orders-list', orders))
     .catch(err => console.error("error in socket business", err));
 }
@@ -40,7 +45,7 @@ function requestOrders (fbid) {
 // find the right fbid by searching redis with our socket id
 // unsubscribe from redis messages on fbid frequency
 function disco () {
-  return client.getAsync(this.id)
+  return fbid(this)
     .then(fbid => sub.unsubscribe(fbid))
     .then(() => client.delAsync(this.id))
     .catch(err => console.error("error disconnecting socket", err));

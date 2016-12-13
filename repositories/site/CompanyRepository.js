@@ -196,6 +196,13 @@ exports.setOpenHours = ({ fbid, opentime, closetime, status }) =>
     where: { fbid }
   });
 
+exports.setDelayTime = (fbid, time) =>
+  Company.update({
+    delay: time
+  }, {
+    where: { fbid }
+  });
+
 exports.addTypePhotos = val =>
   sequelize.query(
     "UPDATE types" +
