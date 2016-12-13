@@ -84,7 +84,6 @@ exports.deleteItem = data => {
   switch (data.type) {
 
     case "item":
-    console.log("Deleting item: " + data.id );
     return sequelize.query(
       "DELETE FROM items" +
       " WHERE itemid = $1",
@@ -94,7 +93,6 @@ exports.deleteItem = data => {
 
 
     case "type":
-    console.log("Deleting type: " + data.id );
     return sequelize.query(
       "DELETE FROM types" +
       " WHERE typeid = $1",
@@ -104,7 +102,6 @@ exports.deleteItem = data => {
 
 
     case "size":
-    console.log("Deleting size: " + data.id );
     return sequelize.query(
       "DELETE FROM sizes" +
       " WHERE sizeid = $1",
@@ -113,7 +110,7 @@ exports.deleteItem = data => {
       break;
 
     default:
-      console.log("Attempt to delete failed, type not recognised");
+      console.error("Attempt to delete failed, type not recognised");
   }
 
 };
