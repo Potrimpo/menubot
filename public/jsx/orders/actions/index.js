@@ -9,6 +9,11 @@ export const setVisibilityFilter = (filter) => ({
   filter
 });
 
+export const setDelayTime = (time) => ({
+  type: 'SET_DELAY',
+  time
+});
+
 const toggleLocal = (orderid) => ({
   type: TOGGLE_ORDER,
   orderid

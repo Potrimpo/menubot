@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux'
 import { RECEIVE_ORDERS, TOGGLE_ORDER, NEW_ORDER } from '../actions'
 import filter from './filter'
+import delay from './delay'
 
 const bongNoise = new Audio('/audio/bong.mp3');
 
@@ -39,7 +40,8 @@ const fbid = (state = "", action) => state;
 const rootReducer = combineReducers({
   fbid,
   orders,
-  filter
+  filter,
+  delay
 });
 
 export default rootReducer
