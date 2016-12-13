@@ -88,7 +88,7 @@ function greetingText (pageToken, intent) {
   };
   if (intent) {
     body.greeting = {
-      text: "This is a Menubot.xyz activated page. View the menu and order ahead of time, straight from Facebook messenger."
+      text: "This is a suss.nz activated page. Here, you can view the menu and order ahead of time, straight from Facebook messenger."
     }
   }
   pageToken = encodeURIComponent((pageToken));
