@@ -8,7 +8,6 @@ module.exports = function (sequelize, Sequelize) {
       fbid: {
         type: Sequelize.BIGINT,
         unique: true,
-        allowNull: false,
         primaryKey: true
       },
       access_token: {
@@ -37,6 +36,11 @@ module.exports = function (sequelize, Sequelize) {
         type: Sequelize.STRING,
         allowNull: false,
         defaultValue: "17:00",
+      },
+      delay: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 5
       }
     }, {
       tableName: 'companies',

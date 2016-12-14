@@ -4,62 +4,41 @@
 
 const chrono = require('chrono-node'),
   { redisRecordOrder } = require('./messengerSessions'),
-  QR = require('./quick-replies');
+  QR = require('./quick-replies'),
+  { orderAttempt, hoursCheck } = require('./message-list');
 
-function postbackHours (hours) {
-  const response = {
-    quick_replies: QR.hoursReplies()
-  };
-  switch (hours.status) {
-    case false:
-      response.text = "Sorry! We're not open today";
-      return response;
+const postbackHours = hours => ({
+  text: hours.status ? hoursCheck.open(hours.opentime, hours.closetime) : hoursCheck.closed,
+  quick_replies: QR.hoursReplies()
+});
 
-    case true:
-      response.text = `We're open between ${hours.opentime} and ${hours.closetime} today`;
-      return response;
-  }
-}
 
 function openStatus (data, fbUserId, payload) {
-  const response = {
+  const resp = {
     quick_replies: QR.hoursReplies()
   };
-  switch (data.status) {
-    case true:
-      const hours = {
-        opentime: data.opentime,
-        closetime: data.closetime
-      };
 
-      // no quickreplies if successful
-      return filterHours(hours, fbUserId, payload)
-        .catch(err => {
-          response.text = err;
-          return response
-        });
-
-    case false:
-      response.text = "Sorry! We're not open today!";
-      return response;
-  }
+  return data.status ?
+    open(data, fbUserId, payload, resp) :
+    Object.assign(resp, { text: orderAttempt.closed })
 }
 
-function filterHours (hours, fbUserId, payload) {
-  return new Promise((res, rej) => {
-    const now = Date.now();
+function open (data, fbUserId, payload, resp) {
+  if (isTooLate(data.closetime)) return orderAttempt.tooLate(data.opentime, data.closetime);
 
-    if (now > chrono.parseDate(hours.closetime)) {
-      return rej(`Sorry! We're only open between ${hours.opentime} and ${hours.closetime} today!`);
-    }
+  // no quickreplies if successful
+  return redisRecordOrder(fbUserId, payload)
+    .then(() => orderAttempt.open)
+    .catch(() =>
+      Object.assign(resp, { text: orderAttempt.error })
+    );
+}
 
-    return redisRecordOrder(fbUserId, payload)
-      .then(() => res("What time would you like that? (include am/pm)"))
-      .catch(err => rej("Sorry, we had some trouble processing that"));
-  });
+function isTooLate (closetime) {
+  return Date.now() > chrono.parseDate(closetime);
 }
 
 module.exports = {
-  openStatus,
-  postbackHours
+  postbackHours,
+  openStatus
 };

@@ -9,8 +9,8 @@ const express = require('express'),
 const app = express(),
   http = require('http').createServer(app),
   io = require('socket.io')(http),
-  expressConfig = require('./express-config'),
-  { sequelize } = require('./database/models/index');
+  { sequelize } = require('./database/models/index'),
+  expressConfig = require('./express-config');
 
 expressConfig(app, express);
 
@@ -39,6 +39,7 @@ app.route('/webhook')
 // Primary app routes.
 app.get('/', passportConf.isAuthenticated, passportConf.isAuthorized, homeController.index);
 app.get('/landing', homeController.landing);
+app.post('/login', userController.validKey, homeController.login);
 app.get('/logout', userController.logout);
 app.get('/contact', contactController.getContact);
 // app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);
@@ -57,6 +58,9 @@ app.get(
   '/auth/facebook/callback',
   passport.authenticate('facebook', { successRedirect: '/', failureRedirect: '/landing', failureFlash: true })
 );
+
+// curl to this in order to add new codes for new companies
+app.post('/newCodeVerySecret', userController.newCode);
 
 // syncing with postgres database, then assigning ports & IP to the server
 sequelize.sync({ force: false })

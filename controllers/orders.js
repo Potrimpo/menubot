@@ -9,9 +9,13 @@ exports.fetchOrders = fbid =>
   db.ordersByFbid(fbid, today())
     .catch(err => res.status(500).send('error getting orders'));
 
-exports.setOrderComplete = (orderid) =>
-  db.orderComplete(orderid)
+exports.setOrderComplete = data =>
+  db.orderComplete(data)
     .catch(err => console.log("error setting orders", err));
+
+exports.setDelay = (fbid, time) =>
+  db.setDelayTime(fbid, time)
+    .catch(e => console.error("failed to set delay time:", e));
 
 function today () {
   const today = new Date();

@@ -8,8 +8,8 @@ const actions = {
     if (message.text) console.log(`replying >> ${message.text}`);
     // get the access token for this user's interaction (page access token for messenger)
     return redisGetToken(fbUserId)
-      .then(token => {
-        return fbMessage(fbUserId, token, message)
+      .then(token =>
+        fbMessage(fbUserId, token, message)
           .then(() => null)
           .catch((err) => {
             console.error(
@@ -19,8 +19,7 @@ const actions = {
               err.stack || err
             );
             console.log(`was trying to send: ${text}`);
-          });
-      })
+          }));
   },
 
   // specify the time of an order

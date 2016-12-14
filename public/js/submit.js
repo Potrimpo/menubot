@@ -6,13 +6,18 @@
 window.jQuery = window.$ = require('./lib/jquery-2.1.3.min');
 const _ = require('./lib/bootstrap.min');
 
+import myQuote from './quotes';
+
+$("[name='filterLink']").mouseup(function(){
+    $(this).blur();
+});
 
 console.log("PRIOR TO BEING IN IT");
 
 $(document).ready(function() {
   //Removing spinner
   $('#spinner-overlay').hide();
-  $('body').removeClass('overlay-container')
+  $('body').removeClass('overlay-container');
 
   //Defining spin boys
   $('.misc-async').click(function () {
@@ -24,47 +29,53 @@ $(document).ready(function() {
     $('body').addClass('overlay-container');
   }
 
-  // dumb Footer quote generator
-  var myQuote = [
-    "&quot;And into this website he poured all his cruelty, his malice and his will to dominate all life&quot; - ",
-    "Constructed mostly from crayons and construction paper by ",
-    "Put together by ",
-    "By ",
-    "Designed by ",
-    "Made by ",
-    "Developed by ",
-    "Fabricated by ",
-    "Erected to appease pagan deity ",
-    "1000 monkeys with 1000 type writers owned by ",
-    "Means of production seized by ",
-    "Put together by ",
-    "Hastily cobbled together by ",
-    "Hastily replated from floor by ",
-    "Brewed from knockbox waste by ",
-    "Ironically designed by ",
-    "Written by ",
-    "Manufactured by ",
-    "Powered by ",
-    "Assembled by ",
-    "Completed by ",
-    "Step one in world domination by ",
-    "Raised in the name of ",
-    "Laundering by ",
-    "Blood, sweat and tears by ",
-    "Lovingly crafted by "
-  ];
   if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
 
   } else {
-    var quoteRandom = Math.floor(Math.random()*myQuote.length);
+    const quoteRandom = Math.floor(Math.random()*myQuote.length);
     $('#myQuote').html(myQuote[quoteRandom]);
   }
 
-  //Initialising libraries
-  $("[name='openToday']").bootstrapSwitch({size: "small", onText: "Open", offText: "Closed"});
   //yay for us
   console.log("WE IN IT");
 
+  //initialising orders page guffery
+  if(document.location.pathname.indexOf('/orders/') == 0) {
+    $("[name='filterLink']").mouseup(function(){
+      $(this).blur();
+    });
+  }
+
+  //initialising menu page guffery
+  if (document.location.pathname.indexOf('/company/') == 0) {
+    $("[name='openToday']").bootstrapSwitch({size: "small", onText: "Open", offText: "Closed"});
+  }
+
+  //initialising landing page guffery
+  if (window.location.pathname == '/landing') {
+
+    if ($(window).width() < 992) {
+      $('#landingText').hide();
+    }
+
+    if ($(window).width() < 768) {
+      $('#authCodeForm1').hide();
+      $('#authCodeForm2').show();
+    }
+
+    $("[name='hider-btn']").click(function () {
+      const value = this.id;
+      const hider = $(`[name=hider-content]#${value}`);
+      if ( hider.is( ":hidden" ) ) {
+        $(`[name='hider-btn']#${value}`).html('Hide details «');
+        hider.slideDown();
+      } else {
+        $(`[name='hider-btn']#${value}`).html('View details »');
+        hider.slideUp();
+      }
+    });
+
+  }
 
   // document constants
   const fbid = $('.company-head').attr('id');
@@ -72,14 +83,10 @@ $(document).ready(function() {
 
   // delete a menu entry
   $('button.delete-entry').click(function (event) {
-    console.log("button click");
-    console.log(this);
     event.preventDefault();
     showSpinner();
 
     const [_, type, deleteId] = /(\w+)-(\d+)/.exec(this.name);
-    console.log("type =", type);
-    console.log("id =", deleteId);
     const deleteSpec = {
       intent: "delete",
       type,
@@ -181,11 +188,6 @@ $(document).ready(function() {
     const opentime = $('#opentime').val(),
     closetime = $('#closetime').val(),
     status = $('input#openToday').prop('checked');
-
-    console.log("opentime =", opentime);
-    console.log("closetime =", closetime);
-    console.log("#openToday =", status);
-    console.log("state =", state);
 
     const data = {
       fbid,

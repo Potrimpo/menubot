@@ -15,7 +15,6 @@ module.exports = function (sequelize, Sequelize) {
     sizeid: {
       type: Sequelize.INTEGER,
       autoIncrement: true,
-      allowNull: false,
       primaryKey: true
     },
     size: {

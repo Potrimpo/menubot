@@ -1,5 +1,4 @@
-const Sequelize = require('sequelize'),
-  bcrypt = require('bcrypt-nodejs');
+const Sequelize = require('sequelize');
 
 const sequelize = new Sequelize(
   `postgres://postgres:${process.env.postgresPassword}@${process.env.postgresURL}:5432/menubot`,
@@ -12,6 +11,7 @@ const sequelize = new Sequelize(
 
 const Session = sequelize.import("./Sessions"),
   User = sequelize.import("./Users"),
+  Key = sequelize.import("./Keys"),
   Company = sequelize.import("./Companies"),
   Item = sequelize.import("./Items"),
   Type = sequelize.import("./Types"),
@@ -37,6 +37,7 @@ module.exports = {
   sequelize,
   Session,
   User,
+  Key,
   Company,
   Item,
   Type,

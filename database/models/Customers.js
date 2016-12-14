@@ -8,7 +8,6 @@ module.exports = function (sequelize, Sequelize) {
     customer_id: {
       type: Sequelize.BIGINT,
       primaryKey: true,
-      allowNull: false
     },
     profile_pic: Sequelize.STRING,
     customer_name: Sequelize.STRING

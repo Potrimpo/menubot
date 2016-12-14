@@ -1,20 +1,22 @@
 import { combineReducers } from 'redux'
 import { RECEIVE_ORDERS, TOGGLE_ORDER, NEW_ORDER } from '../actions'
 import filter from './filter'
+import delay from './delay'
 
 const bongNoise = new Audio('/audio/bong.mp3');
 
 const order = (state, action) => {
   switch (action.type) {
     case TOGGLE_ORDER:
-      if (state.orderid !== action.orderid) {
+      if (action.ids.includes(state.orderid)) {
+        return {
+          ...state,
+          pending: !state.pending
+        }
+      } else {
         return state
       }
 
-      return {
-        ...state,
-        pending: !state.pending
-      };
     default:
       return state
   }
@@ -39,7 +41,8 @@ const fbid = (state = "", action) => state;
 const rootReducer = combineReducers({
   fbid,
   orders,
-  filter
+  filter,
+  delay
 });
 
 export default rootReducer

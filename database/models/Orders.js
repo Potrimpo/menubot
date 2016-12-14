@@ -9,7 +9,6 @@ module.exports = function (sequelize, Sequelize) {
       type: Sequelize.INTEGER,
       primaryKey: true,
       autoIncrement: true,
-      allowNull: false
     },
     fbid: {
       type: Sequelize.BIGINT,

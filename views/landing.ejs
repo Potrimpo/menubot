@@ -1,37 +1,94 @@
 <% layout('layout') -%>
 
 <div class="text-center">
-  <h1>MENUBOT</h1>
-  <p class="lead">A platform for automated customer interaction</p>
-</div>
-<hr/>
-<div class="center-block">
-  <form novalidate method="POST" action="/login" name="loginForm">
-      <a href="/auth/facebook" class="btn btn-block btn-facebook btn-social center-block">
-          <i class="fa fa-facebook"></i>Sign in with Facebook
-      </a>
-  </form>
+    <h1 style="font-family: 'Roboto', sans-serif">Menubot</h1>
+    <p class="lead">A platform for automated customer interaction</p>
 </div>
 <div class="row">
-    <div class="col-xs-12 col-sm-6 col-sm-offset-3">
-        <h2>24/7 customer service</h2>
-        <p>
-            Provide around-the-clock information availability without having to maintain a website
-        </p>
-        <p><a href="#" role="button" class="btn btn-default">View details »</a></p>
+  <div id="landingText" class="col-sm-12 col-md-5">
+
+    <h2>24/7 customer service</h2>
+    <p>Provide around-the-clock information availability without having to maintain a website</p>
+
+    <div name="hider-content" id="hider-1" hidden>
+      <p>
+        With Menubot’s around the clock availability, anyone can see your menu, find your open hours,
+        or order from you at anytime. Your customers can order days or weeks ahead of time, but we’ll
+        only show you today’s orders.
+        <br> <br>
+        Menubot is there to answer your customers every day and every night.
+      </p>
     </div>
-    <div class="col-xs-12 col-sm-4 col-sm-offset-2">
-        <h2>Consistent user experience</h2>
-        <p>
-            Take advantage of the familiarity your customers already have for the Facebook interface
-        </p>
-        <p><a href="#" role="button" class="btn btn-default">View details »</a></p>
+    <p><a name="hider-btn" id="hider-1" role="button" class="btn btn-default">View details »</a></p>
+    <br>
+
+
+    <h2>Consistent user experience</h2>
+    <p>Take advantage of the familiarity your customers already have for the Facebook interface</p>
+
+    <div name="hider-content" id="hider-2" hidden>
+      <p>
+        Your customers don’t want to add to their cluttered phones with <i>yet another</i> app, or explore some
+        new bizarre interface a lazy web developer copy pasted from his last job.
+        <br><br>
+        That’s why Menubot works right in Facebook Messenger, an app intimately familiar to 900 million users around the world.
+        <br><br>
+        Because we’re using Facebook Messenger, we can use lot’s of cool features designed by some of the world’s
+        finest developers, like <a href="https://www.facebook.com/davidm/posts/10156878445465195?pnref=story" target="_blank">Facebook Messenger codes</a>.
+      </p>
     </div>
-    <div class="col-xs-12 col-sm-4">
-        <h2>Social media engagement</h2>
-        <p>
-            Boost your social media presence with interactions that have real value
-        </p>
-        <p><a href="#" role="button" class="btn btn-default">View details »</a></p>
+    <p><a name="hider-btn" id="hider-2" role="button" class="btn btn-default">View details »</a></p>
+    <br>
+
+
+    <h2>More efficient workflow</h2>
+    <p>Your customer's don't need to wait, and you've got the forewarning you need to give the quality service you're proud of</p>
+
+    <div name="hider-content" id="hider-3" hidden>
+      <p>
+        For some people, a ten minute wait can make or break their lunchtime choice of eatery. Don’t let yourself
+        get out-convenienced by a dry, two day old dairy pie.
+        <br><br>
+        With Menubot, let them order ahead of time, and have the food piping hot and ready to go by the time they arrive.
+      </p>
     </div>
+    <p><a name="hider-btn" id="hider-3" role="button" class="btn btn-default">View details »</a></p>
+  </div>
+
+
+  <div class="col-sm-12 col-md-offset-1 col-md-6" id="landingVidCol">
+    <div style="position:relative;">
+      <img class="demoVidRatio" src="https://placehold.it/16x9"/>
+      <iframe src="https://www.youtube.com/embed/iZugt3fiBe0" frameborder="1" class="demoVid" allowfullscreen></iframe>
+    </div>
+
+  </div>
+
+</div>
+<div class="row">
+  <div class="col-xs-12" style="margin-top:30px;">
+    <h1 class="text-center">Want to try Menubot?</h1>
+    <h2 class="text-center">Only $10/month. To get an access code, contact us at:</h2>
+    <h2 class="text-center"><a href="mailto:daish@piric.io">daish@piric.io</a> or <span style="white-space: nowrap;">+021 151 6781</span></h2>
+    <form id="authCodeForm1" method="POST" action="/login" class="form-inline text-center" style="margin-top:45px;">
+      <div class="form-group">
+        <div class="input-group">
+          <input name="code" type="text" class="form-control input-lg" id="exampleInputAmount" placeholder="Code" required>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary btn-lg">Enter code</button>
+    </form>
+    <form id="authCodeForm2" method="POST" action="/login" class="form-inline text-center" hidden style="margin-top:45px;">
+      <div class="col-xs-7">
+        <div class="form-group">
+          <div class="input-group" style="float:right">
+            <input name="code" type="text" class="form-control input-lg" id="authCodeInput" placeholder="Code" required>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-5">
+        <button type="submit" style="float: left" class="btn btn-primary btn-lg">Enter code</button>
+      </div>
+    </form>
+  </div>
 </div>

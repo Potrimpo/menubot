@@ -1,12 +1,62 @@
 /**
  * Created by lewis.knoxstreader on 25/11/16.
  */
-const chrono = require('chrono-node'),
+const Either = require('ramda-fantasy').Either,
+  Right = Either.Right,
+  Left = Either.Left,
+  chrono = require('chrono-node'),
   { pub } = require('../redis-init'),
+  { orderAttempt } = require('../messaging/message-list'),
   db = require('../repositories/bot/botQueries'),
   Item = require('./Item'),
   Type = require('./Type'),
   Size = require('./Size');
+
+const parseHours = data =>
+  Either.of({
+    opentime: chrono.parseDate(data.opentime),
+    closetime: chrono.parseDate(data.closetime)
+  });
+
+const validTime = time =>
+  time ? Right(time) : Left(orderAttempt.noTime);
+
+const inRange = (requestTime, hours) =>
+  requestTime >  hours.opentime && requestTime < hours.closetime;
+
+const withinHours = (hours, plainHours, requestTime) =>
+  inRange(requestTime, hours) ?
+    Right() :
+    Left(orderAttempt.tooLate(plainHours.opentime, plainHours.closetime));
+
+const delayDate = delay =>
+  new Date(
+    Date.now() + (delay * 60 * 1000));
+
+const compareWaitTime = (delay, request) =>
+  request > delayDate(delay) ?
+    Right() :
+    Left(orderAttempt.minimumWait(delay));
+
+const throwE = e => {
+  throw e;
+};
+
+const timeFilter = (data, requestTime) =>
+  validTime(requestTime)
+    .chain(_ =>
+      parseHours(data))
+    .chain(hours =>
+      withinHours(hours, data, requestTime))
+    .chain(_ =>
+      compareWaitTime(data.delay, requestTime));
+
+const canIPlace = (data, requestTime) =>
+  data.status ?
+    timeFilter(data, requestTime) :
+    Left(orderAttempt.closed);
+
+const throwLeft = Either.either(throwE, x => x);
 
 class Order {
   constructor (fbPageId, fbUserId, msg, data) {
@@ -14,8 +64,7 @@ class Order {
 
     return Order.checkHours(fbPageId, time)
       .then(() =>
-        Order.dbInsert(fbPageId, fbUserId, time, data)
-      )
+        Order.dbInsert(fbPageId, fbUserId, time, data))
       .then(fields => {
         fields = fields[0];
 
@@ -56,27 +105,15 @@ class Order {
 
   // insert order into database, returning values used to create Order instance
   static dbInsert (fbPageId, fbUserId, time, order) {
-    if (!time) throw "Sorry, we couldn't understand the time you gave us";
     return db.makeOrder(fbPageId, fbUserId, time, order);
   }
 
-  // check the company is open & requested time is within open hours
+  // check the company is open, requested time is within open hours & after minimum delay time
   static checkHours (fbPageId, requestTime) {
     return db.checkOpenStatus(fbPageId)
-      .then(data => {
-        switch (data.status) {
-          case false:
-            throw "Sorry! We aren't open today";
-
-          case true:
-            const opentime = chrono.parseDate(data.opentime),
-              closetime = chrono.parseDate(data.closetime);
-            if (!requestTime) throw "Sorry, we couldn't understand the time you gave us";
-            if (requestTime <  opentime || requestTime > closetime) {
-              throw `Sorry! We're only open between ${data.opentime} and ${data.closetime} today`;
-            }
-        }
-      });
+      .then(data =>
+        throwLeft(
+          canIPlace(data, requestTime)));
   }
 
   toMessage () {
