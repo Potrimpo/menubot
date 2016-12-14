@@ -13,9 +13,9 @@ function init (io) {
 
     sub.on('message', (channel, message) => socket.emit('new-order', message));
 
-    socket.on('order-status', control.setOrderComplete);
-
     socket.on('set-delay', setDelay);
+
+    socket.on('order-status', ids => control.setOrderComplete(JSON.parse(ids)));
 
     socket.on("disconnect", disco);
   });

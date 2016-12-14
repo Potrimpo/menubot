@@ -127,12 +127,12 @@ exports.ordersByFbid = (fbid, today) =>
     { replacements: {fbid, today}, type: sequelize.QueryTypes.SELECT })
     .catch(err => console.error("error getting orders in sql", err));
 
-exports.orderComplete = orderid =>
+exports.orderComplete = ids =>
   sequelize.query(
     "UPDATE orders" +
     " SET pending = NOT pending" +
-    " WHERE orderid = $1",
-    { bind: [orderid], type: sequelize.QueryTypes.UPDATE });
+    " WHERE orderid IN (:ids)",
+    { replacements: { ids }, type: sequelize.QueryTypes.UPDATE });
 
 const matchFbid = R.find(R.propEq('fbid'));
 

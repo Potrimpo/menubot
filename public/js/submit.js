@@ -8,6 +8,9 @@ const _ = require('./lib/bootstrap.min');
 
 import myQuote from './quotes';
 
+$("[name='filterLink']").mouseup(function(){
+    $(this).blur();
+});
 
 console.log("PRIOR TO BEING IN IT");
 
