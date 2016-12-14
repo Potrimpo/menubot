@@ -24,9 +24,9 @@ export const setDelayTime = (time) => {
   }
 };
 
-const toggleLocal = (orderid) => ({
+const toggleLocal = ids => ({
   type: TOGGLE_ORDER,
-  orderid
+  ids
 });
 
 export const initOrders = orders => {
@@ -41,10 +41,17 @@ export const newOrder = order => ({
   order
 });
 
-export const toggleOrder = (fbid, orderid) => {
-  return dispatch => {
-    dispatch(toggleLocal(orderid));
+const matchUserAndTime = (x, order) =>
+x.pickuptime == order.pickuptime && x.customer_id == order.customer_id;
 
-    return socket.emit('order-status', orderid);
+export const toggleOrder = (fbid, orders, order) => {
+  return dispatch => {
+    const ids = orders
+      .filter(o => matchUserAndTime(o, order))
+      .map(o => o.orderid);
+
+    dispatch(toggleLocal(ids));
+
+    return socket.emit('order-status', JSON.stringify(ids));
   };
 };

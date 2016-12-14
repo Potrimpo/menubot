@@ -9,8 +9,8 @@ exports.fetchOrders = fbid =>
   db.ordersByFbid(fbid, today())
     .catch(err => res.status(500).send('error getting orders'));
 
-exports.setOrderComplete = orderid =>
-  db.orderComplete(orderid)
+exports.setOrderComplete = data =>
+  db.orderComplete(data)
     .catch(err => console.log("error setting orders", err));
 
 exports.setDelay = (fbid, time) =>
