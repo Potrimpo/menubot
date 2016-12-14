@@ -48,7 +48,7 @@ const throwE = e => {
   throw e;
 };
 
-const timeChecking = (data, requestTime) =>
+const timeFilter = (data, requestTime) =>
   validTime(requestTime)
     .chain(_ =>
       parseHours(data))
@@ -56,6 +56,11 @@ const timeChecking = (data, requestTime) =>
       withinHours(hours, data, requestTime))
     .chain(_ =>
       compareWaitTime(data.delay, requestTime));
+
+const canIPlace = (data, requestTime) =>
+  data.status ?
+    timeFilter(data, requestTime) :
+    Left(orderAttempt.closed);
 
 const throwLeft = Either.either(throwE, x => x);
 
@@ -109,20 +114,12 @@ class Order {
     return db.makeOrder(fbPageId, fbUserId, time, order);
   }
 
-  // check the company is open & requested time is within open hours
+  // check the company is open, requested time is within open hours & after minimum delay time
   static checkHours (fbPageId, requestTime) {
     return db.checkOpenStatus(fbPageId)
-      .then(data => {
-        switch (data.status) {
-          case false:
-            return throwLeft(
-              Left(orderAttempt.closed));
-
-          case true:
-            return throwLeft(
-              timeChecking(data, requestTime));
-        }
-      });
+      .then(data =>
+        throwLeft(
+          canIPlace(data, requestTime)));
   }
 
   toMessage () {

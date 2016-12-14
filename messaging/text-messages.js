@@ -7,7 +7,7 @@ const chrono = require('chrono-node'),
   QR = require('./quick-replies');
 
 const orderAttempt = {
-  closed: "Sorry! We're not open today!",
+  closed: "Sorry! We aren't open today!",
   open: {
     success: "What time would you like that? (include am/pm)",
     tooLate: (open, close) => `Sorry! We're only open between ${open} and ${close} today!`
