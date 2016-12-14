@@ -10,7 +10,7 @@ const OrdersList = ({ fbid, orders, onOrderClick }) => (
         {...order}
         pickuptime={timeFormatting(order.pickuptime)}
         onClick={() => onOrderClick(fbid, order.customer_id, order.pickuptime)}
-        classing={ordering(orders, order, i)}
+        classing={ordering(orders, order)}
       />
     )}
   </div>
@@ -37,36 +37,37 @@ function timeFormatting (pickuptime) {
 function lookback (orders, o, i) {
   if (i == 0) return false;
   return o.userid === orders[i -1].userid && o.pickuptime === orders[i - 1].pickuptime;
-};
+}
 
-function ordering (orders, order,  i) {
-  function alikeFiltering (array) {
-    if (array.pickuptime == order.pickuptime && array.customer_id == order.customer_id) {
-      return true
-    } else {
-      return false
+function ordering (orders, order) {
+  const classes = `col-lg-offset-3 col-lg-6 col-md-offset-3 col-md-6 col-sm-offset-2 col-sm-8 col-xs-12`;
+  const groupedContainer = position => `order-${position}-container`;
+  const appendClass = str =>
+    classes.concat(" ").concat(groupedContainer(str));
+
+  const matchUserAndTime = (x, order) =>
+    x.pickuptime == order.pickuptime && x.customer_id == order.customer_id;
+
+  const alike = orders.filter(x => matchUserAndTime(x, order));
+
+  const index = alike
+    .map(x => x.orderid)
+    .indexOf(order.orderid);
+
+  const assignClass = (index, alike) => {
+    if (alike.length == 1) {
+      return appendClass("alone");
     }
-  }
-
-  var alike = orders.filter(alikeFiltering);
-
-  for (var i = 0; i < alike.length; i += 1) {
-    if(alike[i].orderid === order.orderid) {
-      var position = i;
+    else if (index == 0) {
+      return appendClass("top");
+    }
+    else if (index+1 == alike.length) {
+      return appendClass("bottom");
+    }
+    else {
+      return appendClass("mid");
     }
   };
 
-  var adding;
-
-  if (alike.length == 1) {
-    adding = "alone"
-  } else if (position == 0) {
-    adding = "top"
-  } else if (position+1 == alike.length) {
-    adding = "bottom"
-  } else {
-    adding = "mid"
-  }
-
-  return `col-lg-offset-3 col-lg-6 col-md-offset-3 col-md-6 col-sm-offset-2 col-sm-8 col-xs-12 order-${adding}-container`
+  return assignClass(index, alike)
 }
