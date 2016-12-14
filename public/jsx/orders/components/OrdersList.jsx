@@ -9,7 +9,7 @@ const OrdersList = ({ fbid, orders, onOrderClick }) => (
         child={lookback(orders, order, i)}
         {...order}
         pickuptime={timeFormatting(order.pickuptime)}
-        onClick={() => onOrderClick(fbid, order.customer_id, order.pickuptime)}
+        onClick={() => onOrderClick(fbid, orders, order)}
         classing={ordering(orders, order)}
       />
     )}

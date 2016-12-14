@@ -9,9 +9,11 @@ exports.fetchOrders = fbid =>
   db.ordersByFbid(fbid, today())
     .catch(err => res.status(500).send('error getting orders'));
 
-exports.setOrderComplete = (fbid, customer_id, pickuptime) =>
-  db.orderComplete(fbid, customer_id, pickuptime)
+exports.setOrderComplete = data => {
+  console.log("data from socket =", data);
+  return db.orderComplete(data)
     .catch(err => console.log("error setting orders", err));
+};
 
 function today () {
   const today = new Date();

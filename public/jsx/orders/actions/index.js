@@ -9,11 +9,9 @@ export const setVisibilityFilter = (filter) => ({
   filter
 });
 
-const toggleLocal = (fbid, customer_id, pickuptime) => ({
+const toggleLocal = ids => ({
   type: TOGGLE_ORDER,
-  fbid,
-  customer_id,
-  pickuptime
+  ids
 });
 
 export const initOrders = orders => {
@@ -28,10 +26,17 @@ export const newOrder = order => ({
   order
 });
 
-export const toggleOrder = (fbid, customer_id, pickuptime) => {
-  return dispatch => {
-    dispatch(toggleLocal(fbid, customer_id, pickuptime));
+const matchUserAndTime = (x, order) =>
+x.pickuptime == order.pickuptime && x.customer_id == order.customer_id;
 
-    return socket.emit('order-status', fbid, customer_id, pickuptime);
+export const toggleOrder = (fbid, orders, order) => {
+  return dispatch => {
+    const ids = orders
+      .filter(o => matchUserAndTime(o, order))
+      .map(o => o.orderid);
+
+    dispatch(toggleLocal(ids));
+
+    return socket.emit('order-status', JSON.stringify(ids));
   };
 };

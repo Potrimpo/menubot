@@ -7,7 +7,7 @@ const bongNoise = new Audio('/audio/bong.mp3');
 const order = (state, action) => {
   switch (action.type) {
     case TOGGLE_ORDER:
-      if (state.fbid == action.fbid && state.pickuptime == action.pickuptime && state.customer_id == action.customer_id) {
+      if (action.ids.includes(state.orderid)) {
         return {
           ...state,
           pending: !state.pending
