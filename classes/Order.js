@@ -6,17 +6,11 @@ const Either = require('ramda-fantasy').Either,
   Left = Either.Left,
   chrono = require('chrono-node'),
   { pub } = require('../redis-init'),
+  { orderAttempt } = require('../messaging/message-list'),
   db = require('../repositories/bot/botQueries'),
   Item = require('./Item'),
   Type = require('./Type'),
   Size = require('./Size');
-
-const orderAttempt = {
-  closed: "Sorry! We aren't open today",
-  noTime: "Sorry, we couldn't understand the time you gave us",
-  outOfRange: hours => `Sorry! We're only open between ${hours.opentime} and ${hours.closetime} today`,
-  minimumWait: delay => `Sorry, it'll be at least ${delay} minutes before we can get that to you!`
-};
 
 const parseHours = data =>
   Either.of({
@@ -33,7 +27,7 @@ const inRange = (requestTime, hours) =>
 const withinHours = (hours, plainHours, requestTime) =>
   inRange(requestTime, hours) ?
     Right() :
-    Left(orderAttempt.outOfRange(plainHours));
+    Left(orderAttempt.tooLate(plainHours.opentime, plainHours.closetime));
 
 const delayDate = delay =>
   new Date(

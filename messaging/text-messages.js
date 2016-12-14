@@ -4,21 +4,8 @@
 
 const chrono = require('chrono-node'),
   { redisRecordOrder } = require('./messengerSessions'),
-  QR = require('./quick-replies');
-
-const orderAttempt = {
-  closed: "Sorry! We aren't open today!",
-  open: {
-    success: "What time would you like that? (include am/pm)",
-    tooLate: (open, close) => `Sorry! We're only open between ${open} and ${close} today!`
-  },
-  error: "Sorry, we had some trouble processing that"
-};
-
-const hoursCheck = {
-  open: (open, close) => `We're open between ${open} and ${close} today`,
-  closed: "Sorry! We're not open today"
-};
+  QR = require('./quick-replies'),
+  { orderAttempt, hoursCheck } = require('./message-list');
 
 const postbackHours = hours => ({
   text: hours.status ? hoursCheck.open(hours.opentime, hours.closetime) : hoursCheck.closed,
@@ -37,11 +24,11 @@ function openStatus (data, fbUserId, payload) {
 }
 
 function open (data, fbUserId, payload, resp) {
-  if (isTooLate(data.closetime)) return orderAttempt.open.tooLate(data.opentime, data.closetime);
+  if (isTooLate(data.closetime)) return orderAttempt.tooLate(data.opentime, data.closetime);
 
   // no quickreplies if successful
   return redisRecordOrder(fbUserId, payload)
-    .then(() => orderAttempt.open.success)
+    .then(() => orderAttempt.open)
     .catch(() =>
       Object.assign(resp, { text: orderAttempt.error })
     );
