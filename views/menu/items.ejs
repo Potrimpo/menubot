@@ -3,7 +3,7 @@
       <div class="row item-outer-container">
         <div class="col-xs-12 ">
           <div class="row item-heading-inner-container">
-            <div class="col-xs-6">
+            <div class="col-xs-12 col-sm-6">
               <button class="delete-entry item-remove-button" type="button" name="item-<%= items[i].itemid %>">
                 <i class="fa fa-trash-o item-remove-button-glyph" aria-hidden="true"></i>
               </button>
@@ -22,16 +22,25 @@
              if (hasTypeChild) { %>
 
             <% } else { %>
-              <div class="col-xs-6">
+              <div class="col-xs-8 col-sm-6">
                 <form id="<%= items[i].itemid %>" name="item"
                   style="float:right;" class="price form-inline"
                 >
                   <div class="form-group-lg" >
                     <div class="input-group">
-                      <div class="input-group-addon">$</div>
+                      <div class="input-group-addon" style="padding: 0px">
+                        <p class="item-price-adder">
+                          $
+                        </p>
+                      </div>
                       <input type="text" <% if (items[i].item_price == null) { %> value="" <% }
                          else { %> value="<%= items[i].item_price %>" <% } %>
                          size="10" class="form-control" placeholder="Price">
+                       <span class="input-group-btn">
+                          <button class="btn btn-default btn-lg item-price-button" type="submit">
+                              Set
+                          </button>
+                       </span>
                     </div>
                   </div>
                 </form>
@@ -40,7 +49,7 @@
 
             <div style="clear:both;"></div>
           </div>
-          <div class="row item-content-inner-container">
+          <div class="row item-content-inner-container" style="margin-top: 20px">
             <div class="col-sm-6 col-xs-12">
               <img src="<%= items[i].item_photo ? items[i].item_photo : "" %>" style="float:left" class="thumbnail menu-photo" />
             </div>

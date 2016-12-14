@@ -3,6 +3,14 @@
   padding-bottom: 2em;
 }
 
+.total-center {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
 .btn-facebook {
   text-align: center;
   width: 20em;
@@ -46,6 +54,12 @@
    width: 200px;
  }
 
+ .info-button {
+   font-size:18px;
+   margin-left:-4px;
+   margin-right:-3px;
+ }
+
 .col-centered{
   float: none;
   margin: 0 auto;
@@ -64,8 +78,24 @@
 }
 
 .header-logo {
-  height: 32px;
-  margin-top: -9px;
+  display:inline;
+  padding:5px 10px 5px 10px;
+  background-color: #a9cdeb;
+  border-radius: 10px 10px 0px 10px;
+}
+
+.header-logo-text {
+  font-size: 20px;
+  font-family: 'Roboto', sans-serif;
+  display:inline;
+  color: white;
+}
+
+.header-logo-accompaniment {
+  font-size:17px;
+  font-family:'Roboto',sans-serif;
+  display:inline;
+  margin-left:5px
 }
 
 //orders classes
@@ -85,6 +115,10 @@
 }
 
 .order-text {
+  font-size: 15px;
+}
+
+.big-order-text {
   font-size: 19px;
 }
 
@@ -186,6 +220,8 @@
   border: 1px solid #f2f2f2;
   border-radius: 3px;
   background-color: #e8e8e8;
+  margin-top:1em;
+  min-width: 310px;
 }
 
 .menu-photo {
@@ -283,9 +319,19 @@
   padding-top: 3px;
 }
 
+.item-price-adder {
+  margin: 0px 6px 0px 6px;
+  font-size: 17px;
+}
+
 .type-title {
   float: left;
   font-size: 26px;
+}
+
+.type-price-button {
+  border-radius: 0px 4px 4px 0px;
+  padding: 10px 0px 10px 0px;
 }
 
 .type-content-inner-container {
@@ -335,6 +381,14 @@
 .size-title {
   float: left;
   font-size: 22px;
+}
+
+.size-price-adder {
+  margin: 0px 3px 0px 3px;
+}
+
+.size-price-button {
+  border-radius: 0px 4px 4px 0px;
 }
 
 .size-content-inner-container {
