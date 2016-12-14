@@ -1,5 +1,7 @@
 # Menubot
 
+> Warning: This guide has not been changed since the change of name from Menubot to suss. Consequently, please swap out any mentions of Menubot or it's domain to the new version.
+
 ## DNS forwarding
 
 ### First time setup

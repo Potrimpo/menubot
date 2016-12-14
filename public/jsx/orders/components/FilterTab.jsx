@@ -3,7 +3,7 @@ import FilterLink from '../containers/FilterLink'
 import DelayForm from '../containers/DelayForm'
 
 const FilterTab = () => (
-  <div className="row">
+  <div className="row order-divider">
     <div className="col-xs-12">
       <div className="row">
         <div className="col-sm-6 col-xs-12">
