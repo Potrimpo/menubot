@@ -3,7 +3,7 @@
  */
 
 const chrono = require('chrono-node'),
-  { redisRecordOrder } = require('./messengerSessions'),
+  { redisRecordOrder } = require('./../state-and-sessions/messengerSessions'),
   QR = require('./quick-replies'),
   { orderAttempt, hoursCheck } = require('./message-list');
 

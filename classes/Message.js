@@ -1,10 +1,10 @@
 /**
  * Created by lewis.knoxstreader on 2/12/16.
  */
-const { findOrCreateSession, redisDeleteOrder } = require('../messaging/messengerSessions'),
-  runActions = require('../messaging/runActions'),
-  postbackHandler = require('../messaging/postbackHandler'),
-  actions = require('../messaging/actions');
+const { findOrCreateSession, redisDeleteOrder } = require('../state-and-sessions/messengerSessions'),
+  runActions = require('../messaging/response-logic/runActions'),
+  postbackHandler = require('../messaging/response-logic/postbackHandler'),
+  actions = require('../messaging/response-logic/actions');
 
 class Message {
   constructor (event) {

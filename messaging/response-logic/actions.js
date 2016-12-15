@@ -1,6 +1,6 @@
-const fbMessage = require('./fbMessage'),
-  { redisRetrieveOrder, redisGetToken } = require('./messengerSessions'),
-  Order = require('../classes/Order');
+const fbMessage = require('./../fbMessage'),
+  { redisRetrieveOrder, redisGetToken } = require('./../../state-and-sessions/messengerSessions'),
+  Order = require('../../classes/Order');
 
 // Our bot actions
 const actions = {

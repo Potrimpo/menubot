@@ -2,9 +2,9 @@
  * Created by lewis.knoxstreader on 31/08/16.
  */
 
-const structured = require('./structured-messages'),
-  text = require('./text-messages'),
-  db = require('./../repositories/bot/botQueries');
+const structured = require('./../structured-messages'),
+  text = require('./../text-messages'),
+  db = require('./../../repositories/bot/botQueries');
 
 function postbackHandler (jsonPayload, fbUserId, fbPageId) {
   return new Promise(function (res, rej) {

@@ -3,7 +3,7 @@
  */
 
 const { client, sub } = require('./redis-init'),
-  control = require('./controllers/orders');
+  control = require('./../controllers/orders');
 
 function init (io) {
   io.on('connection', function (socket) {
