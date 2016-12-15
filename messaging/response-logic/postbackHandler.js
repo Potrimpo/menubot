@@ -2,9 +2,9 @@
  * Created by lewis.knoxstreader on 31/08/16.
  */
 
-const structured = require('./structured-messages'),
-  text = require('./text-messages'),
-  db = require('./../repositories/bot/botQueries');
+const structured = require('./../structured-messages'),
+  text = require('./../text-messages'),
+  db = require('./../../repositories/bot/botQueries');
 
 function postbackHandler (jsonPayload, fbUserId, fbPageId) {
   return new Promise(function (res, rej) {
@@ -13,22 +13,22 @@ function postbackHandler (jsonPayload, fbUserId, fbPageId) {
     switch (payload.intent.toUpperCase()) {
       case 'MENU':
         return db.getMenu(fbPageId)
-          .then((menu) => res(structured.parseItems(menu)) )
+          .then((menu) => res(structured.items(menu)) )
           .catch(err => rej(err));
 
       case 'LOCATION':
         return db.findLocation(fbPageId)
-          .then(data => res(data.location ? data.location : "Sorry, I don't know where I am!"))
+          .then(data => res(text.location(data.location)))
           .catch(err => rej(err));
 
       case 'DETAILS':
         return db.getTypes(payload.itemid)
-          .then(types => res(structured.parseProductTypes(types, payload.itemid)) )
+          .then(types => res(structured.types(types, payload.itemid)) )
           .catch(err => rej(err));
 
       case 'SIZES':
         return db.getSizes(payload.typeid)
-          .then(sizes => res(structured.parseProductSizes(sizes, payload.typeid, payload.itemid)) )
+          .then(sizes => res(structured.sizes(sizes, payload.typeid, payload.itemid)) )
           .catch(err => rej(err));
 
       case 'ORDER':
@@ -39,12 +39,13 @@ function postbackHandler (jsonPayload, fbUserId, fbPageId) {
 
       case 'MY_ORDERS':
         return db.ordersbyUserid(fbUserId)
-          .then(orders => res(structured.parseOrders(orders)))
+          .then(xs =>
+            res(text.hasOrders(xs)))
           .catch(err => rej(err));
 
       case 'HOURS':
         return db.checkOpenStatus(fbPageId)
-          .then(hours => res(text.postbackHours(hours)))
+          .then(data => res(text.hours(data)))
           .catch(err => rej(err));
 
       case 'GET_STARTED':

@@ -1,6 +1,7 @@
-const fbMessage = require('./fbMessage'),
-  { redisRetrieveOrder, redisGetToken } = require('./messengerSessions'),
-  Order = require('../classes/Order');
+const fbMessage = require('./../fbMessage'),
+  { redisRetrieveOrder, redisGetToken } = require('./../../state-and-sessions/messengerSessions'),
+  text = require('../text-messages'),
+  Order = require('../../classes/Order');
 
 // Our bot actions
 const actions = {
@@ -18,7 +19,7 @@ const actions = {
               ':',
               err.stack || err
             );
-            console.log(`was trying to send: ${text}`);
+            console.log(`was trying to send: ${message.text}`);
           }));
   },
 
@@ -33,6 +34,9 @@ const actions = {
       .catch(err => console.error("Error in orderTime", err));
   },
 
+  defaultResp () {
+    return new Promise(res => res(text.defaultResponse));
+  }
 };
 
 module.exports = actions;

@@ -1,6 +1,6 @@
 /* Created by lewis.knoxstreader on 13/08/16. */
 
-const actions = require('../../messaging/actions'),
+const actions = require('../../messaging/response-logic/actions'),
   expect = require('chai').expect,
   { dbQueryFactory } = require('./functionsForTests'),
   { testPageID } = require('../../envVariables');
