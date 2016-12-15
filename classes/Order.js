@@ -2,59 +2,17 @@
  * Created by lewis.knoxstreader on 25/11/16.
  */
 const Either = require('ramda-fantasy').Either,
-  Right = Either.Right,
-  Left = Either.Left,
   chrono = require('chrono-node'),
   { pub } = require('../state-and-sessions/redis-init'),
-  { orderAttempt } = require('../messaging/message-list'),
   db = require('../repositories/bot/botQueries'),
+  { canIPlace } = require('../messaging/time-management'),
   Item = require('./Item'),
   Type = require('./Type'),
   Size = require('./Size');
 
-const parseHours = data =>
-  Either.of({
-    opentime: chrono.parseDate(data.opentime),
-    closetime: chrono.parseDate(data.closetime)
-  });
-
-const validTime = time =>
-  time ? Right(time) : Left(orderAttempt.noTime);
-
-const inRange = (requestTime, hours) =>
-  requestTime >  hours.opentime && requestTime < hours.closetime;
-
-const withinHours = (hours, plainHours, requestTime) =>
-  inRange(requestTime, hours) ?
-    Right() :
-    Left(orderAttempt.tooLate(plainHours.opentime, plainHours.closetime));
-
-const delayDate = delay =>
-  new Date(
-    Date.now() + (delay * 60 * 1000));
-
-const compareWaitTime = (delay, request) =>
-  request > delayDate(delay) ?
-    Right() :
-    Left(orderAttempt.minimumWait(delay));
-
 const throwE = e => {
   throw e;
 };
-
-const timeFilter = (data, requestTime) =>
-  validTime(requestTime)
-    .chain(_ =>
-      parseHours(data))
-    .chain(hours =>
-      withinHours(hours, data, requestTime))
-    .chain(_ =>
-      compareWaitTime(data.delay, requestTime));
-
-const canIPlace = (data, requestTime) =>
-  data.status ?
-    timeFilter(data, requestTime) :
-    Left(orderAttempt.closed);
 
 const throwLeft = Either.either(throwE, x => x);
 
