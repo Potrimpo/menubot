@@ -15,7 +15,7 @@ const app = express(),
 expressConfig(app, express);
 
 // socket.io listeners
-const init = require('./socket-functions');
+const init = require('./state-and-sessions/socket-functions');
 init(io);
 
 // API keys and Passport configuration.

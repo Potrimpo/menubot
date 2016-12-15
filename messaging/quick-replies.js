@@ -26,19 +26,9 @@ const myOrders = {
   payload: JSON.stringify({ intent: "MY_ORDERS" })
 };
 
-const basicReplies = () =>
-  [
-    menu,
-    location,
-    hours
-  ];
+const basicReplies = [ menu, location, hours ];
 
-const hoursReplies = () =>
-  [
-    menu,
-    location,
-    myOrders
-  ];
+const hoursReplies = [ menu, location, myOrders ];
 
 module.exports = {
   menu,
