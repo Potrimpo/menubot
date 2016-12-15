@@ -2,6 +2,7 @@ import { combineReducers } from 'redux'
 import { RECEIVE_ORDERS, TOGGLE_ORDER, NEW_ORDER } from '../actions'
 import filter from './filter'
 import delay from './delay'
+import { compareTimeAndUser } from '../misc-functions'
 
 const bongNoise = new Audio('/audio/bong.mp3');
 
@@ -48,16 +49,14 @@ const rootReducer = combineReducers({
 export default rootReducer
 
 function orderPlacement (state, newOrder) {
-  let newState;
+  //cloning state to newState variable
+  const newState = state.slice(0);
   for (let i = 0; i < state.length; i++) {
-    if (new Date(newOrder.pickuptime) < new Date(state[i].pickuptime)) {
-      newState = state.slice(0, i);
-      newState.push(newOrder);
-      newState.push(...state.slice(i));
+    if (compareTimeAndUser(newOrder, state[i])) {
+      newState.splice(i, 0, newOrder);
       return newState;
     }
   }
-  newState = state.slice(0);
   newState.push(newOrder);
   return newState;
 }

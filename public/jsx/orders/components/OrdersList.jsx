@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import Order from './Order'
+import { matchUserAndTime } from '../misc-functions'
 
 const OrdersList = ({ fbid, orders, onOrderClick }) => (
   <div style={{margin: "0 5px 0 5px"}}>
@@ -36,7 +37,7 @@ function timeFormatting (pickuptime) {
 
 function lookback (orders, o, i) {
   if (i == 0) return false;
-  return o.userid === orders[i -1].userid && o.pickuptime === orders[i - 1].pickuptime;
+  return matchUserAndTime(o, orders[i - 1]);
 }
 
 function ordering (orders, order) {
@@ -44,9 +45,6 @@ function ordering (orders, order) {
   const groupedContainer = position => `order-${position}-container`;
   const appendClass = str =>
     classes.concat(" ").concat(groupedContainer(str));
-
-  const matchUserAndTime = (x, order) =>
-    x.pickuptime == order.pickuptime && x.customer_id == order.customer_id;
 
   const alike = orders.filter(x => matchUserAndTime(x, order));
 

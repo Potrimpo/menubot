@@ -123,7 +123,7 @@ exports.ordersByFbid = (fbid, today) =>
     " LEFT OUTER JOIN types AS t ON o.typeid = t.typeid" +
     " LEFT OUTER JOIN sizes AS s ON o.sizeid = s.sizeid" +
     " WHERE o.fbid = :fbid AND o.pickuptime >= :today" +
-    " ORDER BY o.pickuptime ASC",
+    " ORDER BY o.pickuptime, o.customer_id ASC",
     { replacements: {fbid, today}, type: sequelize.QueryTypes.SELECT })
     .catch(err => console.error("error getting orders in sql", err));
 
