@@ -13,6 +13,7 @@ const parseHours = data =>
     closetime: chrono.parseDate(data.closetime)
   });
 
+// never reach this with !time. If time can't be parsed, gets caught on the default response
 const validTime = time =>
   time ? Right(time) : Left(orderAttempt.noTime);
 
@@ -34,9 +35,7 @@ const compareWaitTime = (delay, request) =>
     Left(orderAttempt.minimumWait(delay));
 
 const timeFilter = (data, requestTime) =>
-  validTime(requestTime)
-    .chain(_ =>
-      parseHours(data))
+  parseHours(data)
     .chain(hours =>
       withinHours(hours, data, requestTime))
     .chain(_ =>

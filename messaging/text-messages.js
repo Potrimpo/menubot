@@ -6,12 +6,14 @@ const chrono = require('chrono-node'),
   Identity = require('ramda-fantasy').Identity,
   { redisRecordOrder } = require('./../state-and-sessions/messengerSessions'),
   QR = require('./quick-replies'),
-  { orderAttempt, hoursCheck, locationCheck } = require('./message-list');
+  { orderAttempt, hoursCheck, locationCheck, confused } = require('./message-list');
 
 const wrapQuickreplies = (text, qrs) => ({
   quick_replies: qrs,
   text
 });
+
+const defaultResponse = wrapQuickreplies(confused, QR.basicReplies);
 
 const getHours = hours =>
   hours.status ?
@@ -59,6 +61,7 @@ const location = loc =>
     .get();
 
 module.exports = {
+  defaultResponse,
   hours,
   openStatus,
   location

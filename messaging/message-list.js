@@ -21,8 +21,11 @@ const locationCheck = {
   notFound: "I don't know where I am!"
 };
 
+const confused = "Sorry, we couldn't understand that!";
+
 module.exports = {
   orderAttempt,
   hoursCheck,
-  locationCheck
+  locationCheck,
+  confused
 };

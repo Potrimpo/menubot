@@ -17,9 +17,7 @@ const throwE = e => {
 const throwLeft = Either.either(throwE, x => x);
 
 class Order {
-  constructor (fbPageId, fbUserId, msg, data) {
-    const time = chrono.parseDate(msg);
-
+  constructor (fbPageId, fbUserId, time, data) {
     return Order.checkHours(fbPageId, time)
       .then(() =>
         Order.dbInsert(fbPageId, fbUserId, time, data))
