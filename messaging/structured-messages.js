@@ -6,7 +6,7 @@ const QR = require('./quick-replies');
 
 const getStarted = () => ({
   text: "Welcome! Would you like to see our menu?",
-  quick_replies: QR.basicReplies()
+  quick_replies: QR.basicReplies
 });
 
 const genericTemplate  = () => ({
@@ -120,7 +120,7 @@ function orders(orders) {
       }
     }
   });
-  template.quick_replies = QR.basicReplies();
+  template.quick_replies = QR.basicReplies;
 
   return template;
 }

@@ -16,7 +16,13 @@ const hoursCheck = {
   closed: "Sorry! We're not open today"
 };
 
+const locationCheck = {
+  found: loc => `Currently: ${loc}`,
+  notFound: "I don't know where I am!"
+};
+
 module.exports = {
   orderAttempt,
-  hoursCheck
+  hoursCheck,
+  locationCheck
 };

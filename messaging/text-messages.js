@@ -3,19 +3,30 @@
  */
 
 const chrono = require('chrono-node'),
+  Identity = require('ramda-fantasy').Identity,
   { redisRecordOrder } = require('./../state-and-sessions/messengerSessions'),
   QR = require('./quick-replies'),
-  { orderAttempt, hoursCheck } = require('./message-list');
+  { orderAttempt, hoursCheck, locationCheck } = require('./message-list');
 
-const postbackHours = hours => ({
-  text: hours.status ? hoursCheck.open(hours.opentime, hours.closetime) : hoursCheck.closed,
-  quick_replies: QR.hoursReplies()
+const wrapQuickreplies = (text, qrs) => ({
+  quick_replies: qrs,
+  text
 });
 
+const getHours = hours =>
+  hours.status ?
+    hoursCheck.open(hours.opentime, hours.closetime) :
+    hoursCheck.closed;
+
+const hours = hours =>
+  Identity(getHours(hours))
+    .map(resp =>
+      wrapQuickreplies(resp, QR.hoursReplies))
+    .get();
 
 function openStatus (data, fbUserId, payload) {
   const resp = {
-    quick_replies: QR.hoursReplies()
+    quick_replies: QR.hoursReplies
   };
 
   return data.status ?
@@ -38,7 +49,17 @@ function isTooLate (closetime) {
   return Date.now() > chrono.parseDate(closetime);
 }
 
+const hasLocation = loc =>
+  loc ? locationCheck.found(loc) : locationCheck.notFound;
+
+const location = loc =>
+  Identity(hasLocation(loc))
+    .map(resp =>
+      wrapQuickreplies(resp, QR.basicReplies))
+    .get();
+
 module.exports = {
-  postbackHours,
-  openStatus
+  hours,
+  openStatus,
+  location
 };

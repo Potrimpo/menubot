@@ -18,7 +18,7 @@ function postbackHandler (jsonPayload, fbUserId, fbPageId) {
 
       case 'LOCATION':
         return db.findLocation(fbPageId)
-          .then(data => res(data.location ? data.location : "Sorry, I don't know where I am!"))
+          .then(data => res(text.location(data.location)))
           .catch(err => rej(err));
 
       case 'DETAILS':
@@ -44,7 +44,7 @@ function postbackHandler (jsonPayload, fbUserId, fbPageId) {
 
       case 'HOURS':
         return db.checkOpenStatus(fbPageId)
-          .then(hours => res(text.postbackHours(hours)))
+          .then(data => res(text.hours(data)))
           .catch(err => rej(err));
 
       case 'GET_STARTED':
