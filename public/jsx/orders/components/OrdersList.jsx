@@ -36,7 +36,7 @@ function timeFormatting (pickuptime) {
 
 function lookback (orders, o, i) {
   if (i == 0) return false;
-  return o.userid === orders[i -1].userid && o.pickuptime === orders[i - 1].pickuptime;
+  return o.customer_id === orders[i -1].customer_id && o.pickuptime === orders[i - 1].pickuptime;
 }
 
 function ordering (orders, order) {
