@@ -6,7 +6,8 @@ const chrono = require('chrono-node'),
   Identity = require('ramda-fantasy').Identity,
   { redisRecordOrder } = require('./../state-and-sessions/messengerSessions'),
   QR = require('./quick-replies'),
-  { orderAttempt, hoursCheck, locationCheck, confused } = require('./message-list');
+  structured = require('./structured-messages'),
+  { orderAttempt, hoursCheck, locationCheck, confused, noOrders } = require('./message-list');
 
 const wrapQuickreplies = (text, qrs) => ({
   quick_replies: qrs,
@@ -60,9 +61,18 @@ const location = loc =>
       wrapQuickreplies(resp, QR.basicReplies))
     .get();
 
+const hasNoOrders = wrapQuickreplies(noOrders, QR.basicReplies);
+
+const emptyArray = xs =>
+  Array.isArray(xs) && xs.length > 0;
+
+const hasOrders = xs =>
+  emptyArray(xs) ? structured.orders(xs) : hasNoOrders;
+
 module.exports = {
   defaultResponse,
   hours,
   openStatus,
-  location
+  location,
+  hasOrders
 };

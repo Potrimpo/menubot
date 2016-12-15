@@ -39,7 +39,8 @@ function postbackHandler (jsonPayload, fbUserId, fbPageId) {
 
       case 'MY_ORDERS':
         return db.ordersbyUserid(fbUserId)
-          .then(orders => res(structured.orders(orders)))
+          .then(xs =>
+            res(text.hasOrders(xs)))
           .catch(err => rej(err));
 
       case 'HOURS':

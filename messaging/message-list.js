@@ -23,9 +23,12 @@ const locationCheck = {
 
 const confused = "Sorry, we couldn't understand that!";
 
+const noOrders = "Oops! Looks like you don't have any orders";
+
 module.exports = {
   orderAttempt,
   hoursCheck,
   locationCheck,
+  noOrders,
   confused
 };
