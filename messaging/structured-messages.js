@@ -22,7 +22,7 @@ const button = payload => ({
   payload: JSON.stringify(payload)
 });
 
-function parseItems(menu) {
+function items(menu) {
   const template = genericTemplate();
 
   template.attachment.payload.elements = menu.map(val => {
@@ -50,7 +50,7 @@ function parseItems(menu) {
   return template;
 }
 
-function parseProductTypes(types, itemid) {
+function types(types, itemid) {
   const template = genericTemplate();
 
   template.attachment.payload.elements = types.map(val => {
@@ -79,7 +79,7 @@ function parseProductTypes(types, itemid) {
   return template;
 }
 
-function parseProductSizes(sizes, typeid, itemid) {
+function sizes(sizes, typeid, itemid) {
   const template = genericTemplate();
   template.attachment.payload.elements = sizes.map(val => {
     const order = {
@@ -100,7 +100,7 @@ function parseProductSizes(sizes, typeid, itemid) {
   return template;
 }
 
-function parseOrders(orders) {
+function orders(orders) {
   const template = genericTemplate();
   template.attachment.payload.elements = orders.map(val => {
     if (val.size) {
@@ -127,8 +127,8 @@ function parseOrders(orders) {
 
 module.exports = {
   getStarted,
-  parseItems,
-  parseProductTypes,
-  parseProductSizes,
-  parseOrders
+  items,
+  types,
+  sizes,
+  orders
 };

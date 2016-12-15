@@ -13,7 +13,7 @@ function postbackHandler (jsonPayload, fbUserId, fbPageId) {
     switch (payload.intent.toUpperCase()) {
       case 'MENU':
         return db.getMenu(fbPageId)
-          .then((menu) => res(structured.parseItems(menu)) )
+          .then((menu) => res(structured.items(menu)) )
           .catch(err => rej(err));
 
       case 'LOCATION':
@@ -23,12 +23,12 @@ function postbackHandler (jsonPayload, fbUserId, fbPageId) {
 
       case 'DETAILS':
         return db.getTypes(payload.itemid)
-          .then(types => res(structured.parseProductTypes(types, payload.itemid)) )
+          .then(types => res(structured.types(types, payload.itemid)) )
           .catch(err => rej(err));
 
       case 'SIZES':
         return db.getSizes(payload.typeid)
-          .then(sizes => res(structured.parseProductSizes(sizes, payload.typeid, payload.itemid)) )
+          .then(sizes => res(structured.sizes(sizes, payload.typeid, payload.itemid)) )
           .catch(err => rej(err));
 
       case 'ORDER':
@@ -39,7 +39,7 @@ function postbackHandler (jsonPayload, fbUserId, fbPageId) {
 
       case 'MY_ORDERS':
         return db.ordersbyUserid(fbUserId)
-          .then(orders => res(structured.parseOrders(orders)))
+          .then(orders => res(structured.orders(orders)))
           .catch(err => rej(err));
 
       case 'HOURS':
