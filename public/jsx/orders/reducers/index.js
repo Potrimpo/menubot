@@ -51,7 +51,7 @@ function orderPlacement (state, newOrder) {
   //cloning state to newState variable
   const newState = state.slice(0);
   for (let i = 0; i < state.length; i++) {
-    if (new Date(newOrder.pickuptime) < new Date(state[i].pickuptime)) {
+    if (new Date(newOrder.pickuptime) <= new Date(state[i].pickuptime)) {
       if (newOrder.customer_id == state[i].customer_id) {
         newState.splice(i, 0, newOrder);
         return newState;
