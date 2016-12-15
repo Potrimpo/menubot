@@ -134,7 +134,7 @@ exports.orderComplete = ids =>
     " WHERE orderid IN (:ids)",
     { replacements: { ids }, type: sequelize.QueryTypes.UPDATE });
 
-const matchFbid = R.find(R.propEq('fbid'));
+// const matchFbid = R.find(R.propEq('fbid'));
 
 exports.linkCompany = (id, facebookId) =>
   User.findOne({
@@ -142,7 +142,8 @@ exports.linkCompany = (id, facebookId) =>
     where: { id }
   })
     .then(user => {
-      const { fbid, name, access_token } = matchFbid(user.accounts, facebookId);
+      const { fbid, name, access_token } = user.accounts.filter(v => v.fbid == facebookId)[0];
+      // const { fbid, name, access_token } = matchFbid(user.accounts, facebookId);
       return sequelize.query(
         "INSERT INTO companies (fbid, name, access_token)" +
         " VALUES (:fbid, :name, :access_token)" +
