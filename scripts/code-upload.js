@@ -15,12 +15,13 @@ const domain = env => {
   }
 };
 
-const url = `http://${domain(env)}/newCodeVerySecret`;
+// url has to be https in order to work on server. Probably nginx filtering out non-https POSTs
+const url = `https://${domain(env)}/newCodeVerySecret`;
 
-const curlServer = vals =>
+const curlServer = body =>
   fetch(url, {
     method: 'POST',
-    body: JSON.stringify(vals),
+    body: JSON.stringify(body),
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
