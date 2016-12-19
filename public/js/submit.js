@@ -150,7 +150,7 @@ $(document).ready(function() {
     event.preventDefault();
     showSpinner();
 
-    const val = $(`#${this.id}`).find(':text').val().replace(/[^\d.-]/g, ''),
+    const val = $(this).find(':text').val().replace(/[^\d.-]/g, ''),
       id = this.id,
       kind = this.name;
 
