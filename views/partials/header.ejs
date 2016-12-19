@@ -7,17 +7,18 @@
       </button>
 
       <a href="/" class="navbar-brand">
-          <div class="header-logo">
-            <p class="header-logo-text">
-              suss
-            </p>
-          </div>
-
-          <% if (typeof compName !== 'undefined') { %>
-             <p class="header-logo-accompaniment"> <%= compName %></p>
-          <% } %>
-
+        <div class="header-logo">
+          <p class="header-logo-text">
+            suss
+          </p>
+        </div>
       </a>
+      <% if (typeof compName !== 'undefined') { %>
+        <a href="/" class="navbar-brand" style="margin-left:-20px">
+          <p class="header-logo-accompaniment"> <%= compName %></p>
+        </a>
+      <% } %>
+
     </div>
     <div class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
