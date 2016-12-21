@@ -25,7 +25,11 @@ OrdersList.propTypes = {
 export default OrdersList
 
 function timeFormatting (pickuptime) {
+  console.log(pickuptime);
+
   pickuptime = new Date(pickuptime);
+  console.log(pickuptime);
+
   let hours = pickuptime.getHours(),
     minutes = pickuptime.getMinutes();
 

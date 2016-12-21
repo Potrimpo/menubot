@@ -38,7 +38,10 @@ function openStatus (data, fbUserId, payload) {
 }
 
 function open (data, fbUserId, payload, resp) {
-  if (isTooLate(data.closetime)) return orderAttempt.tooLate(data.opentime, data.closetime);
+
+  if (isTooLate(data.closetime)) {
+    return Object.assign(resp, { text: orderAttempt.tooLate(data.opentime, data.closetime) });
+  }
 
   // no quickreplies if successful
   return redisRecordOrder(fbUserId, payload)
@@ -49,6 +52,11 @@ function open (data, fbUserId, payload, resp) {
 }
 
 function isTooLate (closetime) {
+  console.log( new Date());
+  console.log( chrono.parseDate(closetime));
+  console.log(new Date() > chrono.parseDate(closetime));
+
+
   return Date.now() > chrono.parseDate(closetime);
 }
 
