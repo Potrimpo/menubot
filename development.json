@@ -13,7 +13,7 @@
       "FACEBOOK_ID": "",
       "FB_APP_SECRET": "",
       "FB_VERIFY_TOKEN": "saveme",
-      "timeZoneOffset": -780
+      "timeZoneOffset": "Pacific/Auckland"
     }
   }
   ]
