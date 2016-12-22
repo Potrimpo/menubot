@@ -7,7 +7,8 @@ const chrono = require('chrono-node'),
   { redisRecordOrder } = require('./../state-and-sessions/messengerSessions'),
   QR = require('./quick-replies'),
   structured = require('./structured-messages'),
-  { orderAttempt, hoursCheck, locationCheck, confused, noOrders } = require('./message-list');
+  { orderAttempt, hoursCheck, locationCheck, confused, noOrders } = require('./message-list'),
+  { offsetThis } = require('./../config/timeOffset.js');
 
 const wrapQuickreplies = (text, qrs) => ({
   quick_replies: qrs,
@@ -52,10 +53,9 @@ function open (data, fbUserId, payload, resp) {
 }
 
 function isTooLate (closetime) {
-  console.log( new Date().getTimezoneOffset());
-  console.log( chrono.parseDate(closetime));
-  console.log(new Date() > chrono.parseDate(closetime));
-
+  console.log("The current date:");
+  console.log(new Date());
+  console.log( offsetThis(new Date()) );
 
   return Date.now() > chrono.parseDate(closetime);
 }

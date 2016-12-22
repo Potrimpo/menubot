@@ -12,7 +12,8 @@
       "sessionTable": "Sessions",
       "FACEBOOK_ID": "",
       "FB_APP_SECRET": "",
-      "FB_VERIFY_TOKEN": "saveme"
+      "FB_VERIFY_TOKEN": "saveme",
+      "timeZoneOffset": -780
     }
   }
   ]
