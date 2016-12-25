@@ -53,6 +53,8 @@ function open (data, fbUserId, payload, resp) {
 
 function isTooLate (closetime) {
   console.log("Date.now() = " + Date.now());
+  console.log("chrono.parseDate(closetime) = ");
+  console.log(chrono.parseDate(closetime));
   return Date.now() > chrono.parseDate(closetime);
 }
 
