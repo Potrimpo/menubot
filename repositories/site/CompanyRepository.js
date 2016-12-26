@@ -136,7 +136,7 @@ exports.orderComplete = ids =>
 
 // const matchFbid = R.find(R.propEq('fbid'));
 
-exports.linkCompany = (id, facebookId) =>
+exports.linkCompany = (id, facebookId, offset) =>
   User.findOne({
     attributes: ['accounts'],
     where: { id }
@@ -145,10 +145,10 @@ exports.linkCompany = (id, facebookId) =>
       const { fbid, name, access_token } = user.accounts.filter(v => v.fbid == facebookId)[0];
       // const { fbid, name, access_token } = matchFbid(user.accounts, facebookId);
       return sequelize.query(
-        "INSERT INTO companies (fbid, name, access_token)" +
-        " VALUES (:fbid, :name, :access_token)" +
+        "INSERT INTO companies (fbid, name, access_token, timezone)" +
+        " VALUES (:fbid, :name, :access_token, :offset)" +
         " RETURNING fbid",
-        { replacements: { fbid, name, access_token },
+        { replacements: { fbid, name, access_token, offset },
           type: sequelize.QueryTypes.INSERT });
     });
 

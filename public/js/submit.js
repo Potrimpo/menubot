@@ -275,6 +275,42 @@ $(document).ready(function() {
       });
   });
 
+  //Initialise a new company
+  $('form.company-init').submit(function(event) {
+    event.preventDefault();
+    showSpinner();
+
+    //Define company Facebook id
+    var fbid = this.id;
+    console.log(fbid);
+
+    //Find the client's current timezone offset
+    var curdate = new Date();
+    var offsetNumber = curdate.getTimezoneOffset() / 60;
+    var offsetToString = offsetNumber.toString();
+    var offset = " GMT" + offsetToString + "00";
+    console.log(offset);
+
+    $.ajax({
+      type: 'POST',
+      url: '/company/init/' + fbid,
+      data: { offset },
+      encode: true,
+      success(data) {
+        console.log("SUCCESS");
+        if (typeof data.redirect == 'string') {
+          window.location = data.redirect
+        };
+      },
+      error(smth, status, err) {
+        console.error("ERROR IN AJAX", status);
+        console.error("ERROR =", err);
+      }
+    })
+      .done(function(data) {
+        console.log("DONE");
+      });
+  });
 });
 
 

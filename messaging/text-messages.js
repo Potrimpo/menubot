@@ -39,7 +39,7 @@ function openStatus (data, fbUserId, payload) {
 
 function open (data, fbUserId, payload, resp) {
 
-  if (isTooLate(data.closetime)) {
+  if (isTooLate(data.closetime, data.timezone)) {
     return Object.assign(resp, { text: orderAttempt.tooLate(data.opentime, data.closetime) });
   }
 
@@ -51,7 +51,7 @@ function open (data, fbUserId, payload, resp) {
     );
 }
 
-function isTooLate (closetime) {
+function isTooLate (closetime, timezone) {
   console.log("------");
   console.log("new Date() = " + new Date());
   console.log(new Date());
@@ -59,12 +59,11 @@ function isTooLate (closetime) {
   console.log("chrono.parseDate(closetime) = " + chrono.parseDate(closetime));
   console.log(chrono.parseDate(closetime));
   console.log("------");
-  console.log('Closetime parse date object with timezone adjustment = ' + chrono.parseDate(closetime + "GMT+1300"));
-  console.log(chrono.parseDate(closetime + " GMT+1300"));
+  console.log('Closetime parse date object with timezone adjustment = ' + chrono.parseDate(closetime + timezone));
+  console.log(chrono.parseDate(closetime + timezone));
   console.log("------");
 
-
-  return new Date() > chrono.parseDate(closetime + " GMT+1300");
+  return new Date() > chrono.parseDate(closetime + timezone);
 }
 
 const hasLocation = loc =>

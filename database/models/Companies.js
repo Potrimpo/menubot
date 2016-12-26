@@ -27,6 +27,11 @@ module.exports = function (sequelize, Sequelize) {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
       },
+      timezone: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        defaultValue: "GMT+1300"
+      },
       opentime: {
         type: Sequelize.STRING,
         allowNull: false,
