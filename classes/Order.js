@@ -18,6 +18,7 @@ const throwLeft = Either.either(throwE, x => x);
 
 class Order {
   constructor (fbPageId, fbUserId, time, data) {
+    console.log("Time message = " + time);
     return Order.checkHours(fbPageId, time)
       .then(() =>
         Order.dbInsert(fbPageId, fbUserId, time, data))
