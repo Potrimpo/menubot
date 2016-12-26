@@ -52,10 +52,16 @@ function open (data, fbUserId, payload, resp) {
 }
 
 function isTooLate (closetime) {
-  console.log("Date.now() = " + Date.now());
-  console.log("chrono.parseDate(closetime) = ");
+  console.log("------");
+  console.log("new Date() = " + new Date());
+  console.log(new Date());
+  console.log("------");
+
+  console.log("chrono.parseDate(closetime) = " + chrono.parseDate(closetime));
   console.log(chrono.parseDate(closetime));
-  return Date.now() > chrono.parseDate(closetime);
+  console.log("------");
+
+  return new Date() > chrono.parseDate(closetime);
 }
 
 const hasLocation = loc =>
