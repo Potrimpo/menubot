@@ -56,7 +56,7 @@ function isTooLate (closetime) {
   console.log("new Date() = " + new Date());
   console.log(new Date());
   console.log("------");
-
+  console.log(chrono.parseDate(closetime + "GMT+1300"));
   console.log("chrono.parseDate(closetime) = " + chrono.parseDate(closetime));
   console.log(chrono.parseDate(closetime));
   console.log("------");
