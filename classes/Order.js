@@ -82,7 +82,8 @@ class Order {
     console.log("Substring of pickup time: " + reducedPickupTime);
     return db.checkTimezone(fbPageId)
       .then(data => {
-        console.log("corrected pickuptime, after substringing : " + chrono.parseDate(reducedPickupTime + data.timezone));
+        console.log("corrected pickuptime, after substringing : " + reducedPickupTime + data.timezone);
+        console.log("corrected pickuptime, after substringing, and parsed to date object : " + chrono.parseDate(reducedPickupTime + data.timezone));
         return reducedPickupTime
       })
   }
