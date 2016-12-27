@@ -22,8 +22,8 @@ class Order {
     return Order.checkHours(fbPageId, time)
       .then(() =>
         Order.correctTime(time, fbPageId))
-      .then(() =>
-        Order.dbInsert(fbPageId, fbUserId, time, data))
+      .then((correctedPickupTime) =>
+        Order.dbInsert(fbPageId, fbUserId, correctedPickupTime, data))
       .then(fields => {
         fields = fields[0];
 
@@ -84,7 +84,8 @@ class Order {
       .then(data => {
         console.log("corrected pickuptime, after substringing : " + reducedPickupTime + data.timezone);
         console.log("corrected pickuptime, after substringing, and parsed to date object : " + chrono.parseDate(reducedPickupTime + data.timezone));
-        return reducedPickupTime
+        var correctedPickupTime = chrono.parseDate(reducedPickupTime + data.timezone));
+        return correctedPickupTime
       })
   }
 
