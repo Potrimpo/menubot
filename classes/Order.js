@@ -84,7 +84,7 @@ class Order {
       .then(data => {
         console.log("corrected pickuptime, after substringing : " + reducedPickupTime + data.timezone);
         console.log("corrected pickuptime, after substringing, and parsed to date object : " + chrono.parseDate(reducedPickupTime + data.timezone));
-        var correctedPickupTime = chrono.parseDate(reducedPickupTime + data.timezone));
+        var correctedPickupTime = chrono.parseDate(reducedPickupTime + data.timezone);
         return correctedPickupTime
       })
   }
