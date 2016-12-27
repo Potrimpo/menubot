@@ -23,7 +23,7 @@ class Order {
       .then(() =>
         Order.correctTime(time, fbPageId))
       .then((correctedPickupTime) =>
-        Order.dbInsert(fbPageId, fbUserId, correctedPickupTime, data))
+        Order.dbInsert(fbPageId, fbUserId, time, data))
       .then(fields => {
         fields = fields[0];
 
