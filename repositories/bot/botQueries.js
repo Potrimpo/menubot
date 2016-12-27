@@ -43,6 +43,12 @@ exports.checkOpenStatus = fbid =>
     where: { fbid }
   });
 
+exports.checkTimezone = fbid =>
+  Company.findOne({
+    attributes: ['timezone'],
+    where: { fbid }
+  });
+
 exports.findLocation = fbid =>
   Company.findOne({
       attributes: ['location'],
