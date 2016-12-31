@@ -3,6 +3,7 @@
  */
 const Either = require('ramda-fantasy').Either,
   chrono = require('chrono-node'),
+  moment = require('moment-timezone'),
   { pub } = require('../state-and-sessions/redis-init'),
   db = require('../repositories/bot/botQueries'),
   { canIPlace } = require('../messaging/time-management'),
@@ -17,7 +18,7 @@ const throwE = e => {
 const throwLeft = Either.either(throwE, x => x);
 
 class Order {
-  constructor (fbPageId, fbUserId, requestedPickup, timestamp, data) {
+  constructor (fbPageId, fbUserId, requestedPickup, timestamp, timezone, data) {
     return Order.checkHours(fbPageId, requestedPickup, timestamp)
       .then(() =>
         Order.dbInsert(fbPageId, fbUserId, requestedPickup, data))
@@ -28,6 +29,7 @@ class Order {
         this.fbid = fields.fbid;
         this.customer_id = fields.customer_id;
         this.pickuptime = fields.pickuptime;
+        this.timezone = timezone;
 
         if (fields.itemid) {
           this.itemVals = new Item(fields);
@@ -77,7 +79,7 @@ class Order {
   }
 
   get readableTime () {
-    return chrono.parseDate(String(this.pickuptime));
+    return moment(this.pickuptime, this.timezone).format('h:mm a, dddd ZZ')
   }
 
   get confirmationMsg () {

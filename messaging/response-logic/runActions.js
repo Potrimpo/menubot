@@ -18,7 +18,7 @@ function runActions (fbUserId, fbPageId, msg, timestamp, timezone) {
   console.log("Chrono Parsed = " + chrono.parseDate(dateFormat + " " + msg + " " + dateZone));
   const requestedPickup = chrono.parseDate(dateFormat + " " + msg + " " + dateZone);
   if (requestedPickup) {
-    return actions.orderTime(fbUserId, fbPageId, requestedPickup, timestamp)
+    return actions.orderTime(fbUserId, fbPageId, requestedPickup, timestamp, timezone)
       .then(order => order.toMessage())
       .catch(err => {
         console.error("error in runActions", err);
