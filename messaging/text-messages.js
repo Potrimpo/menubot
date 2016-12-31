@@ -53,9 +53,9 @@ function open (data, fbUserId, payload, resp, timestamp) {
 }
 
 function isTooLate (closetime, timezone, timestamp) {
-  var messageDate = moment.tz(timestamp, timezone);
-  var dateFormat = messageDate.format("M/D/YYYY");
-  var dateZone = messageDate.format("ZZ");
+  const messageDate = moment.tz(timestamp, timezone);
+  const dateFormat = messageDate.format("M/D/YYYY");
+  const dateZone = messageDate.format("ZZ");
   return new Date() > chrono.parseDate(dateFormat + " " + closetime + " " + dateZone);
 }
 
