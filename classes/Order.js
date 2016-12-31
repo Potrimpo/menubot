@@ -79,9 +79,7 @@ class Order {
   }
 
   get readableTime () {
-    console.log(this.pickuptime);
-    console.log(this.timezone);
-    return moment.tz(this.pickuptime, this.timezone).format('h:mm a, dddd ZZ')
+    return moment.tz(this.pickuptime, this.timezone).format('h:mm a, dddd z')
   }
 
   get confirmationMsg () {
