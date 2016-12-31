@@ -17,10 +17,10 @@ const throwE = e => {
 const throwLeft = Either.either(throwE, x => x);
 
 class Order {
-  constructor (fbPageId, fbUserId, time, data) {
-    return Order.checkHours(fbPageId, time)
+  constructor (fbPageId, fbUserId, requestedPickup, timestamp, data) {
+    return Order.checkHours(fbPageId, requestedPickup, timestamp)
       .then(() =>
-        Order.dbInsert(fbPageId, fbUserId, time, data))
+        Order.dbInsert(fbPageId, fbUserId, requestedPickup, data))
       .then(fields => {
         fields = fields[0];
 
@@ -65,11 +65,11 @@ class Order {
   }
 
   // check the company is open, requested time is within open hours & after minimum delay time
-  static checkHours (fbPageId, requestTime) {
+  static checkHours (fbPageId, requestedPickup, timestamp) {
     return db.checkOpenStatus(fbPageId)
       .then(data =>
         throwLeft(
-          canIPlace(data, requestTime)));
+          canIPlace(data, requestedPickup, timestamp)));
   }
 
   toMessage () {

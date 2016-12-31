@@ -2,16 +2,22 @@
  * Created by lewis.knoxstreader on 15/12/16.
  */
 const chrono = require('chrono-node'),
+  moment = require('moment-timezone'),
   Either = require('ramda-fantasy').Either,
   Right = Either.Right,
   Left = Either.Left,
   { orderAttempt } = require('../messaging/message-list');
 
-const parseHours = data =>
-  Either.of({
-    opentime: chrono.parseDate(data.opentime),
-    closetime: chrono.parseDate(data.closetime)
+const parseHours = (data, timestamp) => {
+  var messageDate = moment.tz(timestamp, data.timezone);
+  var dateFormat = messageDate.format("M/D/YYYY");
+  var dateZone = messageDate.format("ZZ");
+
+  return Either.of({
+    opentime: chrono.parseDate(dateFormat + " " + data.opentime + " " + dateZone),
+    closetime: chrono.parseDate(dateFormat + " " + data.closetime + " " + dateZone)
   });
+};
 
 // never reach this with !time. If time can't be parsed, gets caught on the default response
 const validTime = time =>
@@ -34,16 +40,16 @@ const compareWaitTime = (delay, request) =>
     Right() :
     Left(orderAttempt.minimumWait(delay));
 
-const timeFilter = (data, requestTime) =>
-  parseHours(data)
+const timeFilter = (data, requestTime, timestamp) =>
+  parseHours(data, timestamp)
     .chain(hours =>
       withinHours(hours, data, requestTime))
     .chain(_ =>
       compareWaitTime(data.delay, requestTime));
 
-const canIPlace = (data, requestTime) =>
+const canIPlace = (data, requestTime, timestamp) =>
   data.status ?
-    timeFilter(data, requestTime) :
+    timeFilter(data, requestTime, timestamp) :
     Left(orderAttempt.closed);
 
 module.exports = {

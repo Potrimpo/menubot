@@ -29,6 +29,7 @@ function timeFormatting (pickuptime) {
 
   pickuptime = new Date(pickuptime);
   console.log("As date object: " + pickuptime);
+  console.log("Date object offset: " + pickuptime.getTimezoneOffset());
 
   let hours = pickuptime.getHours(),
     minutes = pickuptime.getMinutes();

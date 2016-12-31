@@ -4,7 +4,8 @@
 
 // using webpack to bundle all javascript together for one big file to send
 window.jQuery = window.$ = require('./lib/jquery-2.1.3.min');
-const _ = require('./lib/bootstrap.min');
+const _ = require('./lib/bootstrap.min'),
+  moment = require('./lib/moment-timezone-with-data-2010-2020.min.js');
 
 import myQuote from './quotes';
 
@@ -272,6 +273,40 @@ $(document).ready(function() {
       .done(function(data) {
         console.log("DONE", data);
         location.reload();
+      });
+  });
+
+  //Initialise a new company
+  $('form.company-init').submit(function(event) {
+    event.preventDefault();
+    showSpinner();
+
+    //Define company Facebook id
+    var fbid = this.id;
+    console.log(fbid);
+
+    //Find the client's current timezone
+    var timezone = moment.tz.guess();
+    console.log(timezone);
+
+    $.ajax({
+      type: 'POST',
+      url: '/company/init/' + fbid,
+      data: { timezone },
+      encode: true,
+      success(data) {
+        console.log("SUCCESS");
+        if (typeof data.redirect == 'string') {
+          window.location = data.redirect
+        };
+      },
+      error(smth, status, err) {
+        console.error("ERROR IN AJAX", status);
+        console.error("ERROR =", err);
+      }
+    })
+      .done(function(data) {
+        console.log("DONE");
       });
   });
 
