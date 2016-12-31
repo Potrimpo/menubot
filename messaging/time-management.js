@@ -9,9 +9,9 @@ const chrono = require('chrono-node'),
   { orderAttempt } = require('../messaging/message-list');
 
 const parseHours = (data, timestamp) => {
-  var messageDate = moment.tz(timestamp, data.timezone);
-  var dateFormat = messageDate.format("M/D/YYYY");
-  var dateZone = messageDate.format("ZZ");
+  const messageDate = moment.tz(timestamp, data.timezone);
+  const dateFormat = messageDate.format("M/D/YYYY");
+  const dateZone = messageDate.format("ZZ");
 
   return Either.of({
     opentime: chrono.parseDate(dateFormat + " " + data.opentime + " " + dateZone),
