@@ -56,11 +56,6 @@ function isTooLate (closetime, timezone, timestamp) {
   var messageDate = moment.tz(timestamp, timezone);
   var dateFormat = messageDate.format("M/D/YYYY");
   var dateZone = messageDate.format("ZZ");
-  console.log("messageDate = " + messageDate);
-  console.log("dateFormat = " + dateFormat);
-  console.log("dateZone = " + dateZone);
-  console.log("Put together = " + dateFormat + " " + closetime + " " + dateZone);
-  console.log("Chrono Parsed = " + chrono.parseDate(dateFormat + " " + closetime + " " + dateZone));
   return new Date() > chrono.parseDate(dateFormat + " " + closetime + " " + dateZone);
 }
 

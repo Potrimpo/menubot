@@ -283,11 +283,9 @@ $(document).ready(function() {
 
     //Define company Facebook id
     var fbid = this.id;
-    console.log(fbid);
 
     //Find the client's current timezone
     var timezone = moment.tz.guess();
-    console.log(timezone);
 
     $.ajax({
       type: 'POST',

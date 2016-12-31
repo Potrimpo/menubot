@@ -109,7 +109,6 @@ function fullMenu (fbid, data) {
 }
 
 function add_to_menu(req, res) {
-  console.log(req.body);
   return new Promise((resolve, reject) => {
     switch (req.body.intent) {
       case "item":

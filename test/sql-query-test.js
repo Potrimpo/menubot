@@ -25,7 +25,7 @@ describe('testing database queries', function() {
   });
 
   after(function () {
-    console.log("CLEANIGN UP");
+    console.log("CLEANING UP");
     return Promise.all(
       globalOrders.map(val => botQueries.deleteOrder(val.orderid))
     );

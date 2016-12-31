@@ -11,11 +11,6 @@ function runActions (fbUserId, fbPageId, msg, timestamp, timezone) {
   var messageDate = moment.tz(timestamp, timezone);
   var dateFormat = messageDate.format("M/D/YYYY");
   var dateZone = messageDate.format("ZZ");
-  console.log("messageDate = " + messageDate);
-  console.log("dateFormat = " + dateFormat);
-  console.log("dateZone = " + dateZone);
-  console.log("Put together = " + dateFormat + " " + msg + " " + dateZone);
-  console.log("Chrono Parsed = " + chrono.parseDate(dateFormat + " " + msg + " " + dateZone));
   const requestedPickup = chrono.parseDate(dateFormat + " " + msg + " " + dateZone);
   if (requestedPickup) {
     return actions.orderTime(fbUserId, fbPageId, requestedPickup, timestamp, timezone)

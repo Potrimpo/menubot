@@ -24,7 +24,6 @@ class Message {
 
   // parse language if text message, handle postback if not
   process () {
-    console.log(this);
     const x = this.quick_reply || this.postback;
     if (x) {
       return postbackHandler(x.payload, this.sender, this.recipient, this.timestamp)

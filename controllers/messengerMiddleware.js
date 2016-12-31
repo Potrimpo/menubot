@@ -10,7 +10,6 @@ exports.postWebhook = (req, res) => {
   if (data.object === 'page') {
     data.entry.forEach(entry => {
       entry.messaging.forEach(event => {
-        console.log(event);
         const msg = new Message(event);
 
         return msg
