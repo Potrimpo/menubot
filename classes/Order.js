@@ -50,7 +50,7 @@ class Order {
         return this;
       })
       .catch(err => {
-        console.error("error creating Order", err);
+        console.error("error creating Order", err.text);
         this.error = err;
         return this;
       });

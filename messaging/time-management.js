@@ -36,8 +36,7 @@ const withinHours = (hours, plainHours, requestTime) =>
     Left(wrapQuickreplies(orderAttempt.tooLate(plainHours.opentime, plainHours.closetime)));
 
 const delayDate = delay =>
-  new Date(
-    Date.now() + (delay * 60 * 1000));
+  new Date(Date.now() + (delay * 60 * 1000));
 
 const compareWaitTime = (delay, request) =>
   request > delayDate(delay) ?
