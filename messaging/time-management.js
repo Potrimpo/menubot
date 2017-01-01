@@ -6,7 +6,14 @@ const chrono = require('chrono-node'),
   Either = require('ramda-fantasy').Either,
   Right = Either.Right,
   Left = Either.Left,
+  QR = require('./quick-replies'),
   { orderAttempt } = require('../messaging/message-list');
+
+
+const wrapQuickreplies = (text) => ({
+  quick_replies: QR.hoursReplies,
+  text
+});
 
 const parseHours = (data, timestamp) => {
   const messageDate = moment.tz(timestamp, data.timezone);
@@ -19,9 +26,6 @@ const parseHours = (data, timestamp) => {
   });
 };
 
-// never reach this with !time. If time can't be parsed, gets caught on the default response
-const validTime = time =>
-  time ? Right(time) : Left(orderAttempt.noTime);
 
 const inRange = (requestTime, hours) =>
 requestTime >  hours.opentime && requestTime < hours.closetime;
@@ -29,7 +33,7 @@ requestTime >  hours.opentime && requestTime < hours.closetime;
 const withinHours = (hours, plainHours, requestTime) =>
   inRange(requestTime, hours) ?
     Right() :
-    Left(orderAttempt.tooLate(plainHours.opentime, plainHours.closetime));
+    Left(wrapQuickreplies(orderAttempt.tooLate(plainHours.opentime, plainHours.closetime)));
 
 const delayDate = delay =>
   new Date(
@@ -38,7 +42,7 @@ const delayDate = delay =>
 const compareWaitTime = (delay, request) =>
   request > delayDate(delay) ?
     Right() :
-    Left(orderAttempt.minimumWait(delay));
+    Left(wrapQuickreplies(orderAttempt.minimumWait(delay)));
 
 const timeFilter = (data, requestTime, timestamp) =>
   parseHours(data, timestamp)
@@ -50,7 +54,7 @@ const timeFilter = (data, requestTime, timestamp) =>
 const canIPlace = (data, requestTime, timestamp) =>
   data.status ?
     timeFilter(data, requestTime, timestamp) :
-    Left(orderAttempt.closed);
+    Left(wrapQuickreplies(orderAttempt.closed));
 
 module.exports = {
   canIPlace
