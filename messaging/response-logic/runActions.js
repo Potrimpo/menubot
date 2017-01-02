@@ -3,8 +3,7 @@
  */
 
 const chrono = require('chrono-node'),
-  actions = require('./actions'),
-  db = require('../../repositories/bot/botQueries');
+  actions = require('./actions');
 
 function runActions (fbUserId, fbPageId, msg) {
   // the only text messages it knows how to deals with are order times

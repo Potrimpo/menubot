@@ -7,7 +7,7 @@ const chrono = require('chrono-node'),
   { redisRecordOrder } = require('./../state-and-sessions/messengerSessions'),
   QR = require('./quick-replies'),
   structured = require('./structured-messages'),
-  { orderAttempt, hoursCheck, locationCheck, confused, noOrders } = require('./message-list')
+  { orderAttempt, hoursCheck, locationCheck, confused, noOrders } = require('./message-list');
 
 const wrapQuickreplies = (text, qrs) => ({
   quick_replies: qrs,
@@ -39,7 +39,7 @@ function openStatus (data, fbUserId, payload) {
 
 function open (data, fbUserId, payload, resp) {
 
-  if (isTooLate(data.closetime, data.timezone)) {
+  if (isTooLate(data.closetime)) {
     return Object.assign(resp, { text: orderAttempt.tooLate(data.opentime, data.closetime) });
   }
 
@@ -51,18 +51,13 @@ function open (data, fbUserId, payload, resp) {
     );
 }
 
-function isTooLate (closetime, timezone) {
-  console.log("------");
-  console.log("new Date() = " + new Date());
-  console.log(new Date());
-  console.log("------");
-  console.log("chrono.parseDate(closetime) = " + chrono.parseDate(closetime));
-  console.log(chrono.parseDate(closetime));
-  console.log("------");
-  console.log('Closetime parse date object with timezone adjustment = ' + chrono.parseDate(closetime + timezone));
-  console.log(chrono.parseDate(closetime + timezone));
-  console.log("------");
-  return new Date() > chrono.parseDate(closetime + timezone);
+function isTooLate (closetime) {
+  console.log( new Date());
+  console.log( chrono.parseDate(closetime));
+  console.log(new Date() > chrono.parseDate(closetime));
+
+
+  return Date.now() > chrono.parseDate(closetime);
 }
 
 const hasLocation = loc =>

@@ -48,8 +48,8 @@ router.route('/:companyId')
 
 router.route('/init/:companyId')
   .post((req, res) =>
-    db.linkCompany(req.user.id, req.params.companyId, req.body.offset)
-      .then(data => res.send({redirect: `/company/${data[0].fbid}`}))
+    db.linkCompany(req.user.id, req.body.fbid)
+      .then(data => res.redirect(`/company/${data[0].fbid}`))
   );
 
 router.route('/location/:companyId')

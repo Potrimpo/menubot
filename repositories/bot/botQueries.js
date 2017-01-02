@@ -39,13 +39,7 @@ function customerDetails (fbUserId, pageToken) {
 
 exports.checkOpenStatus = fbid =>
   Company.findOne({
-    attributes: ['status', 'opentime', 'closetime', 'delay', 'timezone'],
-    where: { fbid }
-  });
-
-exports.checkTimezone = fbid =>
-  Company.findOne({
-    attributes: ['timezone'],
+    attributes: ['status', 'opentime', 'closetime', 'delay'],
     where: { fbid }
   });
 

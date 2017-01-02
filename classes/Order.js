@@ -18,11 +18,8 @@ const throwLeft = Either.either(throwE, x => x);
 
 class Order {
   constructor (fbPageId, fbUserId, time, data) {
-    console.log("Time message = " + time);
     return Order.checkHours(fbPageId, time)
       .then(() =>
-        Order.correctTime(time, fbPageId))
-      .then((correctedPickupTime) =>
         Order.dbInsert(fbPageId, fbUserId, time, data))
       .then(fields => {
         fields = fields[0];
@@ -75,26 +72,11 @@ class Order {
           canIPlace(data, requestTime)));
   }
 
-  static correctTime (pickupTime, fbPageId) {
-    console.log(String(pickupTime).length);
-    var snipper = String(pickupTime).length - 36;
-    var reducedPickupTime = String(pickupTime).substring(0, String(pickupTime).length - 12 - snipper);
-    console.log("Substring of pickup time: " + reducedPickupTime);
-    return db.checkTimezone(fbPageId)
-      .then(data => {
-        console.log("corrected pickuptime, after substringing : " + reducedPickupTime + data.timezone);
-        console.log("corrected pickuptime, after substringing, and parsed to date object : " + chrono.parseDate(reducedPickupTime + data.timezone));
-        var correctedPickupTime = chrono.parseDate(reducedPickupTime + data.timezone);
-        return correctedPickupTime
-      })
-  }
-
   toMessage () {
     return this.error ? this.error : this.confirmationMsg;
   }
 
   get readableTime () {
-    console.log("The string of the pickuptime about to be set as the order's pickup time: " + String(this.pickuptime));
     return chrono.parseDate(String(this.pickuptime));
   }
 
