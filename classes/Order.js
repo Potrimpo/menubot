@@ -79,7 +79,7 @@ class Order {
   }
 
   get readableTime () {
-    return moment.tz(this.pickuptime, this.timezone).format('h:mm a, dddd z')
+    return moment.tz(this.pickuptime, this.timezone).format('h:mma, dddd z')
   }
 
   get confirmationMsg () {
