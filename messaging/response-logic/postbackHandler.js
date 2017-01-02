@@ -6,7 +6,7 @@ const structured = require('./../structured-messages'),
   text = require('./../text-messages'),
   db = require('./../../repositories/bot/botQueries');
 
-function postbackHandler (jsonPayload, fbUserId, fbPageId) {
+function postbackHandler (jsonPayload, fbUserId, fbPageId, timestamp) {
   return new Promise(function (res, rej) {
     const payload = JSON.parse(jsonPayload);
 
@@ -33,7 +33,7 @@ function postbackHandler (jsonPayload, fbUserId, fbPageId) {
 
       case 'ORDER':
         return db.checkOpenStatus(fbPageId)
-          .then(status => text.openStatus(status, fbUserId, payload))
+          .then(status => text.openStatus(status, fbUserId, payload, timestamp))
           .then(resp => res(resp))
           .catch(err => rej(err));
 

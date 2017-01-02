@@ -4,6 +4,7 @@
 
 const chrono = require('chrono-node'),
   Identity = require('ramda-fantasy').Identity,
+  moment = require('moment-timezone'),
   { redisRecordOrder } = require('./../state-and-sessions/messengerSessions'),
   QR = require('./quick-replies'),
   structured = require('./structured-messages'),
@@ -27,19 +28,19 @@ const hours = hours =>
       wrapQuickreplies(resp, QR.hoursReplies))
     .get();
 
-function openStatus (data, fbUserId, payload) {
+function openStatus (data, fbUserId, payload, timestamp) {
   const resp = {
     quick_replies: QR.hoursReplies
   };
 
   return data.status ?
-    open(data, fbUserId, payload, resp) :
+    open(data, fbUserId, payload, resp, timestamp) :
     Object.assign(resp, { text: orderAttempt.closed })
 }
 
-function open (data, fbUserId, payload, resp) {
+function open (data, fbUserId, payload, resp, timestamp) {
 
-  if (isTooLate(data.closetime)) {
+  if (isTooLate(data.closetime, data.timezone, timestamp)) {
     return Object.assign(resp, { text: orderAttempt.tooLate(data.opentime, data.closetime) });
   }
 
@@ -51,13 +52,11 @@ function open (data, fbUserId, payload, resp) {
     );
 }
 
-function isTooLate (closetime) {
-  console.log( new Date());
-  console.log( chrono.parseDate(closetime));
-  console.log(new Date() > chrono.parseDate(closetime));
-
-
-  return Date.now() > chrono.parseDate(closetime);
+function isTooLate (closetime, timezone, timestamp) {
+  const messageDate = moment.tz(timestamp, timezone);
+  const dateFormat = messageDate.format("M/D/YYYY");
+  const dateZone = messageDate.format("ZZ");
+  return new Date() > chrono.parseDate(dateFormat + " " + closetime + " " + dateZone);
 }
 
 const hasLocation = loc =>

@@ -48,8 +48,8 @@ router.route('/:companyId')
 
 router.route('/init/:companyId')
   .post((req, res) =>
-    db.linkCompany(req.user.id, req.body.fbid)
-      .then(data => res.redirect(`/company/${data[0].fbid}`))
+    db.linkCompany(req.user.id, req.params.companyId, req.body.timezone)
+      .then(data => res.send({redirect: `/company/${data[0].fbid}`}))
   );
 
 router.route('/location/:companyId')
@@ -109,7 +109,6 @@ function fullMenu (fbid, data) {
 }
 
 function add_to_menu(req, res) {
-  console.log(req.body);
   return new Promise((resolve, reject) => {
     switch (req.body.intent) {
       case "item":

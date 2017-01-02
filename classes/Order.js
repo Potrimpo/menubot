@@ -3,6 +3,7 @@
  */
 const Either = require('ramda-fantasy').Either,
   chrono = require('chrono-node'),
+  moment = require('moment-timezone'),
   { pub } = require('../state-and-sessions/redis-init'),
   db = require('../repositories/bot/botQueries'),
   { canIPlace } = require('../messaging/time-management'),
@@ -17,10 +18,10 @@ const throwE = e => {
 const throwLeft = Either.either(throwE, x => x);
 
 class Order {
-  constructor (fbPageId, fbUserId, time, data) {
-    return Order.checkHours(fbPageId, time)
+  constructor (fbPageId, fbUserId, requestedPickup, timestamp, timezone, data) {
+    return Order.checkHours(fbPageId, requestedPickup, timestamp)
       .then(() =>
-        Order.dbInsert(fbPageId, fbUserId, time, data))
+        Order.dbInsert(fbPageId, fbUserId, requestedPickup, data))
       .then(fields => {
         fields = fields[0];
 
@@ -28,6 +29,7 @@ class Order {
         this.fbid = fields.fbid;
         this.customer_id = fields.customer_id;
         this.pickuptime = fields.pickuptime;
+        this.timezone = timezone;
 
         if (fields.itemid) {
           this.itemVals = new Item(fields);
@@ -48,7 +50,7 @@ class Order {
         return this;
       })
       .catch(err => {
-        console.error("error creating Order", err);
+        console.error("error creating Order", err.text);
         this.error = err;
         return this;
       });
@@ -65,11 +67,11 @@ class Order {
   }
 
   // check the company is open, requested time is within open hours & after minimum delay time
-  static checkHours (fbPageId, requestTime) {
+  static checkHours (fbPageId, requestedPickup, timestamp) {
     return db.checkOpenStatus(fbPageId)
       .then(data =>
         throwLeft(
-          canIPlace(data, requestTime)));
+          canIPlace(data, requestedPickup, timestamp)));
   }
 
   toMessage () {
@@ -77,7 +79,7 @@ class Order {
   }
 
   get readableTime () {
-    return chrono.parseDate(String(this.pickuptime));
+    return moment.tz(this.pickuptime, this.timezone).format('h:mm a, dddd z')
   }
 
   get confirmationMsg () {
