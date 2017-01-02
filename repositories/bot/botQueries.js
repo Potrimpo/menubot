@@ -113,10 +113,12 @@ exports.makeOrder = (fbid, customer_id, pickuptime, { itemid, typeid, sizeid }) 
 
 exports.ordersbyUserid = customer_id =>
   sequelize.query(
-    "SELECT * FROM orders AS o" +
+    "SELECT orderid, o.fbid, size, type, item, size_price, type_price, item_price, pickuptime, timezone" +
+    " FROM orders AS o" +
     " LEFT OUTER JOIN sizes ON o.sizeid = sizes.sizeid" +
     " LEFT OUTER JOIN types ON o.typeid = types.typeid" +
     " LEFT OUTER JOIN items ON o.itemid = items.itemid" +
+    " LEFT OUTER JOIN companies ON o.fbid = companies.fbid" +
     " WHERE o.customer_id = :customer_id AND pending = true" +
     " ORDER BY o.pickuptime ASC",
     { replacements: { customer_id }, type: sequelize.QueryTypes.SELECT }

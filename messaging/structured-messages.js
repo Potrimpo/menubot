@@ -2,7 +2,8 @@
  * Created by lewis.knoxstreader on 2/12/16.
  */
 
-const QR = require('./quick-replies');
+const QR = require('./quick-replies'),
+  moment = require('moment-timezone');
 
 const getStarted = () => ({
   text: "Welcome! Would you like to see our menu?",
@@ -103,20 +104,22 @@ function sizes(sizes, typeid, itemid) {
 function orders(orders) {
   const template = genericTemplate();
   template.attachment.payload.elements = orders.map(val => {
+    var readableTime = moment.tz(val.pickuptime, val.timezone).format('h:mma, dddd z');
+
     if (val.size) {
       return {
         title: `${val.size.toUpperCase()} ${val.type.toUpperCase()} ${val.item.toUpperCase()}`,
-        subtitle: `$${val.size_price} @ ${val.pickuptime}`
+        subtitle: `$${val.size_price} @ ${readableTime}`
       };
     } else if (val.type) {
       return {
         title: `${val.type.toUpperCase()} ${val.item.toUpperCase()}`,
-        subtitle: `$${val.type_price} @ ${val.pickuptime}`
+        subtitle: `$${val.type_price} @ ${readableTime}`
       }
     } else {
       return {
         title: `${val.item.toUpperCase()}`,
-        subtitle: `$${val.item_price} @ ${val.pickuptime}`
+        subtitle: `$${val.item_price} @ ${readableTime}`
       }
     }
   });
