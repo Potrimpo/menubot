@@ -51,7 +51,7 @@ describe('testing database queries', function() {
   //requires multiple orders already in database
   it("ordersByFbid testing", function() {
     const today = dateParsing();
-    return companyRepo.ordersByFbid(testPageID, today)
+    return companyRepo.ordersByFbid(testPageID)
       .then(function (data) {
         expect(data).to.not.equal(null);
         // [ 'to.contain.all' means can have more ] [ 'to.have.all' means has these and only these ]

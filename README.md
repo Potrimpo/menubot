@@ -222,8 +222,6 @@ Write out with CTRL + O, then ENTER, then exit with CTRL + X
 > Check that this is the case on the Google Clould console instances page, and if needed, change the configuration in process.json .
 
 
-## Redis Server setup
-
 ```
 cd ~
 wget http://download.redis.io/redis-stable.tar.gz
@@ -465,28 +463,13 @@ Down the bottom, under the commented line `# IPv4 local connections:` change the
 sudo -i -u postgres
 ```
 
-##### Redis
-
->Used for storage of people's pending orders in messenger bot interactions.
-Separated from the node.js server so that if it crashes and restarts, the conversation context for our users is not lost
-
-```
-wget http://download.redis.io/redis-stable.tar.gz
-tar xvzf redis-stable.tar.gz
-cd redis-stable
-make
-sudo make install
-```
->Run with `redis-server`
-
->Inspect with `redis-cli` (like `psql`)
 
 ##### Install node.js & the server dependencies
 
 ```
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 sudo apt-get install -y nodejs
-npm install pm2 webpack less less-plugin-clean-css -g
+sudo npm install pm2 webpack less less-plugin-clean-css -g
 cd [PATH TO MENUBOT DIR]/menubot
 sudo npm i
 sudo ./build.sh
