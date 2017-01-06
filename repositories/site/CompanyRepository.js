@@ -3,6 +3,7 @@
  */
 
 const R = require('ramda'),
+  moment = require('moment-timezone'),
   { sequelize, Company, User, Item, Type, Size, Order } = require('../../database/models/index');
 
 exports.findUserCompanies = accounts =>
@@ -115,17 +116,25 @@ exports.deleteItem = data => {
 
 };
 
-exports.ordersByFbid = (fbid, today) =>
-  sequelize.query(
-    "SELECT * FROM orders AS o" +
-    " INNER JOIN customers AS c ON o.customer_id = c.customer_id" +
-    " LEFT OUTER JOIN items AS i ON o.itemid = i.itemid" +
-    " LEFT OUTER JOIN types AS t ON o.typeid = t.typeid" +
-    " LEFT OUTER JOIN sizes AS s ON o.sizeid = s.sizeid" +
-    " WHERE o.fbid = :fbid AND o.pickuptime >= :today" +
-    " ORDER BY o.pickuptime, o.customer_id ASC",
-    { replacements: {fbid, today}, type: sequelize.QueryTypes.SELECT })
+exports.ordersByFbid = (fbid) => {
+  return Company.findOne({
+    attributes: ['timezone'],
+    where: { fbid }
+  })
+    .then(zoneData => {
+      const today = moment().tz(zoneData.timezone).format('YYYY-MM-DD HH:mm:ssZZ');
+      return sequelize.query(
+        "SELECT * FROM orders AS o" +
+        " INNER JOIN customers AS c ON o.customer_id = c.customer_id" +
+        " LEFT OUTER JOIN items AS i ON o.itemid = i.itemid" +
+        " LEFT OUTER JOIN types AS t ON o.typeid = t.typeid" +
+        " LEFT OUTER JOIN sizes AS s ON o.sizeid = s.sizeid" +
+        " WHERE o.fbid = :fbid AND o.pickuptime >= :today" +
+        " ORDER BY o.pickuptime, o.customer_id ASC",
+        { replacements: {fbid, today}, type: sequelize.QueryTypes.SELECT })
+    })
     .catch(err => console.error("error getting orders in sql", err));
+};
 
 exports.orderComplete = ids =>
   sequelize.query(
