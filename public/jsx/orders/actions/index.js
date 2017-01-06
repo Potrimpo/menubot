@@ -1,4 +1,5 @@
-import socket from '../containers/socket'
+import socket from '../containers/socket';
+import { matchUserAndTime } from '../misc-functions';
 
 export const RECEIVE_ORDERS = 'RECEIVE_ORDERS';
 export const NEW_ORDER = 'NEW_ORDER';
@@ -40,9 +41,6 @@ export const newOrder = order => ({
   type: NEW_ORDER,
   order
 });
-
-const matchUserAndTime = (x, order) =>
-x.pickuptime == order.pickuptime && x.customer_id == order.customer_id;
 
 export const toggleOrder = (fbid, orders, order) => {
   return dispatch => {
