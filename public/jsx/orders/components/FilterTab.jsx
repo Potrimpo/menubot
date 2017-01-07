@@ -20,8 +20,8 @@ const FilterTab = () => (
           <a href="/" className="btn btn-default btn-space" role="button">
             <i className="fa fa-long-arrow-left" style={{"fontSize": "18px"}} aria-hidden="true"/>
           </a>
-          <a href="https://youtu.be/64S6wWF8DS0" target="_blank" role="button" className="btn btn-default btn-space" style={{"marginLeft":"4px"}}>
-            <i className="fa fa-info-circle info-button" aria-hidden="true"/>
+          <a href="https://youtu.be/DXT7O1Ts8-I" target="_blank" role="button" className="btn btn-default btn-space" style={{"marginLeft":"4px"}}>
+            <i className="fa fa-info-circle info-button" aria-hidden="true"/> Tutorial
           </a>
           <div>
             <FilterLink filter="SHOW_ACTIVE">Active</FilterLink>
