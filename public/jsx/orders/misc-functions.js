@@ -41,7 +41,7 @@ const findNewOrderLocation = (orderArray, newOrder) => {
       return newOrderArray;
     } else {
       //Else insert at index of first order that has same pickuptime and customer_id and return
-      const indexOfLastSCO = indexOf(head(sameCustOrders), orderArray) - 1;
+      const indexOfLastSCO = indexOf(head(sameCustOrders), orderArray);
       const newOrderArray = insert(indexOfLastSCO, newOrder, orderArray);
       return newOrderArray;
     }
