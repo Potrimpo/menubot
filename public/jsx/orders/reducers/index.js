@@ -2,7 +2,7 @@ import { combineReducers } from 'redux'
 import { RECEIVE_ORDERS, TOGGLE_ORDER, NEW_ORDER } from '../actions'
 import filter from './filter'
 import delay from './delay'
-import { compareTimeAndUser } from '../misc-functions'
+import { findNewOrderLocation } from '../misc-functions'
 
 const bongNoise = new Audio('/audio/bong.mp3');
 
@@ -28,8 +28,9 @@ const orders = (state = [], action) => {
     case RECEIVE_ORDERS:
       return [ ...action.orders ];
     case NEW_ORDER:
+      const newOrderPlacement = orderPlacement(state, action.order);
       bongNoise.play();
-      return orderPlacement(state, action.order);
+      return newOrderPlacement
     case TOGGLE_ORDER:
       return state.map(o => order(o, action));
     default:
@@ -49,14 +50,6 @@ const rootReducer = combineReducers({
 export default rootReducer
 
 function orderPlacement (state, newOrder) {
-  //cloning state to newState variable
-  const newState = state.slice(0);
-  for (let i = 0; i < state.length; i++) {
-    if (compareTimeAndUser(newOrder, state[i])) {
-      newState.splice(i, 0, newOrder);
-      return newState;
-    }
-  }
-  newState.push(newOrder);
-  return newState;
+  return findNewOrderLocation(state, newOrder)
+  return state
 }
