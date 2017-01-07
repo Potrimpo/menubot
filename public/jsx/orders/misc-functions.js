@@ -8,7 +8,12 @@ x.customer_id == y.customer_id && x.pickuptime == y.pickuptime;
 const compareTimeAndUser = (x, y) =>
   (new Date(x.pickuptime) <= new Date(y.pickuptime) && x.customer_id == y.customer_id);
 
+const compareJustTime = (x, y) =>
+  (new Date(x.pickuptime) <= new Date(y.pickuptime));
+
 module.exports = {
   matchUserAndTime,
-  compareTimeAndUser
+  compareTimeAndUser,
+  compareJustTime,
+  findNewOrderLocation
 };

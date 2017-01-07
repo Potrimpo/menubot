@@ -1,8 +1,9 @@
 import { combineReducers } from 'redux'
+import { insert, append } from 'ramda'
 import { RECEIVE_ORDERS, TOGGLE_ORDER, NEW_ORDER } from '../actions'
 import filter from './filter'
 import delay from './delay'
-import { compareTimeAndUser } from '../misc-functions'
+import { compareTimeAndUser, compareJustTime } from '../misc-functions'
 
 const bongNoise = new Audio('/audio/bong.mp3');
 
@@ -50,13 +51,18 @@ export default rootReducer
 
 function orderPlacement (state, newOrder) {
   //cloning state to newState variable
-  const newState = state.slice(0);
   for (let i = 0; i < state.length; i++) {
     if (compareTimeAndUser(newOrder, state[i])) {
-      newState.splice(i, 0, newOrder);
+      const newState = insert(i, newOrder, state);
       return newState;
     }
   }
-  newState.push(newOrder);
+  for (let j = 0; j < state.length; j++) {
+    if (compareJustTime(newOrder, state[j])) {
+      const newState = insert(j, newOrder, state)
+      return newState;
+    }
+  }
+  const newState = append(newOrder, state)
   return newState;
 }
