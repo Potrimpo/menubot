@@ -1,5 +1,4 @@
-'use strict';
-const { FACEBOOK_ID, FB_APP_SECRET } = require('./local-dev-variables');
+const devVar = (process.env.NODE_ENV == 'development') ? require('./local-dev-variables') : null;
 
 module.exports = {
 
@@ -9,8 +8,8 @@ module.exports = {
 
   // used in passport verification
   facebook: {
-    clientID: process.env.FACEBOOK_ID || FACEBOOK_ID,
-    clientSecret: process.env.FB_APP_SECRET || FB_APP_SECRET,
+    clientID: process.env.FACEBOOK_ID || devVar.FACEBOOK_ID,
+    clientSecret: process.env.FB_APP_SECRET || devVar.FB_APP_SECRET,
     callbackURL: '/auth/facebook/callback',
     passReqToCallback: true,
     enableProof: true,

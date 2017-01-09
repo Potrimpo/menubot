@@ -14,8 +14,9 @@ const cookieParser = require('cookie-parser'),
   ejsEngine = require('ejs-mate'),
   expressValidator = require('express-validator');
 
-const secrets = require('./config/secrets'),
-  devVar = require('./config/local-dev-variables');
+const secrets = require('./config/secrets');
+
+const devVar = (process.env.NODE_ENV === 'development') ? require('./config/local-dev-variables') : null;
 
 module.exports = function (app, express) {
 
