@@ -7,6 +7,7 @@ const chrono = require('chrono-node'),
   moment = require('moment-timezone'),
   { redisRecordOrder } = require('./../state-and-sessions/messengerSessions'),
   QR = require('./quick-replies'),
+  { formatAndParseTime } = require('./time-management'),
   structured = require('./structured-messages'),
   { orderAttempt, hoursCheck, locationCheck, confused, noOrders } = require('./message-list');
 
@@ -52,12 +53,8 @@ function open (data, fbUserId, payload, resp, timestamp) {
     );
 }
 
-function isTooLate (closetime, timezone, timestamp) {
-  const messageDate = moment.tz(timestamp, timezone);
-  const dateFormat = messageDate.format("M/D/YYYY");
-  const dateZone = messageDate.format("ZZ");
-  return new Date() > chrono.parseDate(dateFormat + " " + closetime + " " + dateZone);
-}
+const isTooLate = (closetime, timezone, timestamp) =>
+  new Date() > formatAndParseTime(closetime, timestamp, timezone);
 
 const hasLocation = loc =>
   loc ? locationCheck.found(loc) : locationCheck.notFound;
