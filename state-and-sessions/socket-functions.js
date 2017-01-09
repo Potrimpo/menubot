@@ -1,7 +1,3 @@
-/**
- * Created by lewis.knoxstreader on 20/11/16.
- */
-
 const { client, sub } = require('./redis-init'),
   control = require('./../controllers/orders');
 

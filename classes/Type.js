@@ -1,6 +1,3 @@
-/**
- * Created by lewis.knoxstreader on 25/11/16.
- */
 const db = require('../repositories/site/CompanyRepository');
 
 class Type {

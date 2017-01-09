@@ -1,7 +1,3 @@
-/**
- * Created by lewis.knoxstreader on 3/10/16.
- */
-
 const db = require("../repositories/site/CompanyRepository"),
   moment = require('moment-timezone');
 

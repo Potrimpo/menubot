@@ -1,6 +1,3 @@
-/**
- * Created by lewis.knoxstreader on 11/10/16.
- */
 import { SET_VISIBILITY_FILTER } from '../actions'
 
 export const SHOW_ACTIVE = 'SHOW_ACTIVE';

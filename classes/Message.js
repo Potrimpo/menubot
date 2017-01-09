@@ -1,6 +1,3 @@
-/**
- * Created by lewis.knoxstreader on 2/12/16.
- */
 const { findOrCreateSession, redisDeleteOrder } = require('../state-and-sessions/messengerSessions'),
   runActions = require('../messaging/response-logic/runActions'),
   postbackHandler = require('../messaging/response-logic/postbackHandler'),

@@ -1,7 +1,3 @@
-/**
- * Created by lewis.knoxstreader on 18/09/16.
- */
-
 const Message = require('../classes/Message');
 
 exports.postWebhook = (req, res) => {

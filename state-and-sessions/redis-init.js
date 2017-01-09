@@ -1,7 +1,3 @@
-/**
- * Created by lewis.knoxstreader on 24/11/16.
- */
-
 const redis = require('redis'),
   bluebird = require('bluebird');
 
