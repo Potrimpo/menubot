@@ -1,7 +1,3 @@
-/**
- * Created by lewis.knoxstreader on 24/11/16.
- */
-
 const sessionTable = process.env.sessionTable;
 
 // Sessions for users on the site

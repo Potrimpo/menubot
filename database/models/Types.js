@@ -1,7 +1,3 @@
-/**
- * Created by lewis.knoxstreader on 24/11/16.
- */
-
 module.exports = function (sequelize, Sequelize) {
 
   return sequelize.define('Type', {

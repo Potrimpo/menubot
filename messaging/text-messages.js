@@ -1,7 +1,3 @@
-/**
- * Created by lewis.knoxstreader on 6/12/16.
- */
-
 const chrono = require('chrono-node'),
   Identity = require('ramda-fantasy').Identity,
   moment = require('moment-timezone'),

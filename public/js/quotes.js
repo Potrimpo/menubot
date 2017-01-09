@@ -1,7 +1,3 @@
-/**
- * Created by lewis.knoxstreader on 12/12/16.
- */
-
 // dumb Footer quote generator
 const quotes = [
   "&quot;And into this website he poured all his cruelty, his malice and his will to dominate all life&quot; - ",

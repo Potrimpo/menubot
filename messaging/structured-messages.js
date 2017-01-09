@@ -1,7 +1,3 @@
-/**
- * Created by lewis.knoxstreader on 2/12/16.
- */
-
 const QR = require('./quick-replies'),
   moment = require('moment-timezone');
 

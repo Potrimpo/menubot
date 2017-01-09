@@ -1,6 +1,3 @@
-/**
- * Created by lewis.knoxstreader on 23/11/16.
- */
 const cookieParser = require('cookie-parser'),
   path = require('path'),
   session = require('express-session'),
