@@ -1,6 +1,3 @@
-/**
- * Created by lewis.knoxstreader on 15/12/16.
- */
 const chrono = require('chrono-node'),
   moment = require('moment-timezone'),
   Identity = require('ramda-fantasy').Identity,
@@ -72,6 +69,7 @@ const compareWaitTime = (delay, request) =>
     Right() :
     Left(wrapQuickreplies(orderAttempt.minimumWait(delay)));
 
+// {} -> Number -> String -> Either(null, {})
 const timeFilter = (data, requestTime, timestamp) =>
   parseHours(data, timestamp)
     .chain(hours =>
@@ -79,6 +77,8 @@ const timeFilter = (data, requestTime, timestamp) =>
     .chain(_ =>
       compareWaitTime(data.delay, requestTime));
 
+// checks if order within open hours, delay time, responds accordingly
+// {} -> Number -> String -> Either(null, {})
 const canIPlace = (data, requestTime, timestamp) =>
   data.status ?
     timeFilter(data, requestTime, timestamp) :
