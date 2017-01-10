@@ -1,3 +1,6 @@
+/**
+ * Created by lewis.knoxstreader on 19/10/16.
+ */
 const fetch = require('node-fetch');
 
 exports.activateBot = pageToken =>

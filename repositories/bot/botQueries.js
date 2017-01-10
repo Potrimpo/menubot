@@ -1,3 +1,6 @@
+/**
+ * Created by lewis.knoxstreader on 21/10/16.
+ */
 const { Company, Item, Type, Size, Order, Customer, sequelize } = require('./../../database/models/index'),
   fetch = require('node-fetch');
 

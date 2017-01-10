@@ -1,4 +1,9 @@
-const moment = require('moment-timezone'),
+/**
+ * Created by lewis.knoxstreader on 20/09/16.
+ */
+
+const R = require('ramda'),
+  moment = require('moment-timezone'),
   { sequelize, Company, User, Item, Type, Size, Order } = require('../../database/models/index');
 
 exports.findUserCompanies = accounts =>

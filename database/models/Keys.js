@@ -1,3 +1,7 @@
+/**
+ * Created by lewis.knoxstreader on 8/12/16.
+ */
+
 module.exports = function (sequelize, Sequelize) {
 
     return sequelize.define('Key', {

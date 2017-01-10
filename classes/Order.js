@@ -1,3 +1,6 @@
+/**
+ * Created by lewis.knoxstreader on 25/11/16.
+ */
 const Either = require('ramda-fantasy').Either,
   chrono = require('chrono-node'),
   moment = require('moment-timezone'),

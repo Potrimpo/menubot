@@ -1,3 +1,6 @@
+/**
+ * Created by lewis.knoxstreader on 15/12/16.
+ */
 import { propEq, filter, isEmpty, append, insert, indexOf, last, head } from 'ramda'
 
 const matchUserAndTime = (x, y) =>

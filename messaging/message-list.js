@@ -1,3 +1,7 @@
+/**
+ * Created by lewis.knoxstreader on 14/12/16.
+ */
+
 const orderAttempt = {
   closed: "Sorry! We aren't open today!",
   open: "What time would you like that? (include am/pm)",
