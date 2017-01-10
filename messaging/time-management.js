@@ -1,57 +1,28 @@
 const chrono = require('chrono-node'),
   moment = require('moment-timezone'),
-  Identity = require('ramda-fantasy').Identity,
   Either = require('ramda-fantasy').Either,
   Right = Either.Right,
   Left = Either.Left,
   QR = require('./quick-replies'),
   { orderAttempt } = require('../messaging/message-list');
 
+
 const wrapQuickreplies = (text) => ({
   quick_replies: QR.hoursReplies,
   text
 });
 
-// format time from database into human readable notation
-const readableTime = (time, tz) =>
-  moment.tz(time, tz).format('h:mma, dddd z');
+const parseHours = (data, timestamp) => {
+  const messageDate = moment.tz(timestamp, data.timezone);
+  const dateFormat = messageDate.format("M/D/YYYY");
+  const dateZone = messageDate.format("ZZ");
 
-const messageDate = (tStamp, tz) => moment.tz(tStamp, tz);
-const dateFormat = momentTime => momentTime.format("M/D/YYYY");
-const dateZone = momentTime => momentTime.format("ZZ");
-
-const chronoArgString = (time, metadata) =>
-  metadata.format + " " + time + " " + metadata.zone;
-
-// String -> String -> Identity(String)
-const parseTime = (time, metadata) =>
-  Identity(chronoArgString(time, metadata))
-    .map(argString =>
-      chrono.parseDate(argString));
-
-// String -> String -> Identity({})
-const formatTime = (tStamp, tz) =>
-  Identity(messageDate(tStamp, tz))
-    .map(momentTime => ({
-      format: dateFormat(momentTime),
-      zone: dateZone(momentTime)
-    }));
-
-// formats date/time information & pipes into chrono-node -> date string we can reason about
-const formatAndParseTime = (time, tStamp, tz) =>
-  formatTime(tStamp, tz)
-    .chain(metadata =>
-      parseTime(time, metadata))
-    .map(metadata =>
-      chrono.parseDate(chronoArgString(time, metadata)))
-    .get();
-
-// {} -> String -> Either(null, {})
-const parseHours = (data, timestamp) =>
-  Either.of({
-    opentime: formatAndParseTime(data.opentime, timestamp, data.timezone),
-    closetime: formatAndParseTime(data.closetime, timestamp, data.timezone)
+  return Either.of({
+    opentime: chrono.parseDate(dateFormat + " " + data.opentime + " " + dateZone),
+    closetime: chrono.parseDate(dateFormat + " " + data.closetime + " " + dateZone)
   });
+};
+
 
 const inRange = (requestTime, hours) =>
 requestTime >  hours.opentime && requestTime < hours.closetime;
@@ -69,7 +40,6 @@ const compareWaitTime = (delay, request) =>
     Right() :
     Left(wrapQuickreplies(orderAttempt.minimumWait(delay)));
 
-// {} -> Number -> String -> Either(null, {})
 const timeFilter = (data, requestTime, timestamp) =>
   parseHours(data, timestamp)
     .chain(hours =>
@@ -77,15 +47,11 @@ const timeFilter = (data, requestTime, timestamp) =>
     .chain(_ =>
       compareWaitTime(data.delay, requestTime));
 
-// checks if order within open hours, delay time, responds accordingly
-// {} -> Number -> String -> Either(null, {})
 const canIPlace = (data, requestTime, timestamp) =>
   data.status ?
     timeFilter(data, requestTime, timestamp) :
     Left(wrapQuickreplies(orderAttempt.closed));
 
 module.exports = {
-  canIPlace,
-  formatAndParseTime,
-  readableTime
+  canIPlace
 };
