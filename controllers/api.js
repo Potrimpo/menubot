@@ -1,8 +1,7 @@
-"use strict";
-
 const express = require('express'),
   router = express.Router(),
   fetch = require('node-fetch'),
+  R = require('ramda'),
   db = require('../repositories/site/CompanyRepository'),
   { activateBot, deactivateBot } = require('./activateAccount');
 
@@ -34,19 +33,48 @@ router.route('/photos/:fbid')
       })
   );
 
-function syncPhotos (pageToken) {
-  return fetchPhotos(pageToken)
-    .then(response => {
-      const fbid = response.id;
-      const rightAlbum = response.albums.data.filter(album => album.name.toLowerCase() == "menu");
-      const photos = rightAlbum[0].photos.data
-        .filter(val => val && val.picture && val.name);
-      // add photos to items table, matching the name in the description of the facebook photo to item names
-      return Promise.all(
-        photos.map(val => db.addItemPhotos(val, fbid)).concat(syncTypePhotos(fbid, photos))
-      )
-    })
-}
+
+const pullUrlProp = R.prop('source');
+
+const takeBiggestImg = photo => ({
+  picture: pullUrlProp(R.head(photo.webp_images)),
+  name: photo.name
+});
+
+const usablePhotos = photo => photo && photo.picture && photo.name;
+const menuAlbum = album => album.name.toLowerCase() === "menu";
+
+// [{}] -> [{}]
+const filterPhotosForMenu =
+  R.pipe(
+    R.filter(menuAlbum),
+    R.head,
+    R.path(['photos', 'data']),
+    R.map(takeBiggestImg),
+    R.filter(usablePhotos));
+
+// Number -> [{}] -> [Promise]
+const insertItemAndTypePhotosUncurried = (fbid, photos) =>
+  photos
+    .map(url => db.addItemPhotos(url, fbid))
+    .concat(syncTypePhotos(fbid, photos));
+
+const insertItemAndTypePhotos = R.curry(insertItemAndTypePhotosUncurried);
+
+// {} -> [Promise]
+const getAndInsertImages = response =>
+  R.pipe(
+    R.path(['albums', 'data']),
+    filterPhotosForMenu,
+    insertItemAndTypePhotos(response.id),
+    // can't be called first-class, no idea why
+    x => Promise.all(x))
+  (response);
+
+// Number -> Promise
+const syncPhotos = pageToken =>
+  fetchAlbums(pageToken)
+    .then(getAndInsertImages);
 
 function syncTypePhotos (fbid, photos) {
   return db.getTypesThroughFbid(fbid)
@@ -69,9 +97,9 @@ function syncTypePhotos (fbid, photos) {
 }
 
 // fetches albums from facebook page
-function fetchPhotos (pageToken) {
+function fetchAlbums (pageToken) {
   pageToken = encodeURIComponent(pageToken);
-  const url = `https://graph.facebook.com/me?fields=albums{photos{name,picture},name}&access_token=${pageToken}`;
+  const url = `https://graph.facebook.com/me?fields=albums{photos{name,webp_images},name}&access_token=${pageToken}`;
 
   return fetch(url, {
     method: 'GET',
