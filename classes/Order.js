@@ -83,8 +83,8 @@ class Order {
     const responses = [];
 
     responses.push(
-      orderConfirm("Success!")
-    );
+      orderConfirm("Success!"));
+
     switch (this.depth) {
       case "item":
         responses.push(
@@ -101,6 +101,7 @@ class Order {
           orderConfirm(`Order for one ${this.sizeVals.size} ${this.typeVals.type} ${this.itemVals.item} @ ${this.readableTime}`));
         break;
     }
+
     return responses;
   }
 }

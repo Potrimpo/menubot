@@ -1,7 +1,6 @@
-const chrono = require('chrono-node'),
-  moment = require('moment-timezone'),
-  actions = require('./actions'),
-  time = require('../time-management');
+const actions = require('./actions'),
+  time = require('../time-management'),
+  txt = require('../message-list');
 
 function runActions (fbUserId, fbPageId, msg, timestamp, timezone) {
   // the only text messages it knows how to deals with are order times
@@ -11,7 +10,7 @@ function runActions (fbUserId, fbPageId, msg, timestamp, timezone) {
       .then(order => order.toMessage())
       .catch(err => {
         console.error("error in runActions", err);
-        throw "Sorry! we couldn't place that order for some reason!";
+        throw txt.orderAttempt.error;
       });
   }
   return actions.defaultResp();
