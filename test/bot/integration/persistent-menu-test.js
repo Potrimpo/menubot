@@ -1,7 +1,5 @@
 const chai = require('chai'),
   chaiHttp = require('chai-http'),
-  // fs for debugging using writeToFile (in functionsForTests.js)
-  fs = require('fs'),
   { tunnelURL } = require('../../envVariables'),
   { postBackFactory, hashMyMessage } = require('./functionsForTests');
 
@@ -9,15 +7,13 @@ const expect = chai.expect;
 chai.use(chaiHttp);
 
 describe('simulated persistent menu requests (type postback)', function () {
-  let dummyRequest,
-      myGenHash;
   this.timeout(6000);
 
   afterEach(function (done) { setTimeout(done, 4000) });
 
   it('should be in the middle of nowhere', function () {
-    dummyRequest = postBackFactory('LOCATION');
-    myGenHash = hashMyMessage(dummyRequest);
+    const dummyRequest = postBackFactory('LOCATION');
+    const myGenHash = hashMyMessage(dummyRequest);
 
     return chai.request(tunnelURL)
       .post('/webhook')
@@ -31,8 +27,8 @@ describe('simulated persistent menu requests (type postback)', function () {
   });
 
   it('should fetch menu (but not details)', function () {
-    dummyRequest = postBackFactory('MENU');
-    myGenHash = hashMyMessage(dummyRequest);
+    const dummyRequest = postBackFactory('MENU');
+    const myGenHash = hashMyMessage(dummyRequest);
 
     return chai.request(tunnelURL)
       .post('/webhook')
@@ -46,8 +42,8 @@ describe('simulated persistent menu requests (type postback)', function () {
   });
 
   it("simulated pressing 'get started' button", function () {
-    dummyRequest = postBackFactory('GET_STARTED');
-    myGenHash = hashMyMessage(dummyRequest);
+    const dummyRequest = postBackFactory('GET_STARTED');
+    const myGenHash = hashMyMessage(dummyRequest);
 
     return chai.request(tunnelURL)
       .post('/webhook')
