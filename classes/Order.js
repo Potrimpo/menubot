@@ -3,7 +3,7 @@ const Either = require('ramda-fantasy').Either,
   moment = require('moment-timezone'),
   { pub } = require('../state-and-sessions/redis-init'),
   db = require('../repositories/bot/botQueries'),
-  { canIPlace } = require('../messaging/time-management'),
+  time = require('../messaging/time-management'),
   Item = require('./Item'),
   Type = require('./Type'),
   Size = require('./Size');
@@ -68,7 +68,7 @@ class Order {
     return db.checkOpenStatus(fbPageId)
       .then(data =>
         throwLeft(
-          canIPlace(data, requestedPickup, timestamp)));
+          time.canIPlace(data, requestedPickup, timestamp)));
   }
 
   toMessage () {
