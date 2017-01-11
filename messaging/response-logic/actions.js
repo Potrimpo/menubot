@@ -22,15 +22,13 @@ const send = (fbUserId, message) => {
 };
 
 // specify the time of an order
-const orderTime = (fbUserId, fbPageId, requestedPickup, timestamp, timezone) => {
-  return redisRetrieveOrder(fbUserId)
+const orderTime = (fbUserId, fbPageId, requestedPickup, timestamp, timezone) =>
+  redisRetrieveOrder(fbUserId)
     .then(data => {
       if (!data.itemid) throw "No order for this user in Redis";
       return new Order(fbPageId, fbUserId, requestedPickup, timestamp, timezone, data);
     })
-    .then(order => order ? order : new Error("couldn't create order instance"))
-    .catch(err => console.error("Error in orderTime", err));
-};
+    .then(order => order ? order : new Error("couldn't create order instance"));
 
 const defaultResp = () =>
   new Promise(res => res(text.defaultResponse));
