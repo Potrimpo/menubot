@@ -12,16 +12,20 @@ const wrapQuickreplies = (text) => ({
   text
 });
 
-const parseHours = (data, timestamp) => {
-  const messageDate = moment.tz(timestamp, data.timezone);
-  const dateFormat = messageDate.format("M/D/YYYY");
-  const dateZone = messageDate.format("ZZ");
+const orderDateTime = (time, tStamp, tz) => {
+  const messageDate = moment.tz(tStamp, tz);
 
-  return Either.of({
-    opentime: chrono.parseDate(dateFormat + " " + data.opentime + " " + dateZone),
-    closetime: chrono.parseDate(dateFormat + " " + data.closetime + " " + dateZone)
-  });
+  const dateFormat = messageDate.format("M/D/YYYY"),
+          dateZone = messageDate.format("ZZ");
+
+  return chrono.parseDate(dateFormat + " " + time + " " + dateZone);
 };
+
+const parseHours = (data, timestamp) =>
+  Either.of({
+    opentime: orderDateTime(data.opentime, timestamp, data.timezone),
+    closetime: orderDateTime(data.closetime, timestamp, data.timezone)
+  });
 
 
 const inRange = (requestTime, hours) =>
@@ -53,5 +57,6 @@ const canIPlace = (data, requestTime, timestamp) =>
     Left(wrapQuickreplies(orderAttempt.closed));
 
 module.exports = {
-  canIPlace
+  canIPlace,
+  orderDateTime
 };
