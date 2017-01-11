@@ -83,27 +83,25 @@ class Order {
     const responses = [];
 
     responses.push(
-      orderConfirm("Success!")
-    );
+      orderConfirm("Success!"));
+
     switch (this.depth) {
       case "item":
         responses.push(
-          orderConfirm(`Order for one ${this.itemVals.item} @ ${this.readableTime}`)
-        );
+          orderConfirm(`Order for one ${this.itemVals.item} @ ${this.readableTime}`));
         break;
 
       case "type":
         responses.push(
-          orderConfirm(`Order for one ${this.typeVals.type} ${this.itemVals.item} @ ${this.readableTime}`)
-        );
+          orderConfirm(`Order for one ${this.typeVals.type} ${this.itemVals.item} @ ${this.readableTime}`));
         break;
 
       case "size":
         responses.push(
-          orderConfirm(`Order for one ${this.sizeVals.size} ${this.typeVals.type} ${this.itemVals.item} @ ${this.readableTime}`)
-        );
+          orderConfirm(`Order for one ${this.sizeVals.size} ${this.typeVals.type} ${this.itemVals.item} @ ${this.readableTime}`));
         break;
     }
+
     return responses;
   }
 }

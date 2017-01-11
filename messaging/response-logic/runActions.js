@@ -1,19 +1,16 @@
-const chrono = require('chrono-node'),
-  moment = require('moment-timezone'),
-  actions = require('./actions');
+const actions = require('./actions'),
+  time = require('../time-management'),
+  txt = require('../message-list');
 
 function runActions (fbUserId, fbPageId, msg, timestamp, timezone) {
   // the only text messages it knows how to deals with are order times
-  const messageDate = moment.tz(timestamp, timezone);
-  const dateFormat = messageDate.format("M/D/YYYY");
-  const dateZone = messageDate.format("ZZ");
-  const requestedPickup = chrono.parseDate(dateFormat + " " + msg + " " + dateZone);
+  const requestedPickup = time.orderDateTime(msg, timestamp, timezone);
   if (requestedPickup) {
     return actions.orderTime(fbUserId, fbPageId, requestedPickup, timestamp, timezone)
       .then(order => order.toMessage())
       .catch(err => {
         console.error("error in runActions", err);
-        throw "Sorry! we couldn't place that order for some reason!";
+        throw txt.orderAttempt.error;
       });
   }
   return actions.defaultResp();

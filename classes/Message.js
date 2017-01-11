@@ -29,8 +29,10 @@ class Message {
     else if (this.text) {
       return db.getTimezone(this.recipient)
         .then(data => runActions(this.sender, this.recipient, this.text, this.timestamp, data.timezone))
+        // .then(resp => this.reply(resp))
         .then(resp => this.reply(resp))
-        .then(() => redisDeleteOrder(this.sender));
+        .then(() => redisDeleteOrder(this.sender))
+        .catch(err => this.reply(err));
     }
   }
 
@@ -42,8 +44,7 @@ class Message {
 
     else if (Array.isArray(message)) {
       return Promise.all(
-        message.map(msg => actions.send(this.sender, msg))
-      );
+        message.map(msg => actions.send(this.sender, msg)));
     }
 
     else {
