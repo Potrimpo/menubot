@@ -21,7 +21,7 @@ const send = (fbUserId, message) => {
         }));
 };
 
-  // specify the time of an order
+// specify the time of an order
 const orderTime = (fbUserId, fbPageId, requestedPickup, timestamp, timezone) => {
   return redisRetrieveOrder(fbUserId)
     .then(data => {
