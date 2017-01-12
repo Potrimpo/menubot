@@ -6,7 +6,7 @@ describe('messenger interaction', function() {
   this.timeout(20000);
 
   before(function () {
-    browser.url('https://www.messenger.com/t/1766837970261548');
+    browser.url(`https://www.messenger.com/t/${dev.testPageID}`);
     const title = browser.getTitle();
     expect(title).to.equal('Messenger');
 
