@@ -2,7 +2,7 @@
 
 > Warning: This guide has not been changed since the change of name from Menubot to suss. Consequently, please swap out any mentions of Menubot or it's domain to the new version.
 
-## DNS forwarding
+## DNS forwarding 📡
 
 ### First time setup
 
@@ -33,7 +33,7 @@ Made using:
 
 
 
-## Facebook app
+## Facebook app 👤
 
 ### First time setup
 > Note: This process cannot be completed without a running version of the site. As of such, only follow this guide when another process instructs you to.
@@ -81,7 +81,7 @@ Made using:
 
 
 
-## Node.js server setup
+## Node.js server setup 🚀
 
 
 
@@ -298,7 +298,7 @@ pm2 logs --lines 100
 ##### Congratulations, the server has been started once again.
 
 
-### Useful commands
+### Useful commands 🤓
 
 ##### To log on as pm2er user
 ```
@@ -426,7 +426,7 @@ sudo /etc/init.d/postgresql restart
 > I can't remember why this is important.
 
 
-## Development environment setup
+## Development environment setup 🖥
 
 ### Ubuntu development: First time setup
 
@@ -568,7 +568,7 @@ sudo /etc/init.d/postgresql restart
 > Changing values in the postgres config files requires a restart of the database
 
 
-### Testing
+### Testing 🎃
 
 There are _some_ executable tests, though not a whole lot of coverage yet.
 
