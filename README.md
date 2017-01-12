@@ -570,8 +570,7 @@ sudo /etc/init.d/postgresql restart
 
 ### Testing
 
-There are _some_ executable tests, though not a whole lot of coverage.
-Testing the bot is important, but very difficult to do, due to the way the server responds to requests.
+There are _some_ executable tests, though not a whole lot of coverage yet.
 
 To run some of these tests, values must be added to the `local-dev-variables.js` file
 
@@ -584,5 +583,32 @@ module.exports = {
     // these should already be in your file, for running server in dev environment
     FACEBOOK_ID: <App ID>,
     FB_APP_SECRET: <App Secret>
+    
+    // your facebook information, to simulate user messages to the bot
+    email: <Facebook account email>,
+    password: <Facebook account password>
 };
+```
+#### Setting test environment up
+> Using selenium to run automatic browser use-case tests, it requires a bit of installation
+
+```
+npm install -g selenium-server
+brew install geckodriver // sorry david idk how its done on linux
+```
+
+#### Running tests
+Two separate terminal tabs
+ 
+(warning: firefox will launch & run through the bot frontend, do not be alarmed)
+
+>selenium server
+
+```
+selenium-standalone start
+```
+>test logging
+
+```
+npm run test-front
 ```
