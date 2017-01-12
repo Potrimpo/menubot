@@ -593,7 +593,7 @@ module.exports = {
 > Using selenium to run automatic browser use-case tests, it requires a bit of installation
 
 ```
-npm install -g selenium-server
+npm install -g selenium-standalone
 brew install geckodriver // sorry david idk how its done on linux
 ```
 
