@@ -11,8 +11,10 @@
   "scripts": {
     "start": "pm2 --no-daemon start development.json",
     "prod": "pm2 start process.json",
+    "dev": "webpack -d --progress --colors --watch",
     "test": "mocha",
-    "dev": "webpack -d --progress --colors --watch"
+    "test-front": "./node_modules/.bin/wdio wdio.conf.js",
+    "kill-selenium": "kill -15 $( lsof -i:4444 -t )"
   },
   "repository": "https://github.com/Potrimpo/wit-ai-messenger-bot.git",
   "dependencies": {
@@ -53,6 +55,7 @@
     "redux-logger": "^2.7.0",
     "redux-thunk": "^2.1.0",
     "rx": "^4.1.0",
+    "selenium-standalone": "^5.9.1",
     "sequelize": "^3.24.3",
     "socket.io": "^1.5.1"
   },
@@ -67,6 +70,9 @@
     "chai-http": "^3.0.0",
     "expect.js": "^0.3.1",
     "mocha": "^3.0.2",
-    "supertest": "^1.2.0"
+    "supertest": "^1.2.0",
+    "wdio-dot-reporter": "0.0.7",
+    "wdio-mocha-framework": "^0.5.8",
+    "webdriverio": "^4.6.1"
   }
 }

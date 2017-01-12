@@ -1,10 +1,11 @@
 node_modules
 performanceLogs
-.idea
+dump.rdb
+errorShots
 *.log
+.idea
 output.json
 dist/js
 dist/css
 config/local-dev-variables.js
 icon.png
-dump.rdb

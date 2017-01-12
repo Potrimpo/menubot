@@ -1,8 +1,9 @@
 const QR = require('./quick-replies'),
+  txt = require('./message-list'),
   moment = require('moment-timezone');
 
 const getStarted = () => ({
-  text: "Welcome! Would you like to see our menu?",
+  text: txt.welcome,
   quick_replies: QR.basicReplies
 });
 
