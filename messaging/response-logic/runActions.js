@@ -1,11 +1,12 @@
-const actions = require('./actions'),
+const chrono = require('chrono-node'),
+  actions = require('./actions'),
   time = require('../time-management'),
   commands = require('../bot-commands'),
   QR = require('../quick-replies'),
   txt = require('../message-list');
 
 function runActions (fbUserId, fbPageId, msg, timestamp, timezone) {
-  const reducedMsg = msg.toLowerCase().replace(/\s+/g, '');
+  const reducedMsg = msg.toLowerCase().replace(/[^\w\s]/gi, '').replace(/\s+/g, '');
   const requestedPickup = time.orderDateTime(msg, timestamp, timezone);
 
   switch (reducedMsg) {
@@ -25,7 +26,7 @@ function runActions (fbUserId, fbPageId, msg, timestamp, timezone) {
       return commands.getHours(fbPageId);
   }
 
-  if (requestedPickup) {
+  if (chrono.parseDate(msg)) {
    return actions.orderTime(fbUserId, fbPageId, requestedPickup, timestamp, timezone)
      .then(order => order.toMessage())
      .catch(err => {
