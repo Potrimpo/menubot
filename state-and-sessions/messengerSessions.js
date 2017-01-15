@@ -6,8 +6,8 @@ const findOrCreateSession = (fbUserId, fbPageId) => {
   return client.hgetallAsync(fbUserId)
     .then(data => {
       if (data) {
-        // every message extends the session expiration time to 1 minute from last received message
-        return client.expireAsync(fbUserId, 60);
+        // every message extends the session expiration time to 3 minute from last received message
+        return client.expireAsync(fbUserId, 3 * 60);
       }
       console.log("---->     creating new session      <----");
       return getCompanyAccessToken(fbPageId)
