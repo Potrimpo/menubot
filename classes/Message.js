@@ -31,7 +31,6 @@ class Message {
       return db.getTimezone(this.recipient)
         .then(data => runActions(this.sender, this.recipient, this.text, this.timestamp, data.timezone))
         .then(resp => this.reply(resp))
-        .then(() => redisDeleteOrder(this.sender))
         .catch(err => this.reply(err));
     }
   }
