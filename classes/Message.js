@@ -22,14 +22,14 @@ class Message {
   // parse language if text message, handle postback if not
   process () {
     const x = this.quick_reply || this.postback;
+    const senderRecipient = { userId: this.sender, pageId: this.recipient };
     if (x) {
-      return postbackHandler(x.payload, this.sender, this.recipient, this.timestamp)
+      return postbackHandler(x.payload, senderRecipient, this.timestamp)
         .then(resp => this.reply(resp));
     }
     else if (this.text) {
       return db.getTimezone(this.recipient)
         .then(data => runActions(this.sender, this.recipient, this.text, this.timestamp, data.timezone))
-        // .then(resp => this.reply(resp))
         .then(resp => this.reply(resp))
         .then(() => redisDeleteOrder(this.sender))
         .catch(err => this.reply(err));

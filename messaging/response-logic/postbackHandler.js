@@ -1,61 +1,42 @@
-const structured = require('./../structured-messages'),
-  text = require('./../text-messages'),
-  db = require('./../../repositories/bot/botQueries');
+const commands = require('../bot-commands'),
+  structured = require('./../structured-messages');
 
-function postbackHandler (jsonPayload, fbUserId, fbPageId, timestamp) {
-  return new Promise(function (res, rej) {
-    const payload = JSON.parse(jsonPayload);
+// JSON -> {} -> Number -> Promise
+const postbackHandler = (jsonPayload, ids, timestamp) => {
+  const payload = JSON.parse(jsonPayload);
+  return intentSwitch(payload, ids, timestamp);
+};
 
-    switch (payload.intent.toUpperCase()) {
-      case 'MENU':
-        return db.getMenu(fbPageId)
-          .then((menu) => res(structured.items(menu)) )
-          .catch(err => rej(err));
+// {} -> {} -> Number -> Promise
+const intentSwitch = (payload, ids, timestamp) => {
+  switch (payload.intent.toUpperCase()) {
+    case 'MENU':
+      return commands.getMenu(ids.pageId);
 
-      case 'LOCATION':
-        return db.findLocation(fbPageId)
-          .then(data => res(text.location(data.location)))
-          .catch(err => rej(err));
+    case 'LOCATION':
+      return commands.getLocation(ids.pageId);
 
-      case 'DETAILS':
-        return db.getTypes(payload.itemid)
-          .then(types => res(structured.types(types, payload.itemid)) )
-          .catch(err => rej(err));
+    case 'DETAILS':
+      return commands.getTypes(payload.itemid);
 
-      case 'SIZES':
-        return db.getSizes(payload.typeid)
-          .then(sizes => res(structured.sizes(sizes, payload.typeid, payload.itemid)) )
-          .catch(err => rej(err));
+    case 'SIZES':
+      return commands.getSizes(payload.typeid, payload.itemid);
 
-      case 'ORDER':
-        return db.checkOpenStatus(fbPageId)
-          .then(status => text.openStatus(status, fbUserId, payload, timestamp))
-          .then(resp => res(resp))
-          .catch(err => rej(err));
+    case 'ORDER':
+      return commands.placeOrder(ids.pageId, ids.userId, payload, timestamp);
 
-      case 'MY_ORDERS':
-        return db.ordersbyUserid(fbUserId)
-          .then(xs =>
-            res(text.hasOrders(xs)))
-          .catch(err => rej(err));
+    case 'MY_ORDERS':
+      return commands.myOrders(ids.userId);
 
-      case 'HOURS':
-        return db.checkOpenStatus(fbPageId)
-          .then(data => res(text.hours(data)))
-          .catch(err => rej(err));
+    case 'HOURS':
+      return commands.getHours(ids.pageId);
 
-      case 'GET_STARTED':
-       return res(structured.getStarted());
+    case 'GET_STARTED':
+      return new Promise(res => res(structured.getStarted()));
 
-      default:
-        return rej(new Error("couldn't deal with this postbackHandler input"));
-    }
-
-  })
-    .catch(err => {
-      const payload = JSON.parse(jsonPayload);
-      console.error(`Error in ${payload.intent} postback:`, err)
-    });
-}
+    default:
+      return new Promise((_, rej) => rej(new Error("couldn't deal with this postbackHandler input")));
+  }
+};
 
 module.exports = postbackHandler;
