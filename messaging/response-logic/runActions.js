@@ -1,4 +1,5 @@
-const actions = require('./actions'),
+const chrono = require('chrono-node'),
+  actions = require('./actions'),
   time = require('../time-management'),
   commands = require('../bot-commands'),
   QR = require('../quick-replies'),
@@ -25,7 +26,7 @@ function runActions (fbUserId, fbPageId, msg, timestamp, timezone) {
       return commands.getHours(fbPageId);
   }
 
-  if (requestedPickup) {
+  if (chrono.parseDate(msg)) {
    return actions.orderTime(fbUserId, fbPageId, requestedPickup, timestamp, timezone)
      .then(order => order.toMessage())
      .catch(err => {
