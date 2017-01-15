@@ -6,7 +6,7 @@ const chrono = require('chrono-node'),
   txt = require('../message-list');
 
 function runActions (fbUserId, fbPageId, msg, timestamp, timezone) {
-  const reducedMsg = msg.toLowerCase().replace(/\s+/g, '');
+  const reducedMsg = msg.toLowerCase().replace(/[^\w\s]/gi, '').replace(/\s+/g, '');
   const requestedPickup = time.orderDateTime(msg, timestamp, timezone);
 
   switch (reducedMsg) {
