@@ -11,22 +11,29 @@ function runActions (fbUserId, fbPageId, msg, timestamp, timezone) {
   switch (reducedMsg) {
     case "menu":
       return commands.getMenu(fbPageId);
+
     case "location":
       return commands.getLocation(fbPageId);
-    case "myorders" || "orders" || "myorder":
+
+    case "myorders":
+    case "myorder":
+    case "orders":
       return commands.myOrders(fbUserId);
-    case "hours" || "hour":
+
+    case "hours":
+    case "hour":
       return commands.getHours(fbPageId);
-    case requestedPickup:
-      return actions.orderTime(fbUserId, fbPageId, requestedPickup, timestamp, timezone)
-        .then(order => order.toMessage())
-        .catch(err => {
-          console.error("error in runActions", err);
-          throw {text: txt.orderAttempt.error, quick_replies: QR.basicReplies};
-        });
-    default:
-      return actions.defaultResp();
   }
+
+  if (requestedPickup) {
+   return actions.orderTime(fbUserId, fbPageId, requestedPickup, timestamp, timezone)
+     .then(order => order.toMessage())
+     .catch(err => {
+       console.error("error in runActions", err);
+       throw {text: txt.orderAttempt.error, quick_replies: QR.basicReplies};
+     });
+  }
+  return actions.defaultResp();
 }
 
 module.exports = runActions;
