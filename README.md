@@ -7,6 +7,7 @@
 ### First time setup
 
 Made using:
+
 * https://cloud.google.com/dns/quickstart
 * https://cloud.google.com/compute/docs/configure-instance-ip-addresses#reserve_new_static
 
@@ -425,6 +426,11 @@ sudo /etc/init.d/postgresql restart
 
 > I can't remember why this is important.
 
+### Migrations
+
+[Documentation here](http://docs.sequelizejs.com/en/v3/docs/migrations/)
+
+settings for sequelize migrations are stored in `config/config.json`.
 
 ## Development environment setup 🖥
 
