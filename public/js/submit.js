@@ -230,46 +230,54 @@ $(document).ready(function() {
       };
     }).get();
 
-    const intent = /-(\w+)/.exec(this.id)[1];
-    const sendData = {
-      intent,
-      fbid,
-      parentId: this.name
-    };
 
-    for (let x = values.length - 1; x >= 0; x--) {
-      switch (values[x].kind) {
-        case "item":
-          sendData.item = values[x].val;
-          break;
-        case "type":
-          sendData.type = values[x].val;
-          break;
-        case "size":
-          sendData.size = values[x].val;
-          break;
+    if (values[0].val != "" && typeof values[0].val != "undefined") {
+      const intent = /-(\w+)/.exec(this.id)[1];
+      const sendData = {
+        intent,
+        fbid,
+        parentId: this.name
+      };
+
+      for (let x = values.length - 1; x >= 0; x--) {
+        switch (values[x].kind) {
+          case "item":
+            sendData.item = values[x].val;
+            break;
+          case "type":
+            sendData.type = values[x].val;
+            break;
+          case "size":
+            sendData.size = values[x].val;
+            break;
+        }
       }
+      console.log("SENDING", sendData);
+
+      $.ajax({
+        type: 'POST',
+        url: '/company/' + fbid,
+        data: sendData,
+        encode: true,
+        success(data) {
+          console.log("SUCCESS");
+          console.log(data);
+        },
+        error(smth, status, err) {
+          console.error("ERROR IN AJAX", status);
+          console.error("ERROR =", err);
+        }
+      })
+        .done(function(data) {
+          console.log("DONE", data);
+          location.reload();
+        });
+    } else {
+      //remove the spinner
+      $('#spinner-overlay').hide();
+      $('body').removeClass('overlay-container');
     }
-    console.log("SENDING", sendData);
 
-    $.ajax({
-      type: 'POST',
-      url: '/company/' + fbid,
-      data: sendData,
-      encode: true,
-      success(data) {
-        console.log("SUCCESS");
-        console.log(data);
-      },
-      error(smth, status, err) {
-        console.error("ERROR IN AJAX", status);
-        console.error("ERROR =", err);
-      }
-    })
-      .done(function(data) {
-        console.log("DONE", data);
-        location.reload();
-      });
   });
 
   //Initialise a new company
