@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 
-const Order = ({onClick, classing, pending, child, type, size, item, userid, pickuptime, profile_pic, customer_name }) => (
+const Order = ({onClick, classing, pending, child, type, size, item, quantity, userid, pickuptime, profile_pic, customer_name }) => (
   <div onClick={onClick} className="row">
     <div
       className={classing}
@@ -26,7 +26,8 @@ const Order = ({onClick, classing, pending, child, type, size, item, userid, pic
       <div className="row">
         <div className="order-content-container">
           <p className="order-text">
-            { item ? <span>- {item}</span> : null }
+            {quantity}x
+            { item ? <span> {item}</span> : null }
             { type ? <span>, {type}</span> : null }
             { size ? <span>, {size}</span> : null }
           </p>

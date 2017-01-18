@@ -1,6 +1,6 @@
 const moment = require('moment-timezone'),
   db = require('../repositories/site/CompanyRepository.js'),
-  { basicReplies } = require('./quick-replies.js'),
+  { hoursReplies } = require('./quick-replies.js'),
   fbMessage = require('./fbMessage'),
   { groupBy, map, intersperse, prepend } = require('ramda');
 
@@ -18,14 +18,14 @@ const intervalReminders = (minutes) => {
             `The following orders will be ready in ${minutes} minutes: `,
             map((order) => {
               db.orderNotified(order.orderid);
-              if (order.type == null) {return `-${order.item}`}
-              else if (order.size == null) {return `-${order.type}, ${order.item}`}
-              else {return `-${order.size}, ${order.type}, ${order.item}`}
+              if (order.type == null) {return `${order.quantity}x ${order.item}`}
+              else if (order.size == null) {return `${order.quantity}x ${order.type}, ${order.item}`}
+              else {return `${order.quantity}x ${order.size}, ${order.type}, ${order.item}`}
             } , orders)
           )
         );
         const message = {
-          quick_replies: basicReplies,
+          quick_replies: hoursReplies,
           text: orderStrings.join("")
         };
         fbMessage(orders[0].customer_id, orders[0].access_token, message);

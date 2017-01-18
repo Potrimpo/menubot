@@ -42,6 +42,11 @@ module.exports = function (sequelize, Sequelize) {
         key: 'itemid'
       },
     },
+    quantity: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      defaultValue: 1
+    },
     pickuptime: {
       type: Sequelize.DATE,
       allowNull: false

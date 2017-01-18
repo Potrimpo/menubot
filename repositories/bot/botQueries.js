@@ -96,11 +96,11 @@ exports.orderDetails = orderid =>
     { replacements: { orderid }, type: sequelize.QueryTypes.SELECT }
   );
 
-exports.makeOrder = (fbid, customer_id, pickuptime, { itemid, typeid, sizeid }) =>
+exports.makeOrder = (fbid, customer_id, pickuptime, { itemid, typeid, sizeid, quantity }) =>
   sequelize.transaction(t =>
     Order.create({
       fbid, customer_id, pickuptime,
-      itemid, typeid, sizeid
+      itemid, typeid, sizeid, quantity
     }, { transaction: t })
       .then(order =>
         sequelize.query(
@@ -119,7 +119,7 @@ exports.makeOrder = (fbid, customer_id, pickuptime, { itemid, typeid, sizeid }) 
 
 exports.ordersbyUserid = customer_id =>
   sequelize.query(
-    "SELECT orderid, o.fbid, size, type, item, size_price, type_price, item_price, pickuptime, timezone" +
+    "SELECT orderid, o.fbid, size, type, item, size_price, type_price, item_price, pickuptime, timezone, quantity" +
     " FROM orders AS o" +
     " LEFT OUTER JOIN sizes ON o.sizeid = sizes.sizeid" +
     " LEFT OUTER JOIN types ON o.typeid = types.typeid" +

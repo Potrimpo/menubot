@@ -133,7 +133,7 @@ exports.ordersByFbid = (fbid) => {
 
 exports.ordersByTime = (now, timePoint) => {
   return sequelize.query(
-    "SELECT sizes.size, types.type, items.item, o.orderid, o.customer_id, o.fbid, companies.access_token" +
+    "SELECT sizes.size, types.type, items.item, o.orderid, o.customer_id, o.fbid, companies.access_token, o.quantity" +
     " FROM orders AS o" +
     " LEFT OUTER JOIN sizes ON o.sizeid = sizes.sizeid" +
     " LEFT OUTER JOIN types ON o.typeid = types.typeid" +

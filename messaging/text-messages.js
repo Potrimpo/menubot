@@ -1,7 +1,7 @@
 const chrono = require('chrono-node'),
   Identity = require('ramda-fantasy').Identity,
   moment = require('moment-timezone'),
-  { redisRecordOrder } = require('./../state-and-sessions/messengerSessions'),
+  { redisRecordOrder, redisRetrieveOrder } = require('./../state-and-sessions/messengerSessions'),
   time = require('./time-management'),
   QR = require('./quick-replies'),
   structured = require('./structured-messages'),
@@ -43,7 +43,9 @@ function open (data, fbUserId, payload, resp, timestamp) {
 
   // no quickreplies if successful
   return redisRecordOrder(fbUserId, payload)
-    .then(() => orderAttempt.open)
+    .then(() => {
+      return {text: orderAttempt.howMany, quick_replies: QR.quantityReplies}
+    })
     .catch(() =>
       Object.assign(resp, { text: orderAttempt.error })
     );
@@ -69,10 +71,30 @@ const emptyArray = xs =>
 const hasOrders = xs =>
   emptyArray(xs) ? structured.orders(xs) : hasNoOrders;
 
+const quantity = (pageId, userId, payload) =>
+  redisRetrieveOrder(userId)
+    .then((order) => {
+      const newOrder = {
+        itemid: order.itemid ? order.itemid : undefined,
+        typeid: order.typeid ? order.typeid : undefined,
+        sizeid: order.sizeid ? order.sizeid : undefined,
+        quantity: payload.quantity
+      };
+      console.log("order: ", newOrder);
+      return redisRecordOrder(userId, newOrder)
+    })
+    .then(() => {
+      return {text: orderAttempt.open}
+    })
+    .catch((err) => {
+      return {text: orderAttempt.error}
+    })
+
 module.exports = {
   defaultResponse,
   hours,
   openStatus,
   location,
-  hasOrders
+  hasOrders,
+  quantity
 };
