@@ -33,7 +33,6 @@ const findOrCreateSession = (fbUserId, fbPageId) => {
 };
 
 const redisRecordOrder = (fbUserId, order) => {
-  console.log(order);
   return client.hmsetAsync(fbUserId, {
     itemid: order.itemid ? order.itemid : '',
     typeid: order.typeid ? order.typeid : '',
