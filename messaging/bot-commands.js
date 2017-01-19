@@ -4,7 +4,7 @@ const db = require('./../repositories/bot/botQueries'),
 
 const getMenu = pageId =>
   db.getMenu(pageId)
-    .then(menu => structured.items(menu));
+    .then(text.menu);
 
 const getLocation = pageId =>
   db.findLocation(pageId)

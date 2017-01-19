@@ -21,6 +21,8 @@ const confused = "Sorry, we couldn't understand that!";
 
 const noOrders = "Oops! Looks like you don't have any orders";
 
+const emptyMenu = "Oops! Looks like we don't have anything on the menu right now";
+
 const welcome = "Welcome! Would you like to see our menu?";
 
 module.exports = {
@@ -29,5 +31,6 @@ module.exports = {
   hoursCheck,
   locationCheck,
   noOrders,
+  emptyMenu,
   confused
 };
