@@ -1,6 +1,6 @@
 const chai = require('chai'),
   chaiHttp = require('chai-http'),
-    // fs for debugging using writeToFile (in functionsForTests.js)
+    // fs for debugging using writeToFile (in helper-functions.js)
     fs = require('fs'),
   { tunnelURL } = require('../envVariables');
 

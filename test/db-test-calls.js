@@ -20,9 +20,42 @@ const clearLocation = fbid =>
     { location: '' },
     { where: { fbid } });
 
+const setLocation = fbid =>
+  Company.update(
+    { location: '123 Fake Street' },
+    { where: { fbid } });
+
+const insertItem = (fbid, name, price) =>
+  Item.create({
+    fbid,
+    item: name,
+    item_price: price
+  });
+
+const createOrder = (fbid, userId, time, itemid) =>
+  Order.create({
+    fbid,
+    customer_id: userId,
+    pickuptime: time,
+    itemid
+  });
+
+const setOpen = fbid =>
+  Company.update(
+    {
+      status: true,
+      opentime: '9am',
+      closetime: '5pm'
+    },
+    { where: { fbid } });
+
 module.exports = {
   deleteMenu,
+  insertItem,
   deleteOrders,
+  createOrder,
   setClosed,
-  clearLocation
+  setOpen,
+  clearLocation,
+  setLocation
 };
