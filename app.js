@@ -62,13 +62,6 @@ app.get(
 // curl to this in order to add new codes for new companies
 app.post('/newCodeVerySecret', userController.newCode);
 
-// Running a callback that sends a reminder to end users when their orders are almost at their pickup time
-
-const intervalReminders = require('./messaging/interval-reminders'),
-  minutesTilPickup = 5,
-  frequencyToRunInMinutes = 1,
-  reminder = setInterval(intervalReminders, (frequencyToRunInMinutes * 60 * 1000), minutesTilPickup);
-
 // syncing with postgres database, then assigning ports & IP to the server
 sequelize.sync({ force: false })
   .then(() => {

@@ -55,11 +55,6 @@ module.exports = function (sequelize, Sequelize) {
       type: Sequelize.BOOLEAN,
       allowNull: false,
       defaultValue: true
-    },
-    notified: {
-      type: Sequelize.BOOLEAN,
-      allowNull: false,
-      defaultValue: false
     }
   }, {
     tableName: 'orders',

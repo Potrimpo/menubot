@@ -131,27 +131,6 @@ exports.ordersByFbid = (fbid) => {
     .catch(err => console.error("error getting orders in sql", err));
 };
 
-exports.ordersByTime = (now, timePoint) => {
-  return sequelize.query(
-    "SELECT sizes.size, types.type, items.item, o.orderid, o.customer_id, o.fbid, companies.access_token, o.quantity" +
-    " FROM orders AS o" +
-    " LEFT OUTER JOIN sizes ON o.sizeid = sizes.sizeid" +
-    " LEFT OUTER JOIN types ON o.typeid = types.typeid" +
-    " LEFT OUTER JOIN items ON o.itemid = items.itemid" +
-    " LEFT OUTER JOIN companies ON o.fbid = companies.fbid" +
-    " WHERE o.notified = false AND o.pickuptime" +
-    " BETWEEN :now::timestamp AND :timePoint::timestamp",
-    { replacements: {now, timePoint} , type: sequelize.QueryTypes.SELECT }
-  );
-}
-
-exports.orderNotified = ids =>
-  sequelize.query(
-    "UPDATE orders" +
-    " SET notified = NOT notified" +
-    " WHERE orderid IN (:ids)",
-    { replacements: { ids }, type: sequelize.QueryTypes.UPDATE });
-
 exports.orderComplete = ids =>
   sequelize.query(
     "UPDATE orders" +
