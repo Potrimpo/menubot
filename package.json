@@ -12,7 +12,7 @@
     "start": "pm2 --no-daemon start development.json",
     "prod": "pm2 start process.json",
     "dev": "webpack -d --progress --colors --watch",
-    "test": "mocha",
+    "test": "./node_modules/.bin/mocha",
     "test-front": "./node_modules/.bin/wdio wdio.conf.js",
     "kill-selenium": "kill -15 $( lsof -i:4444 -t )"
   },
