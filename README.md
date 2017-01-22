@@ -2,11 +2,12 @@
 
 > Warning: This guide has not been changed since the change of name from Menubot to suss. Consequently, please swap out any mentions of Menubot or it's domain to the new version.
 
-## DNS forwarding
+## DNS forwarding 📡
 
 ### First time setup
 
 Made using:
+
 * https://cloud.google.com/dns/quickstart
 * https://cloud.google.com/compute/docs/configure-instance-ip-addresses#reserve_new_static
 
@@ -33,7 +34,7 @@ Made using:
 
 
 
-## Facebook app
+## Facebook app 👤
 
 ### First time setup
 > Note: This process cannot be completed without a running version of the site. As of such, only follow this guide when another process instructs you to.
@@ -81,7 +82,7 @@ Made using:
 
 
 
-## Node.js server setup
+## Node.js server setup 🚀
 
 
 
@@ -298,7 +299,7 @@ pm2 logs --lines 100
 ##### Congratulations, the server has been started once again.
 
 
-### Useful commands
+### Useful commands 🤓
 
 ##### To log on as pm2er user
 ```
@@ -425,8 +426,13 @@ sudo /etc/init.d/postgresql restart
 
 > I can't remember why this is important.
 
+### Migrations
 
-## Development environment setup
+[Documentation here](http://docs.sequelizejs.com/en/v3/docs/migrations/)
+
+settings for sequelize migrations are stored in `config/config.json`.
+
+## Development environment setup 🖥
 
 ### Ubuntu development: First time setup
 
@@ -568,10 +574,9 @@ sudo /etc/init.d/postgresql restart
 > Changing values in the postgres config files requires a restart of the database
 
 
-### Testing
+### Testing 🎃
 
-There are _some_ executable tests, though not a whole lot of coverage.
-Testing the bot is important, but very difficult to do, due to the way the server responds to requests.
+There are _some_ executable tests, though not a whole lot of coverage yet.
 
 To run some of these tests, values must be added to the `local-dev-variables.js` file
 
@@ -584,5 +589,32 @@ module.exports = {
     // these should already be in your file, for running server in dev environment
     FACEBOOK_ID: <App ID>,
     FB_APP_SECRET: <App Secret>
+    
+    // your facebook information, to simulate user messages to the bot
+    email: <Facebook account email>,
+    password: <Facebook account password>
 };
+```
+#### Setting test environment up
+> Using selenium to run automatic browser use-case tests, it requires a bit of installation
+
+```
+npm install -g selenium-standalone
+brew install geckodriver // sorry david idk how its done on linux
+```
+
+#### Running tests
+Two separate terminal tabs
+ 
+(warning: firefox will launch & run through the bot frontend, do not be alarmed)
+
+>selenium server
+
+```
+selenium-standalone start
+```
+>test logging
+
+```
+npm run test-front
 ```

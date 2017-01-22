@@ -1,0 +1,14 @@
+{
+  "development": {
+    "database": "menubot",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "menubot",
+    "password": "45FeistyEggsFearY2k",
+    "database": "menubot",
+    "host": "10.146.0.3",
+    "dialect": "postgres"
+  }
+}

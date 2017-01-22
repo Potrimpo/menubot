@@ -1,6 +1,6 @@
 const { findOrCreateSession, redisDeleteOrder } = require('../state-and-sessions/messengerSessions'),
   runActions = require('../messaging/response-logic/runActions'),
-  postbackHandler = require('../messaging/response-logic/postbackHandler'),
+  postbackHandler = require('../messaging/response-logic/postback-handler'),
   actions = require('../messaging/response-logic/actions'),
   db = require('../repositories/bot/botQueries.js');
 
