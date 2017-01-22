@@ -32,7 +32,7 @@ function items(menu) {
     if (val.item_price) {
       items.title = items.title.concat(` - $${val.item_price}`);
       items.buttons = [
-        button({ intent: 'Order', itemid: val.itemid })
+        button({ intent: 'Order', itemid: val.itemid, price: val.item_price })
       ];
       return items;
     }
@@ -60,7 +60,7 @@ function types(types, itemid) {
     if (val.type_price) {
       types.title = types.title.concat(` - $${val.type_price}`);
       types.buttons = [
-        button({ intent: 'Order', itemid, typeid: val.typeid })
+        button({ intent: 'Order', itemid, typeid: val.typeid, price: val.type_price })
       ];
       return types;
     }
@@ -84,7 +84,8 @@ function sizes(sizes, typeid, itemid) {
       intent: 'Order',
       itemid,
       typeid,
-      sizeid: val.sizeid
+      sizeid: val.sizeid,
+      price: val.size_price
     };
 
     return {
@@ -105,17 +106,17 @@ function orders(orders) {
 
     if (val.size) {
       return {
-        title: `${val.size.toUpperCase()} ${val.type.toUpperCase()} ${val.item.toUpperCase()}`,
+        title: `${val.quantity}x ${val.size.toUpperCase()} ${val.type.toUpperCase()} ${val.item.toUpperCase()}`,
         subtitle: `$${val.size_price} @ ${readableTime}`
       };
     } else if (val.type) {
       return {
-        title: `${val.type.toUpperCase()} ${val.item.toUpperCase()}`,
+        title: `${val.quantity}x ${val.type.toUpperCase()} ${val.item.toUpperCase()}`,
         subtitle: `$${val.type_price} @ ${readableTime}`
       }
     } else {
       return {
-        title: `${val.item.toUpperCase()}`,
+        title: `${val.quantity}x ${val.item.toUpperCase()}`,
         subtitle: `$${val.item_price} @ ${readableTime}`
       }
     }

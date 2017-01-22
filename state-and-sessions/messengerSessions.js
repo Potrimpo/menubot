@@ -36,7 +36,8 @@ const redisRecordOrder = (fbUserId, order) => {
   return client.hmsetAsync(fbUserId, {
     itemid: order.itemid ? order.itemid : '',
     typeid: order.typeid ? order.typeid : '',
-    sizeid: order.sizeid ? order.sizeid : ''
+    sizeid: order.sizeid ? order.sizeid : '',
+    quantity: order.quantity ? order.quantity : ''
   })
     .catch(err => console.error("error adding order to redis", err));
 };
@@ -47,7 +48,8 @@ const redisRetrieveOrder = fbUserId => {
       return {
         itemid: data.itemid ? data.itemid : undefined,
         typeid: data.typeid ? data.typeid : undefined,
-        sizeid: data.sizeid ? data.sizeid : undefined
+        sizeid: data.sizeid ? data.sizeid : undefined,
+        quantity: data.quantity ? data.quantity : undefined
       }
     })
     .catch(err => console.error("error retrieving order from redis", err));
