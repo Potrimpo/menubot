@@ -41,7 +41,8 @@ function open (data, fbUserId, payload, resp, timestamp) {
 
   // no quickreplies if successful
   return redisRecordOrder(fbUserId, payload)
-    .then(() => txt.orderAttempt.open)
+    .then(() =>
+      wrapQuickreplies(txt.orderAttempt.howMany, QR.quantityReplies(payload.price)))
     .catch(() =>
       Object.assign(resp, { text: txt.orderAttempt.error })
     );
@@ -80,10 +81,10 @@ const quantity = (pageId, userId, payload) =>
       return redisRecordOrder(userId, newOrder)
     })
     .then(() => ({
-      text: orderAttempt.open
+      text: txt.orderAttempt.open
     }))
     .catch(_ => ({
-      text: orderAttempt.error
+      text: txt.orderAttempt.error
     }));
 
 module.exports = {

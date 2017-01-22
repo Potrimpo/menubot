@@ -23,7 +23,7 @@ const placeOrder = (pageId, userId, payload, timestamp) =>
     .then(status => text.openStatus(status, userId, payload, timestamp));
 
 const setQuantity = (pageId, userId, payload) =>
-  text.quantity(pageId, userId, payload)
+  text.quantity(pageId, userId, payload);
 
 const myOrders = userId =>
   db.ordersbyUserid(userId)
