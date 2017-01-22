@@ -1,5 +1,5 @@
 const Identity = require('ramda-fantasy').Identity,
-  { redisRecordOrder } = require('./../state-and-sessions/messengerSessions'),
+  { redisRecordOrder, redisRetrieveOrder } = require('./../state-and-sessions/messengerSessions'),
   time = require('./time-management'),
   QR = require('./quick-replies'),
   structured = require('./structured-messages'),
@@ -72,19 +72,19 @@ const quantity = (pageId, userId, payload) =>
   redisRetrieveOrder(userId)
     .then((order) => {
       const newOrder = {
-        itemid: order.itemid ? order.itemid : undefined,
-        typeid: order.typeid ? order.typeid : undefined,
-        sizeid: order.sizeid ? order.sizeid : undefined,
+        itemid: order.itemid,
+        typeid: order.typeid,
+        sizeid: order.sizeid,
         quantity: payload.quantity
       };
       return redisRecordOrder(userId, newOrder)
     })
-    .then(() => {
-      return {text: orderAttempt.open}
-    })
-    .catch((err) => {
-      return {text: orderAttempt.error}
-    })
+    .then(() => ({
+      text: orderAttempt.open
+    }))
+    .catch(_ => ({
+      text: orderAttempt.error
+    }));
 
 module.exports = {
   defaultResponse,
