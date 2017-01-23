@@ -98,6 +98,206 @@
   margin-left:5px
 }
 
+//Test classes
+
+@media (max-width:767px) {
+  .top-large-gap {margin-top: 10px;}
+  .bot-large-gap {margin-bot: 10px;}
+
+  .top-med-gap {margin-top: 4px;}
+  .bot-med-gap {margin-bot: 4px;}
+
+  .top-smol-gap {margin-top: 4px;}
+  .bot-smol-gap {margin-bot: 4px;}
+  
+  .item-children-container {
+      padding: 0 4px 4px 4px;
+      background-color: #cfcfcf;
+  }
+  .type-children-container {
+      padding: 0 4px 4px 4px;
+      background-color: #b8b8b8;
+      border-width: 0 1px 0 1px;
+      border-color: #b5b5b5;
+      border-style: solid;
+  }
+}
+
+@media (min-width:768px) {
+  .top-large-gap {margin-top: 13px;}
+  .bot-large-gap {margin-bot: 13px;}
+
+  .top-med-gap {margin-top: 10px;}
+  .bot-med-gap {margin-bot: 10px;}
+
+  .top-smol-gap {margin-top: 7px;}
+  .bot-smol-gap {margin-bot: 7px;}
+
+  .item-children-container {
+      padding: 0 10px 10px 10px;
+      background-color: #cfcfcf;
+  }
+  .type-children-container {
+      padding: 0 7px 7px 7px;
+      background-color: #b8b8b8;
+      border-width: 0 1px 0 1px;
+      border-color: #b5b5b5;
+      border-style: solid;
+  }
+}
+
+.closed-borders {
+    border-style: solid;
+    border-width: 1px;
+    border-color: #b5b5b5;
+    border-radius: 3px;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, .2);
+}
+.top-open-borders {
+    border-style: solid;
+    border-width: 1px 1px 1px 1px;
+    border-color: #b5b5b5;
+    border-radius: 3px 3px 0 0;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, .2);
+}
+.bottom-open-borders {
+    border-style: solid;
+    border-width: 1px 1px 1px 1px;
+    border-color: #b5b5b5;
+    border-radius: 0 0 3px 3px;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, .2);
+}
+.container-row {
+    padding: 0;
+    margin: 0;
+}
+.item-container {
+    cursor: pointer;
+    background-color: #e8e8e8;
+    padding: 4px;
+}
+.item-container div {
+    padding: 0;
+}
+.item-container div input {
+    font-size: 25px;
+}
+.type-container {
+    cursor: pointer;
+    background-color: #e8e8e8;
+    padding: 4px;
+}
+.type-container div {
+    padding: 0;
+}
+.type-container div input {
+    font-size: 20px;
+}
+.size-container {
+    cursor: pointer;
+    background-color: #e8e8e8;
+    padding: 4px;
+}
+.size-container div {
+    padding: 0;
+}
+.size-container div input {
+    font-size: 17px;
+}
+.entry-input {
+    padding: 0 3px 0 3px;
+    width: 100%;
+    background-color: #e8e8e8;
+    border: none;
+    outline: 0;
+    border: solid #e8e8e8 1px;
+    border-radius: 3px;
+    transition: box-shadow .3s, border .3s, transform .3s;
+}
+.entry-input.focus, .entry-input:focus {
+    box-shadow: inset 1px 1px 1px 1px rgba(0, 0, 0, .2);
+    border: solid #b5b5b5 1px;
+    transform: scale(.995);
+}
+.entry-price-container div {
+    padding: 2px 4px 2px 4px;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 4px 0 0 4px;
+    border-color: #b5b5b5;
+    cursor: default;
+    display: inline-block;
+}
+.entry-price-container div div {
+    color: #000;
+    margin: auto;
+    font-size: 17px;
+}
+.entry-price-container input {
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 0 4px 4px 0;
+    border-color: #b5b5b5;
+    display: inline-block;
+    font-size: 17px;
+    width: 4em;
+    padding: 0 3px 0 3px;
+    background-color: #e8e8e8;
+    outline: 0;
+    transition: box-shadow .3s;
+}
+.entry-price-container input.focus, .entry-price-container input:focus {
+    box-shadow: inset 1px 1px 1px 1px rgba(0, 0, 0, .2);
+}
+.entry-image {
+    background-image: url(https://scontent.xx.fbcdn.net/v/t31.0-8/15874934_1290529604343705_5517852160362023404_o.jpg.webp?oh=5a0b4b5eea1d7395d7ca757ceacb0c65&oe=5918EAE2);
+    background-position-y: 50%;
+    background-position-x: 50%;
+    background-size: cover;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 3px;
+    margin: 5px;
+}
+.entry-arrow {
+    margin-left: 50%;
+    transform: translate(-50%, 0);
+    font-size: 23px;
+}
+.large-remove-button {
+    float: right;
+    background-color: inherit;
+    border: none;
+}
+.large-remove-button i {
+    color: #000;
+    font-size: 25px;
+    padding-top: 3px;
+}
+.med-remove-button {
+    float: right;
+    background-color: inherit;
+    border: none;
+}
+.med-remove-button i {
+    color: #000;
+    font-size: 20px;
+    padding-top: 3px;
+}
+.smol-remove-button {
+    float: right;
+    background-color: inherit;
+    border: none;
+}
+.smol-remove-button i {
+    color: #000;
+    font-size: 17px;
+    padding-top: 3px;
+}
+
 //orders classes
 
 .order-top-container {
