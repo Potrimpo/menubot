@@ -26,7 +26,6 @@ function webhookSubscription (pageToken, intent) {
       if (json.error && json.error.message) {
         throw new Error(json.error.message);
       }
-      console.log("Response to webhook subscription request: " + JSON.stringify(json));
       return json;
     })
     .catch(err => console.error("error activating bot for this page!!", err));
@@ -100,7 +99,6 @@ function greetingText (pageToken, intent) {
       if (json.error && json.error.message) {
         throw new Error(json.error.message);
       }
-      console.log("Response to greeting text setting request: " + JSON.stringify(json));
       return json;
     })
     .catch(err => console.error("error setting greeting text!!", err));
@@ -130,7 +128,6 @@ function getStartedButton (pageToken, intent) {
       if (json.error && json.error.message) {
         throw new Error(json.error.message);
       }
-      console.log("Response to Get Started btn setting request: " + JSON.stringify(json));
       return json;
     })
     .catch(err => console.error("error adding get-started button!!", err));

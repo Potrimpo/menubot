@@ -52,14 +52,8 @@ exports.loginOrCreateAcc = function(accessToken, refreshToken, profile) {
   const profileId = profile.id.toString();
 
   return User.findOne({ where: { facebookId: profileId } })
-    .then(existingUser => {
-      if (existingUser) {
-        console.log("   Existing user !!!");
-        return existingUser;
-      }
-      console.log("   No user found !!!");
-      return createAcc(accessToken, profile);
-    })
+    .then(existingUser =>
+      existingUser ?  existingUser : createAcc(accessToken, profile));
 };
 
 function createAcc(accessToken, profile) {
@@ -68,28 +62,26 @@ function createAcc(accessToken, profile) {
 
     const accounts = profile._json.accounts.data.map(company => {
       return getPageAccessToken(accessToken, company.id)
-        .then(json => {
-          return {
+        .then(json => ({
             fbid: company.id,
             name: company.name,
             access_token: json.access_token
-          };
-        })
+          }))
         .catch(err => rej("error getting pageAccessToken", err));
     });
     return res(Promise.all(accounts));
 
   })
-  .then(accounts => {
-    var user = User.build({facebookId: profileId});
-    user.set('accounts', accounts);
-    user.email = profile._json.email || ( profileId + '@facebook.com' );
-    user.token = accessToken;
-    user.name = profile.name.givenName + ' ' + profile.name.familyName;
-    user.photo = 'https://graph.facebook.com/' + profile.id+ '/picture?type=large';
-    user.profile = { name: profile._json.first_name };
-    return user.save();
-  })
+  .then(accounts =>
+    User.create({
+      facebookId: profileId,
+      name: profile.name.givenName + ' ' + profile.name.familyName,
+      photo: 'https://graph.facebook.com/' + profile.id+ '/picture?type=large',
+      profile: { name: profile._json.first_name },
+      accounts,
+      email: profile._json.email || (profileId + '@facebook.com'),
+      token: accessToken,
+    }))
   .catch(err => console.error("error creating account!", err));
 }
 
@@ -97,7 +89,6 @@ function getPageAccessToken (userToken, pageId) {
   pageId = encodeURIComponent(pageId);
   userToken = encodeURIComponent((userToken));
   const query = `https://graph.facebook.com/${pageId}?fields=access_token&access_token=${userToken}`;
-  console.log("QUERY =", query);
   return fetch(query, {
     method: 'GET',
     headers: {'Content-Type': 'application/json'}
@@ -107,7 +98,6 @@ function getPageAccessToken (userToken, pageId) {
       if (json.error && json.error.message) {
         throw new Error(json.error.message);
       }
-      console.log("json ============= ", json);
       return json;
     })
     .catch(err => console.error("error fetching access token!!", err));
