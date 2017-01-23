@@ -10,7 +10,7 @@
         <input type="text" class="entry-input" placeholder="Rename this item...">
       </div>
       <div class="col-xs-2">
-        <button class="delete-entry large-edit-button" type="button">
+        <button class="large-edit-button" type="button">
           <i class="fa fa-pencil" aria-hidden="true"></i>
         </button>
       </div>
@@ -25,7 +25,7 @@
             <input type="text" class="entry-input" placeholder="Rename this type...">
           </div>
           <div class="col-xs-2">
-            <button class="delete-entry med-edit-button" type="button">
+            <button class="med-edit-button" type="button">
               <i class="fa fa-pencil" aria-hidden="true"></i>
             </button>
           </div>
@@ -39,7 +39,7 @@
             <input type="text" class="entry-input" placeholder="Rename this type...">
           </div>
           <div class="col-xs-2">
-            <button class="delete-entry med-edit-button" type="button">
+            <button class="med-edit-button" type="button">
               <i class="fa fa-pencil" aria-hidden="true"></i>
             </button>
           </div>
@@ -53,7 +53,7 @@
                 <input type="text" class="entry-input" placeholder="Rename this size...">
               </div>
               <div class="col-xs-2">
-                <button class="delete-entry smol-edit-button" type="button">
+                <button class="smol-edit-button" type="button">
                   <i class="fa fa-pencil" aria-hidden="true"></i>
                 </button>
               </div>
@@ -69,7 +69,7 @@
           </div>
         </div>
 
-        <div class="col-xs-12 type-container bottom-open-borders"  style="height: 30px"></div>
+        <div class="col-xs-12 type-container bottom-open-borders container-bottom"></div>
       </div>
 
       <div class="row container-row">
@@ -82,7 +82,7 @@
 
     </div>
 
-    <div class="col-xs-12 item-container bottom-open-borders" style="height: 30px"></div>
+    <div class="col-xs-12 item-container bottom-open-borders container-bottom"></div>
 
   </div>
 
@@ -93,7 +93,7 @@
         <input type="text" class="entry-input" placeholder="Rename this item...">
       </div>
       <div class="col-xs-2">
-        <button class="delete-entry large-edit-button" type="button">
+        <button class="large-edit-button" type="button">
           <i class="fa fa-pencil" aria-hidden="true"></i>
         </button>
       </div>
@@ -112,22 +112,14 @@
 
 </div>
 
-<div style="
-background: rgba(0,0,0,.6);
-bottom: 0;
-left: 0;
-position: absolute;
-right: 0;
-top: 0;
-z-index: 1031;
-">
-  <div class="row container-row" style="width: 720px; position:relative; margin: auto;">
+<div class="editor-darkener">
+  <div class="row container-row editor-row" style="width: 720px;">
     <div class="col-xs-12 item-container closed-borders" style="top: 100px;">
       <div class="col-xs-10">
         <input type="text" class="entry-input" placeholder="Rename this item...">
       </div>
       <div class="col-xs-2">
-        <button class="delete-entry large-edit-button" type="button">
+        <button class="large-edit-button" type="button">
           <i class="fa fa-pencil" aria-hidden="true"></i>
         </button>
       </div>
@@ -152,3 +144,165 @@ z-index: 1031;
 </div>
 
 <script src="/js/configuration.bundle.js"></script>
+
+<!-- YOU ARE NOW ENTERING THE PROTOTYPE ZONE -->
+
+<!-- Entry container -->
+<div style="padding: 5px" class="col-xs-12 col-md-8 col-md-offset-2">
+  <!-- Entries go here -->
+</div>
+
+
+<!-- New item -->
+<div class="row">
+  <div class="col-xs-12 item-container closed-borders top-large-gap">
+    <div class="col-xs-12">
+      <input type="text" class="entry-input" placeholder="Add a new item...">
+    </div>
+  </div>
+</div>
+
+
+<!-- Closed item -->
+<div class="row">
+  <div class="col-xs-12 item-container closed-borders top-large-gap">
+    <div class="col-xs-10">
+      <input type="text" class="entry-input" placeholder="Rename this item...">
+    </div>
+    <div class="col-xs-2">
+      <button class="large-edit-button" type="button">
+        <i class="fa fa-pencil" aria-hidden="true"></i>
+      </button>
+    </div>
+    <i class="fa fa-chevron-down entry-arrow" aria-hidden="true"></i>
+  </div>
+</div>
+
+
+<!-- Open item -->
+<div class="row">
+  <div class="col-xs-12 item-container top-open-borders top-large-gap">
+    <div class="col-xs-10">
+      <input type="text" class="entry-input" placeholder="Rename this item...">
+    </div>
+    <div class="col-xs-2">
+      <button class="large-edit-button" type="button">
+        <i class="fa fa-pencil" aria-hidden="true"></i>
+      </button>
+    </div>
+    <i class="fa fa-chevron-up entry-arrow" aria-hidden="true"></i>
+  </div>
+
+  <div class="col-xs-12 item-children-container">
+    <!-- Types go here -->
+  </div>
+
+  <div class="col-xs-12 item-container bottom-open-borders container-bottom"></div>
+</div>
+
+
+<!-- New type -->
+<div class="row container-row">
+  <div class="col-xs-12 type-container closed-borders top-med-gap bot-med-gap">
+    <div class="col-xs-12">
+      <input type="text" class="entry-input" placeholder="Add a new type...">
+    </div>
+  </div>
+</div>
+
+
+<!-- Closed type -->
+<div class="row container-row">
+  <div class="col-xs-12 type-container closed-borders top-med-gap">
+    <div class="col-xs-10">
+      <input type="text" class="entry-input" placeholder="Rename this type...">
+    </div>
+    <div class="col-xs-2">
+      <button class="med-edit-button" type="button">
+        <i class="fa fa-pencil" aria-hidden="true"></i>
+      </button>
+    </div>
+    <i class="fa fa-chevron-down entry-arrow" aria-hidden="true"></i>
+  </div>
+</div>
+
+
+<!-- Open type -->
+<div class="row container-row">
+  <div class="col-xs-12 type-container top-open-borders top-med-gap">
+    <div class="col-xs-10">
+      <input type="text" class="entry-input" placeholder="Rename this type...">
+    </div>
+    <div class="col-xs-2">
+      <button class="med-edit-button" type="button">
+        <i class="fa fa-pencil" aria-hidden="true"></i>
+      </button>
+    </div>
+    <i class="fa fa-chevron-up entry-arrow" aria-hidden="true"></i>
+  </div>
+
+  <div class="col-xs-12 type-children-container">
+    <!-- Sizes go here -->
+  </div>
+
+  <div class="col-xs-12 type-container bottom-open-borders container-bottom"></div>
+</div>
+
+
+<!-- New Size -->
+<div class="row container-row">
+  <div class="col-xs-12 size-container closed-borders top-smol-gap">
+    <div class=" col-xs-12">
+      <input type="text" class="entry-input" placeholder="Add a new size...">
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Size -->
+<div class="row container-row">
+  <div class="col-xs-12 size-container closed-borders top-smol-gap">
+    <div class="col-xs-10">
+      <input type="text" class="entry-input" placeholder="Rename this size...">
+    </div>
+    <div class="col-xs-2">
+      <button class="smol-edit-button" type="button">
+        <i class="fa fa-pencil" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Editor overlay -->
+<div class="editor-darkener">
+  <div class="row container-row editor-row" style="width: 720px;">
+    <div class="col-xs-12 <!-- Entry type goes here -->-container closed-borders" style="top: 100px;">
+      <div class="col-xs-10">
+        <input type="text" class="entry-input" placeholder="Rename this <!-- Entry type goes here -->...">
+      </div>
+      <div class="col-xs-2">
+        <button class="large-edit-button" type="button">
+          <i class="fa fa-pencil" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="col-xs-12 col-sm-6">
+        <div style="padding-bottom: 52%"></div>
+        <div class="entry-image"></div>
+      </div>
+      <div class="col-xs-12 col-sm-6" style="padding: 5px;">
+        <textarea rows="3" class="entry-input" placeholder="Add a description... (80 character limit)"></textarea>
+        <div class="entry-price-container center-when-mobile">
+          <div>
+            <span>$</span>
+          </div>
+          <input type="text" placeholder="Price...">
+        </div>
+        <div class="entry-delete-button center-when-mobile">
+          Delete
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

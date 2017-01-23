@@ -58,6 +58,11 @@ app.get(
   '/auth/facebook/callback',
   passport.authenticate('facebook', { successRedirect: '/', failureRedirect: '/landing', failureFlash: true })
 );
+app.get(
+  '/test',
+  (req, res) => res.render('test', {title: 'test'})
+
+)
 
 // curl to this in order to add new codes for new companies
 app.post('/newCodeVerySecret', userController.newCode);

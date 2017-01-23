@@ -245,6 +245,9 @@
       font-size: @large_input_fontsize;
     }
   }
+  &.container-bottom {
+    height: @large_input_fontsize;
+  }
 }
 
 
@@ -257,6 +260,9 @@
     & > input {
       font-size: @med_input_fontsize;
     }
+  }
+  &.container-bottom {
+    height: @med_input_fontsize;
   }
 }
 
@@ -271,16 +277,6 @@
       font-size: @smol_input_fontsize;
     }
   }
-}
-
-textarea.entry-input {
-  font-size: @editor_input_fontsize;
-  background-color: @editor_input_background_color;
-  border-style: solid;
-  border-width: 1px;
-  border-color: @raised_border_color;
-  max-width: 300px;
-  margin-bottom: @editor_gap;
 }
 
 .entry-input {
@@ -301,6 +297,37 @@ textarea.entry-input {
     border: solid @raised_border_color 1px;
     transform: scale(.995);
   }
+}
+
+textarea.entry-input {
+  font-size: @editor_input_fontsize;
+  background-color: @editor_input_background_color;
+  border-style: solid;
+  border-width: 1px;
+  border-color: @raised_border_color;
+  max-width: 300px;
+  margin-bottom: @editor_gap;
+}
+
+.editor-darkener {
+  cursor: pointer;
+  background: rgba(0,0,0,.6);
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 1031;
+  .item-container,
+  .type-container,
+  .size-container {
+    cursor: default;
+  }
+}
+
+.editor-row {
+  position:relative;
+  margin: auto;
 }
 
 .entry-price-container {
@@ -346,6 +373,7 @@ textarea.entry-input {
 
 .entry-delete-button {
   bottom: 0;
+  cursor: pointer;
   display: table;
   background-color: @editor_delete_background_color;
   border: 1px solid @editor_delete_border_color;
