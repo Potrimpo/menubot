@@ -108,22 +108,47 @@
 @mobi_med_gap: 4px;
 @mobi_smol_gap: 4px;
 
+@editor_gap: 10px;
+
 @large_input_fontsize: 25px;
 @med_input_fontsize: 20px;
 @smol_input_fontsize: 17px;
+@editor_input_fontsize: 17px;
+
+@editor_input_background_color: #e0e0e0;
+@editor_delete_background_color: #d9534f;
+@editor_delete_background_color_hover: #c9302c;
 
 @raised_background_color: #e8e8e8;
 @lowered_background_color: #cfcfcf;
 @extra_lowered_background_color: #b8b8b8;
 
 @raised_border_color: #b5b5b5;
+@editor_delete_border_color: #d43f3a;
+@editor_delete_border_color_hover: #ac2925;
 
 @default_border_radius: 3px;
 
 .subtle_box_shadow () {
+  -webkit-box-shadow: 0 3px 15px rgba(0, 0, 0, .2);
+  -moz-box-shadow: 0 3px 15px rgba(0, 0, 0, .2);
   box-shadow: 0 3px 15px rgba(0, 0, 0, .2);
 }
+.subtle_inset_box_shadow () {
+  -webkit-box-shadow: inset 0 3px 15px rgba(0, 0, 0, .2);
+  -moz-box-shadow: inset 0 3px 15px rgba(0, 0, 0, .2);
+  box-shadow: inset 0 3px 15px rgba(0, 0, 0, .2);
+}
 
+.noselect () {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari*/
+     -khtml-user-select: none; /* Konqueror */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
 
 
 
@@ -150,6 +175,8 @@
     border-color: @raised_border_color;
     border-style: solid;
   }
+
+  .center-when-mobile {margin: 0 auto;}
 }
 
 @media (min-width:401px) {
@@ -175,6 +202,8 @@
     border-color: @raised_border_color;
     border-style: solid;
   }
+
+  .center-when-mobile {}
 }
 
 .closed-borders {
@@ -210,9 +239,9 @@
   cursor: pointer;
   background-color: @raised_background_color;
   padding: 4px;
-  div {
+  & > div {
     padding: 0;
-    input {
+    & > input {
       font-size: @large_input_fontsize;
     }
   }
@@ -223,9 +252,9 @@
   cursor: pointer;
   background-color: @raised_background_color;
   padding: 4px;
-  div {
+  & > div {
     padding: 0;
-    input {
+    & > input {
       font-size: @med_input_fontsize;
     }
   }
@@ -236,14 +265,23 @@
   cursor: pointer;
   background-color: @raised_background_color;
   padding: 4px;
-  div {
+  & > div {
     padding: 0;
-    input {
+   & > input {
       font-size: @smol_input_fontsize;
     }
   }
 }
 
+textarea.entry-input {
+  font-size: @editor_input_fontsize;
+  background-color: @editor_input_background_color;
+  border-style: solid;
+  border-width: 1px;
+  border-color: @raised_border_color;
+  max-width: 300px;
+  margin-bottom: @editor_gap;
+}
 
 .entry-input {
   padding: 0 3px 0 3px;
@@ -254,8 +292,11 @@
   border: solid @raised_background_color 1px;
   border-radius: @default_border_radius;
   transition: box-shadow .3s, border .3s, transform .3s;
+
   &.focus,
   &:focus {
+    -webkit-box-shadow: inset 1px 1px 1px 1px rgba(0, 0, 0, .2);
+    -moz-box-shadow: inset 1px 1px 1px 1px rgba(0, 0, 0, .2);
     box-shadow: inset 1px 1px 1px 1px rgba(0, 0, 0, .2);
     border: solid @raised_border_color 1px;
     transform: scale(.995);
@@ -263,37 +304,62 @@
 }
 
 .entry-price-container {
+  margin-bottom: @editor_gap;
+  display: table;
   div {
-    padding: 2px 4px 2px 4px;
+    padding: 0 4px 0 4px;
+    margin-right: -1px;
     border-style: solid;
     border-width: 1px;
-    border-radius: 4px 0 0 4px;
+    border-radius: @default_border_radius 0 0 @default_border_radius;
     border-color: @raised_border_color;
     cursor: default;
     display: inline-block;
-    div {
+    background-color: @editor_input_background_color;
+    span {
       color: #000;
       margin: auto;
-      font-size: 17px;
+      font-size: @editor_input_fontsize;
     }
   }
 
   input {
     border-style: solid;
     border-width: 1px;
-    border-radius: 0 4px 4px 0;
+    border-radius: 0 @default_border_radius @default_border_radius 0;
     border-color: @raised_border_color;
     display: inline-block;
-    font-size: 17px;
+    font-size: @editor_input_fontsize;
     width: 4em;
     padding: 0 3px 0 3px;
-    background-color: @raised_background_color;
+    background-color: @editor_input_background_color;
     outline: 0;
     transition: box-shadow .3s;
     &.focus,
     &:focus {
+      -webkit-box-shadow: inset 1px 1px 1px 1px rgba(0, 0, 0, .2);
+      -moz-box-shadow: inset 1px 1px 1px 1px rgba(0, 0, 0, .2);
       box-shadow: inset 1px 1px 1px 1px rgba(0, 0, 0, .2);
     }
+  }
+}
+
+.entry-delete-button {
+  bottom: 0;
+  display: table;
+  background-color: @editor_delete_background_color;
+  border: 1px solid @editor_delete_border_color;
+  border-radius: @default_border_radius;
+  padding: 0 4px 0 4px;
+  color: white;
+  font-size: @editor_input_fontsize;
+  .noselect;
+  &:hover {
+    background-color: @editor_delete_background_color_hover;
+    border-color: @editor_delete_border_color_hover;
+  }
+  &:active {
+    .subtle_inset_box_shadow;
   }
 }
 
@@ -314,7 +380,7 @@
   font-size: 23px;
 }
 
-.large-remove-button {
+.large-edit-button {
   float: right;
   background-color: inherit;
   border: none;
@@ -325,7 +391,7 @@
   }
 }
 
-.med-remove-button {
+.med-edit-button {
   float: right;
   background-color: inherit;
   border: none;
@@ -336,7 +402,7 @@
   }
 }
 
-.smol-remove-button {
+.smol-edit-button {
   float: right;
   background-color: inherit;
   border: none;
