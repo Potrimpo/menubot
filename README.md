@@ -578,12 +578,15 @@ sudo /etc/init.d/postgresql restart
 
 There are _some_ executable tests, though not a whole lot of coverage yet.
 
+#### Setting test environment up
+
 To run some of these tests, values must be added to the `local-dev-variables.js` file
 
 ```
 module.exports = {
     tunnelURL: <your ngrok url>,
     senderID: <page-scoped facebook ID of user to spoof messages from>,
+    companyOwnerID: <facebook ID of person who owns the page you're testing with>,
     testPageID: <the ID of the facebook page you're using for testing>,
 
     // these should already be in your file, for running server in dev environment
@@ -595,7 +598,9 @@ module.exports = {
     password: <Facebook account password>
 };
 ```
-#### Setting test environment up
+
+##### Selenium tests (currently not useful)
+
 > Using selenium to run automatic browser use-case tests, it requires a bit of installation
 
 ```
@@ -604,6 +609,18 @@ brew install geckodriver // sorry david idk how its done on linux
 ```
 
 #### Running tests
+
+##### Mocha
+
+ensure postgres & redis-server are currently running &
+`config/local-dev-variables.js` is set up properly
+
+```
+npm test
+```
+
+##### Selenium
+
 Two separate terminal tabs
  
 (warning: firefox will launch & run through the bot frontend, do not be alarmed)
