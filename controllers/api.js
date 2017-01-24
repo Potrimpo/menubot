@@ -3,7 +3,7 @@ const express = require('express'),
   fetch = require('node-fetch'),
   R = require('ramda'),
   db = require('../repositories/site/CompanyRepository'),
-  { activateBot, deactivateBot } = require('./activateAccount');
+  { activateBot, deactivateBot } = require('./activate-bot');
 
 router.route('/activate/:fbid')
   .get((req, res) =>
