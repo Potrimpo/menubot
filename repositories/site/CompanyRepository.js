@@ -10,12 +10,27 @@ exports.findUserCompanies = accounts =>
 
 exports.findCompany = (id) => Company.findById(id);
 
-exports.getMenuItemsByCompId = id =>
+
+exports.getMenuItemsByCompId = compId =>
   sequelize.query(
     "SELECT i.itemid, i.item, i.item_photo, i.item_price FROM items AS i" +
-    " WHERE i.fbid = $1" +
+    " WHERE i.fbid = :compId" +
     " ORDER BY itemid ASC",
-    { bind: [id], type: sequelize.QueryTypes.SELECT });
+    { replacements: { compId }, type: sequelize.QueryTypes.SELECT });
+
+exports.getMenuTypesByCompId = compId =>
+  sequelize.query(
+    "SELECT t.itemid, t.fbid, t.type, t.typeid, t.type_photo, t.type_price FROM types AS t" +
+    " WHERE t.fbid = :compId" +
+    " ORDER BY typeid ASC",
+    { replacements: { compId }, type: sequelize.QueryTypes.SELECT });
+
+exports.getMenuSizesByCompId = compId =>
+  sequelize.query(
+    "SELECT typeid, fbid, size, sizeid, size_price FROM sizes" +
+    " WHERE fbid = :compId" +
+    " ORDER BY sizeid ASC",
+    { replacements: { compId }, type: sequelize.QueryTypes.SELECT });
 
 
 exports.getCompanyMenu = id =>

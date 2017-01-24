@@ -4,14 +4,17 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux'
 import thunk from 'redux-thunk'
 import reducer from './reducers'
-import App from './containers/AppCont'
+import AppCont from './containers/AppCont'
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const middleware = [ thunk ];
 
 const init = {
-  fbid: document.getElementById("root").getAttribute("name")
+  fbid: document.getElementById("root").getAttribute("name"),
+  items: {},
+  types: {},
+  sizes: {}
 }
 
 const store = createStore(
@@ -22,7 +25,7 @@ const store = createStore(
 
 render(
   <Provider store={store}>
-    <App />
+    <AppCont />
   </Provider>,
   document.getElementById('root')
 );

@@ -3,14 +3,16 @@ import { connect } from 'react-redux'
 import AppComp from '../components/AppComp'
 import { map } from 'ramda'
 
-const returnItems = (entries) = {
-  return entries
-};
+const mapStateToProps = state => {
+  console.log(state);
+  const returnedState = {
+    fbid: state.fbid,
+    items: Object.values(state.items)
+  };
+  console.log(returnedState);
+  return returnedState;
+}
 
-const mapStateToProps = state => return {
-  items: Object.values(state.items)
-};
+const AppCont = connect(mapStateToProps)(AppComp);
 
-const App = connect(mapStateToProps)(AppComp);
-
-export default App
+export default AppCont
