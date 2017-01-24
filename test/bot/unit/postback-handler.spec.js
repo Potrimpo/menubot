@@ -5,7 +5,7 @@ const expect = require('chai').expect,
   R = require('ramda'),
   { sequelize } = require('../../../database/models/index'),
   postbackHandler = require('../../../messaging/response-logic/postback-handler'),
-  db = require('../../db-test-calls'),
+  db = require('../db-bot-test-calls'),
   time = require('../../../messaging/time-management'),
   txt = require('../../../messaging/message-list'),
   dev = require('../../../config/local-dev-variables');
@@ -125,11 +125,12 @@ describe('testing postbackHandler w mocked input', function() {
       return postbackHandler(postback, ids, time)
         .then(resp => {
           const msg = validatePayload(resp),
-            title = R.head(pullItemNames(msg));
+            title = R.head(pullItemNames(msg)),
+            expectedResponse = `1x ${item.toUpperCase()}`;
 
           expect(msg).to.be.an('array');
           expect(msg).to.have.length(1);
-          expect(title).to.equal(item.toUpperCase());
+          expect(title).to.equal(expectedResponse);
         });
     });
 
