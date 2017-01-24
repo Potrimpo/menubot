@@ -20,7 +20,8 @@ const config = {
         test: /\.jsx?/,
         include: [JSX_DIR, JS_DIR],
         loader: 'babel'
-      }
+      },
+      { test: /\.json$/, loader: "json-loader"}
     ]
   },
   resolve: {

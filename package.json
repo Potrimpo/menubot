@@ -34,6 +34,7 @@
     "express-session": "^1.13.0",
     "express-validator": "^2.20.4",
     "fbgraph": "^1.1.0",
+    "json-loader": "^0.5.4",
     "less": "2.5.1",
     "lusca": "^1.4.1",
     "method-override": "^2.3.5",

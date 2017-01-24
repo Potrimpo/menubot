@@ -1,7 +1,8 @@
 const db = require('../repositories/site/CompanyRepository');
 
 class Size {
-  constructor ({ typeid, parentId, sizeid, id, size, size_price, price }) {
+  constructor ({ fbid, typeid, parentId, sizeid, id, size, size_price, price }) {
+    this.fbid = fbid;
     this.typeid = typeid || parentId;
     this.sizeid = sizeid || id;
     this.size = size;
@@ -9,7 +10,7 @@ class Size {
   }
 
   dbInsert () {
-    return db.insertSize(this.size, this.typeid)
+    return db.insertSize(this.size, this.typeid, this.fbid)
       .catch(err => console.error("error inserting Size into database:", err));
   }
 

@@ -13,9 +13,9 @@ exports.findCompany = (id) => Company.findById(id);
 exports.getMenuItemsByCompId = id =>
   sequelize.query(
     "SELECT i.itemid, i.item, i.item_photo, i.item_price FROM items AS i" +
-    " WHERE i.fbid = :id" +
+    " WHERE i.fbid = $1" +
     " ORDER BY itemid ASC",
-    { replacements: { id }, item: sequelize.Queryitems.SELECT });
+    { bind: [id], type: sequelize.QueryTypes.SELECT });
 
 
 exports.getCompanyMenu = id =>
@@ -52,9 +52,9 @@ exports.insertItem = (fbid, item) =>
   Item.create({ fbid, item })
     .catch(err => console.error("error inserting menu item:", err));
 
-exports.insertType = (type, itemid) =>
+exports.insertType = (type, itemid, fbid) =>
   sequelize.transaction(t  =>
-    Type.create({ itemid, type }, { transaction: t })
+    Type.create({ itemid, type, fbid }, { transaction: t })
       .then(() =>
         Item.update({
           item_price: null
@@ -64,9 +64,9 @@ exports.insertType = (type, itemid) =>
         })))
     .catch(err => console.error("error in insertType transaction", err));
 
-exports.insertSize = (size, typeid) =>
+exports.insertSize = (size, typeid, fbid) =>
   sequelize.transaction(t  =>
-    Size.create({ typeid, size }, { transaction: t })
+    Size.create({ typeid, size, fbid }, { transaction: t })
       .then(() =>
         Type.update({
           type_price: null

@@ -1,6 +1,13 @@
 module.exports = function (sequelize, Sequelize) {
 
   return sequelize.define('Size', {
+    fbid: {
+      type: Sequelize.BIGINT,
+      references: {
+        model: 'companies',
+        key: 'fbid'
+      },
+    },
     typeid: {
       type: Sequelize.INTEGER,
       references: {
