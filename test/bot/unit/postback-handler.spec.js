@@ -83,9 +83,8 @@ describe('testing postbackHandler w mocked input', function() {
   describe('set fields, existing menu, etc', function () {
 
     const item = "Coffee",
-          price = 3;
-
-    const expectedTitle = item.toUpperCase() + ' - $' + price;
+          price = 3,
+          quantity = 4;
 
     const tStamp = Date.now(),
       tz = 'Pacific/Auckland';
@@ -97,7 +96,7 @@ describe('testing postbackHandler w mocked input', function() {
         .then(_ =>
           db.insertItem(dev.testPageID, item, price))
         .then(x =>
-          db.createOrder(dev.testPageID, dev.senderID, orderTime, x.itemid))
+          db.createOrder(dev.testPageID, dev.senderID, orderTime, x.itemid, quantity))
         .then(_ =>
           db.setOpen(dev.testPageID))
         .then(_ =>
@@ -111,10 +110,12 @@ describe('testing postbackHandler w mocked input', function() {
       return postbackHandler(postback, ids, time)
         .then(resp => {
           const msg = validatePayload(resp);
+          const expectedTitle = item.toUpperCase() + ' - $' + price;
+          const title = pullTitle(R.head(msg));
 
           expect(msg).to.be.an('array');
           expect(msg).to.have.length(1);
-          expect(R.head(pullItemNames(msg))).to.equal(expectedTitle);
+          expect(title).to.equal(expectedTitle);
         });
     });
 
@@ -124,13 +125,19 @@ describe('testing postbackHandler w mocked input', function() {
 
       return postbackHandler(postback, ids, time)
         .then(resp => {
-          const msg = validatePayload(resp),
-            title = R.head(pullItemNames(msg)),
-            expectedResponse = `1x ${item.toUpperCase()}`;
-
+          const msg = validatePayload(resp);
           expect(msg).to.be.an('array');
           expect(msg).to.have.length(1);
-          expect(title).to.equal(expectedResponse);
+
+          const order = R.head(msg);
+          const title = pullTitle(order);
+          const subtitle = pullSubtitle(order);
+
+          const expectedTitle = `${quantity}x ${item.toUpperCase()}`,
+                expectedSubtitle = `$${quantity * price}`
+
+          expect(title).to.equal(expectedTitle);
+          expect(subtitle).to.contain(expectedSubtitle);
         });
     });
 
@@ -173,4 +180,5 @@ const pullMessage = R.prop('text');
 
 const postbackFactory = intent => JSON.stringify({ intent });
 const validatePayload = R.path(['attachment', 'payload', 'elements']);
-const pullItemNames = R.pluck('title');
+const pullTitle = R.prop('title');
+const pullSubtitle = R.prop('subtitle');

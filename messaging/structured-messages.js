@@ -107,17 +107,17 @@ function orders(orders) {
     if (val.size) {
       return {
         title: `${val.quantity}x ${val.size.toUpperCase()} ${val.type.toUpperCase()} ${val.item.toUpperCase()}`,
-        subtitle: `$${val.size_price} @ ${readableTime}`
+        subtitle: `$${val.quantity * val.size_price} @ ${readableTime}`
       };
     } else if (val.type) {
       return {
         title: `${val.quantity}x ${val.type.toUpperCase()} ${val.item.toUpperCase()}`,
-        subtitle: `$${val.type_price} @ ${readableTime}`
+        subtitle: `$${val.quantity * val.type_price} @ ${readableTime}`
       }
     } else {
       return {
         title: `${val.quantity}x ${val.item.toUpperCase()}`,
-        subtitle: `$${val.item_price} @ ${readableTime}`
+        subtitle: `$${val.quantity * val.item_price} @ ${readableTime}`
       }
     }
   });
