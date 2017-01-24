@@ -10,6 +10,14 @@ exports.findUserCompanies = accounts =>
 
 exports.findCompany = (id) => Company.findById(id);
 
+exports.getMenuItemsByCompId = id =>
+  sequelize.query(
+    "SELECT i.itemid, i.item, i.item_photo, i.item_price FROM items AS i" +
+    " WHERE i.fbid = :id" +
+    " ORDER BY itemid ASC",
+    { replacements: { id }, item: sequelize.Queryitems.SELECT });
+
+
 exports.getCompanyMenu = id =>
   sequelize.query(
     "SELECT c.name, c.bot_status, c.location, c.opentime, c.closetime, c.status, i.*" +

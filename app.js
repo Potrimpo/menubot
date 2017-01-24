@@ -27,6 +27,7 @@ const homeController = require('./controllers/home'),
   userController = require('./controllers/user'),
   apiController = require('./controllers/api'),
   companyController = require('./controllers/company'),
+  testController = require('./controllers/test'),
   contactController = require('./controllers/contact'),
   messengerMiddleware = require('./controllers/messengerMiddleware');
 
@@ -58,11 +59,8 @@ app.get(
   '/auth/facebook/callback',
   passport.authenticate('facebook', { successRedirect: '/', failureRedirect: '/landing', failureFlash: true })
 );
-app.get(
-  '/test',
-  (req, res) => res.render('test', {title: 'test'})
-
-)
+//For testing the configuration page react rewrite
+app.use('/test', testController)
 
 // curl to this in order to add new codes for new companies
 app.post('/newCodeVerySecret', userController.newCode);
