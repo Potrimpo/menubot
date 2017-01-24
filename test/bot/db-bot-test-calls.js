@@ -1,4 +1,4 @@
-const { Company, Item, Order } = require('../database/models/index');
+const { Company, Item, Order } = require('../../database/models/index');
 
 const deleteMenu = fbid =>
   Item.destroy({
