@@ -1,6 +1,7 @@
 node_modules
 performanceLogs
 .idea
+.vscode
 *.log
 output.json
 dist/js
