@@ -70,14 +70,12 @@ function createAcc(accessToken, profile) {
         .catch(err => rej("error getting pageAccessToken", err));
     });
     return res(Promise.all(accounts));
-
   })
   .then(accounts =>
     User.create({
       facebookId: profileId,
       name: profile.name.givenName + ' ' + profile.name.familyName,
       photo: 'https://graph.facebook.com/' + profile.id+ '/picture?type=large',
-      profile: { name: profile._json.first_name },
       accounts,
       email: profile._json.email || (profileId + '@facebook.com'),
       token: accessToken,

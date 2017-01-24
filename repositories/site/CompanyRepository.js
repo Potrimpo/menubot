@@ -142,13 +142,13 @@ exports.orderComplete = ids =>
 const matchFbid = (id, accounts) =>
   R.find(R.propEq('fbid', id), accounts);
 
-exports.linkCompany = (id, facebookId, timezone) =>
+exports.linkCompany = (userId, pageId, timezone) =>
   User.findOne({
     attributes: ['accounts'],
-    where: { id }
+    where: { id: userId }
   })
     .then(user => {
-      const { fbid, name, access_token } = matchFbid(facebookId, user.accounts);
+      const { fbid, name, access_token } = matchFbid(pageId, user.accounts);
       return sequelize.query(
         "INSERT INTO companies (fbid, name, access_token, timezone)" +
         " VALUES (:fbid, :name, :access_token, :timezone)" +
