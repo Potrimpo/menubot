@@ -599,6 +599,16 @@ module.exports = {
 };
 ```
 
+* `senderID` should be the id that the facebook bot sees the customer as.
+(not useable outside that individual page)
+    > found with `select customer_id from customers;` after messaging the page
+
+* `companyOwnerID` should be globally useable fbid of the person who owns the page you're testing
+    > found with `select "facebookId" from pl_users;`
+
+* `testPageID` should be the fbid of the bot-activated page
+    > found with `select fbid from companies;` after pressing the "create menu for page" button on site homepage
+
 ##### Selenium tests (currently not useful)
 
 > Using selenium to run automatic browser use-case tests, it requires a bit of installation
@@ -619,7 +629,7 @@ ensure postgres & redis-server are currently running &
 npm test
 ```
 
-##### Selenium
+##### Selenium (currently not used)
 
 Two separate terminal tabs
  
