@@ -12,6 +12,9 @@ const Delay =({currentDelayTime, handleChange}) => {
             <option value="15">15 minutes</option>
             <option value="20">20 minutes</option>
             <option value="25">25 minutes</option>
+            <option value="30">30 minutes</option>
+            <option value="35">35 minutes</option>
+            <option value="40">40 minutes</option>
           </select>
         </div>
       </form>

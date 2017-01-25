@@ -4,6 +4,7 @@ const orderAttempt = {
   tooLate: (open, close) => `Sorry! We're only open between ${open} and ${close} today!`,
   minimumWait: delay => `Sorry, it'll be at least ${delay} minutes before we can get that to you!`,
   noTime: "Sorry, we couldn't understand the time you gave us",
+  howMany: "How many would you like?",
   error: "Sorry, we had some trouble processing that"
 };
 

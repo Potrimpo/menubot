@@ -1,4 +1,4 @@
-const { Company, Item, Order } = require('../database/models/index');
+const { Company, Item, Order } = require('../../database/models/index');
 
 const deleteMenu = fbid =>
   Item.destroy({
@@ -32,12 +32,13 @@ const insertItem = (fbid, name, price) =>
     item_price: price
   });
 
-const createOrder = (fbid, userId, time, itemid) =>
+const createOrder = (fbid, userId, time, itemid, quantity) =>
   Order.create({
     fbid,
     customer_id: userId,
     pickuptime: time,
-    itemid
+    itemid,
+    quantity
   });
 
 const setOpen = fbid =>

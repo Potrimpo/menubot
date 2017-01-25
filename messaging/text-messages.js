@@ -1,5 +1,5 @@
 const Identity = require('ramda-fantasy').Identity,
-  { redisRecordOrder } = require('./../state-and-sessions/messengerSessions'),
+  { redisRecordOrder, redisRetrieveOrder } = require('./../state-and-sessions/messengerSessions'),
   time = require('./time-management'),
   QR = require('./quick-replies'),
   structured = require('./structured-messages'),
@@ -41,7 +41,8 @@ function open (data, fbUserId, payload, resp, timestamp) {
 
   // no quickreplies if successful
   return redisRecordOrder(fbUserId, payload)
-    .then(() => txt.orderAttempt.open)
+    .then(() =>
+      wrapQuickreplies(txt.orderAttempt.howMany, QR.quantityReplies(payload.price)))
     .catch(() =>
       Object.assign(resp, { text: txt.orderAttempt.error })
     );
@@ -68,11 +69,30 @@ const hasOrders = xs =>
 const menu = xs =>
   emptyArray(xs) ? structured.items(xs) : wrapQuickreplies(txt.emptyMenu, QR.basicReplies);
 
+const quantity = (pageId, userId, payload) =>
+  redisRetrieveOrder(userId)
+    .then((order) => {
+      const newOrder = {
+        itemid: order.itemid,
+        typeid: order.typeid,
+        sizeid: order.sizeid,
+        quantity: payload.quantity
+      };
+      return redisRecordOrder(userId, newOrder)
+    })
+    .then(() => ({
+      text: txt.orderAttempt.open
+    }))
+    .catch(_ => ({
+      text: txt.orderAttempt.error
+    }));
+
 module.exports = {
   defaultResponse,
   hours,
   openStatus,
   location,
   hasOrders,
+  quantity,
   menu
 };

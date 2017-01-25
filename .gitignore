@@ -4,6 +4,7 @@ dump.rdb
 errorShots
 *.log
 .idea
+.vscode
 output.json
 dist/js
 dist/css

@@ -25,6 +25,9 @@ const intentSwitch = (payload, ids, timestamp) => {
     case 'ORDER':
       return commands.placeOrder(ids.pageId, ids.userId, payload, timestamp);
 
+    case 'QUANTITY':
+      return commands.setQuantity(ids.pageId, ids.userId, payload);
+
     case 'MY_ORDERS':
       return commands.myOrders(ids.userId);
 

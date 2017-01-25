@@ -27,6 +27,7 @@ class Order {
         this.customer_id = fields.customer_id;
         this.pickuptime = fields.pickuptime;
         this.timezone = timezone;
+        this.quantity = fields.quantity;
 
         if (fields.itemid) {
           this.itemVals = new Item(fields);
@@ -81,6 +82,7 @@ class Order {
 
   get confirmationMsg () {
     const responses = [];
+    const numbers = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
 
     responses.push(
       orderConfirm("Success!"));
@@ -88,17 +90,17 @@ class Order {
     switch (this.depth) {
       case "item":
         responses.push(
-          orderConfirm(`Order for one ${this.itemVals.item} @ ${this.readableTime}`));
+          orderConfirm(`Order for ${numbers[this.quantity]} ${this.itemVals.item} @ ${this.readableTime}`));
         break;
 
       case "type":
         responses.push(
-          orderConfirm(`Order for one ${this.typeVals.type} ${this.itemVals.item} @ ${this.readableTime}`));
+          orderConfirm(`Order for ${numbers[this.quantity]} ${this.typeVals.type} ${this.itemVals.item} @ ${this.readableTime}`));
         break;
 
       case "size":
         responses.push(
-          orderConfirm(`Order for one ${this.sizeVals.size} ${this.typeVals.type} ${this.itemVals.item} @ ${this.readableTime}`));
+          orderConfirm(`Order for ${numbers[this.quantity]} ${this.sizeVals.size} ${this.typeVals.type} ${this.itemVals.item} @ ${this.readableTime}`));
         break;
     }
 

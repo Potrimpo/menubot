@@ -1,4 +1,5 @@
-const moment = require('moment-timezone'),
+const R = require('ramda'),
+  moment = require('moment-timezone'),
   { sequelize, Company, User, Item, Type, Size, Order } = require('../../database/models/index');
 
 exports.findUserCompanies = accounts =>
@@ -138,7 +139,8 @@ exports.orderComplete = ids =>
     " WHERE orderid IN (:ids)",
     { replacements: { ids }, type: sequelize.QueryTypes.UPDATE });
 
-// const matchFbid = R.find(R.propEq('fbid'));
+const matchFbid = (id, accounts) =>
+  R.find(R.propEq('fbid', id), accounts);
 
 exports.linkCompany = (id, facebookId, timezone) =>
   User.findOne({
@@ -146,8 +148,7 @@ exports.linkCompany = (id, facebookId, timezone) =>
     where: { id }
   })
     .then(user => {
-      const { fbid, name, access_token } = user.accounts.filter(v => v.fbid == facebookId)[0];
-      // const { fbid, name, access_token } = matchFbid(user.accounts, facebookId);
+      const { fbid, name, access_token } = matchFbid(facebookId, user.accounts);
       return sequelize.query(
         "INSERT INTO companies (fbid, name, access_token, timezone)" +
         " VALUES (:fbid, :name, :access_token, :timezone)" +

@@ -22,6 +22,9 @@ const placeOrder = (pageId, userId, payload, timestamp) =>
   db.checkOpenStatus(pageId)
     .then(status => text.openStatus(status, userId, payload, timestamp));
 
+const setQuantity = (pageId, userId, payload) =>
+  text.quantity(pageId, userId, payload);
+
 const myOrders = userId =>
   db.ordersbyUserid(userId)
     .then(xs => text.hasOrders(xs));
@@ -35,6 +38,7 @@ module.exports = {
   getTypes,
   getSizes,
   placeOrder,
+  setQuantity,
   myOrders,
   getHours,
   getLocation
