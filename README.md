@@ -626,6 +626,7 @@ ensure postgres & redis-server are currently running &
 `config/local-dev-variables.js` is set up properly
 
 ```
+cd /path/to/menubot
 npm test
 ```
 
