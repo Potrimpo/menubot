@@ -1,34 +1,77 @@
-import React, { PropTypes } from 'react'
-import Please from 'pleasejs'
+import React, { PropTypes, Component } from 'react'
+import { debounce } from 'throttle-debounce';
+
+import TypeCont from '../containers/TypeCont'
 
 
-const Item = ({item, itemid, item_price, item_photo, types}) => {
-  const color = Please.make_color({base_color: '#B9F6CA'});
-  const border_color = Please.make_color({base_color: '#a9e0b8'});
+const Item = ({changeItemName, changeFurl, item, furl, types, fbid}) => {
+  if (furl == false) {
+    return (
+      <div className="row">
+        <div
+          className="col-xs-12 item-container closed-borders top-large-gap"
+          onClick={changeFurl}
+        >
+          <div className="col-xs-10">
+            <input
+              type="text"
+              className="entry-input"
+              placeholder="Rename this item..."
+              value={item}
+              onChange={changeItemName}
+              onClick={(e) => e.stopPropagation()}
+            >
+            </input>
+          </div>
 
-  return (
-  <div className="row">
-    <div
-      className="col-xs-12 item-container closed-borders top-large-gap"
-      style={{borderColor: border_color, backgroundColor:color}}
-    >
-      <div className="col-xs-10">
-        <input
-          type="text"
-          className="entry-input"
-          placeholder="Rename this item..."
-          value={item}>
-        </input>
+          <div className="col-xs-2">
+            <button className="large-edit-button" type="button">
+              <i className="fa fa-pencil" aria-hidden="true"></i>
+            </button>
+          </div>
+          <i className="fa fa-chevron-down entry-arrow" aria-hidden="true"></i>
+        </div>
       </div>
-      <div className="col-xs-2">
-        <button className="large-edit-button" type="button">
-          <i className="fa fa-pencil" aria-hidden="true"></i>
-        </button>
+    )
+  } else {
+    return (
+      <div className="row">
+        <div className="col-xs-12 item-container top-open-borders top-large-gap">
+          <div className="col-xs-10">
+            <input
+              type="text"
+              className="entry-input"
+              placeholder="Rename this item..."
+              value={item}
+              onChange={changeItemName}
+              onClick={(e) => e.stopPropagation()}
+            >
+            </input>
+          </div>
+          <div className="col-xs-2">
+            <button className="large-edit-button" type="button">
+              <i className="fa fa-pencil" aria-hidden="true"></i>
+            </button>
+          </div>
+          <i className="fa fa-chevron-up entry-arrow" aria-hidden="true"></i>
+        </div>
+
+        <div className="col-xs-12 item-children-container">
+          {types.map((type, i) =>
+            <TypeCont
+              key = {i}
+              typeid = {type.typeid}
+              fbid = {fbid}
+            />
+          )}
+        </div>
+
+        <div className="col-xs-12 item-container bottom-open-borders container-bottom"></div>
       </div>
-      <i className="fa fa-chevron-down entry-arrow" aria-hidden="true"></i>
-    </div>
-  </div>
-)};
+    )
+  }
+
+}
 
 
 export default Item

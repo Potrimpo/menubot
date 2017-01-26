@@ -10,7 +10,7 @@ exports.findUserCompanies = accounts =>
 
 exports.findCompany = (id) => Company.findById(id);
 
-
+//Configuration page rewrite database calls
 exports.getMenuItemsByCompId = compId =>
   sequelize.query(
     "SELECT i.itemid, i.item, i.item_photo, i.item_price FROM items AS i" +
@@ -32,6 +32,34 @@ exports.getMenuSizesByCompId = compId =>
     " ORDER BY sizeid ASC",
     { replacements: { compId }, type: sequelize.QueryTypes.SELECT });
 
+exports.changeItem = request =>
+  Item.update({
+    [request.column]: request.newValue
+  }, {
+    where: {
+      itemid: request.id
+    }
+  })
+
+exports.changeType = request =>
+  Type.update({
+    [request.column]: request.newValue
+  }, {
+    where: {
+      typeid: request.id
+    }
+  })
+
+exports.changeSize = request =>
+  Size.update({
+    [request.column]: request.newValue
+  }, {
+    where: {
+      sizeid: request.id
+    }
+  })
+
+//End of Configuration page rewrite database calls
 
 exports.getCompanyMenu = id =>
   sequelize.query(

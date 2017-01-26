@@ -1,18 +1,18 @@
 import React, { Component, PropTypes } from 'react'
-import ItemComp from './ItemComp'
-import NewItemComp from './NewItemComp'
 import fetch from 'node-fetch'
+import ItemCont from '../containers/ItemCont'
+import NewItemComp from './NewItemComp'
 
 
 class App extends Component {
   componentDidMount() {
-    const { fbid } = this.props;
-    const data = fetch('https://2fe4231b.ngrok.io/test/'+ fbid +'/confdata', {
+    const { fbid, dispatchMenu } = this.props;
+    const data = fetch(`https://48c63109.ngrok.io/test/${fbid}/nervecenter`, {
       method: 'GET'
     })
       .then((rsp) =>  rsp.json())
       .then((body) => {
-        console.log(body);
+        dispatchMenu(body)
       })
       .catch((err) => {console.log(err)});
   }
@@ -20,9 +20,12 @@ class App extends Component {
   render () {
     return (
       <div style={{'padding': '5px'}} className="col-xs-12 col-md-8 col-md-offset-2">
+        <p>{this.props.saving}</p>
         {this.props.items.map((item, i) =>
-          <ItemComp
-            {...item}
+          <ItemCont
+            key = {i}
+            itemid = {item.itemid}
+            fbid = {this.props.fbid}
           />
         )}
         <NewItemComp />

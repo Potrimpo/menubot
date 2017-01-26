@@ -1,18 +1,30 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import AppComp from '../components/AppComp'
-import { map } from 'ramda'
+import { initMenu } from '../actions.js'
 
-const mapStateToProps = state => {
-  console.log(state);
+
+const mapStateToProps = (state, ownProps) => {
+  console.log("The state is now: ", state);
   const returnedState = {
     fbid: state.fbid,
-    items: Object.values(state.items)
+    saving: state.saving,
+    items: Object.values(state.items),
+    types: Object.values(state.types)
   };
-  console.log(returnedState);
   return returnedState;
-}
+};
 
-const AppCont = connect(mapStateToProps)(AppComp);
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  dispatchMenu: (menuData) => {
+    dispatch(
+      initMenu(menuData)
+    )
+  },
+
+
+})
+
+const AppCont = connect(mapStateToProps, mapDispatchToProps)(AppComp);
 
 export default AppCont
