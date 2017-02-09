@@ -18,12 +18,13 @@ router.route('/:fbid/nervecenter')
   .get((req, res) => {
     getMenu(req.params.fbid)
       .then((menu) => {
+        console.log(menu);
         res.send(menu)
       })
   })
   .post((req, res) => {
     const data = req.body;
-    console.log('There has been a post query Daish: ', data);
+    console.log('====== There has been a post query Daish: ', data);
     switch (data.request) {
       case 'CHANGE_ITEM':
         db.changeItem(data)
@@ -52,6 +53,57 @@ router.route('/:fbid/nervecenter')
           })
         break;
 
+      case 'MAKING_ITEM':
+        db.insertItem(data.fbid, data.name)
+          .then((response) => {
+            res.send({
+              name: response.item,
+              photo: response.item_photo,
+              price: response.item_price,
+              newId: response.itemid
+            })
+          })
+          .catch((err) => {
+            console.log("Error changing size: ", err);
+            res.sendStatus(403)
+          })
+        break;
+
+      case 'MAKING_TYPE':
+        db.insertType(data.name, data.id, data.fbid)
+          .then((response) => {
+            console.log("response to making type: ", response);
+            res.send({
+              name: response.type,
+              photo: response.type_photo,
+              price: response.type_price,
+              newId: response.typeid,
+              parentId: response.itemid
+            })
+          })
+          .catch((err) => {
+            console.log("Error changing size: ", err);
+            res.sendStatus(403)
+          })
+        break;
+
+      case 'MAKING_SIZE':
+        db.insertSize(data.name, data.id, data.fbid)
+          .then((response) => {
+            console.log("response to making size: ", response);
+            res.send({
+              name: response.size,
+              price: response.size_price,
+              newId: response.sizeid,
+              parentId: response.typeid
+            })
+          })
+          .catch((err) => {
+            console.log("Error changing size: ", err);
+            res.sendStatus(403)
+          })
+        break;
+
       default:
         res.sendStatus(403)
     }
@@ -61,6 +113,7 @@ const getMenu = (fbid) => {
   const itemProm = db.getMenuItemsByCompId(fbid);
   const typeProm = db.getMenuTypesByCompId(fbid);
   const sizeProm = db.getMenuSizesByCompId(fbid);
+  console.log("Activating menu promise now!");
 
   return Promise.join(itemProm, typeProm, sizeProm,
     (items, types, sizes) => {

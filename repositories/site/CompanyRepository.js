@@ -20,14 +20,14 @@ exports.getMenuItemsByCompId = compId =>
 
 exports.getMenuTypesByCompId = compId =>
   sequelize.query(
-    "SELECT t.itemid, t.fbid, t.type, t.typeid, t.type_photo, t.type_price FROM types AS t" +
+    "SELECT t.itemid, t.type, t.typeid, t.type_photo, t.type_price FROM types AS t" +
     " WHERE t.fbid = :compId" +
     " ORDER BY typeid ASC",
     { replacements: { compId }, type: sequelize.QueryTypes.SELECT });
 
 exports.getMenuSizesByCompId = compId =>
   sequelize.query(
-    "SELECT typeid, fbid, size, sizeid, size_price FROM sizes" +
+    "SELECT typeid, size, sizeid, size_price FROM sizes" +
     " WHERE fbid = :compId" +
     " ORDER BY sizeid ASC",
     { replacements: { compId }, type: sequelize.QueryTypes.SELECT });
@@ -97,26 +97,28 @@ exports.insertItem = (fbid, item) =>
 
 exports.insertType = (type, itemid, fbid) =>
   sequelize.transaction(t  =>
-    Type.create({ itemid, type, fbid }, { transaction: t })
-      .then(() =>
-        Item.update({
-          item_price: null
-        }, {
-          where: { itemid },
-          transaction: t
-        })))
+    Item.update({
+      item_price: null
+    }, {
+      where: { itemid },
+      transaction: t
+    })
+    .then(() =>
+      Type.create({ itemid, type, fbid }, { transaction: t })
+    ))
     .catch(err => console.error("error in insertType transaction", err));
 
 exports.insertSize = (size, typeid, fbid) =>
   sequelize.transaction(t  =>
-    Size.create({ typeid, size, fbid }, { transaction: t })
-      .then(() =>
-        Type.update({
-          type_price: null
-        }, {
-          where: { typeid },
-          transaction: t
-        })))
+    Type.update({
+      type_price: null
+    }, {
+      where: { typeid },
+      transaction: t
+    })
+    .then(() =>
+      Size.create({ typeid, size, fbid }, { transaction: t })
+    ))
     .catch(err => console.error("error in insertSize transaction", err));
 
 exports.updateIPrice = (itemid, item_price) =>

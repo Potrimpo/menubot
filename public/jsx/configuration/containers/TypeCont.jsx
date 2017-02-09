@@ -1,21 +1,26 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { pluck, equals, filter } from 'ramda'
+import { pluck, filter } from 'ramda'
 
 import TypeComp from '../components/TypeComp'
 import { IS_TYPE, changeEntry, unfurl } from '../actions'
 
 
 const mapStateToProps = (state, ownProps) => {
-  const sizes = filter(
-    (size) => equals(
-      ownProps.typeid,
-      size.typeid
-    ),
-    Object.values(state.sizes)
-  )
   const key = ownProps.typeid;
-  const thisType = { ...state.types[key], sizes };
+
+  const sizes = pluck('sizeid')(
+    filter(
+      (size) => key == size.typeid,
+      Object.values(state.sizes)
+    )
+  );
+
+  const thisType = {
+    ...state.types[key],
+    fbid: state.fbid,
+    sizes };
+    
   return thisType
 };
 

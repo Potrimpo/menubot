@@ -1,18 +1,17 @@
 import React, { PropTypes } from 'react'
-import Please from 'pleasejs'
 
-const NewItem = ({making, keyupHander}) => {
+const NewSize = ({making, keyupHander}) => {
   if (making == false) {
     return (
-      <div className="row">
+      <div className="row container-row">
         <div
-          className="col-xs-12 item-container closed-borders top-large-gap"
+          className="col-xs-12 size-container closed-borders top-smol-gap"
         >
-          <div className="col-xs-12">
+          <div className=" col-xs-12">
             <input
               type="text"
               className="entry-input"
-              placeholder="Add a new item..."
+              placeholder="Add a new size..."
               onKeyUp={keyupHander}
             >
             </input>
@@ -27,4 +26,4 @@ const NewItem = ({making, keyupHander}) => {
   }
 };
 
-export default NewItem
+export default NewSize

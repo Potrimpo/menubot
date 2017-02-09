@@ -1,7 +1,9 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
+import { keys } from 'ramda'
+
 import AppComp from '../components/AppComp'
-import { initMenu } from '../actions.js'
+import { requestMenu } from '../actions.js'
 
 
 const mapStateToProps = (state, ownProps) => {
@@ -9,20 +11,18 @@ const mapStateToProps = (state, ownProps) => {
   const returnedState = {
     fbid: state.fbid,
     saving: state.saving,
-    items: Object.values(state.items),
-    types: Object.values(state.types)
+    making: state.makingItem,
+    items: keys(state.items)
   };
   return returnedState;
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  dispatchMenu: (menuData) => {
+  requestMenu: (fbid) => {
     dispatch(
-      initMenu(menuData)
+      requestMenu(fbid)
     )
-  },
-
-
+  }
 })
 
 const AppCont = connect(mapStateToProps, mapDispatchToProps)(AppComp);

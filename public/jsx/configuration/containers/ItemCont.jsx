@@ -1,24 +1,26 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { pluck, equals, filter } from 'ramda'
+import { pluck, filter } from 'ramda'
 
 import ItemComp from '../components/ItemComp'
 import { IS_ITEM, changeEntry, unfurl } from '../actions'
 
 
 const mapStateToProps = (state, ownProps) => {
-  const types = filter(
-    (type) => equals(
-      ownProps.itemid,
-      type.itemid
-    ),
-    Object.values(state.types)
-  )
   const key = ownProps.itemid;
+
+  const types = pluck('typeid')(
+    filter(
+      (type) => key == type.itemid,
+      Object.values(state.types)
+    )
+  );
+
   const thisItem = {
     ...state.items[key],
     fbid: state.fbid,
     types };
+
   return thisItem
 };
 
@@ -42,6 +44,11 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 });
 
 
-const ItemCont = connect(mapStateToProps, mapDispatchToProps)(ItemComp);
+const ItemCont = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+  null,
+  { withRef: true }
+  )(ItemComp);
 
 export default ItemCont

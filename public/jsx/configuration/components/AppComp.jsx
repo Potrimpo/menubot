@@ -1,34 +1,32 @@
 import React, { Component, PropTypes } from 'react'
 import fetch from 'node-fetch'
 import ItemCont from '../containers/ItemCont'
-import NewItemComp from './NewItemComp'
+import NewItemCont from '../containers/NewItemCont'
 
 
 class App extends Component {
   componentDidMount() {
-    const { fbid, dispatchMenu } = this.props;
-    const data = fetch(`https://48c63109.ngrok.io/test/${fbid}/nervecenter`, {
-      method: 'GET'
-    })
-      .then((rsp) =>  rsp.json())
-      .then((body) => {
-        dispatchMenu(body)
-      })
-      .catch((err) => {console.log(err)});
+    const { fbid, requestMenu } = this.props;
+    requestMenu(fbid)
   }
 
   render () {
+    const { items, saving, fbid } = this.props;
+
     return (
       <div style={{'padding': '5px'}} className="col-xs-12 col-md-8 col-md-offset-2">
-        <p>{this.props.saving}</p>
-        {this.props.items.map((item, i) =>
+        <p>{saving}</p>
+        {items.map((item, i) =>
           <ItemCont
             key = {i}
-            itemid = {item.itemid}
-            fbid = {this.props.fbid}
+            itemid = {item}
+            fbid = {fbid}
           />
         )}
-        <NewItemComp />
+        <NewItemCont
+          fbid = {fbid}
+        />
+        <div className="editor-darkener"></div>
       </div>
     )
   }
