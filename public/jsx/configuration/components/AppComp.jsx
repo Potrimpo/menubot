@@ -11,7 +11,7 @@ class App extends Component {
   }
 
   render () {
-    const { items, saving, fbid } = this.props;
+    const { items, saving, editor, fbid } = this.props;
 
     return (
       <div style={{'padding': '5px'}} className="col-xs-12 col-md-8 col-md-offset-2">
@@ -26,7 +26,6 @@ class App extends Component {
         <NewItemCont
           fbid = {fbid}
         />
-        <div className="editor-darkener"></div>
       </div>
     )
   }

@@ -1,5 +1,4 @@
 import React, { PropTypes, Component } from 'react'
-import { debounce } from 'throttle-debounce';
 
 import SizeCont from '../containers/SizeCont'
 import NewSizeCont from '../containers/NewSizeCont'
@@ -8,31 +7,107 @@ class Type extends Component {
 
   constructor (props) {
     super(props);
-    this.openEditor = this.openEditor.bind(this);
+    this.mouseDownHandler = this.mouseDownHandler.bind(this);
+    this.mouseUpHandler = this.mouseUpHandler.bind(this);
+    this.typePageClick = this.typePageClick.bind(this);
   }
 
-  openEditor (event) {
-    event.stopPropagation()
-    var el = this.container;
-    var yPos = 0;
+  mouseDownHandler () {
+    this.mouseIsDownInEditor = true;
+  }
 
-    while (el) {
-      if (el.tagName == "BODY") {
-        var yScroll = el.scrollTop
-        yPos += (el.offsetTop - yScroll + el.clientTop);
-      } else {
-        yPos += (el.offsetTop - el.scrollTop + el.clientTop);
-      }
+  mouseUpHandler () {
+      this.mouseIsDownInEditor = false;
+  }
 
-      el = el.offsetParent;
+  typePageClick (event) {
+    if (this.mouseIsDownInEditor) {
+      return;
     }
-
-    console.log("Container ref: ", this.container);
-    console.log(`properties: width:${this.container.clientWidth}, height:${this.container.clientHeight}, top:${yPos}`);
+    const { closeEditor } = this.props;
+    window.removeEventListener('mousedown', this.typePageClick);
+    closeEditor(event);
   }
 
   render () {
-    const { changeTypeName, changeFurl, type, typeid, furl, sizes, fbid } = this.props;
+    const {
+      changeTypeName, changeTypePrice, changeFurl,
+      openEditor, closeEditor, editing,
+      type, type_photo, type_price, displayPrice, typeid, furl, sizes, fbid, itemid
+    } = this.props;
+
+    if (editing) {
+      window.addEventListener('mousedown', this.typePageClick, false);
+      return (
+        <div
+          className="row container-row"
+          onMouseDown={this.mouseDownHandler}
+          onMouseUp={this.mouseUpHandler}
+        >
+          <div
+            className="col-xs-12 type-container closed-borders top-med-gap editor-row"
+          >
+            <div className="col-xs-10">
+              <input
+                type="text"
+                className="entry-input"
+                placeholder="Rename this type..."
+                value={type}
+                onChange={changeTypeName}
+              >
+              </input>
+            </div>
+            <div className="col-xs-2">
+              <button
+                className="med-edit-button"
+                type="button"
+                onClick={(event) => {
+                  window.removeEventListener('mousedown', this.typePageClick);
+                  closeEditor(event)
+                }}
+              >
+                <i
+                  className="fa fa-pencil"
+                  aria-hidden="true"
+                >
+                </i>
+              </button>
+            </div>
+            <div className="col-xs-12 col-sm-6">
+              <div style={{paddingBottom: "52%"}}></div>
+              <div style={type_photo ? {backgroundImage: `url(${type_photo})`} : null } className="entry-image"></div>
+            </div>
+            <div className="col-xs-12 col-sm-6" style={{padding: "5px"}}>
+              <textarea
+                rows="3"
+                className="entry-input"
+                placeholder="Add a description... (80 character limit)"
+              >
+              </textarea>
+              {
+                sizes.length == 0 ?
+                <div className="entry-price-container center-when-mobile">
+                  <div>
+                    <span>$</span>
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Price..."
+                    value={displayPrice}
+                    onChange={changeTypePrice}
+                  >
+                  </input>
+                </div> :
+                null
+              }
+              <div className="entry-delete-button center-when-mobile">
+                Delete
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
 
     if (furl == false) {
       return (
@@ -40,7 +115,6 @@ class Type extends Component {
           <div
             className="col-xs-12 type-container closed-borders top-med-gap"
             onClick={changeFurl}
-            ref={(container) => { this.container = container }}
           >
             <div className="col-xs-10">
               <input
@@ -58,7 +132,7 @@ class Type extends Component {
               <button
                 className="med-edit-button"
                 type="button"
-                onClick={this.openEditor}
+                onClick={openEditor}
               >
                 <i
                   className="fa fa-pencil"
@@ -77,7 +151,6 @@ class Type extends Component {
           <div
             className="col-xs-12 type-container top-open-borders top-med-gap"
             onClick={changeFurl}
-            ref={(container) => { this.container = container }}
           >
             <div className="col-xs-10">
               <input
@@ -93,7 +166,7 @@ class Type extends Component {
               <button
                 className="med-edit-button"
                 type="button"
-                onClick={this.openEditor}
+                onClick={openEditor}
               >
                 <i
                   className="fa fa-pencil"
@@ -110,6 +183,8 @@ class Type extends Component {
               <SizeCont
                 key = {i}
                 sizeid = {size}
+                typeid = {typeid}
+                itemid = {itemid}
                 fbid = {fbid}
               />
             )}

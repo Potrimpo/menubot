@@ -309,25 +309,9 @@ textarea.entry-input {
   margin-bottom: @editor_gap;
 }
 
-.editor-darkener {
-  cursor: pointer;
-  background: rgba(0,0,0,.6);
-  bottom: 0;
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  z-index: 1031;
-  .item-container,
-  .type-container,
-  .size-container {
-    cursor: default;
-  }
-}
-
 .editor-row {
-  position:relative;
-  margin: auto;
+  z-index: 10000;
+  cursor: default;
 }
 
 .entry-price-container {
@@ -392,7 +376,7 @@ textarea.entry-input {
 }
 
 .entry-image {
-  background-image: url(https://scontent.xx.fbcdn.net/v/t31.0-8/15874934_1290529604343705_5517852160362023404_o.jpg.webp?oh=5a0b4b5eea1d7395d7ca757ceacb0c65&oe=5918EAE2);
+  background-image: url(/images/placeholder.png);
   background-position-y: 50%;
   background-position-x: 50%;
   background-size: cover;
@@ -517,10 +501,10 @@ textarea.entry-input {
 
 .overlay-container {
   height: 100%;
-  overflow: hidden;
 }
 
 #spinner-overlay {
+  display: none;
   position:absolute;
   top:0;
   left:0;

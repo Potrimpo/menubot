@@ -13,18 +13,18 @@ console.log("PRIOR TO BEING IN IT");
 
 $(document).ready(function() {
   //Removing spinner
-  $('#spinner-overlay').hide();
-  $('body').removeClass('overlay-container');
+  // $('#spinner-overlay').hide();
+  // $('body').removeClass('overlay-container');
 
   //Defining spin boys
-  $('.misc-async').click(function () {
-    showSpinner();
-  });
-  function showSpinner () {
-    $('html,body').scrollTop(0);
-    $('#spinner-overlay').show();
-    $('body').addClass('overlay-container');
-  }
+  // $('.misc-async').click(function () {
+  //   showSpinner();
+  // });
+  // function showSpinner () {
+  //   $('html,body').scrollTop(0);
+  //   $('#spinner-overlay').show();
+  //   $('body').addClass('overlay-container');
+  // }
 
   if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
 

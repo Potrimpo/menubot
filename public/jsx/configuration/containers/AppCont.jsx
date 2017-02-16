@@ -11,6 +11,7 @@ const mapStateToProps = (state, ownProps) => {
   const returnedState = {
     fbid: state.fbid,
     saving: state.saving,
+    editor: state.editor,
     making: state.makingItem,
     items: keys(state.items)
   };

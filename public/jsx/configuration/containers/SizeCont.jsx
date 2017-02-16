@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { pluck, filter } from 'ramda'
 
 import SizeComp from '../components/SizeComp'
-import { IS_SIZE, changeEntry, unfurl } from '../actions'
+import { IS_SIZE, changeEntry, unfurl, edit, endEdit } from '../actions'
 
 
 const mapStateToProps = (state, ownProps) => {
@@ -16,9 +16,12 @@ const mapStateToProps = (state, ownProps) => {
     )
   );
 
+  const displayPrice = state.sizes[key].size_price ? state.sizes[key].size_price : ""
+
   const thisSize = {
     ...state.sizes[key],
-    fbid: state.fbid
+    fbid: state.fbid,
+    displayPrice
   };
 
   return thisSize
@@ -36,8 +39,35 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     }))
   },
 
-  changeFurl: () => {
-    dispatch(unfurl({
+  changeSizePrice: (event) => {
+    const value = event.target.value;
+    if (/^(\-|\+)?([0-9]+(\.[0-9]+)?|Infinity)$/.test(value.replace(/\./g,'')) || value == '') {
+      dispatch(changeEntry({
+        newValue: value,
+        column: "size_price",
+        entryType: IS_SIZE,
+        id: ownProps.sizeid,
+        fbid: ownProps.fbid
+      }))
+    }
+  },
+
+  openEditor: (event) => {
+    event.stopPropagation()
+    document.getElementById('spinner-overlay').style.display = 'block';
+    dispatch(edit({
+      id: ownProps.sizeid,
+      parentId: ownProps.typeid,
+      grandparentId: ownProps.itemid,
+      entryType: IS_SIZE
+    }))
+  },
+
+  closeEditor: (event) => {
+    event.stopPropagation()
+    document.getElementById('spinner-overlay').style.display = 'none';
+
+    dispatch(endEdit({
       id: ownProps.sizeid,
       entryType: IS_SIZE
     }))

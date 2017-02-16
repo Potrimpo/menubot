@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { pluck, filter } from 'ramda'
 
 import ItemComp from '../components/ItemComp'
-import { IS_ITEM, changeEntry, unfurl } from '../actions'
+import { IS_ITEM, changeEntry, unfurl, edit, endEdit } from '../actions'
 
 
 const mapStateToProps = (state, ownProps) => {
@@ -16,9 +16,12 @@ const mapStateToProps = (state, ownProps) => {
     )
   );
 
+  const displayPrice = state.items[key].item_price ? state.items[key].item_price : ""
+
   const thisItem = {
     ...state.items[key],
     fbid: state.fbid,
+    displayPrice,
     types };
 
   return thisItem
@@ -27,7 +30,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => ({
   changeItemName: (event) => {
     dispatch(changeEntry({
-      newValue:event.target.value,
+      newValue: event.target.value ? event.target.value : "",
       column: "item",
       entryType: IS_ITEM,
       id: ownProps.itemid,
@@ -35,8 +38,43 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     }))
   },
 
+  changeItemPrice: (event) => {
+    const value = event.target.value;
+    if (/^(\-|\+)?([0-9]+(\.[0-9]+)?|Infinity)$/.test(value.replace(/\./g,'')) || value == '') {
+      dispatch(changeEntry({
+        newValue: value,
+        column: "item_price",
+        entryType: IS_ITEM,
+        id: ownProps.itemid,
+        fbid: ownProps.fbid
+      }))
+    }
+  },
+
   changeFurl: () => {
     dispatch(unfurl({
+      id: ownProps.itemid,
+      entryType: IS_ITEM
+    }))
+  },
+
+  openEditor: (event) => {
+    event.stopPropagation()
+    document.getElementById('spinner-overlay').style.display = 'block';
+
+    dispatch(edit({
+      id: ownProps.itemid,
+      parentId: "irrelevant",
+      grandparentId: "irrelevant",
+      entryType: IS_ITEM
+    }))
+  },
+
+  closeEditor: (event) => {
+    event.stopPropagation()
+    document.getElementById('spinner-overlay').style.display = 'none';
+
+    dispatch(endEdit({
       id: ownProps.itemid,
       entryType: IS_ITEM
     }))
@@ -46,9 +84,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 
 const ItemCont = connect(
   mapStateToProps,
-  mapDispatchToProps,
-  null,
-  { withRef: true }
+  mapDispatchToProps
   )(ItemComp);
 
 export default ItemCont

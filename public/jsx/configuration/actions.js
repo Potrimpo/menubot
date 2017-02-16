@@ -1,4 +1,4 @@
-import { addFurl, addMaking, addProps } from './miscFunctions'
+import { addItemProps, addTypeProps, addSizeProps } from './miscFunctions'
 
 //A list of action types
 export const REQUEST_MENU  = 'REQUEST_MENU';
@@ -11,6 +11,12 @@ export const CHANGE_TYPE = 'CHANGE_TYPE';
 export const CHANGE_SIZE = 'CHANGE_SIZE';
 export const UNFURL_ITEM = 'UNFURL_ITEM';
 export const UNFURL_TYPE = 'UNFURL_TYPE';
+export const EDITING_ITEM = 'EDITING_ITEM';
+export const EDITING_TYPE = 'EDITING_TYPE';
+export const EDITING_SIZE = 'EDITING_SIZE';
+export const UNEDITING_ITEM = 'UNEDITING_ITEM';
+export const UNEDITING_TYPE = 'UNEDITING_TYPE';
+export const UNEDITING_SIZE = 'UNEDITING_SIZE';
 export const MAKING_ITEM = 'MAKING_ITEM';
 export const MAKING_TYPE = 'MAKING_TYPE';
 export const MAKING_SIZE = 'MAKING_SIZE';
@@ -34,6 +40,12 @@ export const ACT = {
   CHANGE_SIZE,
   UNFURL_ITEM,
   UNFURL_TYPE,
+  EDITING_ITEM,
+  EDITING_TYPE,
+  EDITING_SIZE,
+  UNEDITING_ITEM,
+  UNEDITING_TYPE,
+  UNEDITING_SIZE,
   MAKING_ITEM,
   MAKING_TYPE,
   MAKING_SIZE,
@@ -63,9 +75,9 @@ export const requestMenu = fbid => {
 export const initMenu = menu => {
   return {
     type: RECEIVE_MENU,
-    items: addProps(menu.items),
-    types: addProps(menu.types),
-    sizes: menu.sizes,
+    items: addItemProps(menu.items),
+    types: addTypeProps(menu.types),
+    sizes: addSizeProps(menu.sizes),
     makingItem: false
   }
 }
@@ -79,7 +91,6 @@ export const initMenu = menu => {
 // id: The ID of the entry (itemid, typeid, or sizeid),
 // fbid: The fbid of the company's page
 export const changeEntry = ({newValue, column, entryType, id, fbid}) => {
-  console.log("Is chaningn entrying");
   switch (entryType) {
     case IS_ITEM:
       return {
@@ -102,7 +113,6 @@ export const changeEntry = ({newValue, column, entryType, id, fbid}) => {
       break;
 
     case IS_SIZE:
-      console.log("IS SIZING");
       return {
         newValue,
         column,
@@ -118,6 +128,7 @@ export const changeEntry = ({newValue, column, entryType, id, fbid}) => {
       }
   }
 };
+
 
 //Unfurls an item/type, revealing the types/sizes that are it's children
 //Expects:
@@ -147,6 +158,82 @@ export const unfurl = ({ id, entryType }) => {
   }
 };
 
+
+//Opens the editor for an item, type or size
+//Expects:
+// id: The ID of the entry (itemid, typeid, or sizeid),
+// parentId: The ID of the entry's parent (itemid or typeid),
+// grandparentId: The ID of the entry's parent's parent (itemid),
+// entryType: The type of entry that is having it's editor opened (Item, type, or size?)
+export const edit = ({ id, parentId, grandparentId, entryType }) => {
+  switch (entryType) {
+    case IS_ITEM:
+      return {
+        id,
+        type: EDITING_ITEM
+      }
+      break;
+
+    case IS_TYPE:
+      return {
+        id,
+        parentId,
+        type: EDITING_TYPE
+      }
+      break;
+
+    case IS_SIZE:
+      return {
+        id,
+        parentId,
+        grandparentId,
+        type: EDITING_SIZE
+      }
+      break;
+
+    default:
+      return {
+        type: INVALID_ACTION_CONSTRUCTION
+      }
+  }
+};
+
+
+//Closes the editor for an item, type or size
+//Expects:
+// id: The ID of the entry (itemid, typeid, or sizeid)
+// entryType: The type of entry that is having it's editor opened (Item, type, or size?)
+export const endEdit = ({ id, entryType }) => {
+  switch (entryType) {
+    case IS_ITEM:
+      return {
+        id,
+        type: UNEDITING_ITEM
+      }
+      break;
+
+    case IS_TYPE:
+      return {
+        id,
+        type: UNEDITING_TYPE
+      }
+      break;
+
+    case IS_SIZE:
+      return {
+        id,
+        type: UNEDITING_SIZE
+      }
+      break;
+
+    default:
+      return {
+        type: INVALID_ACTION_CONSTRUCTION
+      }
+  }
+};
+
+
 //Adds an entry to the database, and then the state once the epic returns it
 //Expects:
 // id: The ID of the parent entry (itemid or typeid),
@@ -155,7 +242,6 @@ export const unfurl = ({ id, entryType }) => {
 // entryType: The type of entry that is being added (Item, type, or size?),
 
 export const createNewEntry = ({ id, fbid, name, entryType }) => {
-  console.log({ id, fbid, name, entryType });
   switch (entryType) {
 
     case IS_ITEM:
@@ -198,7 +284,7 @@ export const createdNewEntry = ({ parentId, newId, name, price, photo, entryType
     case IS_ITEM:
       return {
         parentIndex: parentId,
-        items: addProps(
+        items: addItemProps(
           {
             [newId]: {
               itemid: newId,
@@ -215,7 +301,7 @@ export const createdNewEntry = ({ parentId, newId, name, price, photo, entryType
     case IS_TYPE:
       return {
         parentIndex: parentId,
-        types: addProps(
+        types: addTypeProps(
           {
             [newId]: {
               itemid: parentId,
@@ -233,7 +319,7 @@ export const createdNewEntry = ({ parentId, newId, name, price, photo, entryType
     case IS_SIZE:
       return {
         parentIndex: parentId,
-        sizes: addProps(
+        sizes: addSizeProps(
           {
             [newId]: {
               typeid: parentId,

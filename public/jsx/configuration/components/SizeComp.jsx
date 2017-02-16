@@ -1,41 +1,107 @@
 import React, { PropTypes, Component } from 'react'
-import { debounce } from 'throttle-debounce';
 
 class Size extends Component {
 
   constructor (props) {
     super(props);
-    this.openEditor = this.openEditor.bind(this);
+    this.mouseDownHandler = this.mouseDownHandler.bind(this);
+    this.mouseUpHandler = this.mouseUpHandler.bind(this);
+    this.sizePageClick = this.sizePageClick.bind(this);
   }
 
-  openEditor (event) {
-    event.stopPropagation()
-    var el = this.container;
-    var yPos = 0;
+  mouseDownHandler () {
+    this.mouseIsDownInEditor = true;
+  }
 
-    while (el) {
-      if (el.tagName == "BODY") {
-        var yScroll = el.scrollTop
-        yPos += (el.offsetTop - yScroll + el.clientTop);
-      } else {
-        yPos += (el.offsetTop - el.scrollTop + el.clientTop);
-      }
+  mouseUpHandler () {
+      this.mouseIsDownInEditor = false;
+  }
 
-      el = el.offsetParent;
+  sizePageClick (event) {
+    if (this.mouseIsDownInEditor) {
+      return;
     }
-
-    console.log("Container ref: ", this.container);
-    console.log(`properties: width:${this.container.clientWidth}, height:${this.container.clientHeight}, top:${yPos}`);
+    const { closeEditor } = this.props;
+    window.removeEventListener('mousedown', this.sizePageClick);
+    closeEditor(event);
   }
 
   render () {
-    const { changeSizeName, changeFurl, size, sizeid, furl, fbid } = this.props;
+    const {
+      changeSizeName, changeSizePrice,
+      openEditor, closeEditor, editing,
+      size, displayPrice, sizeid, furl, fbid
+    } = this.props;
+
+    if (editing) {
+      window.addEventListener('mousedown', this.sizePageClick, false);
+      return (
+        <div
+          className="row container-row"
+          onMouseDown={this.mouseDownHandler}
+          onMouseUp={this.mouseUpHandler}
+        >
+          <div
+            className="col-xs-12 size-container closed-borders top-smol-gap editor-row"
+          >
+            <div className="col-xs-10">
+              <input
+                type="text"
+                className="entry-input"
+                placeholder="Rename this size..."
+                value={size}
+                onChange={changeSizeName}
+              >
+              </input>
+            </div>
+            <div className="col-xs-2">
+              <button
+                className="smol-edit-button"
+                type="button"
+                onClick={(event) => {
+                  window.removeEventListener('mousedown', this.sizePageClick);
+                  closeEditor(event)
+                }}
+              >
+                <i
+                  className="fa fa-pencil"
+                  aria-hidden="true"
+                >
+                </i>
+              </button>
+            </div>
+            <div className="col-xs-12" style={{padding: "5px"}}>
+              <textarea
+                rows="3"
+                className="entry-input"
+                placeholder="Add a description... (80 character limit)"
+              >
+              </textarea>
+              <div className="entry-price-container center-when-mobile">
+                <div>
+                  <span>$</span>
+                </div>
+                <input
+                  type="text"
+                  placeholder="Price..."
+                  value={displayPrice}
+                  onChange={changeSizePrice}
+                >
+                </input>
+              </div>
+              <div className="entry-delete-button center-when-mobile">
+                Delete
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
 
     return (
       <div className="row container-row">
         <div
           className="col-xs-12 size-container closed-borders top-smol-gap"
-          ref={(container) => { this.container = container }}
         >
           <div className="col-xs-10">
             <input
@@ -52,7 +118,7 @@ class Size extends Component {
             <button
               className="smol-edit-button"
               type="button"
-              onClick={this.openEditor}
+              onClick={openEditor}
             >
               <i
                 className="fa fa-pencil"
