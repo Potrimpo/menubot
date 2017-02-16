@@ -31,7 +31,7 @@ class Item extends Component {
 
   render () {
     const {
-      changeItemName, changeItemPrice, changeFurl,
+      changeItemName, changeItemPrice, changeFurl, deleteItem,
       openEditor, closeEditor, editing,
       item, item_photo, item_price, displayPrice, itemid, furl, types, fbid
     } = this.props;
@@ -78,12 +78,6 @@ class Item extends Component {
               <div style={item_photo ? {backgroundImage: `url(${item_photo})`} : null } className="entry-image"></div>
             </div>
             <div className="col-xs-12 col-sm-6" style={{padding: "5px"}}>
-              <textarea
-                rows="3"
-                className="entry-input"
-                placeholder="Add a description... (80 character limit)"
-              >
-              </textarea>
               {
                 types.length == 0 ?
                 <div className="entry-price-container center-when-mobile">
@@ -101,7 +95,13 @@ class Item extends Component {
                 null
               }
 
-              <div className="entry-delete-button center-when-mobile">
+              <div
+                className="entry-delete-button center-when-mobile"
+                onClick={() => {
+                  window.removeEventListener('mousedown', this.itemPageClick);
+                  deleteItem()
+                }}
+              >
                 Delete
               </div>
             </div>
@@ -192,6 +192,7 @@ class Item extends Component {
             <NewTypeCont
               fbid = {fbid}
               parentId = {itemid}
+              parentPrice = {item_price}
             />
           </div>
 
@@ -205,5 +206,11 @@ class Item extends Component {
   }
 };
 
+// <textarea
+//   rows="3"
+//   className="entry-input"
+//   placeholder="Add a description... (80 character limit)"
+// >
+// </textarea>
 
 export default Item

@@ -28,7 +28,7 @@ class Size extends Component {
 
   render () {
     const {
-      changeSizeName, changeSizePrice,
+      changeSizeName, changeSizePrice, deleteSize,
       openEditor, closeEditor, editing,
       size, displayPrice, sizeid, furl, fbid
     } = this.props;
@@ -71,12 +71,6 @@ class Size extends Component {
               </button>
             </div>
             <div className="col-xs-12" style={{padding: "5px"}}>
-              <textarea
-                rows="3"
-                className="entry-input"
-                placeholder="Add a description... (80 character limit)"
-              >
-              </textarea>
               <div className="entry-price-container center-when-mobile">
                 <div>
                   <span>$</span>
@@ -89,7 +83,13 @@ class Size extends Component {
                 >
                 </input>
               </div>
-              <div className="entry-delete-button center-when-mobile">
+              <div
+                className="entry-delete-button center-when-mobile"
+                onClick={() => {
+                  window.removeEventListener('mousedown', this.itemPageClick);
+                  deleteSize()
+                }}
+              >
                 Delete
               </div>
             </div>

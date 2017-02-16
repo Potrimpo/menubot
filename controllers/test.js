@@ -70,7 +70,7 @@ router.route('/:fbid/nervecenter')
         break;
 
       case 'MAKING_TYPE':
-        db.insertType(data.name, data.id, data.fbid)
+        db.insertType(data.name, data.id, data.fbid, data.parentPrice)
           .then((response) => {
             console.log("response to making type: ", response);
             res.send({
@@ -88,7 +88,7 @@ router.route('/:fbid/nervecenter')
         break;
 
       case 'MAKING_SIZE':
-        db.insertSize(data.name, data.id, data.fbid)
+        db.insertSize(data.name, data.id, data.fbid, data.parentPrice)
           .then((response) => {
             console.log("response to making size: ", response);
             res.send({
@@ -100,6 +100,36 @@ router.route('/:fbid/nervecenter')
           })
           .catch((err) => {
             console.log("Error changing size: ", err);
+            res.sendStatus(403)
+          })
+        break;
+
+      case 'DELETING_ITEM':
+        console.log("DELETING_ITEM");
+        db.deleteItem({type: "item", deleteId: data.id})
+          .then((response) => res.sendStatus(200))
+          .catch((err) => {
+            console.log("Error deleting item: ", err);
+            res.sendStatus(403)
+          })
+        break;
+
+      case 'DELETING_TYPE':
+        console.log("DELETING_TYPE");
+        db.deleteItem({type: "type", deleteId: data.id})
+          .then((response) => res.sendStatus(200))
+          .catch((err) => {
+            console.log("Error deleting type: ", err);
+            res.sendStatus(403)
+          })
+        break;
+
+      case 'DELETING_SIZE':
+        console.log("DELETING_SIZE");
+        db.deleteItem({type: "size", deleteId: data.id})
+          .then((response) => res.sendStatus(200))
+          .catch((err) => {
+            console.log("Error deleting size: ", err);
             res.sendStatus(403)
           })
         break;

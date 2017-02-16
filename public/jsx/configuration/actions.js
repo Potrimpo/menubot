@@ -20,6 +20,11 @@ export const UNEDITING_SIZE = 'UNEDITING_SIZE';
 export const MAKING_ITEM = 'MAKING_ITEM';
 export const MAKING_TYPE = 'MAKING_TYPE';
 export const MAKING_SIZE = 'MAKING_SIZE';
+export const DELETING_ITEM = 'DELETING_ITEM';
+export const DELETING_TYPE = 'DELETING_TYPE';
+export const DELETING_SIZE = 'DELETING_SIZE';
+export const NOTIFY_DELETED = 'NOTIFY_DELETED';
+export const NOTIFY_DELETE_FAILED = 'NOTIFY_DELETE_FAILED';
 export const NOTIFY_CREATION_FAILED = 'NOTIFY_CREATION_FAILED';
 export const MADE_ITEM = 'MADE_ITEM';
 export const MADE_TYPE = 'MADE_TYPE';
@@ -30,6 +35,7 @@ const INVALID_ACTION_CONSTRUCTION = 'INVALID_ACTION_CONSTRUCTION';
 //Compilation of all action types for ease of importing on reducer and epic
 //pages, where many if not all reducers are needed
 export const ACT = {
+  INVALID_ACTION_CONSTRUCTION,
   REQUEST_MENU,
   NOTIFY_REQUEST_MENU_FAILED,
   RECEIVE_MENU,
@@ -49,6 +55,11 @@ export const ACT = {
   MAKING_ITEM,
   MAKING_TYPE,
   MAKING_SIZE,
+  DELETING_ITEM,
+  DELETING_TYPE,
+  DELETING_SIZE,
+  NOTIFY_DELETED,
+  NOTIFY_DELETE_FAILED,
   NOTIFY_CREATION_FAILED,
   MADE_ITEM,
   MADE_TYPE,
@@ -239,9 +250,10 @@ export const endEdit = ({ id, entryType }) => {
 // id: The ID of the parent entry (itemid or typeid),
 // name: The soon to be value of the db column item/type/size,
 // fbid: The fbid of the company's page,
-// entryType: The type of entry that is being added (Item, type, or size?),
+// parentPrice: The price of the parent entry (item_price, type_price),
+// entryType: The type of entry that is being added (Item, type, or size?)
 
-export const createNewEntry = ({ id, fbid, name, entryType }) => {
+export const createNewEntry = ({ id, fbid, name, parentPrice, entryType }) => {
   switch (entryType) {
 
     case IS_ITEM:
@@ -258,6 +270,7 @@ export const createNewEntry = ({ id, fbid, name, entryType }) => {
         id,
         fbid,
         name,
+        parentPrice,
         type: MAKING_TYPE
       }
       break;
@@ -267,6 +280,7 @@ export const createNewEntry = ({ id, fbid, name, entryType }) => {
         id,
         fbid,
         name,
+        parentPrice,
         type: MAKING_SIZE
       }
     break;
@@ -337,5 +351,40 @@ export const createdNewEntry = ({ parentId, newId, name, price, photo, entryType
       return {
         type: INVALID_ACTION_CONSTRUCTION
       }
+  }
+};
+
+
+//Deletes an entry.
+//Expects:
+// id: The ID of the entry (itemid, typeid, or sizeid),
+// entryType: The type of entry that is being added (Item, type, or size?)
+
+export const deleteEntry = ({ id, entryType }) => {
+  switch (entryType) {
+
+    case IS_ITEM:
+      return {
+        id,
+        type: DELETING_ITEM
+      }
+      break;
+
+    case IS_TYPE:
+      return {
+        id,
+        type: DELETING_TYPE
+      }
+      break;
+
+    case IS_SIZE:
+      return {
+        id,
+        type: DELETING_SIZE
+      }
+      break;
+
+    default:
+
   }
 }

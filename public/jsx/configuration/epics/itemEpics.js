@@ -16,7 +16,7 @@ const changeDBItem = (action$, store) =>
       return ajax({
           method: "POST",
           url: `${window.location.href}/nervecenter`,
-          timeout: 1000,
+          timeout: 10000,
           body: {
             request: ACT.CHANGE_ITEM,
             newValue,
@@ -76,7 +76,37 @@ const newDBitem = (action$, store) =>
     );
 
 
+const deleteDBItem = (action$, store) =>
+   action$.ofType(ACT.DELETING_ITEM)
+    .debounceTime(1000)
+    .switchMap(action =>
+      ajax({
+          method: "POST",
+          url: `${window.location.href}/nervecenter`,
+          timeout: 10000,
+          body: {
+            request: ACT.DELETING_ITEM,
+            id: action.id,
+          }
+        })
+        .map(payload => {
+          console.log("Returned code: " + payload.status);
+          if (payload.status == 200) {
+            return {
+              type: ACT.NOTIFY_DELETED
+            }
+          } else {
+            throw "Request to delete item returned code " + payload.status
+            return {
+              type: ACT.NOTIFY_DELETE_FAILED
+            }
+          }
+        })
+    );
+
+
 export default [
   changeDBItem,
-  newDBitem
+  newDBitem,
+  deleteDBItem
 ]

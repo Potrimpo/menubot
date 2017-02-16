@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { merge, lensPath, set, negate, compose } from 'ramda'
+import { merge, lensPath, set, negate, compose, dissoc } from 'ramda'
 import { ACT } from '../actions'
 
 import { entryProperty } from '../miscFunctions'
@@ -23,6 +23,10 @@ const types = (state = init, action) => {
 
     case ACT.MADE_TYPE:
       return merge(state, action.types)
+      break;
+
+    case ACT.DELETING_TYPE:
+      return dissoc(action.id.toString(), state)
       break;
 
     case ACT.MADE_SIZE:

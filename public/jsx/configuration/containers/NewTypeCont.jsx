@@ -12,14 +12,12 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
   keyupHander: (event) => {
     if (event.key == "Enter") {
-      console.log("someone hit enter!");
-      console.log("Here's the target's value: ", event.currentTarget.value);
-      console.log("ParentID: ", ownProps.parentId);
       dispatch(
         createNewEntry({
           id: ownProps.parentId,
           fbid: ownProps.fbid,
           name: event.currentTarget.value,
+          parentPrice: ownProps.parentPrice,
           entryType: IS_TYPE
         })
       )

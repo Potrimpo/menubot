@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { pluck, filter } from 'ramda'
 
 import ItemComp from '../components/ItemComp'
-import { IS_ITEM, changeEntry, unfurl, edit, endEdit } from '../actions'
+import { IS_ITEM, changeEntry, unfurl, edit, endEdit, deleteEntry } from '../actions'
 
 
 const mapStateToProps = (state, ownProps) => {
@@ -49,6 +49,14 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         fbid: ownProps.fbid
       }))
     }
+  },
+
+  deleteItem: () => {
+    document.getElementById('spinner-overlay').style.display = 'none';
+    dispatch(deleteEntry({
+      id: ownProps.itemid,
+      entryType: IS_ITEM
+    }))
   },
 
   changeFurl: () => {

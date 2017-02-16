@@ -16,7 +16,7 @@ const changeDBSize = (action$, store) =>
       return ajax({
           method: "POST",
           url: `${window.location.href}/nervecenter`,
-          timeout: 1000,
+          timeout: 10000,
           body: {
             request: ACT.CHANGE_SIZE,
             newValue,
@@ -52,7 +52,8 @@ const newDBsize = (action$, store) =>
           request: ACT.MAKING_SIZE,
           id: action.id,
           fbid: action.fbid,
-          name: action.name
+          name: action.name,
+          parentPrice: action.parentPrice
         }
       })
       .map(payload => {
@@ -76,7 +77,38 @@ const newDBsize = (action$, store) =>
       })
     );
 
+
+const deleteDBSize = (action$, store) =>
+   action$.ofType(ACT.DELETING_SIZE)
+    .debounceTime(1000)
+    .switchMap(action =>
+      ajax({
+          method: "POST",
+          url: `${window.location.href}/nervecenter`,
+          timeout: 10000,
+          body: {
+            request: ACT.DELETING_SIZE,
+            id: action.id,
+          }
+        })
+        .map(payload => {
+          console.log("Returned code: " + payload.status);
+          if (payload.status == 200) {
+            return {
+              type: ACT.NOTIFY_DELETED
+            }
+          } else {
+            throw "Request to delete size returned code " + payload.status
+            return {
+              type: ACT.NOTIFY_DELETE_FAILED
+            }
+          }
+        })
+    );
+
+
 export default [
   changeDBSize,
-  newDBsize
+  newDBsize,
+  deleteDBSize
 ]

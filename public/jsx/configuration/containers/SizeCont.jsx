@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { pluck, filter } from 'ramda'
 
 import SizeComp from '../components/SizeComp'
-import { IS_SIZE, changeEntry, unfurl, edit, endEdit } from '../actions'
+import { IS_SIZE, changeEntry, unfurl, edit, endEdit, deleteEntry } from '../actions'
 
 
 const mapStateToProps = (state, ownProps) => {
@@ -50,6 +50,14 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         fbid: ownProps.fbid
       }))
     }
+  },
+
+  deleteSize: () => {
+    document.getElementById('spinner-overlay').style.display = 'none';
+    dispatch(deleteEntry({
+      id: ownProps.sizeid,
+      entryType: IS_SIZE
+    }))
   },
 
   openEditor: (event) => {

@@ -16,7 +16,7 @@ const changeDBType = (action$, store) =>
       return ajax({
           method: "POST",
           url: `${window.location.href}/nervecenter`,
-          timeout: 1000,
+          timeout: 10000,
           body: {
             request: ACT.CHANGE_TYPE,
             newValue,
@@ -52,7 +52,8 @@ const newDBtype = (action$, store) =>
           request: ACT.MAKING_TYPE,
           id: action.id,
           fbid: action.fbid,
-          name: action.name
+          name: action.name,
+          parentPrice: action.parentPrice
         }
       })
       .map(payload => {
@@ -76,7 +77,38 @@ const newDBtype = (action$, store) =>
       })
       );
 
+
+const deleteDBType = (action$, store) =>
+   action$.ofType(ACT.DELETING_TYPE)
+    .debounceTime(1000)
+    .switchMap(action =>
+      ajax({
+          method: "POST",
+          url: `${window.location.href}/nervecenter`,
+          timeout: 10000,
+          body: {
+            request: ACT.DELETING_TYPE,
+            id: action.id,
+          }
+        })
+        .map(payload => {
+          console.log("Returned code: " + payload.status);
+          if (payload.status == 200) {
+            return {
+              type: ACT.NOTIFY_DELETED
+            }
+          } else {
+            throw "Request to delete type returned code " + payload.status
+            return {
+              type: ACT.NOTIFY_DELETE_FAILED
+            }
+          }
+        })
+    );
+
+
 export default [
   changeDBType,
-  newDBtype
+  newDBtype,
+  deleteDBType
 ]

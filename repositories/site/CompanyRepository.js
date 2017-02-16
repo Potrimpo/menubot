@@ -95,7 +95,7 @@ exports.insertItem = (fbid, item) =>
   Item.create({ fbid, item })
     .catch(err => console.error("error inserting menu item:", err));
 
-exports.insertType = (type, itemid, fbid) =>
+exports.insertType = (type, itemid, fbid, parentPrice) =>
   sequelize.transaction(t  =>
     Item.update({
       item_price: null
@@ -103,12 +103,16 @@ exports.insertType = (type, itemid, fbid) =>
       where: { itemid },
       transaction: t
     })
-    .then(() =>
-      Type.create({ itemid, type, fbid }, { transaction: t })
-    ))
+    .then(() => {
+      if (isNaN(Number(parentPrice))) {
+        return Type.create({ itemid, type, fbid }, { transaction: t })
+      } else {
+        return Type.create({ itemid, type, fbid, type_price: parentPrice }, { transaction: t })
+      }
+    }))
     .catch(err => console.error("error in insertType transaction", err));
 
-exports.insertSize = (size, typeid, fbid) =>
+exports.insertSize = (size, typeid, fbid, parentPrice) =>
   sequelize.transaction(t  =>
     Type.update({
       type_price: null
@@ -116,9 +120,13 @@ exports.insertSize = (size, typeid, fbid) =>
       where: { typeid },
       transaction: t
     })
-    .then(() =>
-      Size.create({ typeid, size, fbid }, { transaction: t })
-    ))
+    .then(() => {
+      if (isNaN(Number(parentPrice))) {
+        return Size.create({ typeid, size, fbid }, { transaction: t })
+      } else {
+        return Size.create({ typeid, size, fbid, size_price: parentPrice }, { transaction: t })
+      }
+    }))
     .catch(err => console.error("error in insertSize transaction", err));
 
 exports.updateIPrice = (itemid, item_price) =>
