@@ -17,11 +17,13 @@ const mapStateToProps = (state, ownProps) => {
   );
 
   const displayPrice = state.sizes[key].size_price ? state.sizes[key].size_price : ""
+  const displayDescription = state.sizes[key].size_description ? state.sizes[key].size_description : ""
 
   const thisSize = {
     ...state.sizes[key],
     fbid: state.fbid,
-    displayPrice
+    displayPrice,
+    displayDescription
   };
 
   return thisSize
@@ -37,6 +39,18 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       id: ownProps.sizeid,
       fbid: ownProps.fbid
     }))
+  },
+
+  changeSizeDescription: (event) => {
+    if (event.target.value.length <= 80) {
+      dispatch(changeEntry({
+        newValue: event.target.value ? event.target.value : "",
+        column: "size_description",
+        entryType: IS_SIZE,
+        id: ownProps.sizeid,
+        fbid: ownProps.fbid
+      }))
+    }
   },
 
   changeSizePrice: (event) => {

@@ -31,9 +31,9 @@ class Type extends Component {
 
   render () {
     const {
-      changeTypeName, changeTypePrice, changeFurl, deleteType,
+      changeTypeName, changeTypeDescription, changeTypePrice, changeFurl, deleteType,
       openEditor, closeEditor, editing,
-      type, type_photo, type_price, displayPrice, typeid, furl, sizes, fbid, itemid
+      type, type_photo, type_description, displayDescription, type_price, displayPrice, typeid, furl, sizes, fbid, itemid
     } = this.props;
 
     if (editing) {
@@ -78,6 +78,14 @@ class Type extends Component {
               <div style={type_photo ? {backgroundImage: `url(${type_photo})`} : null } className="entry-image"></div>
             </div>
             <div className="col-xs-12 col-sm-6" style={{padding: "5px"}}>
+              <textarea
+                rows="3"
+                className="entry-input"
+                placeholder="Add a description... (80 character limit)"
+                value={displayDescription}
+                onChange={changeTypeDescription}
+              >
+              </textarea>
               {
                 sizes.length == 0 ?
                 <div className="entry-price-container center-when-mobile">

@@ -1,4 +1,3 @@
-import { combineReducers } from 'redux'
 import { merge, lensPath, set, negate, compose, dissoc } from 'ramda'
 import { ACT } from '../actions'
 
@@ -9,7 +8,11 @@ const init = {};
 const types = (state = init, action) => {
   switch (action.type) {
 
-    case ACT.RECEIVE_MENU:
+    case ACT.RECEIVE_COMPANY_INFO:
+      return merge(state, action.types)
+      break;
+
+    case ACT.RECEIVE_PHOTOS:
       return merge(state, action.types)
       break;
 

@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { keys } from 'ramda'
 
 import AppComp from '../components/AppComp'
-import { requestMenu } from '../actions.js'
+import { requestCompanyInfo } from '../actions.js'
 
 
 const mapStateToProps = (state, ownProps) => {
@@ -11,7 +11,6 @@ const mapStateToProps = (state, ownProps) => {
   const returnedState = {
     fbid: state.fbid,
     saving: state.saving,
-    editor: state.editor,
     making: state.makingItem,
     items: keys(state.items)
   };
@@ -19,9 +18,9 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  requestMenu: (fbid) => {
+  requestCompanyInfo: (fbid) => {
     dispatch(
-      requestMenu(fbid)
+      requestCompanyInfo(fbid)
     )
   }
 })

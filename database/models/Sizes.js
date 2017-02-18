@@ -23,6 +23,12 @@ module.exports = function (sequelize, Sequelize) {
     size: {
       type: Sequelize.STRING
     },
+    size_description: {
+      type: Sequelize.STRING,
+      validate: {
+        max: 80
+      }
+    },
     size_price: {
       type: Sequelize.DECIMAL
     }

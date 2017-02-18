@@ -23,6 +23,12 @@ module.exports = function (sequelize, Sequelize) {
     type: {
       type: Sequelize.STRING
     },
+    type_description: {
+      type: Sequelize.STRING,
+      validate: {
+        max: 80
+      }
+    },
     type_photo: {
       type: Sequelize.STRING
     },

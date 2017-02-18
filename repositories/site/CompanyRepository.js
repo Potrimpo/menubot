@@ -13,24 +13,40 @@ exports.findCompany = (id) => Company.findById(id);
 //Configuration page rewrite database calls
 exports.getMenuItemsByCompId = compId =>
   sequelize.query(
-    "SELECT i.itemid, i.item, i.item_photo, i.item_price FROM items AS i" +
+    "SELECT i.itemid, i.item, i.item_description, i.item_photo, i.item_price FROM items AS i" +
     " WHERE i.fbid = :compId" +
     " ORDER BY itemid ASC",
     { replacements: { compId }, type: sequelize.QueryTypes.SELECT });
 
 exports.getMenuTypesByCompId = compId =>
   sequelize.query(
-    "SELECT t.itemid, t.type, t.typeid, t.type_photo, t.type_price FROM types AS t" +
+    "SELECT t.itemid, t.type, t.type_description, t.typeid, t.type_photo, t.type_price FROM types AS t" +
     " WHERE t.fbid = :compId" +
     " ORDER BY typeid ASC",
     { replacements: { compId }, type: sequelize.QueryTypes.SELECT });
 
 exports.getMenuSizesByCompId = compId =>
   sequelize.query(
-    "SELECT typeid, size, sizeid, size_price FROM sizes" +
+    "SELECT typeid, size, size_description, sizeid, size_price FROM sizes" +
     " WHERE fbid = :compId" +
     " ORDER BY sizeid ASC",
     { replacements: { compId }, type: sequelize.QueryTypes.SELECT });
+
+exports.getCompany = compId =>
+  Company.findOne({
+    where: {
+      fbid: compId
+    },
+    attributes: [
+      'name',
+      'bot_status',
+      'location',
+      'status',
+      'opentime',
+      'closetime',
+      'access_token'
+    ]
+  })
 
 exports.changeItem = request =>
   Item.update({
@@ -56,6 +72,15 @@ exports.changeSize = request =>
   }, {
     where: {
       sizeid: request.id
+    }
+  })
+
+exports.changeCompany = request =>
+  Company.update({
+    [request.property]: request.newValue
+  }, {
+    where: {
+      fbid: request.fbid
     }
   })
 

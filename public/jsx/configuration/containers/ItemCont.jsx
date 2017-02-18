@@ -16,12 +16,14 @@ const mapStateToProps = (state, ownProps) => {
     )
   );
 
-  const displayPrice = state.items[key].item_price ? state.items[key].item_price : ""
+  const displayPrice = state.items[key].item_price ? state.items[key].item_price : "";
+  const displayDescription = state.items[key].item_description ? state.items[key].item_description : "";
 
   const thisItem = {
     ...state.items[key],
     fbid: state.fbid,
     displayPrice,
+    displayDescription,
     types };
 
   return thisItem
@@ -36,6 +38,18 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       id: ownProps.itemid,
       fbid: ownProps.fbid
     }))
+  },
+
+  changeItemDescription: (event) => {
+    if (event.target.value.length <= 80) {
+      dispatch(changeEntry({
+        newValue: event.target.value ? event.target.value : "",
+        column: "item_description",
+        entryType: IS_ITEM,
+        id: ownProps.itemid,
+        fbid: ownProps.fbid
+      }))
+    }
   },
 
   changeItemPrice: (event) => {

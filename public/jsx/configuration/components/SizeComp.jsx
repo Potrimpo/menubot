@@ -28,9 +28,9 @@ class Size extends Component {
 
   render () {
     const {
-      changeSizeName, changeSizePrice, deleteSize,
+      changeSizeName, changeSizeDescription, changeSizePrice, deleteSize,
       openEditor, closeEditor, editing,
-      size, displayPrice, sizeid, furl, fbid
+      size, size_description, displayDescription, size_price, displayPrice, sizeid, furl, fbid
     } = this.props;
 
     if (editing) {
@@ -71,6 +71,14 @@ class Size extends Component {
               </button>
             </div>
             <div className="col-xs-12" style={{padding: "5px"}}>
+              <textarea
+                rows="3"
+                className="entry-input"
+                placeholder="Add a description... (80 character limit)"
+                value={displayDescription}
+                onChange={changeSizeDescription}
+              >
+              </textarea>
               <div className="entry-price-container center-when-mobile">
                 <div>
                   <span>$</span>

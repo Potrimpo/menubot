@@ -60,7 +60,7 @@ exports.findItem = (fbid, item) =>
 
 exports.getMenu = fbid =>
   Item.findAll({
-    attributes: ['item', 'itemid', 'item_photo', 'item_price'],
+    attributes: ['item', 'item_description', 'itemid', 'item_photo', 'item_price'],
     where: { fbid },
     order: [
       ['itemid', 'ASC']
@@ -70,7 +70,7 @@ exports.getMenu = fbid =>
 
 exports.getTypes = itemid =>
   Type.findAll({
-    attributes: ['itemid', 'typeid', 'type', 'type_photo', 'type_price'],
+    attributes: ['itemid', 'typeid', 'type', 'type_description', 'type_photo', 'type_price'],
     where: { itemid },
     order: [
       ['typeid', 'ASC']
@@ -79,7 +79,7 @@ exports.getTypes = itemid =>
 
 exports.getSizes = typeid =>
   Size.findAll({
-    attributes: ['typeid', 'sizeid', 'size', 'size_price'],
+    attributes: ['typeid', 'sizeid', 'size', 'size_description', 'size_price'],
     where: { typeid, size_price: { $ne: null } },
     order: [
       ['sizeid', 'ASC']

@@ -1,5 +1,7 @@
 const express = require('express'),
-  router = express.Router();
+  router = express.Router(),
+  { syncPhotos } = require('./api'),
+  { activateBot, deactivateBot } = require('./activateAccount');
 
 //NOTE: NONE OF THIS IS SECURE YET, ADD SECURITY FUCKWIT
 
@@ -16,10 +18,9 @@ router.route('/:fbid')
 
 router.route('/:fbid/nervecenter')
   .get((req, res) => {
-    getMenu(req.params.fbid)
-      .then((menu) => {
-        console.log(menu);
-        res.send(menu)
+    getCompanyInfo(req.params.fbid)
+      .then((companyInfo) => {
+        res.send(companyInfo)
       })
   })
   .post((req, res) => {
@@ -53,6 +54,15 @@ router.route('/:fbid/nervecenter')
           })
         break;
 
+      case 'CHANGE_COMPANY':
+        db.changeCompany(data)
+          .then((response) => res.sendStatus(200))
+          .catch((err) => {
+            console.log("Error changing company: ", err);
+            res.sendStatus(403)
+          })
+        break;
+
       case 'MAKING_ITEM':
         db.insertItem(data.fbid, data.name)
           .then((response) => {
@@ -70,7 +80,7 @@ router.route('/:fbid/nervecenter')
         break;
 
       case 'MAKING_TYPE':
-        db.insertType(data.name, data.id, data.fbid, data.parentPrice)
+        db.insertType(data.name, data.id, data.fbid)
           .then((response) => {
             console.log("response to making type: ", response);
             res.send({
@@ -88,7 +98,7 @@ router.route('/:fbid/nervecenter')
         break;
 
       case 'MAKING_SIZE':
-        db.insertSize(data.name, data.id, data.fbid, data.parentPrice)
+        db.insertSize(data.name, data.id, data.fbid)
           .then((response) => {
             console.log("response to making size: ", response);
             res.send({
@@ -109,29 +119,53 @@ router.route('/:fbid/nervecenter')
         db.deleteItem({type: "item", deleteId: data.id})
           .then((response) => res.sendStatus(200))
           .catch((err) => {
-            console.log("Error deleting item: ", err);
+            console.log("Error changing item: ", err);
             res.sendStatus(403)
           })
         break;
 
       case 'DELETING_TYPE':
-        console.log("DELETING_TYPE");
-        db.deleteItem({type: "type", deleteId: data.id})
+        console.log("DELETING_Type");
+        db.deleteItem({type: "item", deleteId: data.id})
           .then((response) => res.sendStatus(200))
           .catch((err) => {
-            console.log("Error deleting type: ", err);
+            console.log("Error changing item: ", err);
             res.sendStatus(403)
           })
         break;
 
-      case 'DELETING_SIZE':
-        console.log("DELETING_SIZE");
-        db.deleteItem({type: "size", deleteId: data.id})
+      case 'DELETING_ITEM':
+        console.log("DELETING_ITEM");
+        db.deleteItem({type: "item", deleteId: data.id})
           .then((response) => res.sendStatus(200))
           .catch((err) => {
-            console.log("Error deleting size: ", err);
+            console.log("Error changing item: ", err);
             res.sendStatus(403)
           })
+        break;
+
+      case 'REQUEST_PHOTOS':
+        syncPhotos(data.access_token)
+          .then((response) => getUpdatedMenu(data.fbid))
+          .then((updatedMenu) => res.send(updatedMenu))
+          .catch((err) => {
+            console.log("Error fetching photos: ", err);
+            res.sendStatus(403)
+          })
+        break;
+
+      case 'ACTIVATE_BOT':
+        activateBot(data.access_token)
+          .then(() => db.setBotStatus(data.fbid, true))
+          .then(() => res.sendStatus(200))
+          .catch(() => res.sendStatus(403))
+        break;
+
+      case 'DEACTIVATE_BOT':
+        deactivateBot(data.access_token)
+          .then(() => db.setBotStatus(data.fbid, false))
+          .then(() => res.sendStatus(200))
+          .catch(() => res.sendStatus(403))
         break;
 
       default:
@@ -139,19 +173,38 @@ router.route('/:fbid/nervecenter')
     }
   });
 
-const getMenu = (fbid) => {
+
+
+
+
+const getCompanyInfo = (fbid) => {
   const itemProm = db.getMenuItemsByCompId(fbid);
   const typeProm = db.getMenuTypesByCompId(fbid);
   const sizeProm = db.getMenuSizesByCompId(fbid);
-  console.log("Activating menu promise now!");
+  const companyProm = db.getCompany(fbid);
 
-  return Promise.join(itemProm, typeProm, sizeProm,
-    (items, types, sizes) => {
-      const menu = {};
-      menu.items = indexBy(prop('itemid'), items);
-      menu.types = indexBy(prop('typeid'), types);
-      menu.sizes = indexBy(prop('sizeid'), sizes);
-      return menu
+  return Promise.join(itemProm, typeProm, sizeProm, companyProm,
+    (items, types, sizes, company) => {
+      const companyInfo = {};
+      companyInfo.items = indexBy(prop('itemid'), items);
+      companyInfo.types = indexBy(prop('typeid'), types);
+      companyInfo.sizes = indexBy(prop('sizeid'), sizes);
+      companyInfo.company = company;
+      return companyInfo
+    }
+  )
+}
+
+const getUpdatedMenu = (fbid) => {
+  const itemProm = db.getMenuItemsByCompId(fbid);
+  const typeProm = db.getMenuTypesByCompId(fbid);
+
+  return Promise.join(itemProm, typeProm,
+    (items, types) => {
+      const updatedMenu = {};
+      updatedMenu.items = indexBy(prop('itemid'), items);
+      updatedMenu.types = indexBy(prop('typeid'), types);
+      return updatedMenu
     }
   )
 }

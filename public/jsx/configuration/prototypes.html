@@ -1,5 +1,99 @@
 <!-- YOU ARE NOW ENTERING THE PROTOTYPE ZONE -->
 
+<!-- Page configuration -->
+<div class="col-xs-12 col-md-8 col-md-offset-2">
+  <div class="row configuration-header-separator"></div>
+  <div class="configuration-edit-container">
+    <table>
+      <tr>
+        <td><strong>Page configuration</strong></td>
+        <td>
+          <button
+            type="button"
+            class="large-edit-button"
+          >
+            <i class="fa fa-sliders" aria-hidden="true"></i>
+          </button>
+        </td>
+      </tr>
+
+      <tr><td></td><td></td></tr><tr><td></td><td></td></tr>
+
+      <tr>
+        <td>Location</td>
+        <td>
+          <input type="text" role="button" class="form-control" placeholder="Location" autocomplete="off">
+          </input>
+        </td>
+      </tr>
+
+      <tr><td></td><td></td></tr><tr><td></td><td></td></tr>
+
+      <tr>
+        <td>Opening hours</td>
+        <td class="size-when-wide">
+          <form id="timeSettingForm" class="form-inline">
+              <div class="col-xs-12" style="padding:0">
+                <div class="input-group reactive-distr">
+                  <span class="input-group-addon">Opening</span>
+                  <input type="time" id="opentime" name="openTime"
+                     class="form-control time-setter" value=""
+                  >
+                </div>
+                <div class="input-group">
+                  <span class="input-group-addon">Closing</span>
+                  <input type="time" id="closetime" name="closeTime"
+                     class="form-control time-setter" value=""
+                  >
+                </div>
+              </div>
+              <div style="clear:both;"></div>
+
+              <div class="col-xs-12" style="padding:0; margin-top:5px;">
+                <div class="configuration-week-day-selector text-center">
+                  <input type="checkbox" id="weekday-mon" class="weekday" />
+                  <label for="weekday-mon">Mon</label>
+                  <input type="checkbox" id="weekday-tue" class="weekday" />
+                  <label for="weekday-tue">Tue</label>
+                  <input type="checkbox" id="weekday-wed" class="weekday" />
+                  <label for="weekday-wed">Wen</label>
+                  <input type="checkbox" id="weekday-thu" class="weekday" />
+                  <label for="weekday-thu">Thu</label>
+                  <input type="checkbox" id="weekday-fri" class="weekday" />
+                  <label for="weekday-fri">Fri</label>
+                  <input type="checkbox" id="weekday-sat" class="weekday" />
+                  <label for="weekday-sat">Sat</label>
+                  <input type="checkbox" id="weekday-sun" class="weekday" />
+                  <label for="weekday-sun">Sun</label>
+                </div>
+              </div>
+              <div style="clear:both;"></div>
+          </form>
+        </td>
+      </tr>
+
+      <tr><td></td><td></td></tr><tr><td></td><td></td></tr>
+
+      <tr>
+        <td>Photo control</td>
+        <td>
+          <button type="button" class="configuration-edit-button">Fetch photos from Facebook</button>
+        </td>
+      </tr>
+
+      <tr><td></td><td></td></tr><tr><td></td><td></td></tr>
+
+      <tr>
+        <td>Activate bot</td>
+        <td>
+          <button type="button" class="configuration-edit-button">Activate bot</button>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+</div>
+
 <!-- Entry container -->
 <div style="padding: 5px" class="col-xs-12 col-md-8 col-md-offset-2">
   <!-- Entries go here -->

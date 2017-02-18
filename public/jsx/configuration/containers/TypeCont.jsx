@@ -17,11 +17,13 @@ const mapStateToProps = (state, ownProps) => {
   );
 
   const displayPrice = state.types[key].type_price ? state.types[key].type_price : ""
+  const displayDescription = state.types[key].type_description ? state.types[key].type_description : ""
 
   const thisType = {
     ...state.types[key],
     fbid: state.fbid,
     displayPrice,
+    displayDescription,
     sizes };
 
   return thisType
@@ -36,6 +38,18 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       id: ownProps.typeid,
       fbid: ownProps.fbid
     }))
+  },
+
+  changeTypeDescription: (event) => {
+    if (event.target.value.length <= 80) {
+      dispatch(changeEntry({
+        newValue: event.target.value ? event.target.value : "",
+        column: "type_description",
+        entryType: IS_TYPE,
+        id: ownProps.typeid,
+        fbid: ownProps.fbid
+      }))
+    }
   },
 
   changeTypePrice: (event) => {

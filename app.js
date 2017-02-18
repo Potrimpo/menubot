@@ -48,7 +48,7 @@ app.get('/orders/:fbid', passportConf.isAuthenticated, passportConf.isAuthorized
 app.get('/priv', homeController.priv);
 
 // API router used for asynchronous actions like fetching photos from Facebook
-app.use('/api', passportConf.isAuthenticated, passportConf.isAuthorized, apiController);
+app.use('/api', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.router);
 
 // Router for dealing with company creation & updates, including menu changes
 app.use('/company', passportConf.isAuthenticated, passportConf.isAuthorized, companyController);

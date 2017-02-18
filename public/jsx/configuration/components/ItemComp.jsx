@@ -31,9 +31,9 @@ class Item extends Component {
 
   render () {
     const {
-      changeItemName, changeItemPrice, changeFurl, deleteItem,
+      changeItemName, changeItemDescription, changeItemPrice, changeFurl, deleteItem,
       openEditor, closeEditor, editing,
-      item, item_photo, item_price, displayPrice, itemid, furl, types, fbid
+      item, item_description, displayDescription, item_photo, item_price, displayPrice, itemid, furl, types, fbid
     } = this.props;
 
     if (editing) {
@@ -78,6 +78,14 @@ class Item extends Component {
               <div style={item_photo ? {backgroundImage: `url(${item_photo})`} : null } className="entry-image"></div>
             </div>
             <div className="col-xs-12 col-sm-6" style={{padding: "5px"}}>
+              <textarea
+                rows="3"
+                className="entry-input"
+                placeholder="Add a description... (80 character limit)"
+                value={displayDescription}
+                onChange={changeItemDescription}
+              >
+              </textarea>
               {
                 types.length == 0 ?
                 <div className="entry-price-container center-when-mobile">
@@ -206,11 +214,5 @@ class Item extends Component {
   }
 };
 
-// <textarea
-//   rows="3"
-//   className="entry-input"
-//   placeholder="Add a description... (80 character limit)"
-// >
-// </textarea>
 
 export default Item

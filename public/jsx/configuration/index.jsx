@@ -18,6 +18,7 @@ const middleware = [ thunk, epicMiddleware ];
 export const init = {
   fbid: document.getElementById("root").getAttribute("name"),
   saving: "Ready to save your changes",
+  company: {},
   makingItem: false,
   items: {},
   types: {},

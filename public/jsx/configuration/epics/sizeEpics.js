@@ -7,7 +7,7 @@ import { ACT, IS_SIZE, initMenu, createdNewEntry } from '../actions'
 const changeDBSize = (action$, store) =>
    action$.ofType(ACT.CHANGE_SIZE)
     .debounceTime(1000)
-    .switchMap(action =>{
+    .switchMap(action => {
       if (action.column == 'size_price' && action.newValue == "") {
         var newValue = 0;
       } else {
