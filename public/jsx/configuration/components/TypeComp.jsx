@@ -40,7 +40,7 @@ class Type extends Component {
       window.addEventListener('mousedown', this.typePageClick, false);
       return (
         <div
-          className="row container-row"
+          className="row type-coloring container-row"
           onMouseDown={this.mouseDownHandler}
           onMouseUp={this.mouseUpHandler}
         >
@@ -119,7 +119,7 @@ class Type extends Component {
 
     if (furl == false) {
       return (
-        <div className="row container-row">
+        <div className="row type-coloring container-row">
           <div
             className="col-xs-12 type-container closed-borders top-med-gap"
             onClick={changeFurl}
@@ -155,7 +155,7 @@ class Type extends Component {
       )
     } else {
       return (
-        <div className="row container-row">
+        <div className="row type-coloring container-row">
           <div
             className="col-xs-12 type-container top-open-borders top-med-gap"
             onClick={changeFurl}

@@ -21,13 +21,17 @@ class App extends Component {
         <div className="row">
           <p className="saved-text">{saving}</p>
         </div>
-        {items.map((item, i) =>
-          <ItemCont
-            key = {i}
-            itemid = {item}
-            fbid = {fbid}
-          />
-        )}
+
+        <div className="">
+          {items.map((item, i) =>
+            <ItemCont
+              key = {i}
+              itemid = {item}
+              fbid = {fbid}
+            />
+          )}
+        </div>
+
         <NewItemCont
           fbid = {fbid}
         />

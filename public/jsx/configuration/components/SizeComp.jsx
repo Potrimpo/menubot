@@ -37,7 +37,7 @@ class Size extends Component {
       window.addEventListener('mousedown', this.sizePageClick, false);
       return (
         <div
-          className="row container-row"
+          className="row size-coloring container-row"
           onMouseDown={this.mouseDownHandler}
           onMouseUp={this.mouseUpHandler}
         >
@@ -107,7 +107,7 @@ class Size extends Component {
     }
 
     return (
-      <div className="row container-row">
+      <div className="row size-coloring container-row">
         <div
           className="col-xs-12 size-container closed-borders top-smol-gap"
         >

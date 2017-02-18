@@ -3,7 +3,7 @@ import React, { PropTypes } from 'react'
 const NewSize = ({making, keyupHander}) => {
   if (making == false) {
     return (
-      <div className="row container-row">
+      <div className="row size-coloring container-row">
         <div
           className="col-xs-12 size-container closed-borders top-smol-gap"
         >

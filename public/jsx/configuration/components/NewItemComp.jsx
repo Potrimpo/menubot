@@ -4,7 +4,7 @@ import Please from 'pleasejs'
 const NewItem = ({making, keyupHander}) => {
   if (making == false) {
     return (
-      <div className="row">
+      <div className="row item-coloring">
         <div
           className="col-xs-12 item-container closed-borders top-large-gap"
         >
