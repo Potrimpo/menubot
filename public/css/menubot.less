@@ -313,11 +313,16 @@
     input {
       background-color: @item_background_color_one;
       border-color: @item_background_color_one;
+      transition: border-color 0.3s, box-shadow .3s, transform .3s;
+      &:hover {
+        border-color: @item_border_color_one
+      }
     }
 
     textarea {
       background-color: @item_background_color_one;
       border-color: @item_border_color_one;
+      transition: border-color 0.3s, box-shadow .3s, transform .3s;
     }
 
     .entry-price-container {
@@ -359,11 +364,16 @@
     input {
       background-color: @item_background_color_two;
       border-color: @item_background_color_two;
+      transition: border-color 0.3s, box-shadow .3s, transform .3s;
+      &:hover {
+        border-color: @item_border_color_two
+      }
     }
 
     textarea {
       background-color: @item_background_color_two;
       border-color: @item_border_color_two;
+      transition: border-color 0.3s, box-shadow .3s, transform .3s;
     }
 
     .entry-price-container {
@@ -405,11 +415,16 @@
     input {
       background-color: @item_background_color_three;
       border-color: @item_background_color_three;
+      transition: border-color 0.3s, box-shadow .3s, transform .3s;
+      &:hover {
+        border-color: @item_border_color_three
+      }
     }
 
     textarea {
       background-color: @item_background_color_three;
       border-color: @item_border_color_three;
+      transition: border-color 0.3s, box-shadow .3s, transform .3s;
     }
 
     .entry-price-container {
@@ -469,11 +484,16 @@
     input {
       background-color: @type_background_color_one;
       border-color: @type_background_color_one;
+      transition: border-color 0.3s, box-shadow .3s, transform .3s;
+      &:hover {
+        border-color: @type_border_color_one
+      }
     }
 
     textarea {
       background-color: @type_background_color_one;
       border-color: @type_border_color_one;
+      transition: border-color 0.3s, box-shadow .3s, transform .3s;
     }
 
     .entry-price-container {
@@ -516,11 +536,16 @@
     input {
       background-color: @type_background_color_two;
       border-color: @type_background_color_two;
+      transition: border-color 0.3s, box-shadow .3s, transform .3s;
+      &:hover {
+        border-color: @type_border_color_two
+      }
     }
 
     textarea {
       background-color: @type_background_color_two;
       border-color: @type_border_color_two;
+      transition: border-color 0.3s, box-shadow .3s, transform .3s;
     }
 
     .entry-price-container {
@@ -563,11 +588,16 @@
     input {
       background-color: @type_background_color_three;
       border-color: @type_background_color_three;
+      transition: border-color 0.3s, box-shadow .3s, transform .3s;
+      &:hover {
+        border-color: @type_border_color_three
+      }
     }
 
     textarea {
       background-color: @type_background_color_three;
       border-color: @type_border_color_three;
+      transition: border-color 0.3s, box-shadow .3s, transform .3s;
     }
 
     .entry-price-container {
@@ -628,11 +658,16 @@
     input {
       background-color: @size_background_color_one;
       border-color: @size_background_color_one;
+      transition: border-color 0.3s, box-shadow .3s, transform .3s;
+      &:hover {
+        border-color: @size_border_color_one
+      }
     }
 
     textarea {
       background-color: @size_background_color_one;
       border-color: @size_border_color_one;
+      transition: border-color 0.3s, box-shadow .3s, transform .3s;
     }
 
     .entry-price-container {
@@ -670,11 +705,16 @@
     input {
       background-color: @size_background_color_two;
       border-color: @size_background_color_two;
+      transition: border-color 0.3s, box-shadow .3s, transform .3s;
+      &:hover {
+        border-color: @size_border_color_two
+      }
     }
 
     textarea {
       background-color: @size_background_color_two;
       border-color: @size_border_color_two;
+      transition: border-color 0.3s, box-shadow .3s, transform .3s;
     }
 
     .entry-price-container {
@@ -712,11 +752,16 @@
     input {
       background-color: @size_background_color_three;
       border-color: @size_background_color_three;
+      transition: border-color 0.3s, box-shadow .3s, transform .3s;
+      &:hover {
+        border-color: @size_border_color_three
+      }
     }
 
     textarea {
       background-color: @size_background_color_three;
       border-color: @size_border_color_three;
+      transition: border-color 0.3s, box-shadow .3s, transform .3s;
     }
 
     .entry-price-container {
@@ -765,7 +810,6 @@
   border-style: solid;
   border-width: 1px;
   border-radius: @default_border_radius;
-  transition: box-shadow .3s, border .3s, transform .3s;
 
   &.focus,
   &:focus {
@@ -779,10 +823,8 @@
 
 textarea.entry-input {
   font-size: @editor_input_fontsize;
-  background-color: @editor_input_background_color;
   border-style: solid;
   border-width: 1px;
-  border-color: @raised_border_color;
   max-width: 300px;
   margin-bottom: @editor_gap;
 }
@@ -801,10 +843,8 @@ textarea.entry-input {
     border-style: solid;
     border-width: 1px;
     border-radius: @default_border_radius 0 0 @default_border_radius;
-    border-color: @raised_border_color;
     cursor: default;
     display: inline-block;
-    background-color: @editor_input_background_color;
     span {
       color: #000;
       margin: auto;
@@ -816,12 +856,10 @@ textarea.entry-input {
     border-style: solid;
     border-width: 1px;
     border-radius: 0 @default_border_radius @default_border_radius 0;
-    border-color: @raised_border_color;
     display: inline-block;
     font-size: @editor_input_fontsize;
     width: 4em;
     padding: 0 3px 0 3px;
-    background-color: @editor_input_background_color;
     outline: 0;
     transition: box-shadow .3s;
     &.focus,
