@@ -172,7 +172,7 @@ class Item extends Component {
               >
               </input>
             </div>
-            <div className="col-xs-2">
+            <div className="col-xs-2 item-edit-button-container">
               <button
                 className="large-edit-button"
                 type="button"
