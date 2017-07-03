@@ -34,6 +34,7 @@
     "express-session": "^1.13.0",
     "express-validator": "^2.20.4",
     "fbgraph": "^1.1.0",
+    "json-loader": "^0.5.4",
     "less": "2.5.1",
     "lusca": "^1.4.1",
     "method-override": "^2.3.5",
@@ -45,6 +46,7 @@
     "passport": "^0.3.2",
     "passport-facebook": "^2.1.0",
     "pg": "^4.5.5",
+    "pleasejs": "^0.4.2",
     "ramda": "^0.22.1",
     "ramda-fantasy": "^0.7.0",
     "react": "^15.3.2",
@@ -53,11 +55,14 @@
     "redis": "^2.6.3",
     "redux": "^3.6.0",
     "redux-logger": "^2.7.0",
+    "redux-observable": "^0.13.0",
     "redux-thunk": "^2.1.0",
     "rx": "^4.1.0",
+    "rxjs": "^5.0.3",
     "selenium-standalone": "^5.9.1",
     "sequelize": "^3.24.3",
-    "socket.io": "^1.5.1"
+    "socket.io": "^1.5.1",
+    "throttle-debounce": "^1.0.1"
   },
   "devDependencies": {
     "babel": "^6.5.2",

@@ -10,6 +10,82 @@ exports.findUserCompanies = accounts =>
 
 exports.findCompany = (id) => Company.findById(id);
 
+//Configuration page rewrite database calls
+exports.getMenuItemsByCompId = compId =>
+  sequelize.query(
+    "SELECT i.itemid, i.item, i.item_description, i.item_photo, i.item_price FROM items AS i" +
+    " WHERE i.fbid = :compId" +
+    " ORDER BY itemid ASC",
+    { replacements: { compId }, type: sequelize.QueryTypes.SELECT });
+
+exports.getMenuTypesByCompId = compId =>
+  sequelize.query(
+    "SELECT t.itemid, t.type, t.type_description, t.typeid, t.type_photo, t.type_price FROM types AS t" +
+    " WHERE t.fbid = :compId" +
+    " ORDER BY typeid ASC",
+    { replacements: { compId }, type: sequelize.QueryTypes.SELECT });
+
+exports.getMenuSizesByCompId = compId =>
+  sequelize.query(
+    "SELECT typeid, size, size_description, sizeid, size_price FROM sizes" +
+    " WHERE fbid = :compId" +
+    " ORDER BY sizeid ASC",
+    { replacements: { compId }, type: sequelize.QueryTypes.SELECT });
+
+exports.getCompany = compId =>
+  Company.findOne({
+    where: {
+      fbid: compId
+    },
+    attributes: [
+      'name',
+      'bot_status',
+      'location',
+      'status',
+      'opentime',
+      'closetime',
+      'access_token'
+    ]
+  })
+
+exports.changeItem = request =>
+  Item.update({
+    [request.column]: request.newValue
+  }, {
+    where: {
+      itemid: request.id
+    }
+  })
+
+exports.changeType = request =>
+  Type.update({
+    [request.column]: request.newValue
+  }, {
+    where: {
+      typeid: request.id
+    }
+  })
+
+exports.changeSize = request =>
+  Size.update({
+    [request.column]: request.newValue
+  }, {
+    where: {
+      sizeid: request.id
+    }
+  })
+
+exports.changeCompany = request =>
+  Company.update({
+    [request.property]: request.newValue
+  }, {
+    where: {
+      fbid: request.fbid
+    }
+  })
+
+//End of Configuration page rewrite database calls
+
 exports.getCompanyMenu = id =>
   sequelize.query(
     "SELECT c.name, c.bot_status, c.location, c.opentime, c.closetime, c.status, i.*" +
@@ -44,28 +120,38 @@ exports.insertItem = (fbid, item) =>
   Item.create({ fbid, item })
     .catch(err => console.error("error inserting menu item:", err));
 
-exports.insertType = (type, itemid) =>
+exports.insertType = (type, itemid, fbid, parentPrice) =>
   sequelize.transaction(t  =>
-    Type.create({ itemid, type }, { transaction: t })
-      .then(() =>
-        Item.update({
-          item_price: null
-        }, {
-          where: { itemid },
-          transaction: t
-        })))
+    Item.update({
+      item_price: null
+    }, {
+      where: { itemid },
+      transaction: t
+    })
+    .then(() => {
+      if (isNaN(Number(parentPrice))) {
+        return Type.create({ itemid, type, fbid }, { transaction: t })
+      } else {
+        return Type.create({ itemid, type, fbid, type_price: parentPrice }, { transaction: t })
+      }
+    }))
     .catch(err => console.error("error in insertType transaction", err));
 
-exports.insertSize = (size, typeid) =>
+exports.insertSize = (size, typeid, fbid, parentPrice) =>
   sequelize.transaction(t  =>
-    Size.create({ typeid, size }, { transaction: t })
-      .then(() =>
-        Type.update({
-          type_price: null
-        }, {
-          where: { typeid },
-          transaction: t
-        })))
+    Type.update({
+      type_price: null
+    }, {
+      where: { typeid },
+      transaction: t
+    })
+    .then(() => {
+      if (isNaN(Number(parentPrice))) {
+        return Size.create({ typeid, size, fbid }, { transaction: t })
+      } else {
+        return Size.create({ typeid, size, fbid, size_price: parentPrice }, { transaction: t })
+      }
+    }))
     .catch(err => console.error("error in insertSize transaction", err));
 
 exports.updateIPrice = (itemid, item_price) =>

@@ -1,7 +1,8 @@
 const db = require('../repositories/site/CompanyRepository');
 
 class Type {
-  constructor ({ itemid, parentId, typeid, id, type, type_photo, type_price, price }) {
+  constructor ({ fbid, itemid, parentId, typeid, id, type, type_photo, type_price, price }) {
+    this.fbid = fbid;
     this.itemid = itemid || parentId;
     this.typeid = typeid || id;
     this.type = type;
@@ -10,7 +11,7 @@ class Type {
   }
 
   dbInsert () {
-    return db.insertType(this.type, this.itemid)
+    return db.insertType(this.type, this.itemid, this.fbid)
       .catch(err => console.error("error inserting Type into database:", err));
   }
 

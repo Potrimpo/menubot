@@ -26,6 +26,7 @@ function items(menu) {
   template.attachment.payload.elements = menu.map(val => {
     const items = {
       title: `${val.item.toUpperCase()}`,
+      subtitle: val.item_description,
       image_url: val.item_photo,
     };
 
@@ -54,6 +55,7 @@ function types(types, itemid) {
   template.attachment.payload.elements = types.map(val => {
     const types = {
       title: val.type.toUpperCase(),
+      subtitle: val.type_description,
       image_url: val.type_photo,
     };
 
@@ -90,6 +92,7 @@ function sizes(sizes, typeid, itemid) {
 
     return {
       title: `${val.size.toUpperCase()} - $${val.size_price}`,
+      subtitle: val.size_description,
       buttons: [
         button(order)
       ]

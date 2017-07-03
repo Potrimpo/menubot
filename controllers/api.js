@@ -10,8 +10,8 @@ router.route('/activate/:fbid')
     db.findCompany(req.params.fbid)
       .then(data => activateBot(data.access_token))
       .then(() => db.setBotStatus(req.params.fbid, true))
-      .then(() => res.redirect(`/company/${req.params.fbid}`))
-      .catch(() => res.status(500).redirect(`/company/${req.params.fbid}`))
+      .then(() => res.sendStatus(200))
+      .catch(() => res.sendStatus(500))
   );
 
 router.route('/deactivate/:fbid')
@@ -115,4 +115,4 @@ function fetchAlbums (pageToken) {
     .catch(err => console.error("error fetching photos for this menu!", err));
 }
 
-module.exports = router;
+module.exports = { router, syncPhotos };

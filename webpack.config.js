@@ -1,12 +1,13 @@
 const path = require('path');
 
-const JSX_DIR = path.resolve(__dirname, './public/jsx/orders'),
+const JSX_DIR = path.resolve(__dirname, './public/jsx'),
       JS_DIR = path.resolve(__dirname, './public/js'),
       BUILD_DIR = path.resolve(__dirname, './dist/js');
 
 const config = {
   entry: {
-    orders: `${JSX_DIR}/index`,
+    configuration: `${JSX_DIR}/configuration/index`,
+    orders: `${JSX_DIR}/orders/index`,
     jquery: `${JS_DIR}/submit`,
   },
   output: {
@@ -19,7 +20,8 @@ const config = {
         test: /\.jsx?/,
         include: [JSX_DIR, JS_DIR],
         loader: 'babel'
-      }
+      },
+      { test: /\.json$/, loader: "json-loader"}
     ]
   },
   resolve: {
