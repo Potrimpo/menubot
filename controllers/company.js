@@ -45,7 +45,7 @@ router.route('/:companyId')
 router.route('/init/:companyId')
   .post((req, res) =>
     db.linkCompany(req.user.id, req.params.companyId, req.body.timezone)
-      .then(data => res.send({redirect: `/company/${data[0].fbid}`}))
+      .then(data => res.send({redirect: `/config/${data[0].fbid}`}))
   );
 
 router.route('/location/:companyId')
