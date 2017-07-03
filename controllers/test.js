@@ -1,7 +1,7 @@
 const express = require('express'),
   router = express.Router(),
   { syncPhotos } = require('./api'),
-  { activateBot, deactivateBot } = require('./activateAccount');
+  { activateBot, deactivateBot } = require('activate-bot.js');
 
 //NOTE: NONE OF THIS IS SECURE YET, ADD SECURITY FUCKWIT
 
