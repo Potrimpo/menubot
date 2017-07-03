@@ -25,7 +25,7 @@ exports.index = (req, res) =>
   companiesFromAccounts(req.user.accounts)
     .then(companies =>
       res.render('home', {
-        title: 'home',
+        title: 'Home',
         companies,
         accounts: unregisteredAccounts(companies, req.user.accounts)
       }));
@@ -33,14 +33,14 @@ exports.index = (req, res) =>
 exports.landing = (req, res) =>
   req.user && req.isAuthenticated() ? res.redirect('/') :
     res.render('landing', {
-      title: 'landing'
+      title: 'Welcome'
     });
 
 exports.login = (req, res) =>
   req.user && req.isAuthenticated() ?
     res.redirect('/') :
     res.render('login', {
-      title: 'login'
+      title: 'Login'
     });
 
 exports.orders = (req, res) =>

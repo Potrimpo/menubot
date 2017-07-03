@@ -12,7 +12,7 @@ const db = require('../repositories/site/CompanyRepository'),
 router.route('/:fbid')
   .get((req, res) => res.render('test', {
     fbid: req.params.fbid,
-    title: 'config'
+    title: 'Config'
   })
 );
 
