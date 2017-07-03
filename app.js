@@ -50,8 +50,8 @@ app.get('/priv', homeController.priv);
 // API router used for asynchronous actions like fetching photos from Facebook
 app.use('/api', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.router);
 
-// Router for dealing with company creation & updates, including menu changes
-app.use('/company', passportConf.isAuthenticated, passportConf.isAuthorized, companyController);
+// Router for dealing with  menu changes
+app.use('/config', passportConf.isAuthenticated, passportConf.isAuthorized, testController);
 
 // OAuth authentication routes. (Sign in)
 app.get('/auth/facebook', passport.authenticate('facebook', secrets.facebook.authOptions));
@@ -59,8 +59,8 @@ app.get(
   '/auth/facebook/callback',
   passport.authenticate('facebook', { successRedirect: '/', failureRedirect: '/landing', failureFlash: true })
 );
-//For testing the configuration page react rewrite
-app.use('/test', testController)
+//For company creation & updates
+app.use('/company', passportConf.isAuthenticated, passportConf.isAuthorized, companyController)
 
 // curl to this in order to add new codes for new companies
 app.post('/newCodeVerySecret', userController.newCode);
