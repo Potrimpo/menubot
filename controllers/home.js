@@ -33,12 +33,15 @@ exports.index = (req, res) =>
 exports.landing = (req, res) =>
   res.redirect('/login')
 
-exports.login = (req, res) =>
+exports.login = (req, res) =>{
+  console.log("whoosp");
   req.user && req.isAuthenticated() ?
+    console.log("butts");
     res.redirect('/') :
+    console.log("hello");
     res.render('login', {
       title: 'Login'
-    });
+    });}
 
 exports.orders = (req, res) =>
   db.findCompany(req.params.fbid)
