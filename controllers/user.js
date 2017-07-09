@@ -25,11 +25,12 @@ const parseAndCompare =
     getAndCompare);
 
 exports.validKey = (req, res, next) =>
-  parseAndCompare(req.body.code)
-    .then(status =>
-      status ? next() : res.redirect('/landing'))
-    .catch(e =>
-      res.status(500).redirect('/landing'));
+  next()
+  // parseAndCompare(req.body.code)
+  //   .then(status =>
+  //     status ? next() : res.redirect('/landing'))
+  //   .catch(e =>
+  //     res.status(500).redirect('/landing'));
 
 exports.logout = (req, res) => {
   req.logout();

@@ -31,10 +31,7 @@ exports.index = (req, res) =>
       }));
 
 exports.landing = (req, res) =>
-  req.user && req.isAuthenticated() ? res.redirect('/') :
-    res.render('landing', {
-      title: 'Welcome'
-    });
+  res.redirect('/login')
 
 exports.login = (req, res) =>
   req.user && req.isAuthenticated() ?
