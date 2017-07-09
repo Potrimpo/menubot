@@ -35,14 +35,16 @@ exports.landing = (req, res) =>
 
 exports.login = (req, res) =>{
   console.log("whoosp");
-  req.user && req.isAuthenticated() ?
+  if (req.user && req.isAuthenticated()){
     console.log("butts");
-    res.redirect('/') :
+    res.redirect('/')
+  } else {
     console.log("hello");
     res.render('login', {
       title: 'Login'
     });}
-
+  };
+  
 exports.orders = (req, res) =>
   db.findCompany(req.params.fbid)
     .then(company =>
