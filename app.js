@@ -40,7 +40,7 @@ app.route('/webhook')
 // Primary app routes.
 app.get('/', passportConf.isAuthenticated, passportConf.isAuthorized, homeController.index);
 app.get('/landing', homeController.landing);
-app.post('/login', homeController.login);
+app.get('/login', homeController.login);
 // app.post('/login', userController.validKey, homeController.login);
 app.get('/logout', userController.logout);
 app.get('/contact', contactController.getContact);
